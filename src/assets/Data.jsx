@@ -2,6 +2,7 @@ import { FaHome } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { FaChartSimple } from "react-icons/fa6";
 import { IoSettings } from "react-icons/io5";
+import { IoIosLogIn } from "react-icons/io";
 
 export const navItems = [
     {
@@ -23,5 +24,11 @@ export const navItems = [
         id: 4,
         title: 'Settings',
         icon: <IoSettings className="text-xl text-violet-900"/>
+    },
+    {
+        id: 5,
+        title: 'Login',
+        path:'/',
+        icon: <IoIosLogIn className="text-xl text-violet-900"/>
     },
 ]
