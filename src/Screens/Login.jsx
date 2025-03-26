@@ -1,24 +1,42 @@
 import React, { useState } from 'react';
+import '../App.css';
 
 export default function Auth() {
     const [isLogin, setIsLogin] = useState(true);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [company, setCompany] = useState('');
+    const [mobile, setMobile] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [agreeTerms, setAgreeTerms] = useState(false);
     const [errors, setErrors] = useState({});
 
     const toggleForm = () => {
         setIsLogin(!isLogin);
         setErrors({});
+        setFirstName('');
+        setLastName('');
+        setCompany('');
+        setMobile(''); s
         setEmail('');
         setPassword('');
         setConfirmPassword('');
+        setAgreeTerms(false);
     };
 
     const handleChange = (field, value) => {
-        if (field === 'email') setEmail(value);
-        if (field === 'password') setPassword(value);
-        if (field === 'confirmPassword') setConfirmPassword(value);
+        switch (field) {
+            case 'firstName': setFirstName(value); break;
+            case 'lastName': setLastName(value); break;
+            case 'company': setCompany(value); break;
+            case 'mobile': setMobile(value); break;
+            case 'email': setEmail(value); break;
+            case 'password': setPassword(value); break;
+            case 'confirmPassword': setConfirmPassword(value); break;
+            default: break;
+        }
 
         setErrors(prev => {
             const newErrors = { ...prev };
@@ -37,8 +55,16 @@ export default function Auth() {
         else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters.';
 
         if (!isLogin) {
+            if (!firstName) newErrors.firstName = 'First name is required.';
+            if (!lastName) newErrors.lastName = 'Last name is required.';
+            if (!company) newErrors.company = 'Company name is required.';
+            if (!mobile) newErrors.mobile = 'Mobile number is required.';
+            else if (!/^\d{10}$/.test(mobile.replace(/\s/g, ''))) newErrors.mobile = 'Enter a valid 10-digit mobile number.';
+
             if (!confirmPassword) newErrors.confirmPassword = 'Please confirm your password.';
             else if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match.';
+
+            if (!agreeTerms) newErrors.terms = 'You must agree to the terms and conditions.';
         }
 
         return newErrors;
@@ -56,34 +82,84 @@ export default function Auth() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[#eed9ff] px-4">
+        <div className="min-h-screen flex items-center justify-center bg-secondary px-4">
             <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
-                <h1 className="text-center text-2xl font-bold text-[#4b0082] mb-6">
+                <h1 className="text-center text-2xl font-bold text-secondary mb-6">
                     {isLogin ? 'Login' : 'Create Your Account'}
                 </h1>
                 <form className="space-y-5" onSubmit={handleSubmit}>
 
+                    {!isLogin && (
+                        <>
+                            <div>
+                                <label className="text-secondary font-semibold mb-1 block">First Name</label>
+                                <input
+                                    type="text"
+                                    value={firstName}
+                                    onChange={(e) => handleChange('firstName', e.target.value)}
+                                    className={`custom-focus w-full px-4 py-3 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                    placeholder="Enter your first name"
+                                />
+                                {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
+                            </div>
+
+                            <div>
+                                <label className="text-secondary font-semibold mb-1 block">Last Name</label>
+                                <input
+                                    type="text"
+                                    value={lastName}
+                                    onChange={(e) => handleChange('lastName', e.target.value)}
+                                    className={`custom-focus w-full px-4 py-3 border ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                    placeholder="Enter your last name"
+                                />
+                                {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
+                            </div>
+
+                            <div>
+                                <label className="text-secondary font-semibold mb-1 block">Company Name</label>
+                                <input
+                                    type="text"
+                                    value={company}
+                                    onChange={(e) => handleChange('company', e.target.value)}
+                                    className={`custom-focus w-full px-4 py-3 border ${errors.company ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                    placeholder="Enter your company name"
+                                />
+                                {errors.company && <p className="text-red-500 text-sm mt-1">{errors.company}</p>}
+                            </div>
+
+                            <div>
+                                <label className="text-secondary font-semibold mb-1 block">Mobile Number</label>
+                                <input
+                                    type="tel"
+                                    value={mobile}
+                                    onChange={(e) => handleChange('mobile', e.target.value)}
+                                    className={`custom-focus w-full px-4 py-3 border ${errors.mobile ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                    placeholder="Enter your mobile number"
+                                />
+                                {errors.mobile && <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>}
+                            </div>
+                        </>
+                    )}
+
                     <div>
-                        <label className="text-[#4b0082] text-base font-semibold mb-1 block">Email</label>
+                        <label className="text-secondary font-semibold mb-1 block">Email (Username)</label>
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => handleChange('email', e.target.value)}
-                            className={`w-full px-4 py-3 border ${errors.email ? 'border-red-500' : 'border-gray-300'
-                                } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ad46ff] placeholder:text-sm`}
+                            className={`custom-focus w-full px-4 py-3 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
                             placeholder="Enter your email"
                         />
                         {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                     </div>
 
                     <div>
-                        <label className="text-[#4b0082] text-base font-semibold mb-1 block">Password</label>
+                        <label className="text-secondary font-semibold mb-1 block">Password</label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => handleChange('password', e.target.value)}
-                            className={`w-full px-4 py-3 border ${errors.password ? 'border-red-500' : 'border-gray-300'
-                                } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ad46ff] placeholder:text-sm`}
+                            className={`custom-focus w-full px-4 py-3 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
                             placeholder="Enter your password"
                         />
                         {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
@@ -91,36 +167,35 @@ export default function Auth() {
 
                     {!isLogin && (
                         <div>
-                            <label className="text-[#4b0082] text-base font-semibold mb-1 block">Confirm Password</label>
+                            <label className="text-secondary font-semibold mb-1 block">Confirm Password</label>
                             <input
                                 type="password"
                                 value={confirmPassword}
                                 onChange={(e) => handleChange('confirmPassword', e.target.value)}
-                                className={`w-full px-4 py-3 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
-                                    } rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ad46ff] placeholder:text-sm`}
+                                className={`custom-focus w-full px-4 py-3 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
                                 placeholder="Confirm your password"
                             />
-                            {errors.confirmPassword && (
-                                <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>
-                            )}
+                            {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
                         </div>
                     )}
 
+
+
                     <button
                         type="submit"
-                        className="cursor-pointer w-full py-3 mt-3 bg-[#ad46ff] text-white rounded-lg font-semibold hover:bg-[#9c3ae5] shadow"
+                        className="cursor-pointer w-full py-3 mt-3 bg-secondary text-white rounded-lg font-semibold hover:bg-primary shadow"
                     >
-                        {isLogin ? 'Login' : 'Register'}
+                        {isLogin ? 'Login' : 'Get Started'}
                     </button>
                 </form>
 
                 <p className="text-center mt-6 text-sm text-gray-600">
-                    {isLogin ? "Don't have an account?" : "Already have an account?"}
+                    {isLogin ? "Don’t have an account?" : "Already have an account?"}
                     <span
                         onClick={toggleForm}
-                        className="text-[#ad46ff] cursor-pointer ml-1 font-medium hover:underline"
+                        className="ml-1 text-primary cursor-pointer font-semibold hover:underline"
                     >
-                        {isLogin ? 'Register here' : 'Login here'}
+                        {isLogin ? "Create an account" : "Login here"}
                     </span>
                 </p>
             </div>

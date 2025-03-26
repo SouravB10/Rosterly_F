@@ -9,9 +9,23 @@ body {
   background-color: #d0a6f2;
 }
 
-.secondary {
+.bg-secondary {
+  background-color: #3E1D7A;
+}
+
+.secondary-color {
   color: #48214a;
 }
+
+.text-primary {
+  color: #3E1D7A;
+}
+
+.text-secondary {
+  color: #4b0082;
+}
+
+
 
 /* colors */
 
@@ -37,4 +51,10 @@ body {
   display: inline;
   border-radius: 8px;
   cursor: pointer;
+}
+
+.custom-focus:focus {
+  border-color: 1px solid #ad46ff;
+  box-shadow: 0 0 0 2px #ad46ff4d;
+  outline: none;
 }
