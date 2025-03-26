@@ -1,30 +1,35 @@
 import './App.css'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Login from './Screens/Login';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { FaArrowCircleLeft  } from "react-icons/fa";
+import { navItems } from './assets/Data';
 
 function App() {
-  useEffect(() => {
-    AOS.init({
-      duration: 1500,
-      once: true,
-    });
-  }, []);
+
+  const [open, setOpen] = useState(false);
 
   return (
-    <>
-      {/* <h1 className='bg-purple-500 sub-heading font-bold text-white text-center p-4'>Rosterly</h1>
-      <div className=' flex justify-center mt-4'>
-        <button className='button' data-aos="flip-left">Submit</button>
-      </div> */}
-      <BrowserRouter>
+    <div className='flex items-start'>
+      {/* <BrowserRouter>
         <Routes>
           <Route path='/' element={<Login />} />
         </Routes>
-      </BrowserRouter>
-    </>
+      </BrowserRouter> */}
+      <div className={`h-[100vh] w-64 shadow-2xl text-violet-400 text-[18px] transition-all duration-300 ${open && 'w-[50px]'}`}>
+        <div className='flex gap-[20px] p-4 justify-center'>
+         {!open && <p className='text-violet-900 text-[24px] font-semibold'>Rosterly </p>}
+        </div>
+        <ul className='flex flex-col gap-6 p-4 mt-10 '>
+        {
+          navItems.map((item) => (<li className="flex items-center gap-x-2 transition-all duration-300" key={item.id}><span title={item.title}>{item.icon}</span>{!open && item.title}</li>))
+        }
+        </ul>
+      </div>
+      <button onClick={() => setOpen(!open)} className={`bg-white shadow-lg rounded-full p-2 ms-[-20px] mt-4 transition-all duration-300 ${open && 'transform rotate-180'}`}><FaArrowCircleLeft  /></button>
+    </div>
   )
 }
 
