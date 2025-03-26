@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+body{
+  background-color: #eed9ff ;
+}
+
+/* colors */
+.bg-primary{
+  background-color: #d0a6f2 ;
+}
+.secondary{
+  color: #48214a ;
+}
+/* colors */
+
+/* typography */
+.heading{
+  font-size: 1.625rem;
+}
+.sub-heading{
+  font-size: 1.25rem;
+}
+.paragraph{
+  font-size: 1rem;
+} 
+
+/* button */
+.button{
+  background-color: #ad46ff;
+  color: #ffff;
+  font-weight: 500;
+  padding: 10px 20px;
+  display: inline;
+  border-radius: 8px;
+  cursor: pointer;
+}
