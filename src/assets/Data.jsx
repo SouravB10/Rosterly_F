@@ -9,26 +9,30 @@ export const navItems = [
         id: 1,
         title: 'Home',
         icon: <FaHome className="text-xl text-violet-900"/>,
+        path:'/'
     },
     {
         id: 2,
         title: 'Profile',
         icon: <CgProfile className="text-xl text-violet-900"/>,
+        path:'/profile'
     },
     {
         id: 3,
         title: 'Charts',
         icon: <FaChartSimple className="text-xl text-violet-900"/>,
+        path:'/charts'
     },
     {
         id: 4,
         title: 'Settings',
-        icon: <IoSettings className="text-xl text-violet-900"/>
+        icon: <IoSettings className="text-xl text-violet-900"/>,
+        path:'/settings'
     },
     {
         id: 5,
         title: 'Login',
-        path:'/',
+        path:'/login',
         icon: <IoIosLogIn className="text-xl text-violet-900"/>
     },
 ]
