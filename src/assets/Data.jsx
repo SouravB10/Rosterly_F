@@ -1,34 +1,51 @@
 import { FaHome } from "react-icons/fa";
-import { CgProfile } from "react-icons/cg";
-import { FaChartSimple } from "react-icons/fa6";
-import { IoSettings } from "react-icons/io5";
-import { IoIosLogIn } from "react-icons/io";
+import { CgUnavailable } from "react-icons/cg";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { FaLocationDot } from "react-icons/fa6";
+import { TbCircleLetterRFilled } from "react-icons/tb";
+import { PiArticleNyTimesFill } from "react-icons/pi";
+import { RiNotificationLine } from "react-icons/ri";
+import { RiNotificationOffLine } from "react-icons/ri";
 
 export const navItems = [
     {
         id: 1,
-        title: 'Home',
-        icon: <FaHome className="text-xl text-violet-900"/>,
+        title: 'My Rosterly',
+        icon: <FaHome className="text-xl text-white"/>,
+        path:'/'
     },
     {
         id: 2,
-        title: 'Profile',
-        icon: <CgProfile className="text-xl text-violet-900"/>,
+        title: 'Unavailability',
+        icon: <CgUnavailable className="text-xl text-white"/>,
+        path:'/unavailable'
     },
     {
         id: 3,
-        title: 'Charts',
-        icon: <FaChartSimple className="text-xl text-violet-900"/>,
+        title: 'People',
+        icon: <FaPeopleGroup className="text-xl text-white"/>,
+        // path:'/people',
+        submenu: [
+            { id: 1, title: 'Active', path: '/active', icon: <RiNotificationLine className="text-xl text-white"/> },
+            { id: 2, title: 'Inactive', path: '/inactive', icon: <RiNotificationOffLine className="text-xl text-white"/> }
+        ]
     },
     {
         id: 4,
-        title: 'Settings',
-        icon: <IoSettings className="text-xl text-violet-900"/>
+        title: 'Location',
+        icon: <FaLocationDot className="text-xl text-white"/>,
+        path:'/location'
     },
     {
         id: 5,
-        title: 'Login',
-        path:'/',
-        icon: <IoIosLogIn className="text-xl text-violet-900"/>
+        title: 'Roster',
+        path:'/roster',
+        icon: <TbCircleLetterRFilled className="text-xl text-white"/>
+    },
+    {
+        id: 6,
+        title: 'Timesheet',
+        path:'/timesheet',
+        icon: <PiArticleNyTimesFill className="text-xl text-white"/>
     },
 ]
