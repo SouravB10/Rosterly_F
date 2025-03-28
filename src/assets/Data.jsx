@@ -12,13 +12,13 @@ export const navItems = [
         id: 1,
         title: 'My Rosterly',
         icon: <FaHome className="text-xl text-white"/>,
-        path:'/'
+        path:'/myrosterly'
     },
     {
         id: 2,
         title: 'Unavailability',
         icon: <CgUnavailable className="text-xl text-white"/>,
-        path:'/unavailable'
+        path:'/unavailability'
     },
     {
         id: 3,
