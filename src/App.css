@@ -58,3 +58,8 @@ body {
   box-shadow: 0 0 0 2px #ad46ff4d;
   outline: none;
 }
+
+
+.w-48 {
+  width: 48%;
+}
