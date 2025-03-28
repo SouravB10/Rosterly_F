@@ -1,27 +1,39 @@
-import './App.css'
-import { useEffect, useState } from 'react';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-import Login from './Screens/Login';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import './App.css';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import Sidebar from './Component/SideBar';
+import Login from './Screens/Login';
+import Register from './Screens/Register';
+// import Dashboard from './Screens/Dashboard';
 
-function App() {
+function Layout() {
+  const location = useLocation();
+  const hideSidebarRoutes = ['/', '/register'];
 
   return (
-    <>
-      <BrowserRouter>
-        <div className='flex'>
-          <Sidebar />
-          <div className='flex-1 p-6'>
-            <Routes>
-              <Route path='/login' element={<Login />} />
-            </Routes>
-          </div>
-        </div>
-      </BrowserRouter>
-    </>
-  )
+    <div className="flex">
+      {!hideSidebarRoutes.includes(location.pathname) && <Sidebar />}
+      <div className="flex-1 p-6">
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      </div>
+    </div>
+  );
 }
 
-export default App
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        <Route path="/*" element={<Layout />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
