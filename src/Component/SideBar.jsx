@@ -12,7 +12,7 @@ const Sidebar = () => {
     const toggleMenu = (id) => {
         setActiveMenu(activeMenu === id ? null : id);
     };
-
+ 
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth <= 768) {
@@ -36,7 +36,7 @@ const Sidebar = () => {
                             <div className={`bg-gradient-to-b from-red-100 to-yellow-300 text-white rounded-lg p-[4px] transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
                                 <TbCircleLetterRFilled />
                             </div>
-                            <p className={`text-violet-950 text-[24px] font-semibold transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
+                            <p className={`text-white text-[24px] font-semibold transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
                                 Rosterly
                             </p>
                         </div>
@@ -75,14 +75,14 @@ const Sidebar = () => {
                             {/* Submenu */}
                             {item.submenu && (
                                 <ul
-                                    className={`overflow-hidden bg-violet-950 rounded-lg p-1 w-[200px] transition-all duration-300 ${activeMenu === item.id ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-                                        } ${open ? "pl-4 sm:pl-6" : "absolute left-[80px] top-50% bg-violet-900 rounded-lg shadow-lg p-2 w-[200px] sm:w-auto"}`}
+                                    className={`overflow-hidden rounded-lg p-1 w-[200px] transition-all duration-300 ${activeMenu === item.id ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                                        } ${open ? "w-full" : "absolute left-[80px] top-50% bg-violet-900 rounded-lg shadow-lg p-2 w-[200px] sm:w-auto"}`}
                                 >
                                     {item.submenu.map((sub) => (
                                         <li key={sub.id} className="w-full">
                                             <Link
                                                 to={sub.path}
-                                                className="flex items-center gap-2 my-1 px-3 py-2 rounded-lg text-white bg-violet-800 transition-all duration-300 hover:bg-violet-600 w-full"
+                                                className="flex items-center gap-2 my-1 px-3 py-2 rounded-lg text-white bg-violet-500 transition-all duration-300 hover:bg-violet-900 w-full"
                                             >
                                                 <span className="text-lg">{sub.icon}</span>
                                                 <span className="text-sm font-light">{sub.title}</span>
