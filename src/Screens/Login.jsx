@@ -83,7 +83,7 @@ export default function Auth() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-secondary px-4">
-            <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+            <div className={`bg-white p-8 rounded-2xl shadow-lg w-full ${isLogin ? 'max-w-md' : 'w-[60%]'}`}>
                 <h1 className="text-center text-2xl font-bold text-secondary mb-6">
                     {isLogin ? 'Login' : 'Create Your Account'}
                 </h1>
@@ -91,28 +91,30 @@ export default function Auth() {
 
                     {!isLogin && (
                         <>
-                            <div>
-                                <label className="text-secondary font-semibold mb-1 block">First Name</label>
-                                <input
-                                    type="text"
-                                    value={firstName}
-                                    onChange={(e) => handleChange('firstName', e.target.value)}
-                                    className={`custom-focus w-full px-4 py-3 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                    placeholder="Enter your first name"
-                                />
-                                {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
-                            </div>
+                            <div className='flex justify-between'>
+                                <div>
+                                    <label className="text-secondary font-semibold mb-1 block">First Name</label>
+                                    <input
+                                        type="text"
+                                        value={firstName}
+                                        onChange={(e) => handleChange('firstName', e.target.value)}
+                                        className={`custom-focus w-full px-4 py-3 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                        placeholder="Enter your first name"
+                                    />
+                                    {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
+                                </div>
 
-                            <div>
-                                <label className="text-secondary font-semibold mb-1 block">Last Name</label>
-                                <input
-                                    type="text"
-                                    value={lastName}
-                                    onChange={(e) => handleChange('lastName', e.target.value)}
-                                    className={`custom-focus w-full px-4 py-3 border ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                    placeholder="Enter your last name"
-                                />
-                                {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
+                                <div>
+                                    <label className="text-secondary font-semibold mb-1 block">Last Name</label>
+                                    <input
+                                        type="text"
+                                        value={lastName}
+                                        onChange={(e) => handleChange('lastName', e.target.value)}
+                                        className={`custom-focus w-full px-4 py-3 border ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                        placeholder="Enter your last name"
+                                    />
+                                    {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
+                                </div>
                             </div>
 
                             <div>
@@ -139,6 +141,7 @@ export default function Auth() {
                                 {errors.mobile && <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>}
                             </div>
                         </>
+
                     )}
 
                     <div>
