@@ -105,9 +105,11 @@ export default function Login() {
 
                     <div>
                         <label className="text-secondary font-semibold mb-4 block"></label>
-                        <button type="submit" className="cursor-pointer w-full py-3 mt-3 bg-secondary text-white rounded-lg font-semibold hover:bg-primary shadow">
-                            {isLogin ? 'Login' : 'Get Started'}
-                        </button>
+                        <Link to='dashboard'>
+                            <button type="submit" className="cursor-pointer w-full py-3 mt-3 bg-secondary text-white rounded-lg font-semibold hover:bg-primary shadow">
+                                Login
+                            </button>
+                        </Link>
                     </div>
                 </form>
                 <Link to='/register' className="text-center mt-6 text-sm text-gray-600">"Don’t have an account?"
