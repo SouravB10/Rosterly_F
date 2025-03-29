@@ -36,7 +36,7 @@ const Sidebar = () => {
                             <div className={`bg-gradient-to-b from-red-100 to-yellow-300 text-white rounded-lg p-[4px] transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
                                 <TbCircleLetterRFilled />
                             </div>
-                            <p className={`text-white text-[24px] font-semibold transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
+                            <p className={`text-white text-[22px] font-semibold transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
                                 Rosterly
                             </p>
                         </div>
@@ -49,7 +49,7 @@ const Sidebar = () => {
                         </button>
                     </div>
 
-                    <hr className="border-t border-gray-300 mx-4 mt-2" />
+                    <hr className="border-t border-gray-300 mx-4 mt-1" />
                 </div>
 
                 <ul className="flex flex-col gap-2 p-4 mt-4">

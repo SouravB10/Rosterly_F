@@ -1,39 +1,56 @@
-import './App.css';
+import './App.css'
+import { useEffect, useState } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import Login from './Screens/Login';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import Sidebar from './Component/SideBar';
-import Login from './Screens/Login';
-import Register from './Screens/Register';
+import Rosterly from './Screens/Rosterly';
+import Unavailability from './Screens/Unavailability';
+import NavBar from './Component/NavBar';
 import Dashboard from './Screens/Dashboard';
 
-function Layout() {
+function AppWrapper() {
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
   const location = useLocation();
-  const hideSidebarRoutes = ['/', '/register'];
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  const isLoginPage = location.pathname === '/';
 
   return (
-    <div className="flex">
-      {!hideSidebarRoutes.includes(location.pathname) && <Sidebar />}
-      <div className="flex-1 p-6">
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
+    <>
+
+      <div className='flex h-screen overflow-hidden'>
+        {!isLoginPage && (
+          <div className=" top-0 left-0 h-full">
+            <Sidebar open={sidebarOpen} />
+          </div>
+        )}
+        <div className='flex-1 flex flex-col'>
+          {!isLoginPage && <NavBar toggleSidebar={toggleSidebar} />}
+          <div className='flex-1 overflow-auto p-6'>
+            <Routes>
+              <Route path='/' element={<Login />} />
+              <Route path='/dashboard' element={<Dashboard />} />
+              <Route path='/myrosterly' element={<Rosterly />} />
+              <Route path='/unavailability' element={<Unavailability />} />
+            </Routes>
+          </div>
+        </div>
       </div>
-    </div>
-  );
+
+    </>
+  )
 }
 
-function App() {
+
+export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-
-        <Route path="/*" element={<Layout />} />
-      </Routes>
+      <AppWrapper />
     </BrowserRouter>
   );
 }
-
-export default App;
