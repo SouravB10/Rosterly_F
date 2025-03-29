@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../App.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Login() {
     const [isLogin, setIsLogin] = useState(true);
@@ -13,7 +13,7 @@ export default function Login() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [errors, setErrors] = useState({});
-
+    const navigate = useNavigate()
 
 
     const handleChange = (field, value) => {
@@ -68,6 +68,7 @@ export default function Login() {
         } else {
             setErrors({});
             console.log(isLogin ? 'Logged in successfully!' : 'Registered successfully!');
+            navigate('/dashboard')
         }
     };
 
@@ -105,11 +106,11 @@ export default function Login() {
 
                     <div>
                         <label className="text-secondary font-semibold mb-4 block"></label>
-                        <Link to='dashboard'>
-                            <button type="submit" className="cursor-pointer w-full py-3 mt-3 bg-secondary text-white rounded-lg font-semibold hover:bg-primary shadow">
-                                Login
-                            </button>
-                        </Link>
+
+                        <button type="submit" className="cursor-pointer w-full py-3 mt-3 bg-secondary text-white rounded-lg font-semibold hover:bg-primary shadow">
+                            Login
+                        </button>
+
                     </div>
                 </form>
                 <Link to='/register' className="text-center mt-6 text-sm text-gray-600">"Don’t have an account?"
