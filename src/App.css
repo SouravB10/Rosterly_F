@@ -44,13 +44,19 @@ body {
 
 /* button */
 .button {
-  background-color: #ad46ff;
+  background-color: #7d20f7;
   color: #ffff;
   font-weight: 500;
   padding: 10px 20px;
   display: inline;
   border-radius: 8px;
   cursor: pointer;
+}
+.bg{
+  background-color: #e3e3e3;
+}
+.bagActive{
+  background-color: #7d20f7;
 }
 
 .custom-focus:focus {
