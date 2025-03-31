@@ -2,13 +2,9 @@ import React from "react";
 import { FaBars } from "react-icons/fa";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-]
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -16,6 +12,26 @@ function classNames(...classes) {
 
 
 const NavBar = ({ toggleSidebar }) => {
+
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post('http://127.0.0.1:8000/api/admin/logout', {}, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      localStorage.removeItem('token');
+      alert('Logged out successfully!');
+      navigate('/');
+    } catch (error) {
+      alert('Logout failed!');
+      console.error('Logout error:', error);
+    }
+  };
+
   return (
     <Disclosure as="nav" className="bg-gradient-to-r from-violet-600 to-violet-900">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -43,15 +59,15 @@ const NavBar = ({ toggleSidebar }) => {
                   />
                 </MenuButton>
               </div>
-              <MenuItems  
+              <MenuItems
                 transition
-                className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
+                className="absolute right-0 z-10 mt-2 w-49 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
               >
 
                 <MenuItem>
                   <a
                     href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:outline-hidden"
                   >
                     Your Profile
                   </a>
@@ -59,18 +75,18 @@ const NavBar = ({ toggleSidebar }) => {
                 <MenuItem>
                   <a
                     href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:outline-hidden"
                   >
                     Settings
                   </a>
                 </MenuItem>
                 <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                  <button
+                    onClick={handleLogout}
+                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:outline-hidden"
                   >
                     Sign out
-                  </a>
+                  </button>
                 </MenuItem>
               </MenuItems>
             </Menu>
@@ -78,9 +94,9 @@ const NavBar = ({ toggleSidebar }) => {
         </div>
       </div>
 
-      <DisclosurePanel className="sm:hidden">
+      {/* <DisclosurePanel className="sm:hidden">
         <div className="space-y-1 px-2 pt-2 pb-3">
-          {navigation.map((item) => (
+         
             <DisclosureButton
               key={item.name}
               as="a"
@@ -93,9 +109,9 @@ const NavBar = ({ toggleSidebar }) => {
             >
               {item.name}
             </DisclosureButton>
-          ))}
+          
         </div>
-      </DisclosurePanel>
+      </DisclosurePanel> */}
     </Disclosure>
   );
 };
