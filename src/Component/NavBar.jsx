@@ -80,13 +80,13 @@ const NavBar = ({ toggleSidebar }) => {
                     Settings
                   </a>
                 </MenuItem>
-                <MenuItem>
-                  <button
-                    onClick={handleLogout}
+                <MenuItem  onClick={handleLogout}>
+                  <a
+                   
                     className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:outline-hidden"
                   >
                     Sign out
-                  </button>
+                  </a>
                 </MenuItem>
               </MenuItems>
             </Menu>
