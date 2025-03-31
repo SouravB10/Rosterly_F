@@ -10,6 +10,7 @@ import Unavailability from './Screens/Unavailability';
 import NavBar from './Component/NavBar';
 import Dashboard from './Screens/Dashboard';
 import Register from './Screens/Register';
+import People from './Screens/People';
 
 function AppWrapper() {
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
@@ -40,6 +41,7 @@ function AppWrapper() {
               <Route path='/dashboard' element={<Dashboard />} />
               <Route path='/myrosterly' element={<Rosterly />} />
               <Route path='/unavailability' element={<Unavailability />} />
+              <Route path='/people' element={<People />} />
             </Routes>
           </div>
         </div>
