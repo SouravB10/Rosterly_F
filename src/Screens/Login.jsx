@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../App.css';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function Login() {
     const [isLogin, setIsLogin] = useState(true);
@@ -13,8 +14,14 @@ export default function Login() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [errors, setErrors] = useState({});
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            navigate('/dashboard');
+        }
+    }, [navigate]);
 
     const handleChange = (field, value) => {
         switch (field) {
@@ -60,15 +67,41 @@ export default function Login() {
         return newErrors;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const validationErrors = validate();
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
         } else {
             setErrors({});
-            console.log(isLogin ? 'Logged in successfully!' : 'Registered successfully!');
-            navigate('/dashboard')
+            try {
+                const response = await axios.post('http://127.0.0.1:8000/api/admin/login', { email, password });
+                const data = response.data;
+
+                alert('Login successful!');
+                localStorage.setItem('token', data.token);
+                navigate('/dashboard');
+            } catch (error) {
+                const errorMessage = error.response?.data?.message || 'Login failed!';
+                alert(errorMessage);
+            }
+        }
+    };
+
+    const handleLogout = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.post('http://127.0.0.1:8000/api/admin/logout', {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            localStorage.removeItem('token');
+            alert('Logged out successfully!');
+            navigate('/');
+        } catch (error) {
+            alert('Logout failed!');
+            console.error('Logout error:', error);
         }
     };
 
@@ -92,7 +125,7 @@ export default function Login() {
                         {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                     </div>
 
-                    <div >
+                    <div>
                         <label className="text-secondary font-semibold mb-1 block">Password</label>
                         <input
                             type="password"
@@ -105,18 +138,16 @@ export default function Login() {
                     </div>
 
                     <div>
-                        <label className="text-secondary font-semibold mb-4 block"></label>
-
                         <button type="submit" className="cursor-pointer w-full py-3 mt-3 bg-secondary text-white rounded-lg font-semibold hover:bg-primary shadow">
                             Login
                         </button>
-
                     </div>
                 </form>
-                <Link to='/register' className="text-center mt-6 text-sm text-gray-600">"Don’t have an account?"
-                    <span className="ml-1 text-primary cursor-pointer font-semibold hover:underline">"Create an account"</span>
+                <button onClick={handleLogout} className="text-center mt-4 text-sm text-gray-600 hover:underline">Logout</button>
+                <Link to='/register' className="text-center mt-6 text-sm text-gray-600">Don’t have an account?
+                    <span className="ml-1 text-primary cursor-pointer font-semibold hover:underline">Create an account</span>
                 </Link>
-            </div >
-        </div >
+            </div>
+        </div>
     );
 }
