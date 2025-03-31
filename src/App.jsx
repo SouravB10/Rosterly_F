@@ -9,6 +9,7 @@ import Rosterly from './Screens/Rosterly';
 import Unavailability from './Screens/Unavailability';
 import NavBar from './Component/NavBar';
 import Dashboard from './Screens/Dashboard';
+import Register from './Screens/Register';
 
 function AppWrapper() {
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
@@ -19,21 +20,23 @@ function AppWrapper() {
   };
 
   const isLoginPage = location.pathname === '/';
+  const isRegisterPage = location.pathname === '/register';
 
   return (
     <>
 
       <div className='flex h-screen overflow-hidden'>
-        {!isLoginPage && (
+        {!isLoginPage && !isRegisterPage && (
           <div className=" top-0 left-0 h-full">
             <Sidebar open={sidebarOpen} />
           </div>
         )}
         <div className='flex-1 flex flex-col'>
-          {!isLoginPage && <NavBar toggleSidebar={toggleSidebar} />}
-          <div className={`flex-1 overflow-auto ${isLoginPage ? 'p-0' : 'p-6'}`}>
+          {!isLoginPage && !isRegisterPage && <NavBar toggleSidebar={toggleSidebar} />}
+          <div className={`flex-1 overflow-auto ${isLoginPage || isRegisterPage ? 'p-0' : 'p-6'}`}>
             <Routes>
               <Route path='/' element={<Login />} />
+              <Route path='/register' element={<Register />} />
               <Route path='/dashboard' element={<Dashboard />} />
               <Route path='/myrosterly' element={<Rosterly />} />
               <Route path='/unavailability' element={<Unavailability />} />
@@ -45,7 +48,6 @@ function AppWrapper() {
     </>
   )
 }
-
 
 export default function App() {
   return (
