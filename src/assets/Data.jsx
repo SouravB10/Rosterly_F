@@ -24,11 +24,11 @@ export const navItems = [
         id: 3,
         title: 'People',
         icon: <FaPeopleGroup className="text-xl text-white"/>,
-        // path:'/people',
-        submenu: [
-            { id: 1, title: 'Active', path: '/active', icon: <RiNotificationLine className="text-xl text-white"/> },
-            { id: 2, title: 'Inactive', path: '/inactive', icon: <RiNotificationOffLine className="text-xl text-white"/> }
-        ]
+        path:'/people',
+        // submenu: [
+        //     { id: 1, title: 'Active', path: '/active', icon: <RiNotificationLine className="text-xl text-white"/> },
+        //     { id: 2, title: 'Inactive', path: '/inactive', icon: <RiNotificationOffLine className="text-xl text-white"/> }
+        // ]
     },
     {
         id: 4,
