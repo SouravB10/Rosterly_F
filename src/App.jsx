@@ -31,7 +31,7 @@ function AppWrapper() {
         )}
         <div className='flex-1 flex flex-col'>
           {!isLoginPage && <NavBar toggleSidebar={toggleSidebar} />}
-          <div className='flex-1 overflow-auto p-6'>
+          <div className={`flex-1 overflow-auto ${isLoginPage ? 'p-0' : 'p-6'}`}>
             <Routes>
               <Route path='/' element={<Login />} />
               <Route path='/dashboard' element={<Dashboard />} />
