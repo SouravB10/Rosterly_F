@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaArrowCircleLeft } from "react-icons/fa";
+import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
 import { navItems } from '../assets/Data';
 import { TbCircleLetterRFilled } from "react-icons/tb";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
@@ -45,7 +45,7 @@ const Sidebar = () => {
                             onClick={() => setOpen(!open)}
                             className={`bg-white shadow-lg rounded-full p-2 text-violet-950 transition-all duration-300 flex ml-auto
                         ${open ? 'transform rotate-180' : ''}`}>
-                            <FaArrowCircleLeft />
+                            <FaArrowCircleRight />
                         </button>
                     </div>
 
