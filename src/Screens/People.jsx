@@ -78,7 +78,7 @@ const People = () => {
                             <MenuItem>
                                 <a
                                     href="#"
-                                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:text-gray-900 data-focus:outline-hidden"
+                                    className=" flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:text-gray-900 data-focus:outline-hidden"
                                 >
                                     All
                                 </a>
@@ -86,7 +86,7 @@ const People = () => {
                             <MenuItem>
                                 <a
                                     href="#"
-                                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:text-gray-900 data-focus:outline-hidden"
+                                    className=" flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:text-gray-900 data-focus:outline-hidden"
                                 >
                                    Active
                                 </a>
@@ -94,7 +94,7 @@ const People = () => {
                             <MenuItem>
                                 <a
                                     href="#"
-                                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:text-gray-900 data-focus:outline-hidden"
+                                    className="flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:text-gray-900 data-focus:outline-hidden"
                                 >
                                    Inactive
                                 </a>
@@ -120,7 +120,7 @@ const People = () => {
                             <MenuItem>
                                 <a
                                     href="#"
-                                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                                    className=" flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:text-gray-900 data-focus:outline-hidden"
                                 >
                                     Office
                                 </a>
@@ -128,7 +128,7 @@ const People = () => {
                             <MenuItem>
                                 <a
                                     href="#"
-                                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                                    className=" flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:text-gray-900 data-focus:outline-hidden"
                                 >
                                     Main Branch
                                 </a>
@@ -139,7 +139,8 @@ const People = () => {
                 </Menu>
             </div>
 
-            <div className='overflow-x-auto'>
+            <div className='overflow-x-auto mt-4'>
+                <h1 className='heading'>Table</h1>
                 <table className='w-full border-collapse border border-gray-300'>
                     <thead className='bg-gray-100'>
                         <tr>
