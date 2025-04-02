@@ -6,11 +6,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
-
 const NavBar = ({ toggleSidebar }) => {
 
   const navigate = useNavigate();
@@ -25,6 +20,7 @@ const NavBar = ({ toggleSidebar }) => {
       });
       localStorage.removeItem('token');
       alert('Logged out successfully!');
+      console.log("Token:", token);
       navigate('/');
     } catch (error) {
       alert('Logout failed!');
@@ -80,13 +76,16 @@ const NavBar = ({ toggleSidebar }) => {
                     Settings
                   </a>
                 </MenuItem>
-                <MenuItem  onClick={handleLogout}>
-                  <a
-                   
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:outline-hidden"
-                  >
-                    Sign out
-                  </a>
+                <MenuItem>
+                  {({ active }) => (
+                    <button
+                      onClick={handleLogout}
+                      className={`block w-full px-4 py-2 text-left text-sm text-gray-700 ${active ? 'bg-gray-300' : ''
+                        }`}
+                    >
+                      Sign out
+                    </button>
+                  )}
                 </MenuItem>
               </MenuItems>
             </Menu>
@@ -94,24 +93,6 @@ const NavBar = ({ toggleSidebar }) => {
         </div>
       </div>
 
-      {/* <DisclosurePanel className="sm:hidden">
-        <div className="space-y-1 px-2 pt-2 pb-3">
-         
-            <DisclosureButton
-              key={item.name}
-              as="a"
-              href={item.href}
-              aria-current={item.current ? 'page' : undefined}
-              className={classNames(
-                item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                'block rounded-md px-3 py-2 text-base font-medium',
-              )}
-            >
-              {item.name}
-            </DisclosureButton>
-          
-        </div>
-      </DisclosurePanel> */}
     </Disclosure>
   );
 };
