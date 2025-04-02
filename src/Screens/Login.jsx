@@ -14,7 +14,31 @@ export default function Login() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [errors, setErrors] = useState({});
+    const [modalMessage, setModalMessage] = useState('');
+    const [modalTitle, setModalTitle] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalClass, setModalClass] = useState('transform translate-y-10 opacity-0');
     const navigate = useNavigate();
+
+    const openModal = () => {
+        setModalClass('transform translate-y-15 opacity-0');
+        setIsModalOpen(true);
+
+        setTimeout(() => {
+            setModalClass('transform translate-y-0 opacity-100 transition-all duration-500 ease-out');
+        }, 10);
+    };
+
+    const closeModal = () => {
+        setModalClass('transform translate-y-10 opacity-0');
+        setIsModalOpen(false);
+    };
+
+    useEffect(() => {
+        if (isModalOpen) {
+            openModal();
+        }
+    }, [isModalOpen]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -78,12 +102,18 @@ export default function Login() {
                 const response = await axios.post('http://127.0.0.1:8000/api/admin/login', { email, password });
                 const data = response.data;
 
-                alert('Login successful!');
+                setModalTitle('Success');
+                setModalMessage('Login successful!');
+                setIsModalOpen(true);
+
                 localStorage.setItem('token', data.token);
                 navigate('/dashboard');
             } catch (error) {
                 const errorMessage = error.response?.data?.message || 'Login failed!';
-                alert(errorMessage);
+
+                setModalTitle('Error');
+                setModalMessage(errorMessage);
+                setIsModalOpen(true);
             }
         }
     };
@@ -97,10 +127,16 @@ export default function Login() {
                 }
             });
             localStorage.removeItem('token');
-            alert('Logged out successfully!');
+
+            setModalTitle('Success');
+            setModalMessage('Logged out successfully!');
+            setIsModalOpen(true);
+
             navigate('/');
         } catch (error) {
-            alert('Logout failed!');
+            setModalTitle('Error');
+            setModalMessage('Logout failed!');
+            setIsModalOpen(true);
             console.error('Logout error:', error);
         }
     };
@@ -108,9 +144,7 @@ export default function Login() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-secondary px-4">
             <div className={`bg-white p-8 rounded-2xl shadow-lg w-full ${isLogin ? 'max-w-md' : 'max-w-2xl'}`}>
-                <h1 className="text-center text-2xl font-bold text-secondary mb-6">
-                    Login
-                </h1>
+                <h1 className="text-center text-2xl font-bold text-secondary mb-6">Login</h1>
                 <form className="space-y-5" onSubmit={handleSubmit}>
 
                     <div>
@@ -148,6 +182,19 @@ export default function Login() {
                     <span className="ml-1 text-primary cursor-pointer font-semibold hover:underline">Create an account</span>
                 </Link>
             </div>
+
+            {/* Modal */}
+            {isModalOpen && (
+                <div className="fixed inset-0 bg-modal-opacity flex items-center justify-center z-50">
+                    <div className={`bg-white p-6 rounded-lg shadow-2xl w-80 ${modalClass}`}>
+                        <h3 className="font-bold text-lg">{modalTitle}</h3>
+                        <p className="py-4">{modalMessage}</p>
+                        <div className="text-right">
+                            <button onClick={closeModal} className="bg-secondary text-white py-2 px-4 rounded-lg">Close</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
