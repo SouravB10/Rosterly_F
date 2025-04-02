@@ -72,13 +72,13 @@ const People = () => {
 
                     <MenuItems
                         transition
-                        className="absolute left-0 z-10 mt-2 w-56 origin-top-left rounded-md bg-white ring-1 shadow-lg ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                        className="absolute left-0 z-10 mt-2 w-56 origin-top-left rounded-md bg-violet-100 ring-1 shadow-lg ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
                     >
                         <div className="py-1">
                             <MenuItem>
                                 <a
                                     href="#"
-                                    className=" flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:text-gray-900 data-focus:outline-hidden"
+                                    className=" flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-violet-300 data-focus:text-gray-900 data-focus:outline-hidden"
                                 >
                                     All
                                 </a>
@@ -86,7 +86,7 @@ const People = () => {
                             <MenuItem>
                                 <a
                                     href="#"
-                                    className=" flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:text-gray-900 data-focus:outline-hidden"
+                                    className=" flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-violet-300 data-focus:text-gray-900 data-focus:outline-hidden"
                                 >
                                     Active
                                 </a>
@@ -94,7 +94,7 @@ const People = () => {
                             <MenuItem>
                                 <a
                                     href="#"
-                                    className="flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:text-gray-900 data-focus:outline-hidden"
+                                    className="flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-violet-300 data-focus:text-gray-900 data-focus:outline-hidden"
                                 >
                                     Inactive
                                 </a>
@@ -114,13 +114,13 @@ const People = () => {
 
                     <MenuItems
                         transition
-                        className="absolute left-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white ring-1 shadow-lg ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                        className="absolute  left-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-violet-100 ring-1 shadow-lg ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
                     >
                         <div className="py-1">
-                            <MenuItem>
+                            <MenuItem className=''>
                                 <a
                                     href="#"
-                                    className=" flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:text-gray-900 data-focus:outline-hidden"
+                                    className=" flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-violet-300 data-focus:text-gray-900 data-focus:outline-hidden"
                                 >
                                     Office
                                 </a>
@@ -128,7 +128,7 @@ const People = () => {
                             <MenuItem>
                                 <a
                                     href="#"
-                                    className=" flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:text-gray-900 data-focus:outline-hidden"
+                                    className=" flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-violet-300 data-focus:text-gray-900 data-focus:outline-hidden"
                                 >
                                     Main Branch
                                 </a>
@@ -151,12 +151,12 @@ const People = () => {
                             <th className='border border-gray-300 p-2'>Status</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    {/* <tbody>
                         <td className='border border-gray-300 p-2'>Sourav</td>
                         <td className='border border-gray-300 p-2'>sourav.gmail.com</td>
                         <td className='border border-gray-300 p-2'>354745765765</td>
                         <td className='border border-gray-300 p-2'>Off</td>
-                    </tbody>
+                    </tbody> */}
                 </table>
             </div>
             <div>
