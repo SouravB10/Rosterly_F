@@ -52,10 +52,12 @@ body {
   border-radius: 8px;
   cursor: pointer;
 }
-.bg{
+
+.bg {
   background-color: #e3e3e3;
 }
-.bagActive{
+
+.bagActive {
   background-color: #7d20f7;
 }
 
@@ -68,4 +70,8 @@ body {
 
 .w-48 {
   width: 48%;
+}
+
+.bg-modal-opacity {
+  background-color: #00000052;
 }
