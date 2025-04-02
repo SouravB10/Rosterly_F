@@ -29,9 +29,10 @@ const NavBar = ({ toggleSidebar }) => {
   };
 
   return (
-    <Disclosure as="nav" className="bg-gradient-to-r from-violet-600 to-violet-900">
+  
+    <Disclosure as="nav" className="bg-violet-600 backdrop-blur-lg mt-3 mx-3 mb-1 rounded-2xl shadow-nav">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="relative flex h-18 items-center justify-end">
+        <div className="relative flex h-14 items-center justify-end">
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <button
               type="button"
@@ -94,6 +95,8 @@ const NavBar = ({ toggleSidebar }) => {
       </div>
 
     </Disclosure>
+   
+
   );
 };
 

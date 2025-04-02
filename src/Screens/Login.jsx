@@ -111,7 +111,8 @@ export default function Login() {
                 setIsModalOpen(true);
 
                 localStorage.setItem('token', data.token);
-                navigate('/dashboard');
+                console.log("Login successful:", data);
+                navigate('/myrosterly');
             } catch (error) {
                 const errorMessage = error.response?.data?.message || 'Email or password is incorrect.';
 

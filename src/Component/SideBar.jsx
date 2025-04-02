@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
 import { navItems } from '../assets/Data';
 import { TbCircleLetterRFilled } from "react-icons/tb";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
+import { TiThMenu } from "react-icons/ti";
+import { XMarkIcon } from "@heroicons/react/20/solid";
+import { MdCancelPresentation } from "react-icons/md";
+
 
 const Sidebar = () => {
     const [open, setOpen] = useState(window.innerWidth > 768);
@@ -12,7 +15,7 @@ const Sidebar = () => {
     const toggleMenu = (id) => {
         setActiveMenu(activeMenu === id ? null : id);
     };
- 
+
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth <= 768) {
@@ -27,11 +30,11 @@ const Sidebar = () => {
     return (
         <div className="flex items-start">
 
-            <div className={`h-[100vh] shadow-2xl text-violet-400 text-[18px] transition-all duration-300 bg-gradient-to-b from-violet-600 to-violet-900
+            <div className={`h-[96vh] inset-shadow-amber-600 transition-all duration-300 bg-violet-600 backdrop-blur-lg m-3 rounded-4xl
             ${open ? 'w-[250px]' : 'w-[80px]'}`}>
 
                 <div className="flex flex-col">
-                    <div className="flex items-center p-4 w-full justify-around">
+                    <div className={`flex items-center p-4 w-full ${open ? 'justify-between' : 'justify-center'}`}>
                         <div className="flex items-center gap-2">
                             <div className={`bg-gradient-to-b from-red-100 to-yellow-300 text-white rounded-lg p-[4px] transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
                                 <TbCircleLetterRFilled />
@@ -43,9 +46,12 @@ const Sidebar = () => {
 
                         <button
                             onClick={() => setOpen(!open)}
-                            className={`bg-white shadow-lg rounded-full p-2 text-violet-950 transition-all duration-300 flex ml-auto
-                        ${open ? 'transform rotate-180' : ''}`}>
-                            <FaArrowCircleRight />
+                            className=" p-2 text-xl text-white transition-all duration-300 flex"
+                        >
+                            {open ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="size-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                            </svg>
+                                : <TiThMenu />}
                         </button>
                     </div>
 
@@ -57,7 +63,7 @@ const Sidebar = () => {
                         <li key={item.id}>
                             {/* Main Menu Link */}
                             <Link to={item.path}
-                                className="flex items-center gap-2 p-3 rounded-lg transition-all duration-300 text-white hover:bg-violet-500 hover:shadow-md cursor-pointer"
+                                className="flex items-center gap-2 p-3 rounded-2xl transition-all duration-300 text-white hover:bg-violet-500 hover:shadow-md cursor-pointer"
                                 onClick={() => item.submenu ? toggleMenu(item.id) : null}>
                                 <div className="w-8 flex justify-center">
                                     <span className="text-2xl">{item.icon}</span>
