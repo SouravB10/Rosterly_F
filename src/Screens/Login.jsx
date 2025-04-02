@@ -161,7 +161,13 @@ export default function Login() {
                         </button>
                     </div> */}
                     <div>
-                        <button type="submit" className="cursor-pointer w-full py-3 mt-3 bg-secondary text-white rounded-lg font-semibold hover:bg-primary shadow flex items-center justify-center" disabled={loading}>
+                        <button
+                            type="submit"
+                            className={`w-full py-3 mt-3 bg-secondary text-white rounded-lg font-semibold shadow flex items-center justify-center
+                transition-transform duration-400 ease-in-out hover:scale-105 hover:bg-primary 
+                ${loading ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
+                            disabled={loading}
+                        >
                             {loading ? (
                                 <>
                                     <img src={loadingGif} alt="Loading..." className="h-5 w-5 mr-2" />
@@ -169,11 +175,14 @@ export default function Login() {
                                 </>
                             ) : 'Login'}
                         </button>
+
                     </div>
                 </form>
-                <Link to='/register' className="text-center mt-6 text-sm text-gray-600">Don’t have an account?
-                    <span className="ml-1 text-primary cursor-pointer font-semibold hover:underline">Create an account</span>
-                </Link>
+                <div className='mt-2 text-center'>
+                    <Link to='/register' className="text-center text-sm text-gray-600">Don’t have an account?
+                        <span className="ml-1 text-primary cursor-pointer font-semibold hover:underline">Create an account</span>
+                    </Link>
+                </div>
             </div>
 
             {isModalOpen && (
