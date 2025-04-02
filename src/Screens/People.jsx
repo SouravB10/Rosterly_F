@@ -88,7 +88,7 @@ const People = () => {
                                     href="#"
                                     className=" flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:text-gray-900 data-focus:outline-hidden"
                                 >
-                                   Active
+                                    Active
                                 </a>
                             </MenuItem>
                             <MenuItem>
@@ -96,7 +96,7 @@ const People = () => {
                                     href="#"
                                     className="flex justify-start px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:text-gray-900 data-focus:outline-hidden"
                                 >
-                                   Inactive
+                                    Inactive
                                 </a>
                             </MenuItem>
 
@@ -137,6 +137,7 @@ const People = () => {
                         </div>
                     </MenuItems>
                 </Menu>
+
             </div>
 
             <div className='overflow-x-auto mt-4'>
@@ -157,6 +158,15 @@ const People = () => {
                         <td className='border border-gray-300 p-2'>Off</td>
                     </tbody>
                 </table>
+            </div>
+            <div>
+                <details className="dropdown bg-violet-800 w-1/6 text-white p-1 rounded-md shadow-md">
+                    <summary className="btn m-1">open or close</summary>
+                    <ul className="menu dropdown-content bg-violet-700 rounded-md cursor-pointer z-1 w-full p-2 shadow-sm">
+                        <li><a href='item1'>Item 1</a></li>
+                        <li><a>Item 2</a></li>
+                    </ul>
+                </details>
             </div>
         </div>
     )
