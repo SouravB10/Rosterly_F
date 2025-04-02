@@ -106,7 +106,7 @@ const People = () => {
 
                 <Menu as="div" className="relative inline-block text-right">
                     <div>
-                        <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md px-4 py-2 text-sm font-semibold text-gray-700 ring-1 shadow-xs ring-violet-700 ring-inset hover:bg-violet-100 transition">
+                        <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md px-4 py-2 text-sm font-semibold text-gray-700 ring-1 shadow-xs ring-violet-800 ring-inset hover:bg-violet-100 transition">
                             Location
                             <ChevronDownIcon aria-hidden="true" className="-mr-1 size-5 text-gray-400" />
                         </MenuButton>
