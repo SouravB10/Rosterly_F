@@ -28,13 +28,13 @@ const Sidebar = () => {
     return (
         <div className="flex items-start">
 
-            <div className={`h-[96vh] inset-shadow-amber-600 transition-all duration-300 bg-primary-300 backdrop-blur-lg m-3 rounded-2xl
+            <div className={`h-[96vh] inset-shadow-amber-600 transition-all duration-300 bg-indigo-950 backdrop-blur-lg m-3 rounded-2xl
             ${open ? 'w-[250px]' : 'w-[80px]'}`}>
 
                 <div className="flex flex-col">
                     <div className={`flex items-center p-4 w-full ${open ? 'justify-between' : 'justify-center'}`}>
                         <div className="flex items-center gap-2">
-                            <div className={`bg-gradient-to-b from-red-100 to-yellow-300 text-white rounded-lg p-[4px] transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
+                            <div className={`bg-gradient-to-b from-red-100 to-yellow-300 text-black rounded-lg p-[4px] transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
                                 <TbCircleLetterRFilled />
                             </div>
                             <p className={`text-white text-[22px] font-semibold transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
@@ -63,8 +63,8 @@ const Sidebar = () => {
                         return (
                             <li key={item.id}>                            
                                 <Link to={item.path}
-                                    className={`flex items-center gap-2 p-3 rounded-2xl transition-all duration-300 text-white hover:bg-violet-500 hover:shadow-md cursor-pointer
-                                        ${isActive ? "bg-primary-100 shadow-md" : ""}`}
+                                    className={`flex items-center gap-2 p-3 rounded-2xl transition-all duration-300 text-white hover:bg-indigo-400 hover:shadow-md cursor-pointer
+                                        ${isActive ? "bg-indigo-500 shadow-md" : ""}`}
                                     onClick={() => item.submenu ? toggleMenu(item.id) : null}>
                                     <div className="w-8 flex justify-center">
                                         <span className="text-2xl">{item.icon}</span>
