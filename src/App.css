@@ -1,14 +1,97 @@
 @import "tailwindcss";
 
+
+
+/* font-size-start----------- */
+
+.font14 {
+  font-size: 0.875rem;
+}
+
+.font16 {
+  font-size: 1rem;
+}
+
+.font18 {
+  font-size: 1.125rem;
+}
+
+.font20 {
+  font-size: 1.25rem;
+}
+
+.font22 {
+  font-size: 1.375rem;
+}
+
+.font24 {
+  font-size: 1.5rem;
+}
+
+.font30 {
+  font-size: 1.875rem;
+}
+
+/* font-size-end------------- */
+
+
+/* font-weight-start---------- */
+
+.font-weight-100 {
+  font-weight: 100;
+  /* Thin */
+}
+
+.font-weight-200 {
+  font-weight: 200;
+  /* Extra Light */
+}
+
+.font-weight-300 {
+  font-weight: 300;
+  /* Light */
+}
+
+.font-weight-400 {
+  font-weight: 400;
+  /* Normal (Regular) */
+}
+
+.font-weight-500 {
+  font-weight: 500;
+  /* Medium */
+}
+
+.font-weight-600 {
+  font-weight: 600;
+  /* Semi Bold */
+}
+
+.font-weight-700 {
+  font-weight: 700;
+  /* Bold */
+}
+
+.font-weight-800 {
+  font-weight: 800;
+  /* Extra Bold */
+}
+
+.font-weight-900 {
+  font-weight: 900;
+  /* Black */
+}
+
+/* font-weight-end------------ */
+
+
+/* bg-colors-start----------- */
 body {
   background-color: #ffffff;
 }
 
-
-/* bg-colors-start----------- */
-
 .bg-white-100 {
-  background-color: #ffff;
+  background-color: #ffffff;
 }
 
 .bg-white-200 {
@@ -40,7 +123,7 @@ body {
 }
 
 .bg-black-300 {
-  background-color: #0000;
+  background-color: #000000;
 }
 
 /* bg-colors-end-------------*/
@@ -169,5 +252,3 @@ body {
 .bg-modal-opacity {
   background-color: #00000052;
 }
-
-
