@@ -58,13 +58,13 @@ const NavBar = ({ toggleSidebar }) => {
               </div>
               <MenuItems
                 transition
-                className="absolute right-0 z-10 mt-2 w-49 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
+                className="absolute right-0 z-10 mt-2 w-49 origin-top-right rounded-md bg-violet-100 py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
               >
 
                 <MenuItem>
                   <a
                     href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:outline-hidden"
+                    className="block px-4 py-2 text-sm text-black data-focus:bg-violet-300 data-focus:outline-hidden"
                   >
                     Your Profile
                   </a>
@@ -72,7 +72,7 @@ const NavBar = ({ toggleSidebar }) => {
                 <MenuItem>
                   <a
                     href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:outline-hidden"
+                    className="block px-4 py-2 text-sm text-black data-focus:bg-violet-300 data-focus:outline-hidden"
                   >
                     Settings
                   </a>
@@ -81,7 +81,7 @@ const NavBar = ({ toggleSidebar }) => {
                   {({ active }) => (
                     <button
                       onClick={handleLogout}
-                      className={`block w-full px-4 py-2 text-left text-sm text-gray-700 ${active ? 'bg-gray-300' : ''
+                      className={`block w-full px-4 py-2 text-left text-sm text-black ${active ? 'bg-violet-300' : ''
                         }`}
                     >
                       Sign out
