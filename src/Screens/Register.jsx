@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import '../App.css';
 import { Link } from 'react-router-dom';
 import loadingGif from '../assets/Loading/Loading-circle.gif';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+
 
 export default function Register() {
     const [firstName, setFirstName] = useState('');
@@ -14,7 +16,15 @@ export default function Register() {
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+        const togglePasswordVisibility = () => {
+            setShowPassword(!showPassword);
+        };
+        const toggleConfirmPasswordVisibility = () => {
+            setShowConfirmPassword(!showConfirmPassword);
+        };
     const handleChange = (field, value) => {
         switch (field) {
             case 'firstName': setFirstName(value); break;
@@ -101,16 +111,16 @@ export default function Register() {
                         </div>
                     </div>
                     <div className='flex justify-between'>
-                        <div className='w-48'>
-                            <label className="text-secondary font-semibold mb-1 block">Company Name</label>
+                    <div className='w-48'>
+                            <label className="text-secondary font-semibold mb-1 block">Email Address</label>
                             <input
-                                type="text"
-                                value={company}
-                                onChange={(e) => handleChange('company', e.target.value)}
-                                className={`custom-focus w-full px-4 py-3 border ${errors.company ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                placeholder="Enter your company name"
+                                type="email"
+                                value={email}
+                                onChange={(e) => handleChange('email', e.target.value)}
+                                className={`custom-focus w-full px-4 py-3 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                placeholder="Enter your email"
                             />
-                            {errors.company && <p className="text-red-500 text-sm mt-1">{errors.company}</p>}
+                            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                         </div>
 
                         <div className='w-48'>
@@ -125,43 +135,56 @@ export default function Register() {
                             {errors.mobile && <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>}
                         </div>
                     </div>
-                    <div className='flex justify-between'>
-                        <div className='w-48'>
-                            <label className="text-secondary font-semibold mb-1 block">Email Address</label>
+                    <div className='flex justify-between '>
+                        <div className='w-48 relative'>
+                                <label className="text-secondary font-semibold mb-1 block">Password</label>
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    value={password}
+                                    onChange={(e) => handleChange('password', e.target.value)}
+                                    className={`custom-focus w-full px-4 py-3 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                    placeholder="Enter your password"
+                                />
+                                <span
+                                    onClick={togglePasswordVisibility}
+                                    className="absolute right-4 top-2/3 transform -translate-y-1/2 cursor-pointer text-gray-600"
+                                >
+                                    {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                                </span>
+                                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                            </div>
+
+                        <div className='w-48 relative'>
+                            <label className="text-secondary font-semibold mb-1 block">Confirm Password</label>
                             <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => handleChange('email', e.target.value)}
-                                className={`custom-focus w-full px-4 py-3 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                placeholder="Enter your email"
+                                type={showConfirmPassword ? "text" : "password"}
+                                value={confirmPassword}
+                                onChange={(e) => handleChange('confirmPassword', e.target.value)}
+                                className={`custom-focus w-full px-4 py-3 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                placeholder="Confirm your password"
                             />
-                            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-                        </div>
-                        <div className='w-48'>
-                            <label className="text-secondary font-semibold mb-1 block">Password</label>
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => handleChange('password', e.target.value)}
-                                className={`custom-focus w-full px-4 py-3 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                placeholder="Enter your password"
-                            />
-                            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                            <span
+                                onClick={toggleConfirmPasswordVisibility}
+                                className="absolute right-4 top-2/3 transform -translate-y-1/2 cursor-pointer text-gray-600"
+                            >
+                                {showConfirmPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                            </span>
+                            {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
                         </div>
                     </div>
 
 
                     <div className='flex justify-between'>
                         <div className='w-48'>
-                            <label className="text-secondary font-semibold mb-1 block">Confirm Password</label>
+                            <label className="text-secondary font-semibold mb-1 block">Company Name</label>
                             <input
-                                type="password"
-                                value={confirmPassword}
-                                onChange={(e) => handleChange('confirmPassword', e.target.value)}
-                                className={`custom-focus w-full px-4 py-3 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                placeholder="Confirm your password"
+                                type="text"
+                                value={company}
+                                onChange={(e) => handleChange('company', e.target.value)}
+                                className={`custom-focus w-full px-4 py-3 border ${errors.company ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                placeholder="Enter your company name"
                             />
-                            {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
+                            {errors.company && <p className="text-red-500 text-sm mt-1">{errors.company}</p>}
                         </div>
                         {/* <div className='w-48'>
                             <button type="submit" className="cursor-pointer w-full py-3 mt-7 bg-secondary text-white rounded-lg font-semibold hover:bg-primary shadow">Get Started</button>
