@@ -12,6 +12,8 @@ import Dashboard from './Screens/Dashboard';
 import Register from './Screens/Register';
 import People from './Screens/People';
 import Location from './Screens/Location';
+import SystemSettings from './Screens/RosterSettings/SystemSettings';
+import PayRate from './Screens/RosterSettings/PayRate';
 
 
 function AppWrapper() {
@@ -45,7 +47,8 @@ function AppWrapper() {
               <Route path='/unavailability' element={<Unavailability />} />
               <Route path='/people' element={<People />} />
               <Route path='/location' element={<Location />} />
-
+              <Route path='/systemsettings' element={<SystemSettings />} />
+              <Route path='/payrate' element={<PayRate />} />
             </Routes>
           </div>
         </div>
