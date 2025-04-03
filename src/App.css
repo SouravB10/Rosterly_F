@@ -1,6 +1,19 @@
 @import "tailwindcss";
 
+/* defaultt start */
 
+body {
+  background-color: #ffffff;
+  font-weight: 400;
+  font-size: 1rem;  /*regular*/
+  line-height: 1.5rem;
+  color: #000000;
+  font-family: 'montserrat', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* defaultt end */
 
 /* font-size-start----------- */
 
@@ -10,6 +23,7 @@
 
 .font16 {
   font-size: 1rem;
+  /*regular*/
 }
 
 .font18 {
@@ -86,9 +100,6 @@
 
 
 /* bg-colors-start----------- */
-body {
-  background-color: #ffffff;
-}
 
 .bg-white-100 {
   background-color: #ffffff;

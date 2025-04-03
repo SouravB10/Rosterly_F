@@ -28,7 +28,7 @@ const Sidebar = () => {
     return (
         <div className="flex items-start">
 
-            <div className={`h-[96vh] inset-shadow-amber-600 transition-all duration-300 bg-primary-300 backdrop-blur-lg m-3 rounded-4xl
+            <div className={`h-[96vh] inset-shadow-amber-600 transition-all duration-300 bg-primary-300 backdrop-blur-lg m-3 rounded-2xl
             ${open ? 'w-[250px]' : 'w-[80px]'}`}>
 
                 <div className="flex flex-col">
@@ -93,7 +93,7 @@ const Sidebar = () => {
                                                     <Link
                                                         to={sub.path}
                                                         className={`flex items-center gap-2 my-1 px-3 py-2 rounded-lg text-white transition-all duration-300 
-                                                            ${isSubActive ? "bg-violet-950 shadow-md" : "bg-violet-900 hover:bg-violet-500"}`}
+                                                            ${isSubActive ? "bg-violet-950 rounded-lg shadow-md" : "bg-violet-800 hover:bg-violet-500"}`}
                                                     >
                                                         <span className="text-lg">{sub.icon}</span>
                                                         <span className="text-sm font-light">{sub.title}</span>
