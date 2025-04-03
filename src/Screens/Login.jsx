@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../App.css';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import loadingGif from '../assets/Loading/Loading-circle.gif';
 
 export default function Login() {
     const [isLogin, setIsLogin] = useState(true);
@@ -14,7 +15,33 @@ export default function Login() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [errors, setErrors] = useState({});
+    const [modalMessage, setModalMessage] = useState('');
+    const [modalTitle, setModalTitle] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalClass, setModalClass] = useState('transform translate-y-10 opacity-0');
+    const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate();
+
+    const openModal = () => {
+        setModalClass('transform translate-y-15 opacity-0');
+        setIsModalOpen(true);
+
+        setTimeout(() => {
+            setModalClass('transform translate-y-0 opacity-100 transition-all duration-500 ease-out');
+        }, 10);
+    };
+
+    const closeModal = () => {
+        setModalClass('transform translate-y-10 opacity-0');
+        setIsModalOpen(false);
+    };
+
+    useEffect(() => {
+        if (isModalOpen) {
+            openModal();
+        }
+    }, [isModalOpen]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -74,43 +101,35 @@ export default function Login() {
             setErrors(validationErrors);
         } else {
             setErrors({});
+            setLoading(true);
             try {
                 const response = await axios.post('http://127.0.0.1:8000/api/admin/login', { email, password });
                 const data = response.data;
 
-                alert('Login successful!');
+                setModalTitle('Success');
+                setModalMessage('Login successful!');
+                setIsModalOpen(true);
+
                 localStorage.setItem('token', data.token);
-                navigate('/dashboard');
+                console.log("Login successful:", data);
+                navigate('/myrosterly');
             } catch (error) {
-                const errorMessage = error.response?.data?.message || 'Login failed!';
-                alert(errorMessage);
+                const errorMessage = error.response?.data?.message || 'Email or password is incorrect.';
+
+                setModalTitle('Error');
+                setModalMessage(errorMessage);
+                setIsModalOpen(true);
+            } finally {
+                setLoading(false);
             }
         }
     };
 
-    const handleLogout = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            await axios.post('http://127.0.0.1:8000/api/admin/logout', {}, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            localStorage.removeItem('token');
-            alert('Logged out successfully!');
-            navigate('/');
-        } catch (error) {
-            alert('Logout failed!');
-            console.error('Logout error:', error);
-        }
-    };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-secondary px-4">
             <div className={`bg-white p-8 rounded-2xl shadow-lg w-full ${isLogin ? 'max-w-md' : 'max-w-2xl'}`}>
-                <h1 className="text-center text-2xl font-bold text-secondary mb-6">
-                    Login
-                </h1>
+                <h1 className="text-center text-2xl font-bold text-secondary mb-6">Login</h1>
                 <form className="space-y-5" onSubmit={handleSubmit}>
 
                     <div>
@@ -137,17 +156,47 @@ export default function Login() {
                         {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                     </div>
 
-                    <div>
+                    {/* <div>
                         <button type="submit" className="cursor-pointer w-full py-3 mt-3 bg-secondary text-white rounded-lg font-semibold hover:bg-primary shadow">
                             Login
                         </button>
+                    </div> */}
+                    <div>
+                        <button
+                            type="submit"
+                            className={`w-full py-3 mt-3 bg-secondary text-white rounded-lg font-semibold shadow flex items-center justify-center
+                transition-transform duration-400 ease-in-out hover:scale-105 hover:bg-primary 
+                ${loading ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <>
+                                    <img src={loadingGif} alt="Loading..." className="h-5 w-5 mr-2" />
+                                    Logging in...
+                                </>
+                            ) : 'Login'}
+                        </button>
+
                     </div>
                 </form>
-                <button onClick={handleLogout} className="text-center mt-4 text-sm text-gray-600 hover:underline">Logout</button>
-                <Link to='/register' className="text-center mt-6 text-sm text-gray-600">Don’t have an account?
-                    <span className="ml-1 text-primary cursor-pointer font-semibold hover:underline">Create an account</span>
-                </Link>
+                <div className='mt-2 text-center'>
+                    <Link to='/register' className="text-center text-sm text-gray-600">Don’t have an account?
+                        <span className="ml-1 text-primary cursor-pointer font-semibold hover:underline">Create an account</span>
+                    </Link>
+                </div>
             </div>
+
+            {isModalOpen && (
+                <div className="fixed inset-0 bg-modal-opacity flex items-center justify-center z-50">
+                    <div className={`bg-white p-6 rounded-lg shadow-2xl w-80 ${modalClass}`}>
+                        <h3 className="font-bold text-lg text-center">{modalTitle}</h3>
+                        <p className="py-4 text-center">{modalMessage}</p>
+                        <div className="text-center">
+                            <button onClick={closeModal} className="bg-secondary text-white py-2 px-4 rounded-lg">Close</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

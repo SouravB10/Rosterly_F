@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../App.css';
 import { Link } from 'react-router-dom';
+import loadingGif from '../assets/Loading/Loading-circle.gif';
 
 export default function Register() {
     const [firstName, setFirstName] = useState('');
@@ -12,6 +13,7 @@ export default function Register() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (field, value) => {
         switch (field) {
@@ -161,12 +163,28 @@ export default function Register() {
                             />
                             {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
                         </div>
-                        <div className='w-48'>
+                        {/* <div className='w-48'>
                             <button type="submit" className="cursor-pointer w-full py-3 mt-7 bg-secondary text-white rounded-lg font-semibold hover:bg-primary shadow">Get Started</button>
+                            </div> */}
+                        <div className='w-48'>
+                            <button
+                                type="submit"
+                                className={`cursor-pointer w-full py-3 mt-7 bg-secondary text-white rounded-lg font-semibold hover:bg-primary shadow items-center justify-center
+                                transition-transform duration-400 ease-in-out hover:scale-105 hover:bg-primary 
+                                ${loading ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <>
+                                        <img src={loadingGif} alt="Loading..." className="h-5 w-5 mr-2" />
+                                        Get Started
+                                    </>
+                                ) : 'Get Started'}
+                            </button>
                         </div>
                     </div>
                 </form>
-                <p className="text-center mt-6 text-sm text-gray-600">
+                <p className="text-center mt-2 text-sm text-gray-600">
                     "Already have an account?"
                     <Link
                         to='/'

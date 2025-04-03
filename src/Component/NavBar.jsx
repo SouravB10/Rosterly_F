@@ -6,11 +6,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
-
 const NavBar = ({ toggleSidebar }) => {
 
   const navigate = useNavigate();
@@ -25,6 +20,7 @@ const NavBar = ({ toggleSidebar }) => {
       });
       localStorage.removeItem('token');
       alert('Logged out successfully!');
+      console.log("Token:", token);
       navigate('/');
     } catch (error) {
       alert('Logout failed!');
@@ -33,9 +29,10 @@ const NavBar = ({ toggleSidebar }) => {
   };
 
   return (
-    <Disclosure as="nav" className="bg-gradient-to-r from-violet-600 to-violet-900">
+  
+    <Disclosure as="nav" className="bg-violet-600 backdrop-blur-lg mt-3 mx-3 mb-1 rounded-2xl shadow-nav">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="relative flex h-18 items-center justify-end">
+        <div className="relative flex h-14 items-center justify-end">
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <button
               type="button"
@@ -61,13 +58,13 @@ const NavBar = ({ toggleSidebar }) => {
               </div>
               <MenuItems
                 transition
-                className="absolute right-0 z-10 mt-2 w-49 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
+                className="absolute right-0 z-10 mt-2 w-49 origin-top-right rounded-md bg-violet-100 py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
               >
 
                 <MenuItem>
                   <a
                     href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:outline-hidden"
+                    className="block px-4 py-2 text-sm text-black data-focus:bg-violet-300 data-focus:outline-hidden"
                   >
                     Your Profile
                   </a>
@@ -75,18 +72,21 @@ const NavBar = ({ toggleSidebar }) => {
                 <MenuItem>
                   <a
                     href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:outline-hidden"
+                    className="block px-4 py-2 text-sm text-black data-focus:bg-violet-300 data-focus:outline-hidden"
                   >
                     Settings
                   </a>
                 </MenuItem>
-                <MenuItem  onClick={handleLogout}>
-                  <a
-                   
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-300 data-focus:outline-hidden"
-                  >
-                    Sign out
-                  </a>
+                <MenuItem>
+                  {({ active }) => (
+                    <button
+                      onClick={handleLogout}
+                      className={`block w-full px-4 py-2 text-left text-sm text-black ${active ? 'bg-violet-300' : ''
+                        }`}
+                    >
+                      Sign out
+                    </button>
+                  )}
                 </MenuItem>
               </MenuItems>
             </Menu>
@@ -94,25 +94,9 @@ const NavBar = ({ toggleSidebar }) => {
         </div>
       </div>
 
-      {/* <DisclosurePanel className="sm:hidden">
-        <div className="space-y-1 px-2 pt-2 pb-3">
-         
-            <DisclosureButton
-              key={item.name}
-              as="a"
-              href={item.href}
-              aria-current={item.current ? 'page' : undefined}
-              className={classNames(
-                item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                'block rounded-md px-3 py-2 text-base font-medium',
-              )}
-            >
-              {item.name}
-            </DisclosureButton>
-          
-        </div>
-      </DisclosurePanel> */}
     </Disclosure>
+   
+
   );
 };
 
