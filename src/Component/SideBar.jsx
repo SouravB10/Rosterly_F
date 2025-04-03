@@ -28,7 +28,7 @@ const Sidebar = () => {
     return (
         <div className="flex items-start">
 
-            <div className={`h-[96vh] inset-shadow-amber-600 transition-all duration-300 bg-violet-900 backdrop-blur-lg m-3 rounded-4xl
+            <div className={`h-[96vh] inset-shadow-amber-600 transition-all duration-300 bg-primary-300 backdrop-blur-lg m-3 rounded-4xl
             ${open ? 'w-[250px]' : 'w-[80px]'}`}>
 
                 <div className="flex flex-col">
@@ -64,7 +64,7 @@ const Sidebar = () => {
                             <li key={item.id}>                            
                                 <Link to={item.path}
                                     className={`flex items-center gap-2 p-3 rounded-2xl transition-all duration-300 text-white hover:bg-violet-500 hover:shadow-md cursor-pointer
-                                        ${isActive ? "bg-violet-700 shadow-md" : ""}`}
+                                        ${isActive ? "bg-primary-100 shadow-md" : ""}`}
                                     onClick={() => item.submenu ? toggleMenu(item.id) : null}>
                                     <div className="w-8 flex justify-center">
                                         <span className="text-2xl">{item.icon}</span>
@@ -82,7 +82,7 @@ const Sidebar = () => {
                                 {/* Submenu */}
                                 {item.submenu && (
                                     <ul
-                                        className={`overflow-hidden rounded-lg p-1 w-[200px] transition-all duration-300 
+                                        className={`overflow-hidden rounded-lg p-1 w-[300px] transition-all duration-300 
                                             ${activeMenu === item.id ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"} 
                                             ${open ? "w-full" : "absolute left-[80px] top-50% bg-violet-900 rounded-lg shadow-lg p-2 w-[200px] sm:w-auto"}`}
                                     >
@@ -93,7 +93,7 @@ const Sidebar = () => {
                                                     <Link
                                                         to={sub.path}
                                                         className={`flex items-center gap-2 my-1 px-3 py-2 rounded-lg text-white transition-all duration-300 
-                                                            ${isSubActive ? "bg-violet-700 shadow-md" : "bg-violet-500 hover:bg-violet-900"}`}
+                                                            ${isSubActive ? "bg-violet-950 shadow-md" : "bg-violet-900 hover:bg-violet-500"}`}
                                                     >
                                                         <span className="text-lg">{sub.icon}</span>
                                                         <span className="text-sm font-light">{sub.title}</span>
