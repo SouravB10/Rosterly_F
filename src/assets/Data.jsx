@@ -6,6 +6,10 @@ import { TbCircleLetterRFilled } from "react-icons/tb";
 import { PiArticleNyTimesFill } from "react-icons/pi";
 import { RiNotificationLine } from "react-icons/ri";
 import { RiNotificationOffLine } from "react-icons/ri";
+import { IoSettings } from "react-icons/io5";
+import { MdDisplaySettings } from "react-icons/md";
+import { TbSettingsDollar } from "react-icons/tb";
+
 
 export const navItems = [
     {
@@ -47,5 +51,15 @@ export const navItems = [
         title: 'Timesheet',
         path:'/timesheet',
         icon: <PiArticleNyTimesFill className="text-xl text-white"/>
+    },
+    {
+        id: 7,
+        title: 'Settings',
+        icon: <IoSettings className="text-xl text-white"/>,
+        // path:'/settings',
+        submenu: [
+            { id: 1, title: 'System Settings', path: '/systemsettings', icon: <MdDisplaySettings className="text-xl text-white"/> },
+            { id: 2, title: 'Pay Rate Setup', path: '/payrate', icon: <TbSettingsDollar className="text-xl text-white"/> }
+        ]
     },
 ]
