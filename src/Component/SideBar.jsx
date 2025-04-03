@@ -30,7 +30,7 @@ const Sidebar = () => {
     return (
         <div className="flex items-start">
 
-            <div className={`h-[96vh] inset-shadow-amber-600 transition-all duration-300 bg-violet-600 backdrop-blur-lg m-3 rounded-4xl
+            <div className={`h-[96vh] inset-shadow-amber-600 transition-all duration-300 bg-gradient-to-b from-violet-600 to-violet-900 backdrop-blur-lg m-3 rounded-4xl
             ${open ? 'w-[250px]' : 'w-[80px]'}`}>
 
                 <div className="flex flex-col">
