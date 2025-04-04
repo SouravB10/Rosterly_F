@@ -1,6 +1,23 @@
 @import "tailwindcss";
 
+/* defaultt start */
 
+*{
+  font-family: "Montserrat", sans-serif;
+}
+
+body {
+  background-color: #ffffff;
+  font-weight: 400;
+  font-size: 1rem;  /*regular*/
+  line-height: 1.5rem;
+  color: #000000;
+  font-family: 'montserrat', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* defaultt end */
 
 /* font-size-start----------- */
 
@@ -10,6 +27,7 @@
 
 .font16 {
   font-size: 1rem;
+  /*regular*/
 }
 
 .font18 {
@@ -86,9 +104,6 @@
 
 
 /* bg-colors-start----------- */
-body {
-  background-color: #ffffff;
-}
 
 .bg-white-100 {
   background-color: #ffffff;
@@ -251,4 +266,149 @@ body {
 
 .bg-modal-opacity {
   background-color: #00000052;
+}
+
+:root {
+  --font-main-heading: 35px;
+  --font-heading: 28px;
+  --font-subheading: 22px;
+  --font-paragraph: 12px;
+  --font-button: 14px;
+  --font-link: 13px;
+  --font-label: 14px;
+  --font-input: 16px;
+  --font-modal: 18px;
+  --font-alert: 16px;
+
+  /* Button Colors */
+  --color-add: #28a745; /* Green */
+  --color-update: #ffc107; /* Yellow */
+  --color-delete: #dc3545; /* Red */
+  --color-reset: #6c757d; /* Gray */
+
+  /* Hover Colors */
+  --hover-add: #218838;
+  --hover-update: #e0a800;
+  --hover-delete: #c82333;
+  --hover-reset: #5a6268;
+
+  /* Button Styles */
+  --button-padding: 10px 20px;
+  --button-radius: 6px;
+  --button-font-weight: 600;
+  --button-transition: all 0.3s ease-in-out;
+}
+
+/* Main Heading */
+.main-heading {
+  font-size: var(--font-main-heading);
+  font-weight: bold;
+}
+
+/* Headings */
+.heading {
+  font-size: var(--font-heading);
+  font-weight: 600;
+}
+
+/* Subheadings */
+.subheading {
+  font-size: var(--font-subheading);
+  font-weight: 500;
+}
+
+/* Paragraph */
+p {
+  font-size: var(--font-paragraph);
+  font-weight: 400;
+  line-height: 1.6;
+  font-family: "Inter", sans-serif;
+}
+
+/* Buttons */
+button {
+  font-size: var(--font-button);
+  font-weight: 400;
+  border-radius: 50px;
+  padding: 10px 20px;
+  /* text-transform: uppercase; */
+}
+
+
+/* Links */
+a {
+  font-size: var(--font-link);
+  font-weight: 500;
+  text-decoration: none;
+  /* color: #007bff; */
+}
+
+/* Labels */
+label {
+  font-size: var(--font-label);
+  font-weight: 500;
+}
+
+/* Input Fields */
+input, textarea {
+  font-size: var(--font-input);
+  font-weight: 400;
+}
+
+/* Modals */
+.modal-content {
+  font-size: var(--font-modal);
+}
+
+/* Alerts */
+.alert {
+  font-size: var(--font-alert);
+  font-weight: 500;
+}
+
+/* Add Button */
+.addBtn {
+  background-color: var(--color-add);
+}
+
+.addBtn:hover {
+  background-color: var(--hover-add);
+  transform: scale(1.05);
+}
+
+/* Update Button */
+.updateBtn {
+  background-color: var(--color-update);
+}
+
+.updateBtn:hover {
+  background-color: var(--hover-update);
+  transform: scale(1.05);
+}
+
+/* Delete Button */
+.deleteBtn {
+  background-color: var(--color-delete);
+}
+
+.deleteBtn:hover {
+  background-color: var(--hover-delete);
+  transform: scale(1.05);
+}
+
+/* Reset Button */
+.resetBtn {
+  background-color: var(--color-reset);
+}
+
+.resetBtn:hover {
+  background-color: var(--hover-reset);
+  transform: scale(1.05);
+}
+
+/* Disabled Button */
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
 }

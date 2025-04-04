@@ -114,11 +114,14 @@
                     const response = await axios.post('http://127.0.0.1:8000/api/admin/login', { email, password });
                     const data = response.data;
 
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('firstName', data.admin.firstName);
+                    localStorage.setItem('lastName', data.admin.lastName);        
+
                     setModalTitle('Success');
                     setModalMessage('Login successful!');
                     setIsModalOpen(true);
-
-                    localStorage.setItem('token', data.token);
+                   
                     console.log("Login successful:", data);
                     navigate('/myrosterly');
                 } catch (error) {

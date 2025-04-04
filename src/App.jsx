@@ -14,6 +14,7 @@ import People from './Screens/People';
 import Location from './Screens/Location';
 import SystemSettings from './Screens/RosterSettings/SystemSettings';
 import PayRate from './Screens/RosterSettings/PayRate';
+import Utilities from './Screens/Utilities';
 
 
 function AppWrapper() {
@@ -38,7 +39,7 @@ function AppWrapper() {
         )}
         <div className='flex-1 flex flex-col'>
           {!isLoginPage && !isRegisterPage && <NavBar toggleSidebar={toggleSidebar} />}
-          <div className={`flex-1 overflow-auto ${isLoginPage || isRegisterPage ? 'p-0' : 'p-6'}`}>
+          <div className={`flex-1 overflow-auto ${isLoginPage || isRegisterPage ? 'p-0' : 'p-4'}`}>
             <Routes>
               <Route path='/' element={<Login />} />
               <Route path='/register' element={<Register />} />
@@ -49,6 +50,7 @@ function AppWrapper() {
               <Route path='/location' element={<Location />} />
               <Route path='/systemsettings' element={<SystemSettings />} />
               <Route path='/payrate' element={<PayRate />} />
+              <Route path='/utilities' element={<Utilities/>}/>
             </Routes>
           </div>
         </div>

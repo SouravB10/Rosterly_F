@@ -28,13 +28,13 @@ const Sidebar = () => {
     return (
         <div className="flex items-start">
 
-            <div className={`h-[96vh] inset-shadow-amber-600 transition-all duration-300 bg-primary-300 backdrop-blur-lg m-3 rounded-4xl
+            <div className={`h-[96vh] inset-shadow-amber-600 transition-all duration-300 bg-indigo-950 backdrop-blur-lg m-3 rounded-2xl
             ${open ? 'w-[250px]' : 'w-[80px]'}`}>
 
                 <div className="flex flex-col">
                     <div className={`flex items-center p-4 w-full ${open ? 'justify-between' : 'justify-center'}`}>
                         <div className="flex items-center gap-2">
-                            <div className={`bg-gradient-to-b from-red-100 to-yellow-300 text-white rounded-lg p-[4px] transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
+                            <div className={`bg-gradient-to-b from-red-100 to-yellow-300 text-black rounded-lg p-[4px] transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
                                 <TbCircleLetterRFilled />
                             </div>
                             <p className={`text-white text-[22px] font-semibold transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
@@ -63,8 +63,8 @@ const Sidebar = () => {
                         return (
                             <li key={item.id}>                            
                                 <Link to={item.path}
-                                    className={`flex items-center gap-2 p-3 rounded-2xl transition-all duration-300 text-white hover:bg-violet-500 hover:shadow-md cursor-pointer
-                                        ${isActive ? "bg-primary-100 shadow-md" : ""}`}
+                                    className={`flex items-center gap-2 p-3 rounded-2xl transition-all duration-300 text-white hover:bg-indigo-400 hover:shadow-md cursor-pointer
+                                        ${isActive ? "bg-indigo-400 shadow-md" : ""}`}
                                     onClick={() => item.submenu ? toggleMenu(item.id) : null}>
                                     <div className="w-8 flex justify-center">
                                         <span className="text-2xl">{item.icon}</span>
@@ -84,7 +84,7 @@ const Sidebar = () => {
                                     <ul
                                         className={`overflow-hidden rounded-lg p-1 w-[300px] transition-all duration-300 
                                             ${activeMenu === item.id ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"} 
-                                            ${open ? "w-full" : "absolute left-[80px] top-50% bg-violet-900 rounded-lg shadow-lg p-2 w-[200px] sm:w-auto"}`}
+                                            ${open ? "w-full" : "absolute left-[80px] top-50% bg-indigo-900 rounded-lg shadow-lg p-2 w-[200px] sm:w-auto"}`}
                                     >
                                         {item.submenu.map((sub) => {
                                             const isSubActive = location.pathname === sub.path;
@@ -93,7 +93,7 @@ const Sidebar = () => {
                                                     <Link
                                                         to={sub.path}
                                                         className={`flex items-center gap-2 my-1 px-3 py-2 rounded-lg text-white transition-all duration-300 
-                                                            ${isSubActive ? "bg-violet-950 shadow-md" : "bg-violet-900 hover:bg-violet-500"}`}
+                                                            ${isSubActive ? "bg-indigo-950 rounded-lg shadow-md" : "bg-indigo-800 hover:bg-indigo-500"}`}
                                                     >
                                                         <span className="text-lg">{sub.icon}</span>
                                                         <span className="text-sm font-light">{sub.title}</span>
