@@ -53,6 +53,12 @@ export const navItems = [
         icon: <PiArticleNyTimesFill className="text-xl text-white"/>
     },
     {
+        id: 8,
+        title: 'Utilities',
+        path:'/utilities',
+        icon: <PiArticleNyTimesFill className="text-xl text-white"/>
+    },
+    {
         id: 7,
         title: 'Settings',
         icon: <IoSettings className="text-xl text-white"/>,
