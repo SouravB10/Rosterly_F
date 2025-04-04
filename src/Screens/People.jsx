@@ -4,21 +4,24 @@ import { RiNotificationLine } from "react-icons/ri";
 import { RiNotificationOffLine } from "react-icons/ri";
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import { Dialog } from '@headlessui/react';
 
 const People = () => {
 
     const [activeTab, setActiveTab] = useState("All");
+    const [isModalOpen, setIsModalOpen] = useState(false);  
 
     return (
         <div className='flex flex-col gap-4'>
             <div className='flex items-center justify-between'>
                 <h1 className='text-2xl font-semibold'>People</h1>
-                <button className='bg-violet-600 text-white p-2 rounded-md'>+ Add People</button>
+                <button className='bg-violet-600 text-white p-2 rounded-md'
+                onClick={() => setIsModalOpen(true)}>+ Add People</button>
             </div>
+      
             <div className="w-full mt-4">
                 <div className="relative">
                     <ul className="flex space-x-2 p-1 bg-violet-100 rounded-full shadow-md" role="list">
-
                         <li className="flex-1">
                             <button
                                 className={`flex items-center justify-center w-full px-4 py-2 text-sm font-medium transition-all rounded-full ${activeTab === "All"
@@ -168,7 +171,64 @@ const People = () => {
                     </ul>
                 </details>
             </div>
+            {/* Modal for Adding People */}
+            <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)} className="relative z-50">
+                <div className="fixed inset-0 bg-gray bg-opacity-30 backdrop-blur-[1px]"></div>
+                <div className="fixed inset-0 flex items-center justify-center">
+                <Dialog.Panel className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                    <Dialog.Title className="text-lg font-semibold">Add People</Dialog.Title>
+                    <form className="mt-4 space-y-3">
+                    <div>
+                        <label className="block text-sm font-medium">First Name</label>
+                        <input
+                        type="text"
+                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
+                        placeholder="Enter first name"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium">Last Name</label>
+                        <input
+                        type="text"
+                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
+                        placeholder="Enter last name"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium">Email</label>
+                        <input
+                        type="email"
+                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
+                        placeholder="Enter email"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium">Phone Number</label>
+                        <input
+                        type="text"
+                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
+                        placeholder="Enter phone number"
+                        />
+                    </div>
+                    <div className="flex justify-end gap-2 mt-4">
+                        <button
+                        type="button"
+                        className="px-4 py-2 bg-gray-300 rounded-md"
+                        onClick={() => setIsModalOpen(false)}
+                        >
+                        Cancel
+                        </button>
+                        <button type="submit" className="px-4 py-2 bg-violet-600 text-white rounded-md">
+                        Save
+                        </button>
+                    </div>
+                    </form>
+                </Dialog.Panel>
+                </div>
+            </Dialog>
         </div>
+
+        
     )
 }
 
