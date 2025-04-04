@@ -2,6 +2,10 @@
 
 /* defaultt start */
 
+*{
+  font-family: "Montserrat", sans-serif;
+}
+
 body {
   background-color: #ffffff;
   font-weight: 400;

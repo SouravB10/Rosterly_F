@@ -30,10 +30,13 @@ const NavBar = ({ toggleSidebar }) => {
 
   return (
   
-    <Disclosure as="nav" className="bg-gray-200 backdrop-blur-lg mt-3 mx-3 mb-1 rounded-2xl">
-      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="relative flex h-14 items-center justify-end">
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+    <Disclosure as="nav" className=" backdrop-blur-lg mt-3 mx-3 mb-1 rounded-2xl"  style={{ boxShadow: '-5px 3px 10px 5px rgba(0, 0, 0, 0.1)' }}>
+      <div className="mx-auto max-w-7xl px-2 sm:px-3 lg:px-4">
+        <div className="relative flex h-14 items-center justify-between">
+          <div className="font-bold ">
+            <h1>Menu Name</h1>
+          </div>
+          <div className="absolute inset-y-0 right-0 flex gap-3 items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <button
               type="button"
               className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
