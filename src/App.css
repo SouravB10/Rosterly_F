@@ -272,7 +272,7 @@ body {
   --font-main-heading: 35px;
   --font-heading: 28px;
   --font-subheading: 22px;
-  --font-paragraph: 16px;
+  --font-paragraph: 12px;
   --font-button: 14px;
   --font-link: 13px;
   --font-label: 14px;
@@ -322,6 +322,7 @@ p {
   font-size: var(--font-paragraph);
   font-weight: 400;
   line-height: 1.6;
+  font-family: "Inter", sans-serif;
 }
 
 /* Buttons */
