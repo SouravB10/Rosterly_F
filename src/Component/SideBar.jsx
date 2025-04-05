@@ -37,7 +37,7 @@ const Sidebar = () => {
                             <div className={`bg-gradient-to-b from-red-100 to-yellow-300 text-black rounded-lg p-[4px] transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
                                 <TbCircleLetterRFilled />
                             </div>
-                            <p className={`text-white text-[22px] font-semibold transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
+                            <p className={`text-white text-[22px] sub-heading font-semibold transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
                                 Rosterly
                             </p>
                         </div>
@@ -93,7 +93,7 @@ const Sidebar = () => {
                                                     <Link
                                                         to={sub.path}
                                                         className={`flex items-center gap-2 my-1 px-3 py-2 rounded-lg text-white transition-all duration-300 
-                                                            ${isSubActive ? "bg-indigo-950 rounded-lg shadow-md" : "bg-indigo-800 hover:bg-indigo-500"}`}
+                                                            ${isSubActive ? "bg-indigo-900 rounded-lg shadow-md" : "bg-indigo-800 hover:bg-indigo-500"}`}
                                                     >
                                                         <span className="text-lg">{sub.icon}</span>
                                                         <span className="text-sm font-light">{sub.title}</span>
