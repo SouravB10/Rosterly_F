@@ -42,7 +42,7 @@ export const navItems = [
     },
     {
         id: 5,
-        title: 'Roster',
+        title: 'Rosters',
         path:'/roster',
         icon: <TbCircleLetterRFilled className="text-xl text-white"/>
     },

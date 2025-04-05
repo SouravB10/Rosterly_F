@@ -30,11 +30,11 @@ const Rosterly = () => {
           <div className="mt-4 mr-4">
             <div className="p-4 bg-lime-100 rounded-lg h-full flex flex-col justify-between">
               <p className="font-bold text-lg">Mon 31/03</p>
-              <p className="text-gray-700 flex items-center text-bold"><FaRegClock/> <strong className='sub-heading ml-1'>1.67 hrs</strong></p>
+              <p className="text-gray-700 flex items-center text-bold"><FaRegClock /> <strong className='sub-heading ml-1'>1.67 hrs</strong></p>
               <div className='mt-3'>
-              <p className="text-gray-700">🕗 8:00pm - 10:00pm</p>
-              <p className="text-gray-700">(20 min break)</p>
-              <p className="text-gray-700">📍 Office</p>
+                <p className="text-gray-700">🕗 8:00pm - 10:00pm</p>
+                <p className="text-gray-700">(20 min break)</p>
+                <p className="text-gray-700">📍 Office</p>
               </div>
             </div>
           </div>
@@ -42,28 +42,32 @@ const Rosterly = () => {
           <div className="mt-4 mr-4">
             <div className="p-4 bg-lime-100 rounded-lg h-full flex flex-col justify-between">
               <p className="font-bold text-lg">Tue 01/04</p>
-              <p className="text-gray-700">⏰ <strong className='sub-heading'>1.67 hrs</strong></p>
-              <p className="text-gray-700">🕗 8:00pm - 10:00pm</p>
-              <p className="text-gray-700">(20 min break)</p>
-              <p className="text-gray-700">📍 Office</p>
+              <p className="text-gray-700 flex items-center text-bold"><FaRegClock /> <strong className='sub-heading ml-1'>1.67 hrs</strong></p>
+              <div className='mt-3'>
+                <p className="text-gray-700">🕗 8:00pm - 10:00pm</p>
+                <p className="text-gray-700">(20 min break)</p>
+                <p className="text-gray-700">📍 Office</p>
+              </div>
             </div>
           </div>
 
           <div className="mt-4 mr-4">
-          <div className="p-4 bg-gray-200 rounded-lg h-full flex flex-col justify-start"> 
+            <div className="p-4 bg-gray-200 rounded-lg h-full flex flex-col justify-start">
               <p className="font-bold text-lg">Wed 02/04</p>
               <p className="text-gray-700"><strong className='sub-heading'>Unscheduled</strong></p>
-           
+
             </div>
           </div>
 
           <div className="mt-4 mr-4">
             <div className="p-4 bg-lime-100 rounded-lg h-full flex flex-col justify-between">
               <p className="font-bold text-lg">Thur 03/04</p>
-              <p className="text-gray-700">⏰ <strong className='sub-heading'>1.67 hrs</strong></p>
-              <p className="text-gray-700">🕗 8:00pm - 10:00pm</p>
-              <p className="text-gray-700">(20 min break)</p>
-              <p className="text-gray-700">📍 Office</p>
+              <p className="text-gray-700 flex items-center text-bold"><FaRegClock /> <strong className='sub-heading ml-1'>1.67 hrs</strong></p>
+              <div className='mt-3'>
+                <p className="text-gray-700">🕗 8:00pm - 10:00pm</p>
+                <p className="text-gray-700">(20 min break)</p>
+                <p className="text-gray-700">📍 Office</p>
+              </div>
             </div>
           </div>
 
@@ -78,24 +82,26 @@ const Rosterly = () => {
           <div className="mt-4 mr-4">
             <div className="p-4 bg-lime-100 rounded-lg h-full flex flex-col justify-between">
               <p className="font-bold text-lg">Fri 04/04</p>
-              <p className="text-gray-700">⏰ <strong className='sub-heading'>1.67 hrs</strong></p>
-              <p className="text-gray-700">🕗 8:00pm - 10:00pm</p>
-              <p className="text-gray-700">(20 min break)</p>
-              <p className="text-gray-700">📍 Office</p>
+              <p className="text-gray-700 flex items-center text-bold"><FaRegClock /> <strong className='sub-heading ml-1'>1.67 hrs</strong></p>
+              <div className='mt-3'>
+                <p className="text-gray-700">🕗 8:00pm - 10:00pm</p>
+                <p className="text-gray-700">(20 min break)</p>
+                <p className="text-gray-700">📍 Office</p>
+              </div>
             </div>
           </div>
 
           <div className="mt-4 mr-4 flex-1">
             <div className="p-4 bg-red-100 rounded-lg h-full flex flex-col justify-start">
               <p className="font-bold text-lg">Sat 05/04</p>
-              <p className="text-gray-700">⏰ <strong className='sub-heading'>Day Off</strong></p>
+              <p className="text-gray-700 flex items-center text-bold"><FaRegClock /> <strong className='sub-heading ml-1'>Day Off</strong></p>
             </div>
           </div>
 
           <div className="mt-4 mr-4">
             <div className="p-4 bg-red-100 rounded-lg h-full flex flex-col justify-start">
               <p className="font-bold text-lg">Sun 06/04</p>
-              <p className="text-gray-700">⏰ <strong className='sub-heading'>Day Off</strong></p>
+              <p className="text-gray-700 flex items-center text-bold"><FaRegClock /> <strong className='sub-heading ml-1'>Day Off</strong></p>
 
             </div>
           </div>
