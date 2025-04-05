@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Dialog } from '@headlessui/react';
+import { FaSearch } from "react-icons/fa";
 
 const People = () => {
     const [activeTab, setActiveTab] = useState("All");
@@ -25,8 +26,8 @@ const People = () => {
         e.preventDefault();
         // logic to add person
         setIsModalOpen(false); // close modal after action
-      };
-      
+    };
+
 
 
     return (
@@ -80,30 +81,18 @@ const People = () => {
                     >
                         Filter Data
                     </button>
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm w-64"
-                        value={searchTerm}
-                        onChange={handleSearch}
-                    />
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg
-                            className="w-5 h-5 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"
-                            />
-                        </svg>
+                    <div className="relative w-64">
+                        <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-950" />
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm w-full"
+                            value={searchTerm}
+                            onChange={handleSearch}
+                        />
                     </div>
                 </div>
-              
+
 
                 <button className="px-5 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700" onClick={() => setIsModalOpen(true)}>
                     + People
