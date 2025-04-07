@@ -93,7 +93,7 @@ const People = () => {
                 </div>
 
 
-                <button className="px-5 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700" onClick={() => setIsModalOpen(true)}>
+                <button className="px-3 py-1 bg-indigo-600 text-white rounded-full hover:bg-indigo-700" onClick={() => setIsModalOpen(true)}>
                     + People
                 </button>
                 {/* </div> */}
@@ -102,7 +102,7 @@ const People = () => {
             {/* Table */}
             <div className='overflow-x-auto mt-4'>
                 {/* <h2 className='text-xl font-semibold mb-2'>People Table</h2> */}
-                <table className='w-full border-collapse border border-gray-300'>
+                <table className='w-full border-collapse border border-gray-300 text-xs'>
                     <thead className='bg-gray-100'>
                         <tr>
                             <th className='border border-gray-300 p-2'>Name</th>
@@ -166,10 +166,10 @@ const People = () => {
                             <td className='border border-gray-300 p-2'>vishal@gmail.com</td>
                             <td className='border border-gray-300 p-2'>few days ago</td>
                             <td className='border border-gray-300 p-2 space-x-2'>
-                                <button className='bg-blue-600 text-white px-3 py-1 hover:bg-blue-700 transition duration-200'>
+                                <button className='bg-blue-600 text-white text-xs px-3 py-1 hover:bg-blue-700 transition duration-200'>
                                     View
                                 </button>
-                                <button className='bg-green-600 text-white px-3 py-1 hover:bg-green-700 transition duration-200'>
+                                <button className='bg-green-600 text-white text-xs px-3 py-1 hover:bg-green-700 transition duration-200'>
                                     Add Note
                                 </button>
                             </td>

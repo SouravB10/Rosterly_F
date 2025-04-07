@@ -4,6 +4,7 @@ import { navItems } from '../assets/Data';
 import { TbCircleLetterRFilled } from "react-icons/tb";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { TiThMenu } from "react-icons/ti";
+import { GiHeavyTimer } from "react-icons/gi";
 
 const Sidebar = () => {
     const [open, setOpen] = useState(window.innerWidth > 768);
@@ -34,8 +35,8 @@ const Sidebar = () => {
                 <div className="flex flex-col">
                     <div className={`flex items-center p-4 w-full ${open ? 'justify-between' : 'justify-center'}`}>
                         <div className="flex items-center gap-2">
-                            <div className={`bg-gradient-to-b from-red-100 to-yellow-300 text-black rounded-lg p-[4px] transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
-                                <TbCircleLetterRFilled />
+                            <div className={`bg-gradient-to-b from-indigo-500 to-indigo-800 text-white rounded-lg p-[4px] transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
+                                <GiHeavyTimer />
                             </div>
                             <p className={`text-white text-[22px] sub-heading font-semibold transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
                                 Rosterly
