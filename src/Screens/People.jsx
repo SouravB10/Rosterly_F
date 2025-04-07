@@ -51,9 +51,8 @@ const People = () => {
                         onChange={handleLocation}
                     >
                         <option value="default">--Select Status--</option>
-                        <option value="Location 1">Location 1</option>
-                        <option value="Location 2">Location 2</option>
-                        <option value="Location 3">Location 3</option>
+                        <option value="Location 1">Active</option>
+                        <option value="Location 2">Inactive</option>
                     </select>
 
                     <select
