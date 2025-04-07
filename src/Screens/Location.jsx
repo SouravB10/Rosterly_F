@@ -127,7 +127,29 @@ const Location = () => {
 
         {/* Other Tabs */}
         {activeTab === "Sales" && (
-          <p className="text-slate-500 font-light">Sales tab content here.</p>
+          <div className="bg-gray-100 p-6 rounded-xl shadow-md w-1/2">
+          <h2 className="text-lg font-semibold text-purple-700 mb-4">Expected Average Sales</h2>
+      
+          {[
+            "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+          ].map((day, index) => (
+            <div key={index} className="flex items-center justify-between mb-4">
+              <label className="font-medium text-sm text-black">{day}</label>
+              <input
+                type="text"
+                placeholder="₹5000.00"
+                defaultValue="₹5000.00"
+                className="w-1/3 px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+          ))}
+      
+          <div className="flex justify-end mt-6">
+            <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-md text-sm">
+              Update
+            </button>
+          </div>
+        </div>
         )}
         {activeTab === "Employees" && (
           <p className="text-slate-500 font-light">Employees tab content here.</p>
@@ -139,76 +161,58 @@ const Location = () => {
 
        {/* Modal */}
        {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white w-1/2 rounded-xl shadow-lg p-6 relative">
-            {/* Close Button */}
-            <button
-              className="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-xl"
-              onClick={() => setShowModal(false)}
-            >
-              &times;
-            </button>
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            {/* Modal Box */}
+            <div className="bg-gray-100 w-full max-w-md p-8 rounded-xl shadow-lg">
 
-            {/* Form Title */}
-            <h2 className="text-2xl font-semibold text-purple-700 mb-6">Add Location</h2>
+              {/* Title */}
+              <h2 className="text-xl font-semibold text-purple-700 mb-4">Add Location</h2>
 
-            {/* Form */}
-            <div className="space-y-6">
-              {/* Location Name */}
-              <div className="bg-gray-100 rounded-xl p-6 flex items-start justify-between">
-                <div className="w-2/3">
-                  <h4 className="text-lg font-semibold text-purple-800 mb-2">
-                    Location Name
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    What you normally refer to the roster location as.
-                    For example, if it was a Subway store in Brisbane CBD you might refer to it as Brisbane CBD.
-                  </p>
-                </div>
-                <div className="w-1/3 pl-4">
-                  <input
-                    type="text"
-                    placeholder="Main Branch"
-                    className="bg-white w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
+              {/* Description */}
+              <div className="bg-gray-100 p-6 rounded-xl mb-6">
+                <p className="text-sm text-gray-600">
+                  <strong className="text-black">Location Name</strong> is what you normally refer to the roster location as.
+                  For example, if it was a Subway store in Brisbane CBD you might refer to it as Brisbane CBD
+                </p>
               </div>
 
-              {/* Location Short Name */}
-              <div className="bg-gray-100 rounded-xl p-6 flex items-start justify-between">
-                <div className="w-2/3">
-                  <h4 className="text-lg font-semibold text-purple-800 mb-2">
-                    Location Short Name
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    We will sometimes refer to this roster location with a three-letter code (for example, in an SMS).
-                  </p>
-                </div>
-                <div className="w-1/3 pl-4">
-                  <input
-                    type="text"
-                    placeholder="MNB"
-                    className="bg-white w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
+              {/* Form Fields */}
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Add Location"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                />
+                <input
+                  type="text"
+                  placeholder="Average Daily Sales (₹)"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                />
               </div>
 
-              {/* Update Button */}
-              <div className="flex justify-end">
+              {/* Buttons */}
+              <div className="mt-6 flex justify-end space-x-4">
                 <button
-                  className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-6 py-2 rounded-md text-sm shadow-md"
+                  onClick={() => setShowModal(false)}
+                  className="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded-md text-sm"
+                >
+                  Close
+                </button>
+                <button
                   onClick={() => {
-                    // Submit logic here
+                    // Submit logic
                     setShowModal(false);
                   }}
+                  className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-md text-sm"
                 >
-                  Add Location
+                  Create
                 </button>
               </div>
+
             </div>
           </div>
-        </div>
-      )}
+        )}
+
     </div>
     
   );
