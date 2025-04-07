@@ -104,7 +104,7 @@ const Rosters = () => {
                 <div className="bg-white shadow-md rounded-lg overflow-hidden">
                     <table className="w-full text-xs">
                         <thead>
-                            <tr className="bg-violet-200 text-gray-700">
+                            <tr className="bg-gray-300 text-gray-900">
                                 <th className="p-4">Open Shifts</th>
                                 <th className="p-4">Mon 07/04</th>
                                 <th className="p-4">Tue 08/04</th>
@@ -154,7 +154,7 @@ const Rosters = () => {
                                     <td className="p-4 text-gray-400">Unavailable <br /> 8:00 AM - 10:00 PM</td>
                                 </tr>
                             ))}
-                            <tr className="bg-violet-100 font-semibold">
+                            <tr className="bg-gray-200 font-semibold">
                                 <td className="p-4">Total</td>
                                 <td className="p-4">2.17 Hrs</td>
                                 <td className="p-4">0.00 Hrs</td>
