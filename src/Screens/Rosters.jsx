@@ -147,11 +147,11 @@ const Rosters = () => {
                                         </div>
                                     </td>
                                     <td className="p-4"></td>
-                                    <td className="p-4 text-gray-400">Unavailable <br /> 8:00 AM - 10:00 PM</td>
-                                    <td className="p-4 text-gray-400">Unavailable <br /> 8:00 AM - 10:00 PM</td>
+                                    <td className="p-4 text-gray-600">Unavailable <br /> 8:00 AM - 10:00 PM</td>
+                                    <td className="p-4 text-gray-600">Unavailable <br /> 8:00 AM - 10:00 PM</td>
                                     <td className="p-4"></td>
-                                    <td className="p-4 text-gray-400">Unavailable <br /> 8:00 AM - 10:00 PM</td>
-                                    <td className="p-4 text-gray-400">Unavailable <br /> 8:00 AM - 10:00 PM</td>
+                                    <td className="p-4 text-gray-600">Unavailable <br /> 8:00 AM - 10:00 PM</td>
+                                    <td className="p-4 text-gray-600">Unavailable <br /> 8:00 AM - 10:00 PM</td>
                                 </tr>
                             ))}
                             <tr className="bg-gray-200 font-semibold">
