@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const Location = () => {
   const [selectLocation, setSelectLocation] = useState("");
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState("myrosterly");
 
   const handleLocation = (e) => {
     setSelectLocation(e.target.value);

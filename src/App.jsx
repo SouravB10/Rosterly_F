@@ -15,6 +15,7 @@ import Location from './Screens/Location';
 import SystemSettings from './Screens/RosterSettings/SystemSettings';
 import PayRate from './Screens/RosterSettings/PayRate';
 import Utilities from './Screens/Utilities';
+import Rosters from './Screens/Rosters';
 
 
 function AppWrapper() {
@@ -50,7 +51,8 @@ function AppWrapper() {
               <Route path='/location' element={<Location />} />
               <Route path='/systemsettings' element={<SystemSettings />} />
               <Route path='/payrate' element={<PayRate />} />
-              <Route path='/utilities' element={<Utilities/>}/>
+              <Route path='/utilities' element={<Utilities />} />
+              <Route path='/roster' element={<Rosters />} />
             </Routes>
           </div>
         </div>
