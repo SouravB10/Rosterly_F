@@ -14,7 +14,7 @@ const Location = () => {
 
   return (
     <>
-      <h3 className="text-2xl font-semibold">Locations</h3>
+      {/* <h3 className="text-2xl font-semibold">Locations</h3>
       <div className="grid grid-flow-col grid-rows-6 rounded p-4 mt-4 text-white">
         <div className="row-span-1 flex justify-between items-center p-1 mb-2">
           <div className="flex justify-between gap-3">
@@ -133,7 +133,7 @@ const Location = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
