@@ -2,14 +2,15 @@
 
 /* defaultt start */
 
-*{
+* {
   font-family: "Montserrat", sans-serif;
 }
 
 body {
   background-color: #ffffff;
   font-weight: 400;
-  font-size: 1rem;  /*regular*/
+  font-size: 1rem;
+  /*regular*/
   line-height: 1.5rem;
   color: #000000;
   font-family: 'montserrat', sans-serif;
@@ -20,6 +21,11 @@ body {
 /* defaultt end */
 
 /* font-size-start----------- */
+
+.font10 {
+  font-size: 0.625rem;
+}
+
 
 .font14 {
   font-size: 0.875rem;
@@ -273,7 +279,7 @@ body {
   --font-heading: 28px;
   --font-subheading: 22px;
   --font-paragraph: 12px;
-  --font-button: 12px;
+  --font-button: 13px;
   --font-link: 13px;
   --font-label: 14px;
   --font-input: 16px;
@@ -281,10 +287,14 @@ body {
   --font-alert: 16px;
 
   /* Button Colors */
-  --color-add: #28a745; /* Green */
-  --color-update: #ffc107; /* Yellow */
-  --color-delete: #dc3545; /* Red */
-  --color-reset: #6c757d; /* Gray */
+  --color-add: #28a745;
+  /* Green */
+  --color-update: #ffc107;
+  /* Yellow */
+  --color-delete: #dc3545;
+  /* Red */
+  --color-reset: #6c757d;
+  /* Gray */
 
   /* Hover Colors */
   --hover-add: #218838;
@@ -350,7 +360,8 @@ label {
 }
 
 /* Input Fields */
-input, textarea {
+input,
+textarea {
   font-size: var(--font-input);
   font-weight: 400;
 }
