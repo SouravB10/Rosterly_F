@@ -181,7 +181,7 @@ const People = () => {
 
             {/* Modal */}
             <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)} className="relative z-50">
-                <div className="fixed inset-0 bg-opacity-40 backdrop-blur-xs"></div>
+                <div className="fixed inset-0 bg-opacity-40 backdrop-blur-xs"></div>    
                 <div className="fixed inset-0 flex items-center justify-center">
                     <Dialog.Panel className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
                         <Dialog.Title className="text-lg font-semibold" >Add People</Dialog.Title>
