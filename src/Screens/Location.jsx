@@ -34,7 +34,7 @@ const Location = () => {
               {/* Add your options here */}
             </select>
             <button
-              className="bg-purple-600 text-white rounded-full px-6 py-3 text-sm font-semibold"
+              className="successbutton text-white text-sm font-semibold"
               onClick={getLocation}
             >
               Get Data
