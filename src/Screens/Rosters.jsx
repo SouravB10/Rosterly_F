@@ -68,7 +68,7 @@ const Rosters = () => {
                     </div>
                 </div>
 
-                <button className="bg-lime-500 text-white transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-950 ...">
+                <button className="bg-lime-500 successbutton text-white transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-950 ...">
                     Publish
                 </button>
             </div>
