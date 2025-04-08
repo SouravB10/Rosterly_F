@@ -15,16 +15,13 @@ const People = () => {
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
         console.log("Search Term:", e.target.value);
-        // Optional: implement filtering logic
     };
     const getLocation = () => {
         console.log("Fetching data for:", selectedLocation);
-        // Fetch location data logic here
     };
 
     const handleAddPerson = (e) => {
         e.preventDefault();
-        // logic to add person
         setIsModalOpen(false); // close modal after action
     };
 
@@ -32,7 +29,6 @@ const People = () => {
 
     return (
         <div className='flex flex-col gap-3 p-4'>
-            {/* Header */}
             <div className='flex items-center justify-between'>
             </div>
             <div className="flex justify-between items-center mb-2">
@@ -99,10 +95,8 @@ const People = () => {
                 {/* </div> */}
             </div>
 
-            {/* Table */}
             <div className='overflow-x-auto mt-4'>
-                {/* <h2 className='text-xl font-semibold mb-2'>People Table</h2> */}
-                <table className='w-full border-collapse border border-gray-300 text-xs'>
+                <table className='w-full border-collapse border border-gray-300 text-xs font-semibold'>
                     <thead className='bg-gray-100'>
                         <tr>
                             <th className='border border-gray-300 p-2'>Name</th>
@@ -178,18 +172,17 @@ const People = () => {
                 </table>
             </div>
 
-            {/* Modal */}
             <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)} className="relative z-50">
                 <div className="fixed inset-0 bg-opacity-40 backdrop-blur-xs"></div>    
                 <div className="fixed inset-0 flex items-center justify-center">
                     <Dialog.Panel className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
                         <Dialog.Title className="text-lg font-semibold" >Add People</Dialog.Title>
                         <form className="mt-4 space-y-3">
-                            <div>
+                            <div className=''>
                                 <label className="block text-sm font-medium">First Name</label>
                                 <input
                                     type="text"
-                                    className="w-full border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
+                                    className="w-full font14 border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
                                     placeholder="Enter first name"
                                 />
                             </div>

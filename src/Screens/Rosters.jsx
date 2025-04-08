@@ -72,7 +72,7 @@ const Rosters = () => {
                     </div>
                 </div>
 
-                <button className="w-full md:w-auto px-5 py-2 bg-lime-500 text-white rounded-full hover:bg-indigo-950">
+                <button className="bg-lime-500 text-white transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-950 ...">
                     Publish
                 </button>
             </div>
@@ -102,9 +102,9 @@ const Rosters = () => {
             </div>
             <div className="mt-8 min-h-screen">
                 <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                    <table className="w-full text-xs">
+                    <table className="w-full font12">
                         <thead>
-                            <tr className="bg-violet-200 text-gray-700">
+                            <tr className="bg-gray-300 text-gray-900">
                                 <th className="p-4">Open Shifts</th>
                                 <th className="p-4">Mon 07/04</th>
                                 <th className="p-4">Tue 08/04</th>
@@ -147,14 +147,14 @@ const Rosters = () => {
                                         </div>
                                     </td>
                                     <td className="p-4"></td>
-                                    <td className="p-4 text-gray-400">Unavailable <br /> 8:00 AM - 10:00 PM</td>
-                                    <td className="p-4 text-gray-400">Unavailable <br /> 8:00 AM - 10:00 PM</td>
+                                    <td className="p-4 text-gray-600">Unavailable <br /> 8:00 AM - 10:00 PM</td>
+                                    <td className="p-4 text-gray-600">Unavailable <br /> 8:00 AM - 10:00 PM</td>
                                     <td className="p-4"></td>
-                                    <td className="p-4 text-gray-400">Unavailable <br /> 8:00 AM - 10:00 PM</td>
-                                    <td className="p-4 text-gray-400">Unavailable <br /> 8:00 AM - 10:00 PM</td>
+                                    <td className="p-4 text-gray-600">Unavailable <br /> 8:00 AM - 10:00 PM</td>
+                                    <td className="p-4 text-gray-600">Unavailable <br /> 8:00 AM - 10:00 PM</td>
                                 </tr>
                             ))}
-                            <tr className="bg-violet-100 font-semibold">
+                            <tr className="bg-gray-200 font-semibold">
                                 <td className="p-4">Total</td>
                                 <td className="p-4">2.17 Hrs</td>
                                 <td className="p-4">0.00 Hrs</td>
