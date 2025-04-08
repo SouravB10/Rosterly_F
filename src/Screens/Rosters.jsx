@@ -3,7 +3,8 @@ import moment from "moment";
 import { FaFilePdf } from "react-icons/fa";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { SlCalender } from "react-icons/sl";
-
+import { FaAngleLeft } from "react-icons/fa";
+import { FaAngleRight } from "react-icons/fa";
 
 const Rosters = () => {
     const [selectedLocation, setSelectedLocation] = useState("default");
@@ -33,7 +34,7 @@ const Rosters = () => {
                 <div className="flex flex-wrap gap-3 w-full md:w-auto">
                     <select
                         name="selectedLocation"
-                        className="bg-violet-100 px-3 rounded-lg text-sm font-semibold text-gray-900 shadow-sm w-full md:w-50 appearance-none pr-10"
+                        className="bg-violet-100 px-3 py-2 rounded-lg text-sm font-semibold text-gray-900 shadow-sm w-full md:w-50 appearance-none pr-10"
                         style={{
                             backgroundImage:
                                 'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke-width=\'2\' stroke=\'black\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M19 9l-7 7-7-7\'/></svg>")',
@@ -51,15 +52,10 @@ const Rosters = () => {
                     </select>
 
                     <div className="flex items-center justify-center bg-violet-100 rounded-lg text-sm font-semibold text-gray-900 shadow-sm w-full md:w-75 px-4">
-                        <button onClick={handlePrevWeek} className="text-violet-600 hover:text-violet-900">
-                            &#9665;
-                        </button>
-
+                    
+                        <FaAngleLeft className='text-violet-800 hover:text-violet-950' size={20} onClick={handlePrevWeek} />
                         <span className="mx-2">{getWeekRange(currentWeek)}</span>
-
-                        <button onClick={handleNextWeek} className="text-violet-600 hover:text-violet-900">
-                            &#9655;
-                        </button>
+                        <FaAngleRight className='text-violet-800 hover:text-violet-950' size={20} onClick={handleNextWeek} />
                     </div>
 
                     <div className="flex gap-2">
@@ -72,7 +68,7 @@ const Rosters = () => {
                     </div>
                 </div>
 
-                <button className="w-full md:w-auto px-5 py-2 bg-lime-500 text-white rounded-full hover:bg-indigo-950">
+                <button className="bg-lime-500 text-white transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-950 ...">
                     Publish
                 </button>
             </div>
@@ -102,7 +98,7 @@ const Rosters = () => {
             </div>
             <div className="mt-8 min-h-screen">
                 <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                    <table className="w-full text-xs">
+                    <table className="w-full font12">
                         <thead>
                             <tr className="bg-gray-300 text-gray-900">
                                 <th className="p-4">Open Shifts</th>

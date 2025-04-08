@@ -16,9 +16,9 @@ const Rosterly = () => {
       <div className=''>
         <div className='text-indigo-950'>
           <p className='sub-heading font-bold '>Welcome,</p>
-          <p className='text-2xl heading font-bold'>{userName}</p>
+          <p className=' heading font-bold'>{userName}</p>
         </div>
-        <button className='bg-lime-400 font-bold text-white mt-6 rounded-lg px-3 py-2 hover:bg-indigo-950 transition duration-300'>
+        <button className='bg-lime-500 text-white transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-950 ...'>
           Start Your Shift
         </button>
       </div>
