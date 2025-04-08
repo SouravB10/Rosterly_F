@@ -178,11 +178,11 @@ const People = () => {
                     <Dialog.Panel className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
                         <Dialog.Title className="text-lg font-semibold" >Add People</Dialog.Title>
                         <form className="mt-4 space-y-3">
-                            <div>
+                            <div className=''>
                                 <label className="block text-sm font-medium">First Name</label>
                                 <input
                                     type="text"
-                                    className="w-full border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
+                                    className="w-full font14 border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
                                     placeholder="Enter first name"
                                 />
                             </div>

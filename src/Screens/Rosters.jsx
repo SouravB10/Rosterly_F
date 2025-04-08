@@ -102,7 +102,7 @@ const Rosters = () => {
             </div>
             <div className="mt-8 min-h-screen">
                 <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                    <table className="w-full text-xs">
+                    <table className="w-full font12">
                         <thead>
                             <tr className="bg-gray-300 text-gray-900">
                                 <th className="p-4">Open Shifts</th>
