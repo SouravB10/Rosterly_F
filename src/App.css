@@ -25,7 +25,9 @@ body {
 .font10 {
   font-size: 0.625rem;
 }
-
+.font12 {
+  font-size: 0.75rem;
+}
 
 .font14 {
   font-size: 0.875rem;
