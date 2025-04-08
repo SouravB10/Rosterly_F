@@ -71,7 +71,7 @@ const People = () => {
                     </select>
 
                     <button
-                        className="px-5 py-2 bg-indigo-600 text-white hover:bg-indigo-700"
+                        className="px-5 py-2 bg-indigo-600 successbutton text-white hover:bg-indigo-700"
                         onClick={getLocation}
                     >
                         Filter Data
@@ -89,7 +89,7 @@ const People = () => {
                 </div>
 
 
-                <button className="px-3 py-1 bg-indigo-600 text-white rounded-full hover:bg-indigo-700" onClick={() => setIsModalOpen(true)}>
+                <button className="px-3 py-1 bg-violet-700 text-white rounded-sm hover:bg-violet-800" onClick={() => setIsModalOpen(true)}>
                     + People
                 </button>
                 {/* </div> */}
