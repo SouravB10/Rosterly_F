@@ -10,20 +10,18 @@ const Unavailability = () => {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
-        {/* Days Off Adding */}
         <div className="bg-white-200 rounded-md p-5 font12 w-full">
           <h1 className="text-center font-weight-700 font20 black-100 mb-6">
             Days Off Adding
           </h1>
 
           <div className="flex flex-wrap gap-4 ">
-            {/* Left Column */}
             <div className="w-full md:w-[48%] flex flex-col gap-4">
-              <div className="flex gap-4 mb-2 font12">
-                {/* From Date */}
-                <div className="w-1/2">
-                  <label className="block font-weight-600 primary-100 mb-1">From Date</label>
+              <div className="flex mb-2 font12">
+                <div className="w-1/2 bg-white-100 pt-2 text-center relative">
+                  <label className="block font-weight-600 primary-100 mb-1 ">From Date</label>
                   <DatePicker
+                    className=""
                     selected={fromDate}
                     onChange={(date) => setFromDate(date)}
                     dateFormat="dd/MM/yyyy"
@@ -38,9 +36,8 @@ const Unavailability = () => {
                   />
                 </div>
 
-                {/* To Date */}
-                <div className="w-1/2">
-                  <label className="block font12 font-weight-600 primary-100 mb-1">To Date</label>
+                <div className="w-1/2 bg-white-100 pt-2 text-center ml-1">
+                  <label className="block font12 font-weight-600 primary-100 mb-1 ">To Date</label>
                   <DatePicker
                     selected={toDate}
                     onChange={(date) => setToDate(date)}
@@ -57,9 +54,6 @@ const Unavailability = () => {
                 </div>
               </div>
 
-
-
-              {/* Leave Type */}
               <div>
                 <label className="block font12 font-weight-600 primary-100 mb-1">Specify the leave type</label>
                 <select className="w-full font12 bg-white-100 rounded-md px-4 py-2 custom-focus">
@@ -67,7 +61,6 @@ const Unavailability = () => {
                 </select>
               </div>
 
-              {/* Leave Hours */}
               <div>
                 <label className="block font12 font-weight-600 primary-100 mb-1">Specify number of leave hours per week</label>
                 <div className="flex ">
@@ -83,19 +76,15 @@ const Unavailability = () => {
               </div>
             </div>
 
-            {/* Right Column */}
-            <div className="w-full md:w-[48%] flex flex-col gap-4">
-              {/* Reason */}
+            <div className="w-full md:w-[48%] flex flex-col pt-2 gap-4">
               <div >
                 <label className="block font12 font-weight-600 primary-100 mb-1">Please provide a brief reason</label>
                 <textarea
                   rows="1"
                   className="w-full bg-white-100 rounded-md px-4 py-2 custom-focus"
                 />
-
               </div>
 
-              {/* Manager Dropdown */}
               <div>
                 <label className="block font12 font-weight-600 primary-100 mb-1">Select a manager to notify</label>
                 <select className="w-full bg-white-100  rounded-md px-4 py-2 custom-focus">
@@ -103,18 +92,15 @@ const Unavailability = () => {
                 </select>
               </div>
 
-              {/* Buttons */}
               <div className="flex justify-end gap-4 mt-auto pt-2">
-                <button className="addBtn font12 font-weight-500">Save</button>
-                <button className="deleteBtn font12 font-weight-500">Reset</button>
+                <button className="addBtn button font12 font-weight-500">Save</button>
+                <button className="deleteBtn button font12 font-weight-500">Reset</button>
               </div>
             </div>
           </div>
         </div>
 
-
-
-        <div className="bg-white-300 rounded-md p-5 md:col-span-1 md:row-span-13">
+        <div className="bg-white-200 rounded-md p-5 md:col-span-1 md:row-span-13">
           <h1 className="text-center font-weight-700">Recurring Unavailability</h1>
 
           <div className="flex rounded-md justify-between my-5 bg-white-100 items-center p-3">
@@ -183,7 +169,7 @@ const Unavailability = () => {
         {/* Requested Days Off List */}
         <div className="bg-white-200 rounded-md p-5 md:row-span-8">
           <h1 className=" font-weight-600 font20 black-100 mb-4">
-            Requested Days Off List
+            Requested Days Off
           </h1>
 
           {/* Row 1 */}
