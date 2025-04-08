@@ -2,7 +2,9 @@ import React, { useState } from "react";
 
 const Location = () => {
   const [selectLocation, setSelectLocation] = useState("");
-  const [activeTab, setActiveTab] = useState("Sales");
+  const [activeTab, setActiveTab] = useState("general");
+  const [showModal, setShowModal] = useState(false);
+
 
   const handleLocation = (e) => {
     setSelectLocation(e.target.value);
@@ -14,36 +16,28 @@ const Location = () => {
 
   return (
     <div className="p-6">
-      <h3 className="text-2xl font-semibold mb-6">Location</h3>
+      <div className="grid grid-cols-5 gap-6 w-full">
+        {/* Left Section - 60% (3 columns) */}
+        <div className="col-span-3">
+          <h6 className="text-xl font-semibold mb-4">By Location</h6>
 
-      {/* Filter Section */}
-      <div className="flex gap-3 items-center mb-6">
-        <label className="text-sm font-semibold text-purple-700 mr-2">
-          By Location
-        </label>
-        <select
-          name="selectedLocation"
-          className="bg-white px-3 py-2 rounded-lg text-sm font-semibold text-gray-900 shadow-sm w-80 border"
-          onChange={handleLocation}
-        >
-          <option value="">-- Select location --</option>
-          <option value="Location 1">Location 1</option>
-          <option value="Location 2">Location 2</option>
-          <option value="Location 3">Location 3</option>
-        </select>
+          {/* Dropdown + Button */}
+          <div className="flex items-center gap-4 mb-6">
+            <select
+              className="border rounded-lg px-4 py-2 w-1/2"
+              onChange={handleLocation}
+            >
+              <option>-- Select location --</option>
+              {/* Add your options here */}
+            </select>
+            <button
+              className="bg-purple-600 text-white rounded-full px-6 py-3 text-sm font-semibold"
+              onClick={getLocation}
+            >
+              Get Data
+            </button>
+          </div>
 
-        <button
-          onClick={getLocation}
-          className="bg-green-500 hover:bg-green-600 text-white font-medium px-5 py-2 rounded-md text-sm"
-        >
-          Filter Data
-        </button>
-      </div>
-
-      {/* Main Layout */}
-      <div className="flex gap-10">
-        {/* Left: Tabs and Content */}
-        <div className="flex-1">
           {/* Tab Switcher */}
           <div className="flex gap-6 mb-6">
             {["general", "Sales", "Employees", "Status"].map((tab) => (
@@ -64,80 +58,162 @@ const Location = () => {
           </div>
 
           {/* Tab Content */}
-          {activeTab === "Sales" && (
-            <div className="bg-gray-100 p-6 rounded-xl shadow-md">
-              <h2 className="text-lg font-semibold text-purple-700 mb-4">
-                Expected Average Sales
-              </h2>
-              {[
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday",
-              ].map((day, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between mb-4"
-                >
-                  <label className="font-medium text-sm text-black">
-                    {day}
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="₹5000.00"
-                    defaultValue="₹5000.00"
-                    className="w-1/3 px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
+          <div className="space-y-6">
+            {activeTab === "general" && (
+              <div className="space-y-4">
+                {/* Location Name */}
+                <div className="bg-gray-100 rounded-xl shadow-md p-6 flex justify-between">
+                  <div className="w-1/2 pr-4">
+                    <h4 className="text-lg font-semibold text-purple-800 mb-2">Location Name</h4>
+                    <p className="text-sm text-gray-600">
+                      What you normally refer to the roster location as. For example, Brisbane CBD.
+                    </p>
+                  </div>
+                  <div className="w-1/2">
+                    <input
+                      type="text"
+                      placeholder="Main Branch"
+                      className="bg-white w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                  </div>
                 </div>
-              ))}
-              <div className="flex justify-end mt-6">
-                <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-md text-sm">
-                  Update
-                </button>
+
+                {/* Location Short Name */}
+                <div className="bg-gray-100 rounded-xl shadow-md p-6 flex justify-between">
+                  <div className="w-1/2 pr-4">
+                    <h4 className="text-lg font-semibold text-purple-800 mb-2">Location Short Name</h4>
+                    <p className="text-sm text-gray-600">
+                      We use this in SMS and reports as a 3-letter code (e.g., MNB).
+                    </p>
+                  </div>
+                  <div className="w-1/2">
+                    <input
+                      type="text"
+                      placeholder="MNB"
+                      className="bg-white w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <button className="bg-purple-500 hover:bg-purple-600 text-white font-medium px-6 py-2 rounded-md text-sm shadow-md">
+                    Update
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+
+            {activeTab === "Sales" && (
+              <div className="bg-gray-100 p-6 rounded-xl shadow-md">
+                <h2 className="text-lg font-semibold text-purple-700 mb-4">
+                  Expected Average Sales
+                </h2>
+                {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map(
+                  (day, index) => (
+                    <div key={index} className="flex items-center justify-between mb-4">
+                      <label className="font-medium text-sm text-black">{day}</label>
+                      <input
+                        type="text"
+                        placeholder="₹5000.00"
+                        defaultValue="₹5000.00"
+                        className="w-1/3 px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      />
+                    </div>
+                  )
+                )}
+                <div className="flex justify-end mt-6">
+                  <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-md text-sm">
+                    Update
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "Employees" && (
+              <div className="bg-gray-100 rounded-xl shadow-md p-6 space-y-4">
+                {/* Header */}
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h4 className="text-xl font-semibold text-purple-700">Employees</h4>
+                    <p className="text-sm text-gray-600">
+                      Employees Assigned to Office<br />
+                      <span className="text-xs text-gray-500">
+                        Below is a list of employees assigned to Office.
+                      </span>
+                    </p>
+                  </div>
+
+                  {/* Search Bar */}
+                  <div className="relative w-1/3">
+                    <input
+                      type="text"
+                      placeholder="Search"
+                      className="w-full px-4 py-2 rounded-md border border-gray-300 shadow-sm pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
+                    />
+                    <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                      🔍
+                    </span>
+                  </div>
+                </div>
+
+                {/* Scrollable List */}
+                <div className="bg-white rounded-md shadow-inner p-4 max-h-[250px] overflow-y-auto space-y-3">
+                  {[
+                    "Anita Seth",
+                    "Harish Dobila",
+                    "Naveen Nagam",
+                    "Sourav Behuria",
+                    "Sudiksha Kamireddy",
+                    "Vishal Kattera",
+                  ].map((emp, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-between px-3 py-2 border-b border-gray-100 hover:bg-gray-50 rounded-md transition"
+                    >
+                      <div className="flex items-center gap-3">
+                        <button className="bg-red-500 text-white w-6 h-6 flex items-center justify-center text-xs font-bold hover:bg-red-600">
+                          ×
+                        </button>
+
+                        <span className="text-sm font-medium text-gray-800">{emp}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+
+            {activeTab === "Status" && (
+              <p className="text-slate-500 font-light">Status tab content here.</p>
+            )}
+          </div>
         </div>
 
-        {/* Right: Add Location Panel */}
-        <div className="w-[400px] bg-gray-50 p-6 rounded-xl shadow-lg">
-          <h2 className="text-lg font-semibold text-purple-700 mb-4">
-            Add Location
-          </h2>
-
-          <p className="text-sm text-gray-600 mb-6">
-            <strong className="text-black">Location Name</strong> is what you
-            normally refer to the roster location as. For example, if it was a
-            Subway store in Brisbane CBD you might refer to it as Brisbane CBD
-          </p>
-
-          <div className="space-y-4">
-            <input
-              type="text"
-              placeholder="Add Location"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-            />
-            <input
-              type="text"
-              placeholder="Average Daily Sales (₹)"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-            />
+        {/* Right Section - 40% (2 columns) */}
+        <div className="col-span-2 bg-gray-100 p-6 rounded-2xl shadow-lg h-[300px] overflow-y-auto">
+          <h3 className="text-xl font-bold text-purple-600 mb-4">Add Location</h3>
+          <div className="bg-white p-4 rounded-xl text-sm mb-4">
+            <p>
+              <strong>Location Name</strong> is what you normally refer to the roster location as.
+              For example, Brisbane CBD.
+            </p>
           </div>
-
-          <div className="flex justify-between mt-6">
-            <button className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md text-sm">
-              Close
-            </button>
-            <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-md text-sm">
-              Create
-            </button>
-          </div>
+          <input
+            type="text"
+            placeholder="Add Location"
+            className="w-full border rounded-lg px-4 py-2 mb-4"
+          />
+          <input
+            type="text"
+            placeholder="Average Daily Sales (₹)"
+            className="w-full border rounded-lg px-4 py-2"
+          />
         </div>
       </div>
     </div>
+
+
   );
 };
 
