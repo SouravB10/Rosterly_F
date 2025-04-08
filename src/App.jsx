@@ -16,7 +16,7 @@ import SystemSettings from './Screens/RosterSettings/SystemSettings';
 import PayRate from './Screens/RosterSettings/PayRate';
 import Utilities from './Screens/Utilities';
 import Rosters from './Screens/Rosters';
-
+import PayRateLevel from './Screens/PayRateLevel';
 
 function AppWrapper() {
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
@@ -53,6 +53,7 @@ function AppWrapper() {
               <Route path='/payrate' element={<PayRate />} />
               <Route path='/utilities' element={<Utilities />} />
               <Route path='/roster' element={<Rosters />} />
+              <Route path='/payratelevel' element={<PayRateLevel />} />
             </Routes>
           </div>
         </div>
