@@ -93,8 +93,8 @@ const Unavailability = () => {
               </div>
 
               <div className="flex justify-end gap-4 mt-auto pt-2">
-                <button className="addBtn button font12 font-weight-500">Save</button>
-                <button className="deleteBtn button font12 font-weight-500">Reset</button>
+                <button className="successbutton button font12 font-weight-500">Save</button>
+                <button className="dangerbutton button font12 font-weight-500">Reset</button>
               </div>
             </div>
           </div>

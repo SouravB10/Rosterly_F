@@ -16,7 +16,12 @@ import SystemSettings from './Screens/RosterSettings/SystemSettings';
 import PayRate from './Screens/RosterSettings/PayRate';
 import Utilities from './Screens/Utilities';
 import Rosters from './Screens/Rosters';
+<<<<<<< HEAD
+import PayRateLevel from './Screens/PayRateLevel';
+=======
+import TimeSheet from './Screens/TimeSheet';
 
+>>>>>>> 3f7f1f2957d8ac40a4214287e67df8c53be07a64
 
 function AppWrapper() {
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
@@ -53,6 +58,11 @@ function AppWrapper() {
               <Route path='/payrate' element={<PayRate />} />
               <Route path='/utilities' element={<Utilities />} />
               <Route path='/roster' element={<Rosters />} />
+<<<<<<< HEAD
+              <Route path='/payratelevel' element={<PayRateLevel />} />
+=======
+              <Route path='/timesheet' element={<TimeSheet />} />
+>>>>>>> 3f7f1f2957d8ac40a4214287e67df8c53be07a64
             </Routes>
           </div>
         </div>
