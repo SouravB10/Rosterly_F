@@ -45,11 +45,44 @@ const Location = () => {
           >
             Get Data
           </button>
+
+          {/* <div className="fixed inset-0 z-50 flex"> */}
+            {/* Modal Box */}
+            {/* <div className="bg-gray-100 w-full max-w-md p-8 rounded-xl shadow-lg"> */}
+
+              {/* Title */}
+              <h2 className="text-xl font-semibold text-purple-700 mb-4">Add Location</h2>
+
+              {/* Description */}
+              <div className="bg-gray-100 p-6 rounded-xl mb-6">
+                <p className="text-sm text-gray-600">
+                  <strong className="text-black">Location Name</strong> is what you normally refer to the roster location as.
+                  For example, if it was a Subway store in Brisbane CBD you might refer to it as Brisbane CBD
+                </p>
+              </div>
+
+              {/* Form Fields */}
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Add Location"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                />
+                <input
+                  type="text"
+                  placeholder="Average Daily Sales (₹)"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                />
+              {/* </div> */}
+            {/* </div> */}
+          </div>
         </div>
 
-          <button className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-5 py-2 rounded-full" onClick={() => setShowModal(true)}>
+       
+
+          {/* <button className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-5 py-2 rounded-full" onClick={() => setShowModal(true)}>
             + Location
-          </button>
+          </button> */}
       </div>
 
       
@@ -159,59 +192,7 @@ const Location = () => {
         )}
       </div>
 
-       {/* Modal */}
-       {showModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
-            {/* Modal Box */}
-            <div className="bg-gray-100 w-full max-w-md p-8 rounded-xl shadow-lg">
-
-              {/* Title */}
-              <h2 className="text-xl font-semibold text-purple-700 mb-4">Add Location</h2>
-
-              {/* Description */}
-              <div className="bg-gray-100 p-6 rounded-xl mb-6">
-                <p className="text-sm text-gray-600">
-                  <strong className="text-black">Location Name</strong> is what you normally refer to the roster location as.
-                  For example, if it was a Subway store in Brisbane CBD you might refer to it as Brisbane CBD
-                </p>
-              </div>
-
-              {/* Form Fields */}
-              <div className="space-y-4">
-                <input
-                  type="text"
-                  placeholder="Add Location"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-                />
-                <input
-                  type="text"
-                  placeholder="Average Daily Sales (₹)"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-                />
-              </div>
-
-              {/* Buttons */}
-              <div className="mt-6 flex justify-end space-x-4">
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded-md text-sm"
-                >
-                  Close
-                </button>
-                <button
-                  onClick={() => {
-                    // Submit logic
-                    setShowModal(false);
-                  }}
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-md text-sm"
-                >
-                  Create
-                </button>
-              </div>
-
-            </div>
-          </div>
-        )}
+      
 
     </div>
     
