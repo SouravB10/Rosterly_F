@@ -173,11 +173,19 @@ const People = () => {
             </div>
 
             <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)} className="relative z-50">
-                <div className="fixed inset-0 bg-opacity-40 backdrop-blur-xs"></div>    
+                <div className="fixed inset-0 bg-opacity-60 backdrop-blur-xs"></div>    
                 <div className="fixed inset-0 flex items-center justify-center">
-                    <Dialog.Panel className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-                        <Dialog.Title className="text-lg font-semibold" >Add People</Dialog.Title>
-                        <form className="mt-4 space-y-3">
+                    <Dialog.Panel className="bg-white rounded-lg shadow-lg max-w-md w-full">
+                    <div className="bg-blue-600 text-white px-4 py-3 flex justify-between items-center">
+                            <Dialog.Title className="font-semibold text-lg">Add Person</Dialog.Title>
+                            <button
+                                className="text-white text-lg font-bold"
+                                onClick={() => setIsModalOpen(false)}
+                                >
+                                ×
+                            </button>
+                        </div>
+                        <form className="mt-4 p-6 space-y-3">
                             <div className=''>
                                 <label className="block text-sm font-medium">First Name</label>
                                 <input
