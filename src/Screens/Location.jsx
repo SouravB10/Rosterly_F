@@ -2,9 +2,7 @@ import React, { useState } from "react";
 
 const Location = () => {
   const [selectLocation, setSelectLocation] = useState("");
-  const [activeTab, setActiveTab] = useState("general");
-  const [showModal, setShowModal] = useState(false);
-
+  const [activeTab, setActiveTab] = useState("Sales");
 
   const handleLocation = (e) => {
     setSelectLocation(e.target.value);
@@ -16,201 +14,130 @@ const Location = () => {
 
   return (
     <div className="p-6">
-      <h3 className="text-2xl font-semibold mb-4">Locations</h3>
+      <h3 className="text-2xl font-semibold mb-6">Location</h3>
 
-      {/* Top bar with dropdown and buttons */}
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex gap-3 items-center">
-          <select
-            name="selectedLocation"
-            className="bg-white px-3 py-3 rounded-lg text-sm font-semibold text-gray-900 shadow-xs hover:bg-gray-50 w-80 appearance-none pr-10"
-            style={{
-              backgroundImage:
-                'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke-width=\'2\' stroke=\'black\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M19 9l-7 7-7-7\'/></svg>")',
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "right 1rem center",
-              backgroundSize: "1.25rem",
-            }}
-            onChange={handleLocation}
-          >
-            <option value="">-- Select location --</option>
-            <option value="Location 1">Location 1</option>
-            <option value="Location 2">Location 2</option>
-            <option value="Location 3">Location 3</option>
-          </select>
+      {/* Filter Section */}
+      <div className="flex gap-3 items-center mb-6">
+        <label className="text-sm font-semibold text-purple-700 mr-2">
+          By Location
+        </label>
+        <select
+          name="selectedLocation"
+          className="bg-white px-3 py-2 rounded-lg text-sm font-semibold text-gray-900 shadow-sm w-80 border"
+          onChange={handleLocation}
+        >
+          <option value="">-- Select location --</option>
+          <option value="Location 1">Location 1</option>
+          <option value="Location 2">Location 2</option>
+          <option value="Location 3">Location 3</option>
+        </select>
 
-          <button
-            onClick={getLocation}
-            className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-5 py-2 rounded-full"
-          >
-            Get Data
-          </button>
-        </div>
-
-          <button className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-5 py-2 rounded-full" onClick={() => setShowModal(true)}>
-            + Location
-          </button>
+        <button
+          onClick={getLocation}
+          className="bg-green-500 hover:bg-green-600 text-white font-medium px-5 py-2 rounded-md text-sm"
+        >
+          Filter Data
+        </button>
       </div>
 
-      
-
-      {/* Tab Switcher */}
-      <div className="flex gap-6 mb-6">
-        {["general", "Sales", "Employees", "Status"].map((tab) => (
-          <label key={tab} className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="tabOption"
-              value={tab}
-              checked={activeTab === tab}
-              onChange={() => setActiveTab(tab)}
-              className="form-radio text-purple-600"
-            />
-            <span className="text-sm font-semibold text-slate-900 capitalize">
-              {tab}
-            </span>
-          </label>
-        ))}
-      </div>
-
-      {/* Tab Content */}
-      <div className="space-y-6">
-      {activeTab === "general" && (
-          <div className="w-1/2 pl-1 space-y-4">
-            {/* Location Name */}
-            <div className="bg-gray-100 rounded-xl shadow-md p-6 flex items-start justify-between">
-              <div className="w-2/3">
-                <h4 className="text-lg font-semibold text-purple-800 mb-2">
-                  Location Name
-                </h4>
-                <p className="text-sm text-gray-600">
-                  What you normally refer to the roster location as.
-                  For example, if it was a Subway store in Brisbane CBD you might refer to it as Brisbane CBD.
-                </p>
-              </div>
-              <div className="w-2/3 pl-4">
+      {/* Main Layout */}
+      <div className="flex gap-10">
+        {/* Left: Tabs and Content */}
+        <div className="flex-1">
+          {/* Tab Switcher */}
+          <div className="flex gap-6 mb-6">
+            {["general", "Sales", "Employees", "Status"].map((tab) => (
+              <label key={tab} className="flex items-center gap-2">
                 <input
-                  type="text"
-                  placeholder="Main Branch"
-                  className="bg-white w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  type="radio"
+                  name="tabOption"
+                  value={tab}
+                  checked={activeTab === tab}
+                  onChange={() => setActiveTab(tab)}
+                  className="form-radio text-purple-600"
                 />
-              </div>
-            </div>
-
-            {/* Location Short Name */}
-            <div className="bg-gray-100 rounded-xl shadow-md p-6 flex items-start justify-between">
-              <div className="w-2/3">
-                <h4 className="text-lg font-semibold text-purple-800 mb-2">
-                  Location Short Name
-                </h4>
-                <p className="text-sm text-gray-600">
-                  We will sometimes refer to this roster location with a three letter code (for example, in an SMS).
-                </p>
-              </div>
-              <div className="w-2/3 pl-4">
-                <input
-                  type="text"
-                  placeholder="MNB"
-                  className="bg-white w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                />
-              </div>
-            </div>
-
-            {/* Update Button */}
-            <div className="flex justify-end">
-              <button className="bg-purple-500 hover:bg-purple-600 text-white font-medium px-6 py-2 rounded-md text-sm shadow-md">
-                Update
-              </button>
-            </div>
+                <span className="text-sm font-semibold text-slate-900 capitalize">
+                  {tab}
+                </span>
+              </label>
+            ))}
           </div>
-        )}
 
-        {/* Other Tabs */}
-        {activeTab === "Sales" && (
-          <p className="text-slate-500 font-light">Sales tab content here.</p>
-        )}
-        {activeTab === "Employees" && (
-          <p className="text-slate-500 font-light">Employees tab content here.</p>
-        )}
-        {activeTab === "Status" && (
-          <p className="text-slate-500 font-light">Status tab content here.</p>
-        )}
-      </div>
-
-       {/* Modal */}
-       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white w-1/2 rounded-xl shadow-lg p-6 relative">
-            {/* Close Button */}
-            <button
-              className="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-xl"
-              onClick={() => setShowModal(false)}
-            >
-              &times;
-            </button>
-
-            {/* Form Title */}
-            <h2 className="text-2xl font-semibold text-purple-700 mb-6">Add Location</h2>
-
-            {/* Form */}
-            <div className="space-y-6">
-              {/* Location Name */}
-              <div className="bg-gray-100 rounded-xl p-6 flex items-start justify-between">
-                <div className="w-2/3">
-                  <h4 className="text-lg font-semibold text-purple-800 mb-2">
-                    Location Name
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    What you normally refer to the roster location as.
-                    For example, if it was a Subway store in Brisbane CBD you might refer to it as Brisbane CBD.
-                  </p>
-                </div>
-                <div className="w-1/3 pl-4">
-                  <input
-                    type="text"
-                    placeholder="Main Branch"
-                    className="bg-white w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
-              </div>
-
-              {/* Location Short Name */}
-              <div className="bg-gray-100 rounded-xl p-6 flex items-start justify-between">
-                <div className="w-2/3">
-                  <h4 className="text-lg font-semibold text-purple-800 mb-2">
-                    Location Short Name
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    We will sometimes refer to this roster location with a three-letter code (for example, in an SMS).
-                  </p>
-                </div>
-                <div className="w-1/3 pl-4">
-                  <input
-                    type="text"
-                    placeholder="MNB"
-                    className="bg-white w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
-              </div>
-
-              {/* Update Button */}
-              <div className="flex justify-end">
-                <button
-                  className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-6 py-2 rounded-md text-sm shadow-md"
-                  onClick={() => {
-                    // Submit logic here
-                    setShowModal(false);
-                  }}
+          {/* Tab Content */}
+          {activeTab === "Sales" && (
+            <div className="bg-gray-100 p-6 rounded-xl shadow-md">
+              <h2 className="text-lg font-semibold text-purple-700 mb-4">
+                Expected Average Sales
+              </h2>
+              {[
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday",
+              ].map((day, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between mb-4"
                 >
-                  Add Location
+                  <label className="font-medium text-sm text-black">
+                    {day}
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="₹5000.00"
+                    defaultValue="₹5000.00"
+                    className="w-1/3 px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                </div>
+              ))}
+              <div className="flex justify-end mt-6">
+                <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-md text-sm">
+                  Update
                 </button>
               </div>
             </div>
+          )}
+        </div>
+
+        {/* Right: Add Location Panel */}
+        <div className="w-[400px] bg-gray-50 p-6 rounded-xl shadow-lg">
+          <h2 className="text-lg font-semibold text-purple-700 mb-4">
+            Add Location
+          </h2>
+
+          <p className="text-sm text-gray-600 mb-6">
+            <strong className="text-black">Location Name</strong> is what you
+            normally refer to the roster location as. For example, if it was a
+            Subway store in Brisbane CBD you might refer to it as Brisbane CBD
+          </p>
+
+          <div className="space-y-4">
+            <input
+              type="text"
+              placeholder="Add Location"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+            />
+            <input
+              type="text"
+              placeholder="Average Daily Sales (₹)"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+            />
+          </div>
+
+          <div className="flex justify-between mt-6">
+            <button className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md text-sm">
+              Close
+            </button>
+            <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-md text-sm">
+              Create
+            </button>
           </div>
         </div>
-      )}
+      </div>
     </div>
-    
   );
 };
 
