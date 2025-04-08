@@ -28,6 +28,9 @@ const Location = () => {
               onChange={handleLocation}
             >
               <option>-- Select location --</option>
+              <option>Location 1</option>
+              <option>Location 2</option>
+              <option>Location 3</option>
               {/* Add your options here */}
             </select>
             <button
@@ -191,7 +194,7 @@ const Location = () => {
         </div>
 
         {/* Right Section - 40% (2 columns) */}
-        <div className="col-span-2 bg-gray-100 p-6 rounded-2xl shadow-lg h-[300px] overflow-y-auto">
+        <div className="col-span-2 bg-gray-100 p-6 rounded-2xl shadow-lg h-[350px]">
           <h3 className="text-xl font-bold text-purple-600 mb-4">Add Location</h3>
           <div className="bg-white p-4 rounded-xl text-sm mb-4">
             <p>
@@ -209,6 +212,14 @@ const Location = () => {
             placeholder="Average Daily Sales (₹)"
             className="w-full border rounded-lg px-4 py-2"
           />
+            <div className="flex justify-end mt-6 gap-3">
+            <button className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-md text-sm">
+                      Close
+                    </button>
+                    <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-md text-sm">
+                      Create
+                    </button>
+            </div>
         </div>
       </div>
     </div>
