@@ -4,7 +4,7 @@
 
 * {
   /* font-family: "Montserrat", sans-serif; */
-  font-family: "Manrope", sans-serif;  
+  font-family: "Manrope", sans-serif;
 }
 
 body {
@@ -19,13 +19,50 @@ body {
   padding: 0;
 }
 
+:root {
+  --font-main-heading: 26px;
+  --font-heading: 20px;
+  --font-subheading: 16px;
+  --font-paragraph: 12px;
+  --font-small: 10px;
 
+}
 
 /* defaultt end */
 
 /* font-size-start----------- */
 
-.font10 {
+.mainHeading {
+  font-size: var(--font-main-heading);
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.heading {
+  font-size: var(--font-heading);
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.subHeading {
+  font-size: var(--font-subheading);
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.paragraph {
+  font-size: var(--font-subheading);
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+.smallFont {
+  font-size: var(--font-small);
+  font-weight: 400;
+  margin-bottom: 3px;
+}
+
+
+/* .font10 {
   font-size: 0.625rem;
 }
 
@@ -39,7 +76,6 @@ body {
 
 .font16 {
   font-size: 1rem;
-  /*regular*/
 }
 
 .font18 {
@@ -47,7 +83,7 @@ body {
 }
 
 .font20 {
-  font-size: 1.25rem;
+  font-size: 26px;
 }
 
 .font22 {
@@ -60,7 +96,7 @@ body {
 
 .font30 {
   font-size: 1.875rem;
-}
+} */
 
 /* font-size-end------------- */
 
@@ -153,12 +189,14 @@ body {
   background-color: #000000;
 }
 
-.grayContainer{
+.grayContainer {
   background-color: #F4F4F4;
 }
-.hash737373{
-  background-color: #C8C8C8; 
+
+.hash737373 {
+  background-color: #C8C8C8;
 }
+
 /* bg-colors-end-------------*/
 
 
@@ -179,19 +217,24 @@ body {
 .primary-100 {
   color: #7C21FC;
 }
-p,h1,h2,h3,h4,h5,h6{
+
+p, h1, h2, h3, h4, h5, h6 {
   color: #49494a;
 }
-.textDark{
+
+.textDark {
   color: #49494a;
 }
-.textLight{
+
+.textLight {
   color: #737373;
 }
-.textWhite{
+
+.textWhite {
   color: #ffff;
 }
-.texttheme{
+
+.texttheme {
   color: #1E1A4D;
 }
 
@@ -214,9 +257,11 @@ p,h1,h2,h3,h4,h5,h6{
 .black-300 {
   color: #0000;
 }
-.textColor{
+
+.textColor {
   color: #49494a
 }
+
 /* colors-end-------------*/
 
 
@@ -265,9 +310,7 @@ p,h1,h2,h3,h4,h5,h6{
   font-size: 1.25rem;
 }
 
-.paragraph {
-  font-size: 1rem;
-}
+
 
 .inputfield {
   font-size: 12px;
@@ -307,7 +350,7 @@ p,h1,h2,h3,h4,h5,h6{
   display: inline;
   border-radius: 5px;
   cursor: pointer;
-  font-size:12px ;
+  font-size: 12px;
 }
 
 .dangerbutton {
@@ -321,13 +364,13 @@ p,h1,h2,h3,h4,h5,h6{
 }
 
 .denybutton {
-    font-weight: 500;
-    border: 2px solid #ca736d;
-    padding: 8px 16px;
-    display: inline;
-    border-radius: 5px;
-    cursor: pointer;
-    color: #ca736d;
+  font-weight: 500;
+  border: 2px solid #ca736d;
+  padding: 8px 16px;
+  display: inline;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #ca736d;
 }
 
 .clearButton {
@@ -363,40 +406,6 @@ p,h1,h2,h3,h4,h5,h6{
   background-color: #00000052;
 }
 
-:root {
-  --font-main-heading: 35px;
-  --font-heading: 28px;
-  --font-subheading: 22px;
-  --font-paragraph: 12px;
-  --font-button: 13px;
-  --font-link: 13px;
-  --font-label: 14px;
-  --font-input: 16px;
-  --font-modal: 18px;
-  --font-alert: 16px;
-
-  /* Button Colors */
-  --color-add: #28a745;
-  /* Green */
-  --color-update: #ffc107;
-  /* Yellow */
-  --color-delete: #dc3545;
-  /* Red */
-  --color-reset: #6c757d;
-  /* Gray */
-
-  /* Hover Colors */
-  --hover-add: #218838;
-  --hover-update: #e0a800;
-  --hover-delete: #c82333;
-  --hover-reset: #5a6268;
-
-  /* Button Styles */
-  --button-padding: 10px 20px;
-  --button-radius: 6px;
-  --button-font-weight: 600;
-  --button-transition: all 0.3s ease-in-out;
-}
 
 
 
@@ -505,4 +514,3 @@ button:disabled {
   cursor: not-allowed;
   transform: none;
 }
-
