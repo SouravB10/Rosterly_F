@@ -16,7 +16,6 @@ import SystemSettings from './Screens/RosterSettings/SystemSettings';
 import PayRate from './Screens/RosterSettings/PayRate';
 import Utilities from './Screens/Utilities';
 import Rosters from './Screens/Rosters';
-import PayRateLevel from './Screens/PayRateLevel';
 import TimeSheet from './Screens/TimeSheet';
 import Notification from './Screens/Notification';
 import General from './Screens/RosterSettings/General';
@@ -62,7 +61,6 @@ function AppWrapper() {
               <Route path='/payrate' element={<PayRate />} />
               <Route path='/utilities' element={<Utilities />} />
               <Route path='/roster' element={<Rosters />} />
-              <Route path='/payratelevel' element={<PayRateLevel />} />
               <Route path='/timesheet' element={<TimeSheet />} />
               <Route path='/notification' element={<Notification />} />
               <Route path='/generalsettings' element={<General />} />

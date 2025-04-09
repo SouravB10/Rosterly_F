@@ -42,8 +42,8 @@ const LevelsTableUI = () => {
     };
 
     return (
-        <div className="bg-white-100 min-h-screen p-6">
-            <div className="bg-white rounded-xl shadow-md w-full overflow-hidden">
+        <div className="bg-white-100 p-8">
+            <div className=" overflow-hidden">
                 <div className="bg-[#e4e4e4] px-6 py-4 flex items-center justify-between rounded-t-xl">
                     <p className="text-sm text-[#1f1f1f] font-semibold">
                         Levels allow you to link groups of employees to different pay rates based on their role, experience or classification.
