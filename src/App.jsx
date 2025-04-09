@@ -23,6 +23,8 @@ import General from './Screens/RosterSettings/General';
 import RosterSetting from './Screens/RosterSettings/RosterSetting';
 import EmployeeTypeLoading from './Screens/RosterSettings/EmployeeTypeLoading';
 import Permission from './Screens/RosterSettings/Permission';
+import JuniorRate from './Screens/RosterSettings/JuniorRate';
+import PenalityRate from './Screens/RosterSettings/PenalityRate';
 
 
 function AppWrapper() {
@@ -67,6 +69,8 @@ function AppWrapper() {
               <Route path='/rostersetting' element={<RosterSetting />} />
               <Route path='/employeetypeloading' element={<EmployeeTypeLoading />} />
               <Route path='/permission' element={<Permission />} />
+              <Route path='/JuniorRate' element={<JuniorRate />} />
+              <Route path='/PanalityRate' element={<PenalityRate />} />
 
 
             </Routes>

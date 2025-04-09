@@ -1,0 +1,62 @@
+import React from 'react';
+
+const JuniorRate = () => {
+  const data = [
+    { age: '15 Years Old And Under', rate: '40.00%' },
+    { age: '16 Years Old', rate: '50.00%' },
+    { age: '17 Years Old', rate: '60.00%' },
+    { age: '18 Years Old', rate: '70.00%' },
+    { age: '19 Years Old', rate: '80.00%' },
+    { age: '20 Years Old', rate: '90.00%' },
+  ];
+
+  return (
+    <div className=" mt-10 p-4">
+      {/* Top header bar */}
+      <div className="flex items-center justify-between bg-gray-200 rounded-t-lg px-4 py-3">
+        <p className="text-sm text-gray-700">
+          A Level’s Hourly Rate Can Be Reduced Based On An Employee’s Age.
+        </p>
+        <div className="flex gap-2">
+          <button className="px-4 py-1 text-green-600 font-semibold border border-green-600 rounded-md bg-white hover:bg-green-50">
+            Show Inactive
+          </button>
+          <button className="px-4 py-1 text-white font-semibold bg-green-500 hover:bg-green-600 rounded-md">
+            + Age
+          </button>
+        </div>
+      </div>
+
+      {/* Table */}
+      <table className="w-full border border-gray-300">
+            <thead>
+                <tr className="bg-[#2f2378] text-white">
+                <th className="border border-gray-300 px-4 py-2 text-left">Age</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Percentage Of Full Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td className="border border-gray-300 px-4 py-2">15 Years Old And Under</td>
+                <td className="border border-gray-300 px-4 py-2">40.00%</td>
+                </tr>
+                <tr>
+                <td className="border border-gray-300 px-4 py-2">16 Years Old</td>
+                <td className="border border-gray-300 px-4 py-2">50.00%</td>
+                </tr>
+                <tr>
+                <td className="border border-gray-300 px-4 py-2">14 Years Old</td>
+                <td className="border border-gray-300 px-4 py-2">50.00%</td>
+                </tr>
+                <tr>
+                <td className="border border-gray-300 px-4 py-2">12 Years Old</td>
+                <td className="border border-gray-300 px-4 py-2">50.00%</td>
+                </tr>
+                {/* Add the rest of your rows similarly */}
+            </tbody>
+        </table>
+    </div>
+  );
+};
+
+export default JuniorRate;
