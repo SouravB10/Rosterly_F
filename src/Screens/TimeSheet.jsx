@@ -142,9 +142,9 @@ const TimeSheet = () => {
                                     <p className="font-semibold font12">Start</p>
                                     <input
                                         type="text"
-                                        className="bg-gray-200 p-2 rounded-md w-full font12 my-3"
-                                        value="1:30 PM"
-                                        readOnly
+                                        className="input"
+                                    // value="1:30 PM"
+                                    // readOnly
                                     />
                                 </div>
                                 <div>
