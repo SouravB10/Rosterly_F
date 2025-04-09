@@ -21,6 +21,7 @@ import TimeSheet from './Screens/TimeSheet';
 import Notification from './Screens/Notification';
 import General from './Screens/RosterSettings/General';
 import RosterSetting from './Screens/RosterSettings/RosterSetting';
+import EmployeeTypeLoading from './Screens/RosterSettings/EmployeeTypeLoading';
 
 
 function AppWrapper() {
@@ -63,6 +64,8 @@ function AppWrapper() {
               <Route path='/notification' element={<Notification />} />
               <Route path='/generalsettings' element={<General />} />
               <Route path='/rostersetting' element={<RosterSetting />} />
+              <Route path='/employeetypeloading' element={<EmployeeTypeLoading />} />
+
             </Routes>
           </div>
         </div>

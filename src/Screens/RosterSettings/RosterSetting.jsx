@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const SettingsPage = () => {
+const RosterSettingsPage = () => {
   const [approval, setApproval] = useState(true);
   const [sameLocationManagers, setSameLocationManagers] = useState(true);
   const [emailNotification, setEmailNotification] = useState(false);
@@ -12,7 +12,7 @@ const SettingsPage = () => {
     {/* TIMEZONE */}
     <div className="flex justify-between items-center">
       <div className="w-[60%]">
-        <h3 className="font-bold">Timezone</h3>
+        <h6 className="font-bold">Timezone</h6>
         <p className="text-sm text-gray-600">Which Timezone Do Your Locations Belong To?</p>
         <p className="text-sm text-gray-500 mt-1">1:31:31 PM</p>
       </div>
@@ -26,7 +26,7 @@ const SettingsPage = () => {
     {/* DEFAULT EMPLOYEE TYPE */}
     <div className="flex justify-between items-center">
       <div className="w-[60%]">
-        <h3 className="font-bold">Default Employee Type</h3>
+        <h6 className="font-bold">Default Employee Type</h6>
         <p className="text-sm text-gray-600">When Adding A New Employee, By Default What Should Their Employment Type Be?</p>
       </div>
       <div className="w-[35%] text-right">
@@ -39,7 +39,7 @@ const SettingsPage = () => {
     {/* AVAILABILITY CHANGES REQUIRE APPROVAL */}
     <div className="flex justify-between items-center">
       <div className="w-[60%]">
-        <h3 className="font-bold">Availability Changes Require Approval</h3>
+        <h6 className="font-bold">Availability Changes Require Approval</h6>
         <p className="text-sm text-gray-600">Check To Require Management Approval Before Implementing And Using Employee Initiated Unavailability Updates.</p>
       </div>
       <div className="w-[35%] text-right">
@@ -55,7 +55,7 @@ const SettingsPage = () => {
     {/* ONLY SHOW SAME LOCATION MANAGERS */}
     <div className="flex justify-between items-center">
       <div className="w-[60%]">
-        <h3 className="font-bold">Only Show Same Location Managers</h3>
+        <h6 className="font-bold">Only Show Same Location Managers</h6>
         <p className="text-sm text-gray-600">Check To Only Display Managers Within The Same Location(S) As The Employee When The Employee Is Selecting Who Should Approve Their Availability Change Request.</p>
       </div>
       <div className="w-[35%] text-right">
@@ -71,7 +71,7 @@ const SettingsPage = () => {
     {/* EMAIL NOTIFICATION */}
     <div className="flex justify-between items-center">
       <div className="w-[60%]">
-        <h3 className="font-bold">Send All Unavailability Request Notifications By Email To Manager</h3>
+        <h6 className="font-bold">Send All Unavailability Request Notifications By Email To Manager</h6>
         <p className="text-sm text-gray-600">Check To Notify Selected Manager By Email Of All Unavailability Or Leave Requests/Updates As They Occur.</p>
       </div>
       <div className="w-[35%] text-right">
@@ -96,4 +96,4 @@ const SettingsPage = () => {
   );
 };
 
-export default SettingsPage;
+export default RosterSettingsPage;
