@@ -39,7 +39,7 @@ const NavBar = ({ toggleSidebar }) => {
 
   return (
 
-    <Disclosure as="nav" className=" backdrop-blur-lg mt-3 mx-3 mb-1 rounded-2xl" style={{ boxShadow: '-5px 3px 10px 5px rgba(0, 0, 0, 0.05)' }}>
+    <Disclosure as="nav" className="bg-white backdrop-blur-lg mt-3 mx-3 mb-1 rounded-2xl">
       <div className="mx-auto max-w-7xl px-2 sm:px-3 lg:px-4">
         <div className="relative flex h-14 items-center justify-between">
           <div className="font-bold hidden sm:block">

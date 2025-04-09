@@ -5,8 +5,8 @@ const EmployeeTypeSettings = () => {
   const [casualLoading, setCasualLoading] = useState('25.00%');
 
   return (
-    <div className="min-h-screen bg-white p-10">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <div className=" bg-white p-8">
+      <div className="mx-auto space-y-6">
 
         {/* PART TIME EMPLOYEE FIELD */}
         <div className="flex justify-between items-start">
@@ -47,7 +47,7 @@ const EmployeeTypeSettings = () => {
         {/* SAVE BUTTON */}
         <div className="flex justify-end pt-6">
           <button
-            className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded"
+            className="successbutton w-30 text-white font-semibold px-6 py-2 rounded"
             onClick={() => {
               console.log('Part Time:', partTimeLoading);
               console.log('Casual:', casualLoading);
