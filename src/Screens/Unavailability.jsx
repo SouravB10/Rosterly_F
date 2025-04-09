@@ -10,8 +10,8 @@ const Unavailability = () => {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
-        <div className="f9f9f9card rounded-md p-5 font12 w-full">
-          <h1 className="text-center font-weight-700 font20 black-100 mb-6">
+        <div className="card">
+          <h1 className="heading">
             Days Off Adding
           </h1>
 
@@ -19,11 +19,11 @@ const Unavailability = () => {
             <div className="w-full md:w-[48%] flex flex-col gap-4">
               <div className="flex mb-2 font12">
                 <div className="w-1/2 bg-white-100 pt-2 text-center relative">
-                  <label className="block font-weight-600 texttheme mb-1 ">
+                  <label className="paragraphBold">
                     From Date
                   </label>
                   <DatePicker
-                    className=""
+                    className="input"
                     selected={fromDate}
                     onChange={(date) => setFromDate(date)}
                     dateFormat="dd/MM/yyyy"
@@ -49,10 +49,11 @@ const Unavailability = () => {
                 </div>
 
                 <div className="w-1/2 bg-white-100 pt-2 text-center ml-1">
-                  <label className="block font12 font-weight-600 texttheme mb-1 ">
+                  <label className="paragraphBold">
                     To Date
                   </label>
                   <DatePicker
+                  className="input"
                     selected={toDate}
                     onChange={(date) => setToDate(date)}
                     dateFormat="dd/MM/yyyy"
@@ -79,7 +80,7 @@ const Unavailability = () => {
               </div>
 
               <div>
-                <label className="block font12 font-weight-600 texttheme mb-1">
+                <label className="paragraphBold">
                   Specify the leave type
                 </label>
                 <select className="input w-full custom-focus">
@@ -89,11 +90,11 @@ const Unavailability = () => {
               </div>
 
               <div>
-                <label className="block font12 font-weight-600 texttheme mb-1">
+                <label className="paragraphBold">
                   Specify number of leave hours per week
                 </label>
                 <div className="flex ">
-                  <span className="hash737373 w-80 text-white-100 px-3 py-2 rounded-l-md font12">
+                  <span className="paragraphBold">
                     Week 31/03 - 06/04
                   </span>
                   <input
@@ -107,17 +108,17 @@ const Unavailability = () => {
 
             <div className="w-full md:w-[48%] flex flex-col pt-2 gap-4">
               <div>
-                <label className="block font12 font-weight-600 texttheme mb-1">
+                <label className="paragraphBold">
                   Please provide a brief reason
                 </label>
                 <textarea
                   rows="1"
-                  className="w-full bg-white-100 rounded-md px-4 py-2 custom-focus"
+                  className="textArea custom-focus"
                 />
               </div>
 
               <div>
-                <label className="block font12 font-weight-600 texttheme mb-1">
+                <label className="paragraphBold">
                   Select a manager to notify
                 </label>
                 <select className="input w-full custom-focus">
@@ -126,10 +127,10 @@ const Unavailability = () => {
               </div>
 
               <div className="flex justify-end gap-4 mt-auto pt-2">
-                <button className="successbutton button font12 font-weight-500">
+                <button className="buttonSuccess button font12 font-weight-500">
                   Save
                 </button>
-                <button className="dangerbutton button font12 font-weight-500">
+                <button className="buttonDanger button font12 font-weight-500">
                   Reset
                 </button>
               </div>
