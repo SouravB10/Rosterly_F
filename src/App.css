@@ -1,78 +1,4 @@
 @import "tailwindcss";
-
-.inputfield {
-  font-size: 12px;
-  padding: 0.5rem;
-  height: 30px;
-  border-radius: 0.25rem;
-  border: 1px solid #ccc;
-  width: 100%;
-}
-
-/* button */
-.button {
-  background-color: #7d20f7;
-  color: #ffff;
-  font-weight: 500;
-  padding: 8px 16px;
-  display: inline;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.primarybutton {
-  font-weight: 500;
-  border: 2px solid #85ca6d;
-  padding: 8px 16px;
-  display: inline;
-  border-radius: 5px;
-  cursor: pointer;
-  color: #85ca6d;
-}
-
-.successbutton {
-  background-color: #85ca6d;
-  color: #ffff;
-  font-weight: 500;
-  padding: 8px 16px;
-  display: inline;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 12px;
-}
-
-.dangerbutton {
-  background-color: #ca736d;
-  color: #ffff;
-  font-weight: 500;
-  padding: 8px 16px;
-  display: inline;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.denybutton {
-  font-weight: 500;
-  border: 2px solid #ca736d;
-  padding: 8px 16px;
-  display: inline;
-  border-radius: 5px;
-  cursor: pointer;
-  color: #ca736d;
-}
-
-.clearButton {
-  background-color: #737373;
-  color: #ffff;
-  font-weight: 500;
-  padding: 8px 16px;
-  display: inline;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-
-
 /* defaultt start */
 * {
   /* font-family: "Montserrat", sans-serif; */
@@ -217,6 +143,7 @@ body {
     5px 5px 5px #f5f5f5;
   border-radius: 5px;
   outline: none;
+  /* width: 100%; */
 }
 
 
@@ -224,8 +151,40 @@ body {
   border-color: 1px solid #7d88ff;
   box-shadow: 0 0 0 2px #f5f5f5;
   outline: none;
+  /* width: 100%; */
+}
+.inputFull {
+  height: 35px;
+  font-size: var(--font-paragraph);
+  padding: 0 10px;
+  background-color: #ffff;
+  box-shadow:
+    -5px -5px 5px #f4f4f4,
+    5px 5px 5px #f5f5f5;
+  border-radius: 5px;
+  outline: none;
+  width: 100%;
 }
 
+
+.inputFull:focus {
+  border-color: 1px solid #7d88ff;
+  box-shadow: 0 0 0 2px #f5f5f5;
+  outline: none;
+  width: 100%;
+}
+
+.textArea{
+  width: 100%;
+  height:35px;
+  padding: 0 10px;
+  background-color: #ffff;
+  box-shadow:
+    -5px -5px 5px #f4f4f4,
+    5px 5px 5px #f5f5f5;
+    border-radius: 5px;
+    font-size: var(--font-paragraph);
+}
 
 /* input end */
 
@@ -241,12 +200,17 @@ body {
 }
 
 .cardYellow {
-  background-color: #e0ff7b70;
+  background-color: #3F3897;
   border-radius: 10px;
   border: 1px solid #eaeaea;
   padding: 20px;
   box-shadow:
     0px 4px 20px #efefef;
+  color: #ffff;
+  height:180px;
+  width: 200px;
+  border: 1px solid #a6c1503e;
+  
 }
 
 .cardRed {
@@ -256,6 +220,10 @@ body {
   padding: 20px;
   box-shadow:
     0px 4px 20px #efefef;
+    color: #5e5e5e69;
+    height:180px;
+    width: 200px;
+    border: 1px solid #fe5d5d29;
 }
 
 .cardGrey {
@@ -263,8 +231,16 @@ body {
   border-radius: 10px;
   border: 1px solid #eaeaea;
   padding: 20px;
+  height:180px;
+  width: 200px;
   box-shadow:
     0px 4px 20px #efefef;
+    color: #5e5e5e69;
+    border: 1px solid #80808023;
+}
+
+.sideBar{
+  background-color: #3F3897;
 }
 
 /* Card end */
@@ -283,10 +259,20 @@ body {
   font-weight: 600;
   margin-bottom: 3px;
 }
+.headingBold {
+  font-size: var(--font-heading);
+  font-weight: 800;
+  margin-bottom: 3px;
+}
 
 .subHeading {
   font-size: var(--font-subheading);
   font-weight: 600;
+  margin-bottom: 3px;
+}
+.subHeadingBold {
+  font-size: var(--font-subheading);
+  font-weight: 800;
   margin-bottom: 3px;
 }
 
@@ -294,6 +280,19 @@ body {
   font-size: var(--font-paragraph);
   font-weight: 600;
   margin-bottom: 3px;
+  line-height: 20px;
+}
+.paragraphBold {
+  font-size: var(--font-paragraph);
+  font-weight: 800;
+  margin-bottom: 3px;
+  line-height: 20px;
+}
+.paragraphThin {
+  font-size: var(--font-paragraph);
+  font-weight: 300;
+  margin-bottom: 3px;
+  line-height: 20px;
 }
 
 .smallFont {
@@ -301,3 +300,12 @@ body {
   font-weight: 400;
   margin-bottom: 3px;
 }
+
+/* Icons start */
+
+.icon50{
+  font-size: 15px;
+  margin-bottom: 3px;
+}
+
+/* Icons End */

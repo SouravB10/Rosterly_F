@@ -29,7 +29,7 @@ const Sidebar = () => {
     return (
         <div className="flex items-start">
 
-            <div className={`h-[96vh] inset-shadow-amber-600 transition-all duration-300 bg-indigo-950 backdrop-blur-lg m-3 rounded-2xl overflow-x-hidden overflow-y-auto
+            <div className={`h-[96vh] inset-shadow-amber-600 transition-all duration-300 sideBar backdrop-blur-lg m-3 rounded-2xl overflow-x-hidden overflow-y-auto
             ${open ? 'w-[250px]' : 'w-[80px]'}`}>
 
                 <div className="flex flex-col">

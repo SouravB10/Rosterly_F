@@ -19,12 +19,12 @@ const Location = () => {
       <div className="grid grid-cols-5 gap-6 w-full">
         {/* Left Section - 60% (3 columns) */}
         <div className="col-span-3">
-          <h6 className="text-xl font-semibold mb-4">By Location</h6>
+          <h6 className="heading">By Location</h6>
 
           {/* Dropdown + Button */}
           <div className="flex items-center gap-4 mb-6">
             <select
-              className="border rounded-lg px-4 py-2 w-1/2"
+              className="input"
               onChange={handleLocation}
             >
               <option>-- Select location --</option>
@@ -34,7 +34,7 @@ const Location = () => {
               {/* Add your options here */}
             </select>
             <button
-              className="successbutton text-white text-sm font-semibold"
+              className="buttonSuccess"
               onClick={getLocation}
             >
               Get Data
@@ -42,7 +42,7 @@ const Location = () => {
           </div>
 
           {/* Tab Switcher */}
-          <div className="flex gap-6 mb-6">
+          <div className="subHeading flex gap-6 mb-6">
             {["general", "Sales", "Employees", "Status"].map((tab) => (
               <label key={tab} className="flex items-center gap-2">
                 <input
@@ -65,10 +65,10 @@ const Location = () => {
             {activeTab === "general" && (
               <div className="space-y-4">
                 {/* Location Name */}
-                <div className="bg-gray-100 rounded-xl shadow-md p-6 flex justify-between">
+                <div className="card flex justify-between">
                   <div className="w-1/2 pr-4">
-                    <h4 className="text-lg font-semibold text-purple-800 mb-2">Location Name</h4>
-                    <p className="text-sm text-gray-600">
+                    <h4 className="subHeading">Location Name</h4>
+                    <p className="paragraphThin">
                       What you normally refer to the roster location as. For example, Brisbane CBD.
                     </p>
                   </div>
@@ -76,16 +76,16 @@ const Location = () => {
                     <input
                       type="text"
                       placeholder="Main Branch"
-                      className="bg-white w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="input"
                     />
                   </div>
                 </div>
 
                 {/* Location Short Name */}
-                <div className="bg-gray-100 rounded-xl shadow-md p-6 flex justify-between">
+                <div className="card flex justify-between">
                   <div className="w-1/2 pr-4">
-                    <h4 className="text-lg font-semibold text-purple-800 mb-2">Location Short Name</h4>
-                    <p className="text-sm text-gray-600">
+                    <h4 className="subHeading">Location Short Name</h4>
+                    <p className="paragraphThin">
                       We use this in SMS and reports as a 3-letter code (e.g., MNB).
                     </p>
                   </div>
@@ -93,13 +93,13 @@ const Location = () => {
                     <input
                       type="text"
                       placeholder="MNB"
-                      className="bg-white w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="input"
                     />
                   </div>
                 </div>
 
                 <div className="flex justify-end">
-                  <button className="bg-purple-500 hover:bg-purple-600 text-white font-medium px-6 py-2 rounded-md text-sm shadow-md">
+                  <button className="buttonTheme">
                     Update
                   </button>
                 </div>
@@ -193,8 +193,8 @@ const Location = () => {
 
         {/* Right Section - 40% (2 columns) */}
         <div className="col-span-2 bg-gray-100 p-6 rounded-2xl shadow-lg h-[350px]">
-          <h3 className="text-xl font-bold text-purple-600 mb-4">Add Location</h3>
-          <div className="bg-white p-4 rounded-xl text-sm mb-4">
+          <h3 className="heading">Add Location</h3>
+          <div className="paragraph">
             <p>
               <strong>Location Name</strong> is what you normally refer to the roster location as.
               For example, Brisbane CBD.
@@ -203,18 +203,18 @@ const Location = () => {
           <input
             type="text"
             placeholder="Add Location"
-            className="w-full border rounded-lg px-4 py-2 mb-4"
+            className="input"
           />
           <input
             type="text"
             placeholder="Average Daily Sales (₹)"
-            className="w-full border rounded-lg px-4 py-2"
+            className="input"
           />
             <div className="flex justify-end mt-6 gap-3">
-              <button className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-md text-sm">
+              <button className="buttonGrey">
                   Close
               </button>
-              <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-md text-sm">
+              <button className="buttonSuccess">
                   Create
               </button>
             </div>

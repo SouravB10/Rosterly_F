@@ -206,3 +206,76 @@
   .bg-modal-opacity {
     background-color: #00000052;
   }
+
+
+  
+.inputfield {
+  font-size: 12px;
+  padding: 0.5rem;
+  height: 30px;
+  border-radius: 0.25rem;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+/* button */
+.button {
+  background-color: #7d20f7;
+  color: #ffff;
+  font-weight: 500;
+  padding: 8px 16px;
+  display: inline;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.primarybutton {
+  font-weight: 500;
+  border: 2px solid #85ca6d;
+  padding: 8px 16px;
+  display: inline;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #85ca6d;
+}
+
+.successbutton {
+  background-color: #85ca6d;
+  color: #ffff;
+  font-weight: 500;
+  padding: 8px 16px;
+  display: inline;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.dangerbutton {
+  background-color: #ca736d;
+  color: #ffff;
+  font-weight: 500;
+  padding: 8px 16px;
+  display: inline;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.denybutton {
+  font-weight: 500;
+  border: 2px solid #ca736d;
+  padding: 8px 16px;
+  display: inline;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #ca736d;
+}
+
+.clearButton {
+  background-color: #737373;
+  color: #ffff;
+  font-weight: 500;
+  padding: 8px 16px;
+  display: inline;
+  border-radius: 5px;
+  cursor: pointer;
+}
