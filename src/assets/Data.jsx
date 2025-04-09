@@ -67,7 +67,6 @@ export const navItems = [
         submenu: [
             { id: 1, title: 'System Settings', path: '/systemsettings', icon: <MdDisplaySettings className="text-xl text-white"/> },
             { id: 2, title: 'Pay Rate Setup', path: '/payrate', icon: <TbSettingsDollar className="text-xl text-white"/> },
-            { id: 3, title: 'Pay Rate Level', path: '/payratelevel', icon: <TbSettingsSearch className="text-xl text-white"/> }
         ]
     },
 ]

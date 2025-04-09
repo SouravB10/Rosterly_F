@@ -5,6 +5,9 @@ import { FaUserClock } from "react-icons/fa6";
 import General from './General';
 import RosterSettingsPage from './RosterSetting';
 import Permission from './Permission';
+import { GrDocumentTime } from "react-icons/gr";
+import { RiListSettingsLine } from "react-icons/ri";
+import { BsNewspaper } from "react-icons/bs";
 
 
 const SystemSettings = () => {
@@ -25,14 +28,14 @@ const SystemSettings = () => {
         {[
           { name: 'General', icon: <IoSettingsOutline size={50} /> },
           { name: 'Roster', icon: <FaUserClock size={50} /> },
-          { name: 'TimeSheet', icon: <IoSettingsOutline size={50} /> },
-          { name: 'Integrations', icon: <IoSettingsOutline size={50} /> },
-          { name: 'Permission', icon: <IoSettingsOutline size={50} /> },
+          { name: 'TimeSheet', icon: <GrDocumentTime size={50} /> },
+          { name: 'Integrations', icon: <RiListSettingsLine size={50} /> },
+          { name: 'Permission', icon: <BsNewspaper size={50} /> },
         ].map((setting) => (
           <div
             key={setting.name}
             className={`p-5 rounded-md w-45 cursor-pointer transition-all duration-200
-              ${selectedSetting === setting.name ? 'bg-indigo-900 text-white' : 'bg-gray-100'}
+              ${selectedSetting === setting.name ? 'bg-indigo-900 text-white' : 'bg-gray-200'}
               hover:bg-indigo-300`}
             onClick={() => setSelectedSetting(setting.name)}
           >
