@@ -138,14 +138,55 @@ const Unavailability = () => {
           </div>
         </div>
 
-        <div className="grayContainer rounded-md p-5 md:col-span-1 md:row-span-13">
-          <h1 className="text-center font-weight-700">
+        <div className="card rounded-md p-5 md:col-span-1 md:row-span-9">
+          <h1 className="text-center subHeading">
             Recurring Unavailability
           </h1>
 
-          <div className="flex rounded-md justify-between my-5 bg-white-100 items-center p-3">
+          <div className="flex rounded-md justify-between my-2 bg-white-100 items-center p-3">
             <div>
-              <p className="primary-300 font-weight-700 ">Monday</p>
+              <p className="paragraphBold">Monday</p>
+            </div>
+            <div className="mx-3">
+              <FaPlusSquare />
+            </div>
+          </div>
+          <div className="flex rounded-md justify-between my-2 bg-white-100 items-center p-3">
+            <div>
+              <p className="paragraphBold">Tuesday</p>
+            </div>
+            <div className="mx-3">
+              <FaPlusSquare />
+            </div>
+          </div>
+          <div className="flex rounded-md justify-between my-2 bg-white-100 items-center p-3">
+            <div>
+              <p className="paragraphBold">Wednesday</p>
+            </div>
+            <div className="mx-3">
+              <FaPlusSquare />
+            </div>
+          </div>
+          <div className="flex rounded-md justify-between my-2 bg-white-100 items-center p-3">
+            <div>
+              <p className="paragraphBold">Thursday</p>
+            </div>
+            <div className="mx-3">
+              <FaPlusSquare />
+            </div>
+          </div>
+          <div className="flex rounded-md justify-between my-2 bg-white-100 items-center p-3">
+            <div>
+              <p className="paragraphBold">Friday</p>
+            </div>
+            <div className="mx-3">
+              <FaPlusSquare />
+            </div>
+          </div>
+          <div className="flex rounded-md justify-between my-2 bg-white-100 items-center p-3">
+            <div>
+              <p className="text-red-600 paragraphBold ">Saturday</p>
+              <p className="paragraphThin">8:00am - 11:00am/off</p>
             </div>
             <div className="mx-3">
               <FaPlusSquare />
@@ -153,49 +194,8 @@ const Unavailability = () => {
           </div>
           <div className="flex rounded-md justify-between my-5 bg-white-100 items-center p-3">
             <div>
-              <p className="primary-300 font-weight-700 ">Tuesday</p>
-            </div>
-            <div className="mx-3">
-              <FaPlusSquare />
-            </div>
-          </div>
-          <div className="flex rounded-md justify-between my-5 bg-white-100 items-center p-3">
-            <div>
-              <p className="primary-300 font-weight-700 ">Wednesday</p>
-            </div>
-            <div className="mx-3">
-              <FaPlusSquare />
-            </div>
-          </div>
-          <div className="flex rounded-md justify-between my-5 bg-white-100 items-center p-3">
-            <div>
-              <p className="primary-300 font-weight-700 ">Thursday</p>
-            </div>
-            <div className="mx-3">
-              <FaPlusSquare />
-            </div>
-          </div>
-          <div className="flex rounded-md justify-between my-5 bg-white-100 items-center p-3">
-            <div>
-              <p className="primary-300 font-weight-700 ">Friday</p>
-            </div>
-            <div className="mx-3">
-              <FaPlusSquare />
-            </div>
-          </div>
-          <div className="flex rounded-md justify-between my-5 bg-white-100 items-center p-3">
-            <div>
-              <p className="text-red-600 font-weight-700 ">Saturday</p>
-              <p className=" font10">8:00am - 11:00am/off</p>
-            </div>
-            <div className="mx-3">
-              <FaPlusSquare />
-            </div>
-          </div>
-          <div className="flex rounded-md justify-between my-5 bg-white-100 items-center p-3">
-            <div>
-              <p className="text-red-600 font-weight-700 ">Sunday</p>
-              <p className=" font10">8:00am - 11:00pm/its sunday</p>
+              <p className="text-red-600 paragraphBold ">Sunday</p>
+              <p className="paragraphThin">8:00am - 11:00pm/its sunday</p>
             </div>
             <div className="mx-3">
               <FaPlusSquare />
@@ -204,8 +204,8 @@ const Unavailability = () => {
         </div>
 
         {/* Requested Days Off List */}
-        <div className="grayContainer rounded-md p-5 md:row-span-8">
-          <h1 className=" font-weight-600 font20 black-100 mb-4">
+        <div className="card rounded-md p-5 md:row-span-8">
+          <h1 className="subHeading">
             Requested Days Off
           </h1>
 
@@ -213,10 +213,10 @@ const Unavailability = () => {
           <div className="py-2">
             <div className="flex items-start justify-between">
               <div>
-                <p className="font14 font-weight-600 texttheme">
+                <p className="paragraphBold">
                   28/03/25 - 29/03/25
                 </p>
-                <p className="font10 font-weight-400 black-100">(Function)</p>
+                <p className="paragraphThin">(Function)</p>
               </div>
               <button className="black-100 hover:texttheme mt-1">
                 <FaPencilAlt className="w-4 h-4" />
@@ -229,10 +229,10 @@ const Unavailability = () => {
           <div className="py-2">
             <div className="flex items-start justify-between">
               <div>
-                <p className="font14 font-weight-600 texttheme">
+                <p className="paragraphBold">
                   04/04/25 - 05/04/25
                 </p>
-                <p className="font10 font-weight-400 black-100">
+                <p className="paragraphThin">
                   16.00hrs of Without Pay Leave (Sample visit)
                 </p>
               </div>

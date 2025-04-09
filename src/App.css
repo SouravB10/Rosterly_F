@@ -328,6 +328,7 @@ body {
   font-weight: 800;
   margin-bottom: 3px;
   line-height: 20px;
+  letter-spacing: 0.2px;
 }
 .paragraphBoldWhite {
   font-size: var(--font-paragraph);
