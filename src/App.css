@@ -143,6 +143,7 @@ body {
     5px 5px 5px #f5f5f5;
   border-radius: 5px;
   outline: none;
+  /* width: 100%; */
 }
 
 
@@ -150,6 +151,27 @@ body {
   border-color: 1px solid #7d88ff;
   box-shadow: 0 0 0 2px #f5f5f5;
   outline: none;
+  /* width: 100%; */
+}
+.inputFull {
+  height: 35px;
+  font-size: var(--font-paragraph);
+  padding: 0 10px;
+  background-color: #ffff;
+  box-shadow:
+    -5px -5px 5px #f4f4f4,
+    5px 5px 5px #f5f5f5;
+  border-radius: 5px;
+  outline: none;
+  width: 100%;
+}
+
+
+.inputFull:focus {
+  border-color: 1px solid #7d88ff;
+  box-shadow: 0 0 0 2px #f5f5f5;
+  outline: none;
+  width: 100%;
 }
 
 .textArea{
@@ -258,11 +280,19 @@ body {
   font-size: var(--font-paragraph);
   font-weight: 600;
   margin-bottom: 3px;
+  line-height: 20px;
 }
 .paragraphBold {
   font-size: var(--font-paragraph);
   font-weight: 800;
   margin-bottom: 3px;
+  line-height: 20px;
+}
+.paragraphThin {
+  font-size: var(--font-paragraph);
+  font-weight: 300;
+  margin-bottom: 3px;
+  line-height: 20px;
 }
 
 .smallFont {

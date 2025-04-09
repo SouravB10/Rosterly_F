@@ -6,18 +6,18 @@ const RosterSettingsPage = () => {
   const [emailNotification, setEmailNotification] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white p-8">
+    <div className="card">
       <div className="max-w-6xl mx-auto space-y-6">
 
     {/* TIMEZONE */}
     <div className="flex justify-between items-center">
       <div className="w-[60%]">
-        <h6 className="font-bold">Timezone</h6>
-        <p className="text-sm text-gray-600">Which Timezone Do Your Locations Belong To?</p>
-        <p className="text-sm text-gray-500 mt-1">1:31:31 PM</p>
+        <h6 className="subHeading">Timezone</h6>
+        <p className="paragraphThin">Which Timezone Do Your Locations Belong To?</p>
+        <p className="paragraphBold">1:31:31 PM</p>
       </div>
       <div className="w-[35%] text-right">
-        <select className="w-70 font-bold text-sm mt-2 p-2 rounded-md bg-gray-200 text-gray-700">
+        <select className="input">
           <option>(UTC+05:30) Asia/Kolkata</option>
         </select>
       </div>
@@ -26,11 +26,11 @@ const RosterSettingsPage = () => {
     {/* DEFAULT EMPLOYEE TYPE */}
     <div className="flex justify-between items-center">
       <div className="w-[60%]">
-        <h6 className="font-bold">Default Employee Type</h6>
-        <p className="text-sm text-gray-600">When Adding A New Employee, By Default What Should Their Employment Type Be?</p>
+        <h6 className="subHeading">Default Employee Type</h6>
+        <p className="paragraphThin">When Adding A New Employee, By Default What Should Their Employment Type Be?</p>
       </div>
       <div className="w-[35%] text-right">
-        <select className="w-70 font-bold text-sm mt-2 p-2 rounded-md bg-gray-200 text-gray-700">
+        <select className="input">
           <option>Full</option>
         </select>
       </div>
@@ -39,8 +39,8 @@ const RosterSettingsPage = () => {
     {/* AVAILABILITY CHANGES REQUIRE APPROVAL */}
     <div className="flex justify-between items-center">
       <div className="w-[60%]">
-        <h6 className="font-bold">Availability Changes Require Approval</h6>
-        <p className="text-sm text-gray-600">Check To Require Management Approval Before Implementing And Using Employee Initiated Unavailability Updates.</p>
+        <h6 className="subHeading">Availability Changes Require Approval</h6>
+        <p className="paragraphThin">Check To Require Management Approval Before Implementing And Using Employee Initiated Unavailability Updates.</p>
       </div>
       <div className="w-[35%] text-right">
         <input
@@ -55,8 +55,8 @@ const RosterSettingsPage = () => {
     {/* ONLY SHOW SAME LOCATION MANAGERS */}
     <div className="flex justify-between items-center">
       <div className="w-[60%]">
-        <h6 className="font-bold">Only Show Same Location Managers</h6>
-        <p className="text-sm text-gray-600">Check To Only Display Managers Within The Same Location(S) As The Employee When The Employee Is Selecting Who Should Approve Their Availability Change Request.</p>
+        <h6 className="subHeading">Only Show Same Location Managers</h6>
+        <p className="paragraphThin">Check To Only Display Managers Within The Same Location(S) As The Employee When The Employee Is Selecting Who Should Approve Their Availability Change Request.</p>
       </div>
       <div className="w-[35%] text-right">
         <input
@@ -71,8 +71,8 @@ const RosterSettingsPage = () => {
     {/* EMAIL NOTIFICATION */}
     <div className="flex justify-between items-center">
       <div className="w-[60%]">
-        <h6 className="font-bold">Send All Unavailability Request Notifications By Email To Manager</h6>
-        <p className="text-sm text-gray-600">Check To Notify Selected Manager By Email Of All Unavailability Or Leave Requests/Updates As They Occur.</p>
+        <h6 className="subHeading">Send All Unavailability Request Notifications By Email To Manager</h6>
+        <p className="paragraphThin">Check To Notify Selected Manager By Email Of All Unavailability Or Leave Requests/Updates As They Occur.</p>
       </div>
       <div className="w-[35%] text-right">
         <input

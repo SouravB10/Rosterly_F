@@ -25,7 +25,7 @@ const Permission = () => {
   };
 
   return (
-    <div className="bg-white p-8">
+    <div className="card">
       <div className="mx-auto space-y-6">
         {[
           {
@@ -70,14 +70,14 @@ const Permission = () => {
           >
             {/* LEFT SIDE - 60% */}
             <div className="w-[60%]">
-              <h3 className="font-semibold">{item.label}</h3>
-              <p className="text-sm text-gray-600">{item.desc}</p>
+              <h3 className="subHeading">{item.label}</h3>
+              <p className="paragraphThin">{item.desc}</p>
             </div>
 
             {/* RIGHT SIDE - 40% */}
             <div className="w-[40%] flex justify-end">
               <select
-                className="w-70 font-bold text-sm mt-2 p-2 rounded-md bg-gray-200 text-gray-700"
+                className="input"
                 value={permissions[item.key]}
                 onChange={(e) => handleChange(item.key, e.target.value)}
               >
@@ -92,7 +92,7 @@ const Permission = () => {
         {/* UPDATE BUTTON */}
         <div className="flex justify-end pt-6">
           <button
-            className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded"
+            className="buttonSuccess"
             onClick={() => console.log('Updated Permissions:', permissions)}
           >
             Update
