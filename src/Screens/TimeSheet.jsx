@@ -50,9 +50,8 @@ const TimeSheet = () => {
                         onChange={handleLocation}
                     >
                         <option value="default">--Select Location--</option>
-                        <option value="Location 1">Location 1</option>
-                        <option value="Location 2">Location 2</option>
-                        <option value="Location 3">Location 3</option>
+                        <option value="Location 1">Main Office</option>
+                        <option value="Location 2">Office</option>
                     </select>
 
                     <div className="flex items-center font12 justify-center bg-violet-100 rounded-lg text-sm font-semibold text-gray-900 shadow-sm w-full md:w-75 px-4">
@@ -91,9 +90,9 @@ const TimeSheet = () => {
                         }}
                     >
                         <option value="default">--Select Employee--</option>
-                        <option value="Location 1">Employee 1</option>
-                        <option value="Location 2">Employee 2</option>
-                        <option value="Location 3">Employee 3</option>
+                        <option value="Location 1">Vishal</option>
+                        <option value="Location 2">Harish</option>
+                        <option value="Location 3">Anita</option>
                     </select>
 
                     <button className="font12 successbutton mx-4 text-white transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-950 ...">

@@ -28,9 +28,8 @@ const Location = () => {
               onChange={handleLocation}
             >
               <option>-- Select location --</option>
-              <option>Location 1</option>
-              <option>Location 2</option>
-              <option>Location 3</option>
+              <option>Main Office</option>
+              <option>Office</option>
               {/* Add your options here */}
             </select>
             <button
