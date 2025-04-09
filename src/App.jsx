@@ -59,6 +59,7 @@ function AppWrapper() {
               <Route path='/payratelevel' element={<PayRateLevel />} />
               <Route path='/timesheet' element={<TimeSheet />} />
               <Route path='/notification' element={<Notification />} />
+              <Route path='/rostersetting' element={<RosterSett />} />
 
             </Routes>
           </div>

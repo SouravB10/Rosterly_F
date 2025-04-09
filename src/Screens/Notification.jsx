@@ -12,6 +12,17 @@ const notifications = [
     reason: 'Temple Visit',
     time: '03/04/25 2:56pm',
   },
+  {
+    id: 2,
+    name: 'Anita Seth',
+    days: 2,
+    from: '04/04/23',
+    to: '05/04/25',
+    hours: '16.00hrs',
+    type: 'Without Pay Leave',
+    reason: 'Home Visit',
+    time: '03/04/25 2:56pm',
+  },
   // Add more entries as needed
 ];
 
