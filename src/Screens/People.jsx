@@ -47,9 +47,8 @@ const People = () => {
             onChange={handleLocation}
           >
             <option value="default">--Select Location--</option>
-            <option value="Location 1">Location 1</option>
-            <option value="Location 2">Location 2</option>
-            <option value="Location 3">Location 3</option>
+            <option value="Location 1">Main Office</option>
+            <option value="Location 2">Office</option>
           </select>
 
           <button className="buttonSuccess" onClick={getLocation}>
