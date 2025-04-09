@@ -38,14 +38,14 @@ const TimeSheet = () => {
                 <div className="flex flex-wrap gap-3 w-full md:w-auto">
                     <select
                         name="selectedLocation"
-                        className="bg-violet-100 px-3 font12 py-2 rounded-lg text-sm font-semibold text-gray-900 shadow-sm w-full md:w-50 appearance-none pr-10"
-                        style={{
-                            backgroundImage:
-                                "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='black'><path stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/></svg>\")",
-                            backgroundRepeat: "no-repeat",
-                            backgroundPosition: "right 1rem center",
-                            backgroundSize: "1.25rem",
-                        }}
+                        className="input w-50"
+                        // style={{
+                        //     backgroundImage:
+                        //         "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='black'><path stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/></svg>\")",
+                        //     backgroundRepeat: "no-repeat",
+                        //     backgroundPosition: "right 1rem center",
+                        //     backgroundSize: "1.25rem",
+                        // }}
                         value={selectedLocation}
                         onChange={handleLocation}
                     >
@@ -55,40 +55,34 @@ const TimeSheet = () => {
                         <option value="Location 3">Location 3</option>
                     </select>
 
-                    <div className="flex items-center font12 justify-center bg-violet-100 rounded-lg text-sm font-semibold text-gray-900 shadow-sm w-full md:w-75 px-4">
+                    <div className="flex items-center justify-center bg-white rounded-lg text-sm font-semibold text-gray-900 w-full md:w-75 px-2">
                         <FaAngleLeft
                             className="text-violet-800 hover:text-violet-950"
-                            size={20}
+                            size={16}
                             onClick={handlePrevWeek}
                         />
-                        <span className="mx-2">{getWeekRange(currentWeek)}</span>
+                        <span className="paragraphBold">{getWeekRange(currentWeek)}</span>
                         <FaAngleRight
                             className="text-violet-800 hover:text-violet-950"
-                            size={20}
+                            size={16}
                             onClick={handleNextWeek}
                         />
                     </div>
 
                     <div className="flex gap-2">
-                        <div className="flex items-center justify-center bg-violet-100 rounded-lg text-sm text-gray-900 shadow-sm w-10 px-2">
-                            <IoStatsChartSharp size={18} />
+                    <div className="flex items-center justify-center bg-white rounded-lg text-sm text-gray-900 w-10 px-2">
+                    <IoStatsChartSharp className="icon50" />
                         </div>
-                        <div className="flex items-center justify-center bg-violet-100 rounded-lg text-sm text-gray-900 shadow-sm w-10 px-2">
-                            <FaFilePdf size={18} />
+                        <div className="flex items-center justify-center bg-white rounded-lg text-sm text-gray-900 w-10 px-2">
+                            <FaFilePdf className="icon50" />
                         </div>
                     </div>
                 </div>
                 <div>
                     <select
                         name="selectedEmployee"
-                        className="bg-violet-100 font12 px-3 py-2 rounded-lg text-sm font-semibold text-gray-900 shadow-sm w-full md:w-50 appearance-none pr-10"
-                        style={{
-                            backgroundImage:
-                                "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='black'><path stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/></svg>\")",
-                            backgroundRepeat: "no-repeat",
-                            backgroundPosition: "right 1rem center",
-                            backgroundSize: "1.25rem",
-                        }}
+                        className="input w-50"
+                      
                     >
                         <option value="default">--Select Employee--</option>
                         <option value="Location 1">Employee 1</option>
@@ -150,7 +144,7 @@ const TimeSheet = () => {
                             ].map((day, index) => (
                                 <div
                                     key={index}
-                                    className="p-2 text-black font-bold rounded-md"
+                                    className="p-2 text-black paragraphBold rounded-md"
                                 >
                                     <p>{day}</p>
                                     <p className="text-sm">₹ 0 | 0.00 Hrs</p>
