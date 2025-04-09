@@ -6,8 +6,8 @@ const RosterSettingsPage = () => {
   const [emailNotification, setEmailNotification] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white p-10">
-  <div className="max-w-6xl mx-auto space-y-6">
+    <div className="min-h-screen bg-white p-8">
+      <div className="max-w-6xl mx-auto space-y-6">
 
     {/* TIMEZONE */}
     <div className="flex justify-between items-center">

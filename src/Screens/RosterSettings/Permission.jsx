@@ -25,8 +25,8 @@ const Permission = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white py-10 px-6">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <div className="bg-white p-8">
+      <div className="mx-auto space-y-6">
         {[
           {
             label: 'Roster Design',
@@ -77,7 +77,7 @@ const Permission = () => {
             {/* RIGHT SIDE - 40% */}
             <div className="w-[40%] flex justify-end">
               <select
-                className="w-full max-w-sm font-bold text-sm p-2 rounded-md bg-gray-200 text-gray-700"
+                className="w-70 font-bold text-sm mt-2 p-2 rounded-md bg-gray-200 text-gray-700"
                 value={permissions[item.key]}
                 onChange={(e) => handleChange(item.key, e.target.value)}
               >
