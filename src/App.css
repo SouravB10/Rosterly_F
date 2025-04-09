@@ -1,5 +1,78 @@
 @import "tailwindcss";
 
+.inputfield {
+  font-size: 12px;
+  padding: 0.5rem;
+  height: 30px;
+  border-radius: 0.25rem;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+/* button */
+.button {
+  background-color: #7d20f7;
+  color: #ffff;
+  font-weight: 500;
+  padding: 8px 16px;
+  display: inline;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.primarybutton {
+  font-weight: 500;
+  border: 2px solid #85ca6d;
+  padding: 8px 16px;
+  display: inline;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #85ca6d;
+}
+
+.successbutton {
+  background-color: #85ca6d;
+  color: #ffff;
+  font-weight: 500;
+  padding: 8px 16px;
+  display: inline;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.dangerbutton {
+  background-color: #ca736d;
+  color: #ffff;
+  font-weight: 500;
+  padding: 8px 16px;
+  display: inline;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.denybutton {
+  font-weight: 500;
+  border: 2px solid #ca736d;
+  padding: 8px 16px;
+  display: inline;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #ca736d;
+}
+
+.clearButton {
+  background-color: #737373;
+  color: #ffff;
+  font-weight: 500;
+  padding: 8px 16px;
+  display: inline;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+
 /* defaultt start */
 * {
   /* font-family: "Montserrat", sans-serif; */
@@ -44,6 +117,7 @@ body {
   color: #ffffff;
   font-size: var(--font-paragraph);
   font-weight: 600;
+  padding: 0 15px;
   height: 30px;
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
@@ -67,6 +141,7 @@ body {
   font-size: var(--font-paragraph);
   font-weight: 600;
   height: 30px;
+  padding: 0 15px;
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
   box-shadow:
@@ -89,6 +164,7 @@ body {
   font-size: var(--font-paragraph);
   font-weight: 600;
   height: 30px;
+  padding: 0 15px;
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
   box-shadow:
@@ -111,6 +187,7 @@ body {
   font-size: var(--font-paragraph);
   font-weight: 600;
   height: 30px;
+  padding: 0 15px;
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
   box-shadow:
@@ -156,6 +233,33 @@ body {
 
 .card {
   background-color: #f9f9f9;
+  border-radius: 10px;
+  border: 1px solid #eaeaea;
+  padding: 20px;
+  box-shadow:
+    0px 4px 20px #efefef;
+}
+
+.cardYellow {
+  background-color: #e0ff7b70;
+  border-radius: 10px;
+  border: 1px solid #eaeaea;
+  padding: 20px;
+  box-shadow:
+    0px 4px 20px #efefef;
+}
+
+.cardRed {
+  background-color: #ff858570;
+  border-radius: 10px;
+  border: 1px solid #eaeaea;
+  padding: 20px;
+  box-shadow:
+    0px 4px 20px #efefef;
+}
+
+.cardGrey {
+  background-color: #cacaca70;
   border-radius: 10px;
   border: 1px solid #eaeaea;
   padding: 20px;
@@ -354,65 +458,7 @@ body {
   color: #7C21FC;
 }
 
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: #49494a;
-}
-
-.textDark {
-  color: #49494a;
-}
-
-.textLight {
-  color: #737373;
-}
-
-.textWhite {
-  color: #ffff;
-}
-
-.texttheme {
-  color: #1E1A4D;
-}
-
-.primary-200 {
-  color: #661DCC;
-}
-
-.primary-300 {
-  color: #4F179C;
-}
-
-.black-100 {
-  color: #3E344F;
-}
-
-.black-200 {
-  color: #16131C;
-}
-
-.black-300 {
-  color: #0000;
-}
-
-.textColor {
-  color: #49494a
-}
-
 /* colors-end-------------*/
-
-
-
-
-
-
-
-
 
 
 /* colors */
@@ -452,89 +498,9 @@ h6 {
   font-size: 1.25rem;
 }
 
-
-
-.inputfield {
-  font-size: 12px;
-  padding: 0.5rem;
-  height: 30px;
-  border-radius: 0.25rem;
-  border: 1px solid #ccc;
-  width: 100%;
-}
-
-/* button */
-.button {
-  background-color: #7d20f7;
-  color: #ffff;
-  font-weight: 500;
-  padding: 8px 16px;
-  display: inline;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.primarybutton {
-  font-weight: 500;
-  border: 2px solid #85ca6d;
-  padding: 8px 16px;
-  display: inline;
-  border-radius: 5px;
-  cursor: pointer;
-  color: #85ca6d;
-}
-
-.successbutton {
-  background-color: #85ca6d;
-  color: #ffff;
-  font-weight: 500;
-  padding: 8px 16px;
-  display: inline;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 12px;
-}
-
-.dangerbutton {
-  background-color: #ca736d;
-  color: #ffff;
-  font-weight: 500;
-  padding: 8px 16px;
-  display: inline;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.denybutton {
-  font-weight: 500;
-  border: 2px solid #ca736d;
-  padding: 8px 16px;
-  display: inline;
-  border-radius: 5px;
-  cursor: pointer;
-  color: #ca736d;
-}
-
-.clearButton {
-  background-color: #737373;
-  color: #ffff;
-  font-weight: 500;
-  padding: 8px 16px;
-  display: inline;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
 .bg {
   background-color: #e3e3e3;
 }
-
-.bagActive {
-  background-color: #7d20f7;
-}
-
-
-
 
 .w-48 {
   width: 48%;
@@ -542,112 +508,4 @@ h6 {
 
 .bg-modal-opacity {
   background-color: #00000052;
-}
-
-
-
-
-/* Main Heading */
-.main-heading {
-  font-size: var(--font-main-heading);
-  font-weight: bold;
-}
-
-/* Headings */
-.heading {
-  font-size: var(--font-heading);
-  font-weight: 600;
-}
-
-/* Subheadings */
-.subheading {
-  font-size: var(--font-subheading);
-  font-weight: 500;
-}
-
-/* Paragraph */
-p {
-  font-size: var(--font-paragraph);
-  font-weight: 400;
-  line-height: 1.6;
-  color: #49494a;
-  font-family: "Inter", sans-serif;
-}
-
-/* Links */
-a {
-  font-size: var(--font-link);
-  font-weight: 500;
-  text-decoration: none;
-  /* color: #007bff; */
-}
-
-/* Labels */
-label {
-  font-size: var(--font-label);
-  font-weight: 500;
-}
-
-/* Input Fields */
-textarea {
-  font-size: var(--font-input);
-  font-weight: 400;
-}
-
-/* Modals */
-.modal-content {
-  font-size: var(--font-modal);
-}
-
-/* Alerts */
-.alert {
-  font-size: var(--font-alert);
-  font-weight: 500;
-}
-
-/* Add Button */
-.addBtn {
-  background-color: var(--color-add);
-}
-
-.addBtn:hover {
-  background-color: var(--hover-add);
-  transform: scale(1.05);
-}
-
-/* Update Button */
-.updateBtn {
-  background-color: var(--color-update);
-}
-
-.updateBtn:hover {
-  background-color: var(--hover-update);
-  transform: scale(1.05);
-}
-
-/* Delete Button */
-.deleteBtn {
-  background-color: var(--color-delete);
-}
-
-.deleteBtn:hover {
-  background-color: var(--hover-delete);
-  transform: scale(1.05);
-}
-
-/* Reset Button */
-.resetBtn {
-  background-color: var(--color-reset);
-}
-
-.resetBtn:hover {
-  background-color: var(--hover-reset);
-  transform: scale(1.05);
-}
-
-/* Disabled Button */
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-  transform: none;
 }
