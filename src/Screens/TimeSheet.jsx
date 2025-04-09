@@ -32,6 +32,13 @@ const TimeSheet = () => {
         setSelectedLocation(e.target.value);
         console.log("Selected Location:", e.target.value);
     };
+    const tabs = [
+        { id: 1, title: "Overview", content: "This is the overview content." },
+        { id: 2, title: "Features", content: "Here are some awesome features." },
+        { id: 3, title: "Pricing", content: "Our pricing is simple and fair." },
+      ];
+    
+      const [activeTab, setActiveTab] = useState(tabs[0].id);
     return (
         <>
             <div className="flex flex-col md:flex-row justify-between items-center mb-2 gap-4">
@@ -290,7 +297,36 @@ const TimeSheet = () => {
           </div>
         </div>
       </div>
-      
+      <div className="flex h-[400px] w-full border rounded-xl shadow-sm overflow-hidden">
+      {/* Sidebar Tabs */}
+      <div className="w-1/4 bg-gray-100 p-4 flex flex-col gap-2">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`text-left px-4 py-2 rounded-lg transition-colors ${
+              activeTab === tab.id
+                ? "bg-white text-blue-600 font-semibold shadow"
+                : "hover:bg-white hover:text-blue-500 text-gray-700"
+            }`}
+          >
+            {tab.title}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab Content */}
+      <div className="w-3/4 p-6">
+        {tabs.map(
+          (tab) =>
+            tab.id === activeTab && (
+              <div key={tab.id} className="text-gray-800 text-lg">
+                {tab.content}
+              </div>
+            )
+        )}
+      </div>
+    </div>
     </>
   );
 };
