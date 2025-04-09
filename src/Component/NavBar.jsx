@@ -45,11 +45,11 @@ const NavBar = ({ toggleSidebar }) => {
           <div className="font-bold hidden sm:block">
             <h1>{activeMenu ? activeMenu.title : "My Rosterly"}</h1>
           </div>
-          <div className="absolute inset-y-0 right-0 flex gap-1 items-center pr-2 sm:static sm:inset-auto sm:ml-2 sm:pr-0">
+          <div className="absolute inset-y-0 right-0 flex gap-5 items-center pr-2 sm:static sm:inset-auto sm:ml-2 sm:pr-0">
             <button
               type="button"
               onClick={handleClick}
-              className="relative rounded-full bg-gray-200 p-1 text-black-400 hover:text-gray focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-500 focus:outline-hidden"
+              className="relative rounded-full bg-gray-200 p-1 text-black-400 hover:text-gray focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-500 focus:outline-hidden hover:bg-gray-400"
             >
               <span className="absolute -inset-1.5" />
               <span className="sr-only">View notifications</span>

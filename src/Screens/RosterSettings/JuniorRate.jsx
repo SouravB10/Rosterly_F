@@ -11,8 +11,7 @@ const JuniorRate = () => {
   ];
 
   return (
-    <div className=" mt-10 p-4">
-      {/* Top header bar */}
+    <div className="p-8">
       <div className="flex items-center justify-between bg-gray-200 rounded-t-lg px-4 py-3">
         <p className="text-sm text-gray-700">
           A Level’s Hourly Rate Can Be Reduced Based On An Employee’s Age.

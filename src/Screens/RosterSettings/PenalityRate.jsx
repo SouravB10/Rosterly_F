@@ -11,7 +11,7 @@ const PenalityRate = () => {
   ];
 
   return (
-    <div className=" mt-10 p-4">
+    <div className="p-8">
       {/* Top header bar */}
       <div className="flex items-center justify-between bg-gray-200 rounded-t-lg px-4 py-3">
         <p className="text-sm text-gray-700">

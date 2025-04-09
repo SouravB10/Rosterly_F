@@ -9,6 +9,8 @@ import { MdOutlineDoNotDisturb } from "react-icons/md";
 
 import EmployeeTypeSettings from './EmployeeTypeLoading';
 import PayRateLevel from './PayRateLevel';
+import JuniorRate from './JuniorRate';
+import PenalityRate from './PenalityRate';
 
 const PayRate = () => {
   const [selectedSetting, setSelectedSetting] = useState(null);
@@ -17,8 +19,8 @@ const PayRate = () => {
     switch (selectedSetting) {
       case 'Employee Types': return <EmployeeTypeSettings />;
       case 'Pay Rate Level': return <PayRateLevel />;
-      case 'Junior Rates': return <sdgd />;
-      case 'Penalty Rate Rules': return <sdgd />;
+      case 'Junior Rates': return <JuniorRate />;
+      case 'Penalty Rate Rules': return <PenalityRate />;
       default: return null;
     }
   };
@@ -41,7 +43,7 @@ const PayRate = () => {
           > 
             <div className={`transition-all duration-200 
               ${selectedSetting === setting.name ? 'text-white' : 'text-gray-600'} 
-              hover:text-indigo-700`}>
+              hover:text-indigo-900`}>
               {setting.icon}
             </div>
             <div className='flex justify-between mt-4 items-center'>

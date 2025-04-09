@@ -41,7 +41,7 @@ const SystemSettings = () => {
           >
             <div className={`transition-all duration-200 
               ${selectedSetting === setting.name ? 'text-white' : 'text-gray-600'} 
-              hover:text-indigo-700`}>
+              hover:text-indigo-900`}>
               {setting.icon}
             </div>
             <div className='flex justify-between mt-4 items-center'>
