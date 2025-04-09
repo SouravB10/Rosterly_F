@@ -18,15 +18,10 @@ body {
 
 :root {
   --font-main-heading: 1.625rem;
-  /* 26px */
   --font-heading: 1.25rem;
-  /* 20px */
   --font-subheading: 1rem;
-  /* 16px */
   --font-paragraph: 0.75rem;
-  /* 12px */
   --font-small: 0.625rem;
-  /* 10px */
 }
 
 
