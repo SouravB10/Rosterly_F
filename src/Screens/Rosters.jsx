@@ -226,7 +226,7 @@ const Rosters = () => {
             </tbody>
           </table>
         </div> */}
-        <div className="overflow-x-auto  rounded-lg bg-white rounded shadow">
+        <div className="overflow-x-auto  rounded-lg bg-white shadow">
           <table className="min-w-full border border-gray-200 text-sm">
             <thead className="bg-theme">
               <tr className="h-15">
