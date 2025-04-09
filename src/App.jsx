@@ -73,7 +73,6 @@ function AppWrapper() {
           </div>
         </div>
       </div>
-
     </>
   )
 }
