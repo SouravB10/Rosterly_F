@@ -28,73 +28,66 @@ const TimeSheet = () => {
     setCurrentWeek((prev) => moment(prev).add(1, "week"));
   };
 
-  const handleLocation = (e) => {
-    setSelectedLocation(e.target.value);
-    console.log("Selected Location:", e.target.value);
-  };
-  return (
-    <>
-      <div className="flex flex-col md:flex-row justify-between items-center mb-2 gap-4">
-        <div className="flex flex-wrap gap-3 w-full md:w-auto">
-          <select
-            name="selectedLocation"
-            className="bg-violet-100 px-3 font12 py-2 rounded-lg text-sm font-semibold text-gray-900 shadow-sm w-full md:w-50 appearance-none pr-10"
-            style={{
-              backgroundImage:
-                "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='black'><path stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/></svg>\")",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "right 1rem center",
-              backgroundSize: "1.25rem",
-            }}
-            value={selectedLocation}
-            onChange={handleLocation}
-          >
-            <option value="default">--Select Location--</option>
-            <option value="Location 1">Location 1</option>
-            <option value="Location 2">Location 2</option>
-            <option value="Location 3">Location 3</option>
-          </select>
+    const handleLocation = (e) => {
+        setSelectedLocation(e.target.value);
+        console.log("Selected Location:", e.target.value);
+    };
+    return (
+        <>
+            <div className="flex flex-col md:flex-row justify-between items-center mb-2 gap-4">
+                <div className="flex flex-wrap gap-3 w-full md:w-auto">
+                    <select
+                        name="selectedLocation"
+                        className="input w-50"
+                        // style={{
+                        //     backgroundImage:
+                        //         "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='black'><path stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/></svg>\")",
+                        //     backgroundRepeat: "no-repeat",
+                        //     backgroundPosition: "right 1rem center",
+                        //     backgroundSize: "1.25rem",
+                        // }}
+                        value={selectedLocation}
+                        onChange={handleLocation}
+                    >
+                        <option value="default">--Select Location--</option>
+                        <option value="Location 1">Main Office</option>
+                        <option value="Location 2">Office</option>
+                    </select>
 
-          <div className="flex items-center font12 justify-center bg-violet-100 rounded-lg text-sm font-semibold text-gray-900 shadow-sm w-full md:w-75 px-4">
-            <FaAngleLeft
-              className="text-violet-800 hover:text-violet-950"
-              size={20}
-              onClick={handlePrevWeek}
-            />
-            <span className="mx-2">{getWeekRange(currentWeek)}</span>
-            <FaAngleRight
-              className="text-violet-800 hover:text-violet-950"
-              size={20}
-              onClick={handleNextWeek}
-            />
-          </div>
+                    <div className="flex items-center justify-center bg-white rounded-lg text-sm font-semibold text-gray-900 w-full md:w-75 px-2">
+                        <FaAngleLeft
+                            className="text-violet-800 hover:text-violet-950"
+                            size={16}
+                            onClick={handlePrevWeek}
+                        />
+                        <span className="paragraphBold">{getWeekRange(currentWeek)}</span>
+                        <FaAngleRight
+                            className="text-violet-800 hover:text-violet-950"
+                            size={16}
+                            onClick={handleNextWeek}
+                        />
+                    </div>
 
-          <div className="flex gap-2">
-            <div className="flex items-center justify-center bg-violet-100 rounded-lg text-sm text-gray-900 shadow-sm w-10 px-2">
-              <IoStatsChartSharp size={18} />
-            </div>
-            <div className="flex items-center justify-center bg-violet-100 rounded-lg text-sm text-gray-900 shadow-sm w-10 px-2">
-              <FaFilePdf size={18} />
-            </div>
-          </div>
-        </div>
-        <div>
-          <select
-            name="selectedEmployee"
-            className="bg-violet-100 font12 px-3 py-2 rounded-lg text-sm font-semibold text-gray-900 shadow-sm w-full md:w-50 appearance-none pr-10"
-            style={{
-              backgroundImage:
-                "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='black'><path stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/></svg>\")",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "right 1rem center",
-              backgroundSize: "1.25rem",
-            }}
-          >
-            <option value="default">--Select Employee--</option>
-            <option value="Location 1">Employee 1</option>
-            <option value="Location 2">Employee 2</option>
-            <option value="Location 3">Employee 3</option>
-          </select>
+                    <div className="flex gap-2">
+                    <div className="flex items-center justify-center bg-white rounded-lg text-sm text-gray-900 w-10 px-2">
+                    <IoStatsChartSharp className="icon50" />
+                        </div>
+                        <div className="flex items-center justify-center bg-white rounded-lg text-sm text-gray-900 w-10 px-2">
+                            <FaFilePdf className="icon50" />
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <select
+                        name="selectedEmployee"
+                        className="input w-50"
+                      
+                    >
+                        <option value="default">--Select Employee--</option>
+                        <option value="Location 1">Vishal</option>
+                        <option value="Location 2">Harish</option>
+                        <option value="Location 3">Anita</option>
+                    </select>
 
           <button className="font12 successbutton mx-4 text-white transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-950 ...">
             Employee +
@@ -136,28 +129,28 @@ const TimeSheet = () => {
           </div>
         </div>
 
-        <div className="flex">
-          <div className="w-1/6 bg-gray-300 text-white p-4">
-            <div className="space-y-2">
-              {[
-                "Mon 07/04/25",
-                "Tue 08/04/25",
-                "Wed 09/04/25",
-                "Thu 10/04/25",
-                "Fri 11/04/25",
-                "Sat 12/04/25",
-                "Sun 13/04/25",
-              ].map((day, index) => (
-                <div
-                  key={index}
-                  className="p-2 text-black font-bold rounded-md"
-                >
-                  <p>{day}</p>
-                  <p className="text-sm">₹ 0 | 0.00 Hrs</p>
-                </div>
-              ))}
-            </div>
-          </div>
+                <div className="flex">
+                    <div className="w-1/6 bg-gray-300 text-white p-4">
+                        <div className="space-y-2">
+                            {[
+                                "Mon 07/04/25",
+                                "Tue 08/04/25",
+                                "Wed 09/04/25",
+                                "Thu 10/04/25",
+                                "Fri 11/04/25",
+                                "Sat 12/04/25",
+                                "Sun 13/04/25",
+                            ].map((day, index) => (
+                                <div
+                                    key={index}
+                                    className="p-2 text-black paragraphBold rounded-md"
+                                >
+                                    <p>{day}</p>
+                                    <p className="text-sm">₹ 0 | 0.00 Hrs</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
 
           <div className="flex-1 p-6">
             <div>
