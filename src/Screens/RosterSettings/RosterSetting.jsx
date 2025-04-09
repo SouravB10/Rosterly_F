@@ -7,7 +7,7 @@ const RosterSettingsPage = () => {
 
   return (
     <div className="card">
-      <div className="max-w-6xl mx-auto space-y-6">
+      <div className="space-y-6">
 
     {/* TIMEZONE */}
     <div className="flex justify-between items-center">
@@ -30,7 +30,7 @@ const RosterSettingsPage = () => {
         <p className="paragraphThin">When Adding A New Employee, By Default What Should Their Employment Type Be?</p>
       </div>
       <div className="w-[35%] text-right">
-        <select className="input">
+        <select className="input w-45">
           <option>Full</option>
         </select>
       </div>
