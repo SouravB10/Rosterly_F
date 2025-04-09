@@ -74,14 +74,14 @@ const timerRef = useRef(null);
       <div className="flex items-center justify-between flex-wrap mb-4">
         {/* Left Side: Welcome + Button */}
         <div className='text-indigo-950'>
-          <p className='sub-heading font-bold'>Welcome,</p>
+          <p className='subHeading font-bold'>Welcome,</p>
           <p className='heading font-bold'>{userName}</p>
           <button 
           onClick={handleTimerToggle} 
-          className={`mt-2 text-white transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-100 px-4 py-2 rounded ${
+          className={`${
             activeTimer === 'shift'
-              ? 'dangerbutton'
-              : 'successbutton'
+              ? 'buttonDanger'
+              : 'buttonSuccess'
           }`}
         >
           {getButtonLabel()}
@@ -99,86 +99,86 @@ const timerRef = useRef(null);
         )}
       </div>
 
-      <div className="mt-6 bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+      <div className="card">
 
-        <h2 className="text-xl font-bold text-indigo-950">Shift Details</h2>
+        <h2 className="subHeading">Shift Details</h2>
         <div className='grid gap-6 grid-cols-5'>
 
           <div className="mt-4 mr-4">
-            <div className="p-4 bg-lime-100 rounded-lg h-full flex flex-col justify-between">
-              <p className="font-bold text-lg">Mon 31/03</p>
-              <p className="text-gray-700 flex items-center text-bold"><FaRegClock /> <strong className='sub-heading ml-1'>1.67 hrs</strong></p>
+            <div className="cardYellow">
+              <p className="subHeading">Mon 31/03</p>
+              <p className="subHeading"><FaRegClock /> <strong className='subHeading ml-1'>1.67 hrs</strong></p>
               <div className='mt-3'>
-                <p className="text-gray-700">🕗 8:00pm - 10:00pm</p>
-                <p className="text-gray-700">(20 min break)</p>
-                <p className="text-gray-700">📍 Office</p>
+                <p className="paragraph text-gray-700">🕗 8:00pm - 10:00pm</p>
+                <p className="paragraph text-gray-700">(20 min break)</p>
+                <p className="paragraph text-gray-700">📍 Office</p>
               </div>
             </div>
           </div>
 
           <div className="mt-4 mr-4">
-            <div className="p-4 bg-lime-100 rounded-lg h-full flex flex-col justify-between">
-              <p className="font-bold text-lg">Tue 01/04</p>
-              <p className="text-gray-700 flex items-center text-bold"><FaRegClock /> <strong className='sub-heading ml-1'>1.67 hrs</strong></p>
+            <div className="cardYellow">
+              <p className="subHeading">Tue 01/04</p>
+              <p className="subHeading"><FaRegClock /> <strong className='subHeading ml-1'>1.67 hrs</strong></p>
               <div className='mt-3'>
-                <p className="text-gray-700">🕗 8:00pm - 10:00pm</p>
-                <p className="text-gray-700">(20 min break)</p>
-                <p className="text-gray-700">📍 Office</p>
+                <p className="paragraph text-gray-700">🕗 8:00pm - 10:00pm</p>
+                <p className="paragraph text-gray-700">(20 min break)</p>
+                <p className="paragraph text-gray-700">📍 Office</p>
               </div>
             </div>
           </div>
 
           <div className="mt-4 mr-4">
-            <div className="p-4 bg-gray-200 rounded-lg h-full flex flex-col justify-start">
-              <p className="font-bold text-lg">Wed 02/04</p>
-              <p className="text-gray-700"><strong className='sub-heading'>Unscheduled</strong></p>
+            <div className="cardGrey">
+              <p className="subHeading">Wed 02/04</p>
+              <p className="paragraph text-gray-700"><strong className='subHeading'>Unscheduled</strong></p>
 
             </div>
           </div>
 
           <div className="mt-4 mr-4">
-            <div className="p-4 bg-lime-100 rounded-lg h-full flex flex-col justify-between">
-              <p className="font-bold text-lg">Thur 03/04</p>
-              <p className="text-gray-700 flex items-center text-bold"><FaRegClock /> <strong className='sub-heading ml-1'>1.67 hrs</strong></p>
+            <div className="cardYellow">
+              <p className="subHeading">Thur 03/04</p>
+              <p className="subHeading"><FaRegClock /> <strong className='subHeading ml-1'>1.67 hrs</strong></p>
               <div className='mt-3'>
-                <p className="text-gray-700">🕗 8:00pm - 10:00pm</p>
-                <p className="text-gray-700">(20 min break)</p>
-                <p className="text-gray-700">📍 Office</p>
+                <p className="paragraph text-gray-700">🕗 8:00pm - 10:00pm</p>
+                <p className="paragraph text-gray-700">(20 min break)</p>
+                <p className="paragraph text-gray-700">📍 Office</p>
               </div>
             </div>
           </div>
 
           <div className="mt-4 mr-4">
-            <div className="p-4 bg-gray-100 border-1 rounded-lg h-full flex flex-col justify-between">
-              <p className="font-bold sub-heading text-gray-600 text-lg">Weekly Total</p>
+            <div className="cardYellow">
+              <p className="font-bold subHeading text-gray-600 text-lg">Weekly Total</p>
 
-              <p className="font-weight-800 text-indigo-900 "><strong className='sub-heading'> 13.01 </strong><span className='font-medium'>hours</span></p>
+              <p className="font-weight-800 text-indigo-900 "><strong className='subHeading'> 13.01 </strong><span className='font-medium'>hours</span></p>
             </div>
           </div>
 
           <div className="mt-4 mr-4">
-            <div className="p-4 bg-lime-100 rounded-lg h-full flex flex-col justify-between">
-              <p className="font-bold text-lg">Fri 04/04</p>
-              <p className="text-gray-700 flex items-center text-bold"><FaRegClock /> <strong className='sub-heading ml-1'>1.67 hrs</strong></p>
+            <div className="cardRed">
+              <p className="subHeading">Fri 04/04</p>
+              <p className="subHeading"><FaRegClock /> <strong className='subHeading ml-1'>1.67 hrs</strong></p>
               <div className='mt-3'>
-                <p className="text-gray-700">🕗 8:00pm - 10:00pm</p>
-                <p className="text-gray-700">(20 min break)</p>
-                <p className="text-gray-700">📍 Office</p>
+                <p className="paragraph text-gray-700">🕗 8:00pm - 10:00pm</p>
+                <p className="paragraph text-gray-700">(20 min break)</p>
+                <p className="paragraph text-gray-700">📍 Office</p>
               </div>
             </div>
           </div>
 
           <div className="mt-4 mr-4 flex-1">
-            <div className="p-4 bg-red-100 rounded-lg h-full flex flex-col justify-start">
-              <p className="font-bold text-lg">Sat 05/04</p>
-              <p className="text-gray-700 flex items-center text-bold"><FaRegClock /> <strong className='sub-heading ml-1'>Day Off</strong></p>
+            <div className="cardRed">
+              <p className="subHeading">Sat 05/04</p>
+              <p className="subHeading"><FaRegClock /> <strong className='subHeading ml-1'>Day Off</strong></p>
             </div>
           </div>
 
           <div className="mt-4 mr-4">
             <div className="p-4 bg-red-100 rounded-lg h-full flex flex-col justify-start">
-              <p className="font-bold text-lg">Sun 06/04</p>
-              <p className="text-gray-700 flex items-center text-bold"><FaRegClock /> <strong className='sub-heading ml-1'>Day Off</strong></p>
+              <p className="subHeading">Sun 06/04</p>
+              <p className="subHeading"><FaRegClock /> <strong className='subHeading ml-1'>Day Off</strong></p>
 
             </div>
           </div>

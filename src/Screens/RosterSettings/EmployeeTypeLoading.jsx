@@ -21,7 +21,7 @@ const EmployeeTypeSettings = () => {
               type="text"
               value={partTimeLoading}
               onChange={(e) => setPartTimeLoading(e.target.value)}
-              className="w-1/2 p-2 border border-gray-300 rounded focus:outline-none"
+              className="w-70 font-bold text-sm mt-2 p-2 rounded-md bg-gray-200 text-gray-700"
             />
           </div>
         </div>
@@ -39,7 +39,7 @@ const EmployeeTypeSettings = () => {
               type="text"
               value={casualLoading}
               onChange={(e) => setCasualLoading(e.target.value)}
-              className="w-1/2 p-2 border border-gray-300 rounded focus:outline-none"
+              className="w-70 font-bold text-sm mt-2 p-2 rounded-md bg-gray-200 text-gray-700"
             />
           </div>
         </div>
