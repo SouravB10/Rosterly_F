@@ -53,12 +53,12 @@ export const navItems = [
         path:'/timesheet',
         icon: <PiArticleNyTimesFill className="text-xl text-white"/>
     },
-    {
-        id: 8,
-        title: 'Utilities',
-        path:'/utilities',
-        icon: <PiArticleNyTimesFill className="text-xl text-white"/>
-    },
+    // {
+    //     id: 8,
+    //     title: 'Utilities',
+    //     path:'/utilities',
+    //     icon: <PiArticleNyTimesFill className="text-xl text-white"/>
+    // },
     {
         id: 7,
         title: 'Settings',
