@@ -3,7 +3,8 @@
 /* defaultt start */
 
 * {
-  font-family: "Montserrat", sans-serif;
+  /* font-family: "Montserrat", sans-serif; */
+  font-family: "Manrope", sans-serif;  
 }
 
 body {
@@ -13,10 +14,12 @@ body {
   /*regular*/
   line-height: 1.5rem;
   color: #000000;
-  font-family: 'montserrat', sans-serif;
+  /* font-family: 'montserrat', sans-serif; */
   margin: 0;
   padding: 0;
 }
+
+
 
 /* defaultt end */
 
@@ -150,6 +153,12 @@ body {
   background-color: #000000;
 }
 
+.grayContainer{
+  background-color: #F4F4F4;
+}
+.hash737373{
+  background-color: #C8C8C8; 
+}
 /* bg-colors-end-------------*/
 
 
@@ -169,6 +178,21 @@ body {
 
 .primary-100 {
   color: #7C21FC;
+}
+p,h1,h2,h3,h4,h5,h6{
+  color: #49494a;
+}
+.textDark{
+  color: #49494a;
+}
+.textLight{
+  color: #737373;
+}
+.textWhite{
+  color: #ffff;
+}
+.texttheme{
+  color: #1E1A4D;
 }
 
 .primary-200 {
@@ -190,7 +214,9 @@ body {
 .black-300 {
   color: #0000;
 }
-
+.textColor{
+  color: #49494a
+}
 /* colors-end-------------*/
 
 
@@ -372,6 +398,8 @@ body {
   --button-transition: all 0.3s ease-in-out;
 }
 
+
+
 /* Main Heading */
 .main-heading {
   font-size: var(--font-main-heading);
@@ -395,6 +423,7 @@ p {
   font-size: var(--font-paragraph);
   font-weight: 400;
   line-height: 1.6;
+  color: #49494a;
   font-family: "Inter", sans-serif;
 }
 
@@ -476,3 +505,7 @@ button:disabled {
   cursor: not-allowed;
   transform: none;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> cd38efcb0f30bc089ca5420b3403a30149c47508

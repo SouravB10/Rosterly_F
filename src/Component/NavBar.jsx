@@ -10,6 +10,11 @@ import { navItems } from "../assets/Data";
 const NavBar = ({ toggleSidebar }) => {
 
   const navigate = useNavigate();
+
+  
+  const handleClick = () => {
+    navigate('/notification');
+  };
   const location = useLocation();
 
   const activeMenu = navItems.find((item) => item.path === location.pathname || (item.submenu && item.submenu.some(sub => sub.path === location.pathname)));
@@ -43,6 +48,7 @@ const NavBar = ({ toggleSidebar }) => {
           <div className="absolute inset-y-0 right-0 flex gap-1 items-center pr-2 sm:static sm:inset-auto sm:ml-2 sm:pr-0">
             <button
               type="button"
+              onClick={handleClick}
               className="relative rounded-full bg-gray-200 p-1 text-black-400 hover:text-gray focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-500 focus:outline-hidden"
             >
               <span className="absolute -inset-1.5" />

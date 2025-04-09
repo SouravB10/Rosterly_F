@@ -18,6 +18,7 @@ import Utilities from './Screens/Utilities';
 import Rosters from './Screens/Rosters';
 import PayRateLevel from './Screens/PayRateLevel';
 import TimeSheet from './Screens/TimeSheet';
+import Notification from './Screens/Notification';
 
 
 function AppWrapper() {
@@ -57,6 +58,8 @@ function AppWrapper() {
               <Route path='/roster' element={<Rosters />} />
               <Route path='/payratelevel' element={<PayRateLevel />} />
               <Route path='/timesheet' element={<TimeSheet />} />
+              <Route path='/notification' element={<Notification />} />
+
             </Routes>
           </div>
         </div>
