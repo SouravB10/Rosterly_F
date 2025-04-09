@@ -17,7 +17,7 @@ const RosterSettingsPage = () => {
         <p className="text-sm text-gray-500 mt-1">1:31:31 PM</p>
       </div>
       <div className="w-[35%] text-right">
-        <select className="w-1/2 p-2 border border-gray-300 rounded">
+        <select className="w-70 font-bold text-sm mt-2 p-2 rounded-md bg-gray-200 text-gray-700">
           <option>(UTC+05:30) Asia/Kolkata</option>
         </select>
       </div>
@@ -30,7 +30,7 @@ const RosterSettingsPage = () => {
         <p className="text-sm text-gray-600">When Adding A New Employee, By Default What Should Their Employment Type Be?</p>
       </div>
       <div className="w-[35%] text-right">
-        <select className="w-1/2 p-2 border border-gray-300 rounded">
+        <select className="w-70 font-bold text-sm mt-2 p-2 rounded-md bg-gray-200 text-gray-700">
           <option>Full</option>
         </select>
       </div>

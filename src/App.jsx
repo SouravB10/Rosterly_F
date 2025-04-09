@@ -22,6 +22,7 @@ import Notification from './Screens/Notification';
 import General from './Screens/RosterSettings/General';
 import RosterSetting from './Screens/RosterSettings/RosterSetting';
 import EmployeeTypeLoading from './Screens/RosterSettings/EmployeeTypeLoading';
+import Permission from './Screens/RosterSettings/Permission';
 
 
 function AppWrapper() {
@@ -65,6 +66,8 @@ function AppWrapper() {
               <Route path='/generalsettings' element={<General />} />
               <Route path='/rostersetting' element={<RosterSetting />} />
               <Route path='/employeetypeloading' element={<EmployeeTypeLoading />} />
+              <Route path='/permission' element={<Permission />} />
+
 
             </Routes>
           </div>
