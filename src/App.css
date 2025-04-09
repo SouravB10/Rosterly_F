@@ -3,7 +3,8 @@
 /* defaultt start */
 
 * {
-  font-family: "Montserrat", sans-serif;
+  /* font-family: "Montserrat", sans-serif; */
+  font-family: "Manrope", sans-serif;  
 }
 
 body {
@@ -13,7 +14,7 @@ body {
   /*regular*/
   line-height: 1.5rem;
   color: #000000;
-  font-family: 'montserrat', sans-serif;
+  /* font-family: 'montserrat', sans-serif; */
   margin: 0;
   padding: 0;
 }
