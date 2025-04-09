@@ -11,9 +11,9 @@ const JuniorRate = () => {
   ];
 
   return (
-    <div className="p-8">
+    <div className="card p-8">
       <div className="flex items-center justify-between bg-gray-200 rounded-t-lg px-4 py-3">
-        <p className="text-sm text-gray-700">
+        <p className="paragraphThin">
           A Level’s Hourly Rate Can Be Reduced Based On An Employee’s Age.
         </p>
         <div className="flex gap-2">
@@ -30,26 +30,26 @@ const JuniorRate = () => {
       <table className="w-full border border-gray-300">
             <thead>
                 <tr className="bg-[#2f2378] text-white">
-                <th className="border border-gray-300 px-4 py-2 text-left">Age</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Percentage Of Full Rate</th>
+                <th className="subHeading border border-gray-300 px-4 py-2 text-left">Age</th>
+                <th className="subHeading border border-gray-300 px-4 py-2 text-left">Percentage Of Full Rate</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                <td className="border border-gray-300 px-4 py-2">15 Years Old And Under</td>
-                <td className="border border-gray-300 px-4 py-2">40.00%</td>
+                <td className="paragraphThin border border-gray-300 px-4 py-2">15 Years Old And Under</td>
+                <td className="paragraphThin border border-gray-300 px-4 py-2">40.00%</td>
                 </tr>
                 <tr>
-                <td className="border border-gray-300 px-4 py-2">16 Years Old</td>
-                <td className="border border-gray-300 px-4 py-2">50.00%</td>
+                <td className="paragraphThin border border-gray-300 px-4 py-2">16 Years Old</td>
+                <td className="paragraphThin border border-gray-300 px-4 py-2">50.00%</td>
                 </tr>
                 <tr>
-                <td className="border border-gray-300 px-4 py-2">14 Years Old</td>
-                <td className="border border-gray-300 px-4 py-2">50.00%</td>
+                <td className="paragraphThin border border-gray-300 px-4 py-2">14 Years Old</td>
+                <td className="paragraphThin border border-gray-300 px-4 py-2">50.00%</td>
                 </tr>
                 <tr>
-                <td className="border border-gray-300 px-4 py-2">12 Years Old</td>
-                <td className="border border-gray-300 px-4 py-2">50.00%</td>
+                <td className="paragraphThin border border-gray-300 px-4 py-2">12 Years Old</td>
+                <td className="paragraphThin border border-gray-300 px-4 py-2">50.00%</td>
                 </tr>
                 {/* Add the rest of your rows similarly */}
             </tbody>

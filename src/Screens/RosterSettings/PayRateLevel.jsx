@@ -42,10 +42,10 @@ const LevelsTableUI = () => {
     };
 
     return (
-        <div className="bg-white-100 p-8">
+        <div className="card p-8">
             <div className=" overflow-hidden">
                 <div className="bg-[#e4e4e4] px-6 py-4 flex items-center justify-between rounded-t-xl">
-                    <p className="text-sm text-[#1f1f1f] font-semibold">
+                    <p className="paragraphThin">
                         Levels allow you to link groups of employees to different pay rates based on their role, experience or classification.
                     </p>
                     <div className="space-x-2">
@@ -61,23 +61,23 @@ const LevelsTableUI = () => {
                 <table className="min-w-full text-sm border-t border-black-400">
                     <thead className="bg-[#1e1e50] text-white">
                         <tr>
-                            <th className="text-left py-3 px-4">Level Name</th>
-                            <th className="text-left py-3 px-4">Hourly Rate</th>
-                            <th className="text-left py-3 px-4">Status</th>
-                            <th className="text-left py-3 px-4">Junior Rates</th>
-                            <th className="text-left py-3 px-4"># Attached Employees</th>
+                            <th className="subHeading text-left py-3 px-4">Level Name</th>
+                            <th className="subHeading text-left py-3 px-4">Hourly Rate</th>
+                            <th className="subHeading text-left py-3 px-4">Status</th>
+                            <th className="subHeading text-left py-3 px-4">Junior Rates</th>
+                            <th className="subHeading text-left py-3 px-4"># Attached Employees</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white text-black-800">
                         {levels.map((level, idx) => (
                             <tr key={idx} className="border-t border-black-400">
-                                <td className="py-3 px-4">{level.name}</td>
-                                <td className="py-3 px-4">{level.rate}</td>
-                                <td className="py-3 px-4">{level.status || "-"}</td>
-                                <td className="py-3 px-4 text-blue-600 hover:underline cursor-pointer">
+                                <td className="paragraphThin py-3 px-4">{level.name}</td>
+                                <td className="paragraphThin py-3 px-4">{level.rate}</td>
+                                <td className="paragraphThin py-3 px-4">{level.status || "-"}</td>
+                                <td className="paragraphThin py-3 px-4 text-blue-600 hover:underline cursor-pointer">
                                     {level.junior}
                                 </td>
-                                <td className="py-3 px-4">{level.employees}</td>
+                                <td className="paragraphThin py-3 px-4">{level.employees}</td>
                             </tr>
                         ))}
                     </tbody>
