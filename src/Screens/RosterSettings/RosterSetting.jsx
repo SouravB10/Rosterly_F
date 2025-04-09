@@ -1,122 +1,98 @@
 import React, { useState } from 'react';
 
 const SettingsPage = () => {
-  const [timezone, setTimezone] = useState('(UTC+05:30) Asia/Kolkata');
-  const [employeeType, setEmployeeType] = useState('Full');
-  const [approvalRequired, setApprovalRequired] = useState(true);
-  const [sameLocationOnly, setSameLocationOnly] = useState(true);
-  const [emailNotify, setEmailNotify] = useState(false);
-
-  const handleSave = () => {
-    const settings = {
-      timezone,
-      employeeType,
-      approvalRequired,
-      sameLocationOnly,
-      emailNotify,
-    };
-    console.log('Saved Settings:', settings);
-    // Add your API call here if needed
-  };
+  const [approval, setApproval] = useState(true);
+  const [sameLocationManagers, setSameLocationManagers] = useState(true);
+  const [emailNotification, setEmailNotification] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white p-8">
-      <div className="max-w-4xl mx-auto bg-white">
-        <div className="space-y-8">
-          {/* Timezone */}
-          <div>
-            <h2 className="font-bold text-lg">Timezone</h2>
-            <p className="text-sm text-gray-600 mb-2">
-              Which Timezone Do Your Locations Belong To?
-            </p>
-            <select
-              className="border rounded p-2 w-full max-w-md"
-              value={timezone}
-              onChange={(e) => setTimezone(e.target.value)}
-            >
-              <option value="(UTC+05:30) Asia/Kolkata">(UTC+05:30) Asia/Kolkata</option>
-              <option value="(UTC+01:00) Europe/Paris">(UTC+01:00) Europe/Paris</option>
-              <option value="(UTC-08:00) America/Los_Angeles">(UTC-08:00) America/Los_Angeles</option>
-            </select>
-          </div>
+    <div className="min-h-screen bg-white p-10">
+  <div className="max-w-6xl mx-auto space-y-6">
 
-          {/* Employee Type */}
-          <div>
-            <h2 className="font-bold text-lg">Default Employee Type</h2>
-            <p className="text-sm text-gray-600 mb-2">
-              When Adding A New Employee, By Default What Should Their Employment Type Be?
-            </p>
-            <select
-              className="border rounded p-2 w-full max-w-md"
-              value={employeeType}
-              onChange={(e) => setEmployeeType(e.target.value)}
-            >
-              <option value="Full">Full</option>
-              <option value="Part-Time">Part-Time</option>
-              <option value="Contract">Contract</option>
-            </select>
-          </div>
-
-          {/* Approval Required */}
-          <div className="flex items-start gap-4">
-            <input
-              type="checkbox"
-              className="mt-1"
-              checked={approvalRequired}
-              onChange={() => setApprovalRequired(!approvalRequired)}
-            />
-            <div>
-              <h2 className="font-bold text-lg">Availability Changes Require Approval</h2>
-              <p className="text-sm text-gray-600">
-                Check To Require Management Approval Before Implementing And Using Employee Initiated Unavailability Updates.
-              </p>
-            </div>
-          </div>
-
-          {/* Only Same Location Managers */}
-          <div className="flex items-start gap-4">
-            <input
-              type="checkbox"
-              className="mt-1"
-              checked={sameLocationOnly}
-              onChange={() => setSameLocationOnly(!sameLocationOnly)}
-            />
-            <div>
-              <h2 className="font-bold text-lg">Only Show Same Location Managers</h2>
-              <p className="text-sm text-gray-600">
-                Check To Only Display Managers Within The Same Location(S) As The Employee When The Employee Is Selecting Who Should Approve Their Availability Change Request.
-              </p>
-            </div>
-          </div>
-
-          {/* Email Notify */}
-          <div className="flex items-start gap-4">
-            <input
-              type="checkbox"
-              className="mt-1"
-              checked={emailNotify}
-              onChange={() => setEmailNotify(!emailNotify)}
-            />
-            <div>
-              <h2 className="font-bold text-lg">Send All Unavailability Request Notifications By Email To Manager</h2>
-              <p className="text-sm text-gray-600">
-                Check To Notify Selected Manager By Email Of All Unavailability Or Leave Requests/Updates As They Occur.
-              </p>
-            </div>
-          </div>
-
-          {/* Save Button */}
-          <div className="pt-4">
-            <button
-              className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded"
-              onClick={handleSave}
-            >
-              Save
-            </button>
-          </div>
-        </div>
+    {/* TIMEZONE */}
+    <div className="flex justify-between items-center">
+      <div className="w-[60%]">
+        <h3 className="font-bold">Timezone</h3>
+        <p className="text-sm text-gray-600">Which Timezone Do Your Locations Belong To?</p>
+        <p className="text-sm text-gray-500 mt-1">1:31:31 PM</p>
+      </div>
+      <div className="w-[35%] text-right">
+        <select className="w-1/2 p-2 border border-gray-300 rounded">
+          <option>(UTC+05:30) Asia/Kolkata</option>
+        </select>
       </div>
     </div>
+
+    {/* DEFAULT EMPLOYEE TYPE */}
+    <div className="flex justify-between items-center">
+      <div className="w-[60%]">
+        <h3 className="font-bold">Default Employee Type</h3>
+        <p className="text-sm text-gray-600">When Adding A New Employee, By Default What Should Their Employment Type Be?</p>
+      </div>
+      <div className="w-[35%] text-right">
+        <select className="w-1/2 p-2 border border-gray-300 rounded">
+          <option>Full</option>
+        </select>
+      </div>
+    </div>
+
+    {/* AVAILABILITY CHANGES REQUIRE APPROVAL */}
+    <div className="flex justify-between items-center">
+      <div className="w-[60%]">
+        <h3 className="font-bold">Availability Changes Require Approval</h3>
+        <p className="text-sm text-gray-600">Check To Require Management Approval Before Implementing And Using Employee Initiated Unavailability Updates.</p>
+      </div>
+      <div className="w-[35%] text-right">
+        <input
+          type="checkbox"
+          checked={approval}
+          onChange={() => setApproval(!approval)}
+          className="w-5 h-5 text-purple-700 border-2 border-gray-300 rounded focus:ring-purple-500"
+        />
+      </div>
+    </div>
+
+    {/* ONLY SHOW SAME LOCATION MANAGERS */}
+    <div className="flex justify-between items-center">
+      <div className="w-[60%]">
+        <h3 className="font-bold">Only Show Same Location Managers</h3>
+        <p className="text-sm text-gray-600">Check To Only Display Managers Within The Same Location(S) As The Employee When The Employee Is Selecting Who Should Approve Their Availability Change Request.</p>
+      </div>
+      <div className="w-[35%] text-right">
+        <input
+          type="checkbox"
+          checked={sameLocationManagers}
+          onChange={() => setSameLocationManagers(!sameLocationManagers)}
+          className="w-5 h-5 text-purple-700 border-2 border-gray-300 rounded focus:ring-purple-500"
+        />
+      </div>
+    </div>
+
+    {/* EMAIL NOTIFICATION */}
+    <div className="flex justify-between items-center">
+      <div className="w-[60%]">
+        <h3 className="font-bold">Send All Unavailability Request Notifications By Email To Manager</h3>
+        <p className="text-sm text-gray-600">Check To Notify Selected Manager By Email Of All Unavailability Or Leave Requests/Updates As They Occur.</p>
+      </div>
+      <div className="w-[35%] text-right">
+        <input
+          type="checkbox"
+          checked={emailNotification}
+          onChange={() => setEmailNotification(!emailNotification)}
+          className="w-5 h-5 text-purple-700 border-2 border-gray-300 rounded focus:ring-purple-500"
+        />
+      </div>
+    </div>
+
+    {/* SAVE BUTTON */}
+    <div className="flex justify-end pt-6">
+      <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded">
+        Save
+      </button>
+    </div>
+  </div>
+</div>
+
   );
 };
 
