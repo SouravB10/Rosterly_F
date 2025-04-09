@@ -9,6 +9,7 @@ import { RiNotificationOffLine } from "react-icons/ri";
 import { IoSettings } from "react-icons/io5";
 import { MdDisplaySettings } from "react-icons/md";
 import { TbSettingsDollar } from "react-icons/tb";
+import { TbSettingsSearch } from "react-icons/tb";
 
 
 export const navItems = [
@@ -65,7 +66,8 @@ export const navItems = [
         // path:'/settings',
         submenu: [
             { id: 1, title: 'System Settings', path: '/systemsettings', icon: <MdDisplaySettings className="text-xl text-white"/> },
-            { id: 2, title: 'Pay Rate Setup', path: '/payrate', icon: <TbSettingsDollar className="text-xl text-white"/> }
+            { id: 2, title: 'Pay Rate Setup', path: '/payrate', icon: <TbSettingsDollar className="text-xl text-white"/> },
+            { id: 3, title: 'Pay Rate Level', path: '/payratelevel', icon: <TbSettingsSearch className="text-xl text-white"/> }
         ]
     },
 ]

@@ -29,7 +29,7 @@ const Sidebar = () => {
     return (
         <div className="flex items-start">
 
-            <div className={`h-[96vh] inset-shadow-amber-600 transition-all duration-300 bg-indigo-950 backdrop-blur-lg m-3 rounded-2xl overflow-auto
+            <div className={`h-[96vh] inset-shadow-amber-600 transition-all duration-300 bg-indigo-950 backdrop-blur-lg m-3 rounded-2xl overflow-x-hidden overflow-y-auto
             ${open ? 'w-[250px]' : 'w-[80px]'}`}>
 
                 <div className="flex flex-col">
@@ -80,7 +80,6 @@ const Sidebar = () => {
                                     )}
                                 </Link>
 
-                                {/* Submenu */}
                                 {item.submenu && (
                                     <ul
                                         className={`overflow-hidden rounded-lg p-1 w-[300px] transition-all duration-300 
