@@ -10,7 +10,7 @@ const General = () => {
                         <p className="paragraphThin">Which Timezone Do Your Locations Belong To?</p>
                     </div>
                     <div>
-                        <select className="input">
+                        <select className="input w-50">
                             <option>(UTC+05:30) Asia/Kolkata</option>
                         </select>
                     </div>
@@ -23,7 +23,7 @@ const General = () => {
                         <p className="paragraphThin">When Adding A New Employee, By Default What Should Their Employment Type Be?</p>
                     </div>
                     <div>
-                        <select className="inputFull">
+                        <select className="input w-50">
                             <option>Full Time</option>
                             <option>Part Time</option>
                         </select>
@@ -37,7 +37,7 @@ const General = () => {
                         <p className="paragraphThin">Default Number Of Hours Per Full-Time Employee Day. Used To Calculate Hours For Leave Days.</p>
                     </div>
                     <div>
-                        <select className="inputFull">
+                        <select className="input w-50">
                             <option>08:00</option>
                             <option>12:00</option>
                         </select>
@@ -51,7 +51,7 @@ const General = () => {
                         <p className="paragraphThin">When Applying For And Importing Leave Onto The Timesheet, If Unspecified, What Leave Type Should Be The Default?.</p>
                     </div>
                     <div>
-                        <select className="input">
+                        <select className="input w-50">
                             <option>Without Pay</option>
                             <option>Casual Leave</option>
                             <option>Sick Leave</option>
