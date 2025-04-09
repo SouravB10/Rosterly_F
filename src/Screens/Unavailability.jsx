@@ -10,7 +10,7 @@ const Unavailability = () => {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
-        <div className="grayContainer rounded-md p-5 font12 w-full">
+        <div className="f9f9f9card rounded-md p-5 font12 w-full">
           <h1 className="text-center font-weight-700 font20 black-100 mb-6">
             Days Off Adding
           </h1>
@@ -82,7 +82,8 @@ const Unavailability = () => {
                 <label className="block font12 font-weight-600 texttheme mb-1">
                   Specify the leave type
                 </label>
-                <select className="w-full font12 bg-white-100 rounded-md px-4 py-2 custom-focus">
+                <select className="input w-full custom-focus">
+                  <option>--Select One--</option>
                   <option>Without Pay</option>
                 </select>
               </div>
@@ -97,7 +98,7 @@ const Unavailability = () => {
                   </span>
                   <input
                     type="number"
-                    className="w-24  bg-white-100 px-3 py-2 rounded-r-md custom-focus"
+                    className="input custom-focus"
                     defaultValue="16.00"
                   />
                 </div>
@@ -119,7 +120,7 @@ const Unavailability = () => {
                 <label className="block font12 font-weight-600 texttheme mb-1">
                   Select a manager to notify
                 </label>
-                <select className="w-full bg-white-100  rounded-md px-4 py-2 custom-focus">
+                <select className="input w-full custom-focus">
                   <option>-- Select --</option>
                 </select>
               </div>
