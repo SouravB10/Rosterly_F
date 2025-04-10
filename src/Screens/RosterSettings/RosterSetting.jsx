@@ -9,7 +9,6 @@ const RosterSettingsPage = () => {
     <div className="card">
       <div className="space-y-6">
 
-    {/* TIMEZONE */}
     <div className="flex justify-between items-center">
       <div className="w-[60%]">
         <h6 className="subHeading">Timezone</h6>
@@ -23,7 +22,6 @@ const RosterSettingsPage = () => {
       </div>
     </div>
 
-    {/* DEFAULT EMPLOYEE TYPE */}
     <div className="flex justify-between items-center">
       <div className="w-[60%]">
         <h6 className="subHeading">Default Employee Type</h6>
@@ -36,7 +34,6 @@ const RosterSettingsPage = () => {
       </div>
     </div>
 
-    {/* AVAILABILITY CHANGES REQUIRE APPROVAL */}
     <div className="flex justify-between items-center">
       <div className="w-[60%]">
         <h6 className="subHeading">Availability Changes Require Approval</h6>
@@ -52,7 +49,6 @@ const RosterSettingsPage = () => {
       </div>
     </div>
 
-    {/* ONLY SHOW SAME LOCATION MANAGERS */}
     <div className="flex justify-between items-center">
       <div className="w-[60%]">
         <h6 className="subHeading">Only Show Same Location Managers</h6>
@@ -68,7 +64,6 @@ const RosterSettingsPage = () => {
       </div>
     </div>
 
-    {/* EMAIL NOTIFICATION */}
     <div className="flex justify-between items-center">
       <div className="w-[60%]">
         <h6 className="subHeading">Send All Unavailability Request Notifications By Email To Manager</h6>
@@ -84,9 +79,8 @@ const RosterSettingsPage = () => {
       </div>
     </div>
 
-    {/* SAVE BUTTON */}
     <div className="flex justify-end pt-6">
-      <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded">
+      <button className="buttonSuccess">
         Save
       </button>
     </div>
