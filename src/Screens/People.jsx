@@ -140,17 +140,17 @@ const People = () => {
       <Dialog
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        className="relative z-50"
+        className="relative z-50 rounded-lg"
       >
-        <div className="fixed inset-0 bg-opacity-60 backdrop-blur-xs"></div>
+        <div className="fixed inset-0 bg-gray-700/70"></div>
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="bg-white rounded-lg shadow-lg max-w-md w-full">
-            <div className="bg-blue-600 text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="font-semibold text-lg">
+            <div className="bg-indigo-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
+              <Dialog.Title className="heading">
                 Add Person
               </Dialog.Title>
               <button
-                className="text-white text-lg font-bold"
+                className="text-white font-bold text-2xl"
                 onClick={() => setIsModalOpen(false)}
               >
                 ×
@@ -158,48 +158,48 @@ const People = () => {
             </div>
             <form className="mt-4 p-6 space-y-3">
               <div className="">
-                <label className="block text-sm font-medium">First Name</label>
+                <label className="paragraphBold">First Name</label>
                 <input
                   type="text"
-                  className="w-full font14 border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
+                  className="w-full paragraph border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
                   placeholder="Enter first name"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">Last Name</label>
+                <label className="paragraphBold">Last Name</label>
                 <input
                   type="text"
-                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
+                  className="w-full paragraph border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
                   placeholder="Enter last name"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">Email</label>
+                <label className="paragraphBold">Email</label>
                 <input
                   type="email"
-                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
+                  className="w-full paragraph border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
                   placeholder="Enter email"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">
+                <label className="paragraphBold">
                   Phone Number
                 </label>
                 <input
                   type="text"
-                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
+                  className="w-full paragraph border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
                   placeholder="Enter phone number"
                 />
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1">
                 <input
                   type="checkbox"
                   id="generatePassword"
-                  className="h-4 w-4 text-violet-600 border-gray-300 rounded"
+                  className="h-3 w-3 text-violet-600 border-gray-300 rounded"
                 />
                 <label
                   htmlFor="generatePassword"
-                  className="text-sm text-gray-700"
+                  className="paragraphBold"
                 >
                   Generate Password
                 </label>
@@ -207,14 +207,14 @@ const People = () => {
               <div className="flex justify-end gap-2 mt-4">
                 <button
                   type="button"
-                  className="px-4 py-2 bg-gray-300 rounded-md"
+                  className="buttonGrey"
                   onClick={() => setIsModalOpen(false)}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-violet-600 text-white rounded-md"
+                  className="buttonSuccess"
                 >
                   Save
                 </button>

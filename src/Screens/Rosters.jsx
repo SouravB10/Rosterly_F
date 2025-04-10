@@ -5,10 +5,15 @@ import { IoStatsChartSharp } from "react-icons/io5";
 import { SlCalender } from "react-icons/sl";
 import { FaAngleLeft } from "react-icons/fa";
 import { FaAngleRight } from "react-icons/fa";
+import { Dialog } from "@headlessui/react";
 
 const Rosters = () => {
   const [selectedLocation, setSelectedLocation] = useState("default");
   const [currentWeek, setCurrentWeek] = useState(moment());
+  const [stats, setStats] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isShiftOpen, setIsShiftOpen] = useState(false);
+
 
   const getWeekRange = (week) => {
     const startOfWeek = moment(week).startOf("isoWeek").format("DD MMM");
@@ -55,6 +60,36 @@ const Rosters = () => {
     { name: "Vishal Kattera", hours: "0.00", cost: "₹0.00" },
   ];
 
+  const handleStats = () => {
+    setStats(!stats);
+  };
+
+  const generateTimeOptions = () => {
+    let times = [];
+    let hour = 0;
+    let minute = 0;
+
+    while (hour < 24) {
+      let ampm = hour < 12 ? "AM" : "PM";
+      let displayHour = hour % 12 || 12;
+      let displayMinute = minute === 0 ? "00" : minute;
+      times.push(`${displayHour}:${displayMinute} ${ampm}`);
+
+      minute += 15;
+      if (minute === 60) {
+        minute = 0;
+        hour++;
+      }
+    }
+
+    return times;
+  };
+
+  const timeOptions = generateTimeOptions();
+  const breakOptions = [15, 30, 45, 60];
+  const [start, setStart] = useState(timeOptions[0]);
+  const [finish, setFinish] = useState(timeOptions[0]);
+  const [breakTime, setBreakTime] = useState(breakOptions[0]);
   const hoursPerDay = ["12.25", "0.00", "0.00", "0.00", "0.00", "0.00", "0.00"];
   return (
     <>
@@ -94,10 +129,10 @@ const Rosters = () => {
           </div>
 
           <div className="flex gap-2">
-            <div className="flex items-center justify-center bg-white rounded-lg text-sm text-gray-900 w-10 px-2">
+            <div className="flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2" onClick={handleStats}>
               <IoStatsChartSharp className="icon50" />
             </div>
-            <div className="flex items-center justify-center bg-white rounded-lg text-sm text-gray-900 w-10 px-2">
+            <div className="flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2" >
               <FaFilePdf className="icon50" />
             </div>
           </div>
@@ -105,50 +140,54 @@ const Rosters = () => {
 
         <button className="buttonSuccess ">Publish</button>
       </div>
+      {stats && (
+        <div className="w-full flex flex-col md:flex-row items-center justify-start gap-4 mt-6">
+          <div className="card w-1/2">
+            <h5 className="subHeading text-center">Mon, 7th Apr</h5>
+            <div className="flex items-center justify-center gap-6 overflow-x-auto whitespace-nowrap">
+              <p className="paragraph border p-1 border-gray-300 bg-gray-100">
+                4 Shifts
+              </p>
+              <p className="paragraph border p-1 border-gray-300 bg-gray-100">
+                1.05 Hours
+              </p>
+              <p className="paragraph border p-1 border-gray-300 bg-gray-100">
+                $301 Cost
+              </p>
+              <p className="paragraph border p-1 border-gray-300 bg-gray-100">
+                4000 Sales
+              </p>
+              <p className="paragraph border p-1 border-gray-300 bg-gray-100">
+                4% Cost vs Sales
+              </p>
+            </div>
+          </div>
 
-      <div className="w-full flex flex-col md:flex-row items-center justify-start gap-4 mt-6">
-        <div className="card w-1/2">
-          <h5 className="subHeading text-center">Mon, 7th Apr</h5>
-          <div className="flex items-center justify-center gap-6 overflow-x-auto whitespace-nowrap">
-            <p className="paragraph border p-1 border-gray-300 bg-gray-100">
-              4 Shifts
-            </p>
-            <p className="paragraph border p-1 border-gray-300 bg-gray-100">
-              1.05 Hours
-            </p>
-            <p className="paragraph border p-1 border-gray-300 bg-gray-100">
-              $301 Cost
-            </p>
-            <p className="paragraph border p-1 border-gray-300 bg-gray-100">
-              4000 Sales
-            </p>
-            <p className="paragraph border p-1 border-gray-300 bg-gray-100">
-              4% Cost vs Sales
-            </p>
+          <div className="card w-1/2">
+            <h5 className="subHeading text-center">7th Apr - 13th Apr</h5>
+            <div className="flex items-center justify-center gap-6 overflow-x-auto whitespace-nowrap">
+              <p className="paragraph border p-1 border-gray-300 bg-gray-100">
+                4 Shifts
+              </p>
+              <p className="paragraph border p-1 border-gray-300 bg-gray-100">
+                1.05 Hours
+              </p>
+              <p className="paragraph border p-1 border-gray-300 bg-gray-100">
+                $301 Cost
+              </p>
+              <p className="paragraph border p-1 border-gray-300 bg-gray-100">
+                4000 Sales
+              </p>
+              <p className="paragraph border p-1 border-gray-300 bg-gray-100">
+                4% Cost vs Sales
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className="card w-1/2">
-          <h5 className="subHeading text-center">7th Apr - 13th Apr</h5>
-          <div className="flex items-center justify-center gap-6 overflow-x-auto whitespace-nowrap">
-            <p className="paragraph border p-1 border-gray-300 bg-gray-100">
-              4 Shifts
-            </p>
-            <p className="paragraph border p-1 border-gray-300 bg-gray-100">
-              1.05 Hours
-            </p>
-            <p className="paragraph border p-1 border-gray-300 bg-gray-100">
-              $301 Cost
-            </p>
-            <p className="paragraph border p-1 border-gray-300 bg-gray-100">
-              4000 Sales
-            </p>
-            <p className="paragraph border p-1 border-gray-300 bg-gray-100">
-              4% Cost vs Sales
-            </p>
-          </div>
-        </div>
-      </div>
+      )}
+
+
       <div className="mt-8 min-h-screen">
         {/* <div className="bg-white shadow-md rounded-lg overflow-hidden">
           <table className="w-full font12 table-fixed">
@@ -271,7 +310,7 @@ const Rosters = () => {
                       key={colIdx}
                       className="text-center h-20 align-center p-2 border-r"
                     >
-                      <button className="text-gray-400 hover:text-blue-500">
+                      <button className="text-gray-400 hover:text-blue-500 font-bold" onClick={() => setIsShiftOpen(true)}>
                         {d.icon}
                       </button>
                     </td>
@@ -291,7 +330,7 @@ const Rosters = () => {
                       key={colIdx}
                       className="text-center h-20 align-center p-2 border-r"
                     >
-                      <button className="text-gray-400 hover:text-blue-500">
+                      <button className="text-gray-400 hover:text-blue-500 font-bold" onClick={() => setIsShiftOpen(true)}>
                         {d.icon}
                       </button>
                     </td>
@@ -301,7 +340,7 @@ const Rosters = () => {
                       key={colIdx}
                       className="text-center h-20 align-center p-2 border-r"
                     >
-                      <button className="text-gray-400 hover:text-blue-500">
+                      <button className="text-gray-400 hover:text-blue-500 font-bold" onClick={() => setIsShiftOpen(true)}>
                         {d.icon}
                       </button>
                     </td>
@@ -311,7 +350,7 @@ const Rosters = () => {
                       key={colIdx}
                       className="text-center h-20 align-center p-2 border-r"
                     >
-                      <button className="text-gray-400 hover:text-blue-500">
+                      <button className="text-gray-400 hover:text-blue-500 font-bold" onClick={() => setIsShiftOpen(true)}>
                         {d.icon}
                       </button>
                     </td>
@@ -321,7 +360,7 @@ const Rosters = () => {
                       key={colIdx}
                       className="text-center h-20 align-center p-2 border-r"
                     >
-                      <button className="text-gray-400 hover:text-blue-500">
+                      <button className="text-gray-400 hover:text-blue-500 font-bold" onClick={() => setIsShiftOpen(true)}>
                         {d.icon}
                       </button>
                     </td>
@@ -332,7 +371,7 @@ const Rosters = () => {
               {/* Add Employee Button */}
               <tr className="border-t h-15 bg-gray-100">
                 <td className="p-2 border-r">
-                  <button className="buttonSuccess">+ Employee</button>
+                  <button className="buttonSuccess" onClick={() => setIsModalOpen(true)}>+ Employee</button>
                 </td>
                 {days.map((_, idx) => (
                   <td
@@ -347,6 +386,162 @@ const Rosters = () => {
           </table>
         </div>
       </div>
+      <Dialog
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        className="relative z-50 rounded-lg"
+      >
+        <div className="fixed inset-0 bg-gray-700/70"></div>
+        <div className="fixed inset-0 flex items-center justify-center">
+          <Dialog.Panel className="bg-white rounded-lg shadow-lg max-w-md w-full">
+            <div className="bg-indigo-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
+              <Dialog.Title className="heading">
+                Add Employee
+              </Dialog.Title>
+              <button
+                className="text-white text-2xl font-bold"
+                onClick={() => setIsModalOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+            <form className=" p-6 space-y-3">
+              <div>
+                <p className="paragraph"> An employee from any location can be added to this roster. They will be displayed across all pages for this week only. For a permanent addition to this location, change the employee's profile.</p>
+              </div>
+              <div className="mt-5">
+                <select
+                  name="selectedEmployee"
+                  className="inputFull"
+
+                >
+                  <option value="default">--Select Employee--</option>
+                  <option value="Location 1">Vishal</option>
+                  <option value="Location 2">Harish</option>
+                  <option value="Location 3">Anita</option>
+                </select>
+              </div>
+
+              <div className="flex justify-end gap-2 mt-4">
+                <button
+                  type="button"
+                  className="buttonGrey"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="buttonSuccess"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
+      <Dialog
+        open={isShiftOpen}
+        onClose={() => setIsShiftOpen(false)}
+        className="relative z-50 rounded-lg"
+      >
+        <div className="fixed inset-0 bg-gray-700/70"></div>
+        <div className="fixed inset-0 flex items-center justify-center">
+          <Dialog.Panel className="bg-white rounded-lg shadow-lg max-w-md w-full">
+            <div className="bg-indigo-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
+              <Dialog.Title className="heading">
+                Add Open Shift
+              </Dialog.Title>
+              <button
+                className="text-white text-2xl font-bold"
+                onClick={() => setIsShiftOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+            <form className=" p-6 space-y-3">
+
+              <div className="">
+                <div className="grid grid-cols-3 gap-4 mb-4">
+                  {/* Start Time */}
+                  <div className="flex flex-col">
+                    <label className="paragraphBold">Start</label>
+                    <select
+                      className="input"
+                      value={start}
+                      onChange={(e) => setStart(e.target.value)}
+                    >
+                      {timeOptions.map((time, index) => (
+                        <option key={index} value={time}>
+                          {time}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Finish Time */}
+                  <div className="flex flex-col">
+                    <label className="paragraphBold">Finish</label>
+                    <select
+                      className="input"
+                      value={finish}
+                      onChange={(e) => setFinish(e.target.value)}
+                    >
+                      {timeOptions.map((time, index) => (
+                        <option key={index} value={time}>
+                          {time}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Break Time */}
+                  <div className="flex flex-col">
+                    <label className="paragraphBold">Break</label>
+                    <select
+                      className="input"
+                      value={breakTime}
+                      onChange={(e) => setBreakTime(e.target.value)}
+                    >
+                      {breakOptions.map((breakOption, index) => (
+                        <option key={index} value={breakOption}>
+                          {breakOption} min
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Description Input */}
+                <label className="paragraphBold">Description:</label>
+                <textarea
+                  className=" textarea"
+                  rows="3"
+                  placeholder="Enter description..."
+                ></textarea>
+
+              </div>
+
+              <div className="flex justify-end gap-2 mt-4">
+                <button
+                  type="button"
+                  className="buttonGrey"
+                  onClick={() => setIsShiftOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="buttonSuccess"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
     </>
   );
 };
