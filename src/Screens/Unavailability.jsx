@@ -23,7 +23,7 @@ const Unavailability = () => {
                     From Date
                   </label>
                   <DatePicker
-                    className="input"
+                    className="mixedInput"
                     selected={fromDate}
                     onChange={(date) => setFromDate(date)}
                     dateFormat="dd/MM/yyyy"
@@ -53,7 +53,7 @@ const Unavailability = () => {
                     To Date
                   </label>
                   <DatePicker
-                  className="input"
+                    className="mixedInput"
                     selected={toDate}
                     onChange={(date) => setToDate(date)}
                     dateFormat="dd/MM/yyyy"
@@ -93,13 +93,13 @@ const Unavailability = () => {
                 <label className="paragraphBold">
                   Specify number of leave hours per week
                 </label>
-                <div className="flex ">
-                  <span className="paragraphBold">
+                <div className="flex justify-between items-center pl-2 borderRadius5  bg-white-300">
+                  <span className="paragraphBold ">
                     Week 31/03 - 06/04
                   </span>
                   <input
                     type="number"
-                    className="input custom-focus"
+                    className="mixedInput custom-focus w-25"
                     defaultValue="16.00"
                   />
                 </div>
