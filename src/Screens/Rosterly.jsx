@@ -243,7 +243,7 @@ const Rosterly = () => {
                 Give Your <strong>Unavailability</strong> Date and Time
               </h2>
 
-              <button className="buttonTheme">Start Your Shift</button>
+              <button className="buttonTheme w-30 self-end">Start Your Shift</button>
             </div>
           </div>
         </div>
