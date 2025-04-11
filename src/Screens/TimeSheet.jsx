@@ -148,8 +148,8 @@ const TimeSheet = () => {
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
                                     className={`text-left px-4 py-2 rounded-lg transition-colors ${activeTab === tab.id
-                                        ? "bg-white text-blue-600 subHeading shadow"
-                                        : "hover:bg-white hover:text-blue-500 text-gray-700"
+                                        ? "bg-white text-blue-600 paragraphBold shadow"
+                                        : "hover:bg-white paragraphBold hover:text-blue-500 text-gray-700"
                                         }`}
                                 >
                                     {tab.title}

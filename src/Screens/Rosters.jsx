@@ -326,7 +326,7 @@ const Rosters = () => {
                       key={colIdx}
                       className="text-center h-20 bg-gray-100 align-center p-2 border-r"
                     >
-                      <button className="text-gray-400 hover:text-blue-500 ">
+                      <button className="text-gray-400 paragraph hover:text-blue-500 ">
                         {d.unavail}
                       </button>
                     </td>
