@@ -449,7 +449,7 @@ const Rosters = () => {
         <div className="fixed inset-0 bg-gray-700/70"></div>
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="bg-white rounded-lg shadow-lg max-w-md w-full">
-            <div className="bg-indigo-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
+            <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
               <Dialog.Title className="heading">
                 Add Open Shift
               </Dialog.Title>
@@ -460,9 +460,9 @@ const Rosters = () => {
                 ×
               </button>
             </div>
-            <form className=" p-6 space-y-3">
+            <form className="card p-6 space-y-3">
 
-              <div className="card">
+              <div className="">
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   {/* Start Time */}
                   <div className="flex flex-col">

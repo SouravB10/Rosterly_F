@@ -239,8 +239,11 @@ const Rosterly = () => {
           </div>
           <div className="mt-4 col-span-2 mr-4">
             <div className="p-4 bg-gray-100 border-1 rounded-lg h-full flex flex-col justify-between">
-              <h2 className="font-weight-700 text-indigo-900">
-                Give Your <strong>Unavailability</strong> Date and Time
+              <h2 className="mainHeading text-indigo-900">
+                Give Your <strong>Unavailability</strong>
+              </h2>
+              <h2 className="mainHeading text-indigo-900">
+                Date and Time
               </h2>
 
               <button className="buttonTheme w-30 self-end">Start Your Shift</button>
