@@ -11,7 +11,7 @@ const NavBar = ({ toggleSidebar }) => {
 
   const navigate = useNavigate();
 
-  
+
   const handleClick = () => {
     navigate('/notification');
   };
@@ -54,6 +54,8 @@ const NavBar = ({ toggleSidebar }) => {
               <span className="absolute -inset-1.5" />
               <span className="sr-only">View notifications</span>
               <BellIcon aria-hidden="true" className="size-6" />
+              <span className="absolute top-0 right-0 transform translate-x -translate-y block h-2 w-2 rounded-full bg-red-600 ring-1 ring-white" />
+
             </button>
 
             {/* Profile dropdown */}
@@ -71,13 +73,13 @@ const NavBar = ({ toggleSidebar }) => {
               </div>
               <MenuItems
                 transition
-                className="absolute right-0 z-10 mt-2 w-49 origin-top-right rounded-md bg-violet-100 py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
+                className="absolute right-0 z-10 mt-2 w-49 origin-top-right rounded-md bg-gray-200 py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
               >
 
                 <MenuItem>
                   <a
                     href="#"
-                    className="block px-4 py-2 text-sm text-black data-focus:bg-violet-300 data-focus:outline-hidden"
+                    className="block px-4 py-2 text-sm text-black data-focus:bg-gray-300 data-focus:outline-hidden"
                   >
                     Your Profile
                   </a>
@@ -85,7 +87,7 @@ const NavBar = ({ toggleSidebar }) => {
                 <MenuItem>
                   <a
                     href="#"
-                    className="block px-4 py-2 text-sm text-black data-focus:bg-violet-300 data-focus:outline-hidden"
+                    className="block px-4 py-2 text-sm text-black data-focus:bg-gray-300 data-focus:outline-hidden"
                   >
                     Settings
                   </a>
@@ -94,7 +96,7 @@ const NavBar = ({ toggleSidebar }) => {
                   {({ active }) => (
                     <button
                       onClick={handleLogout}
-                      className={`block w-full px-4 py-2 text-left text-sm text-black ${active ? 'bg-violet-300' : ''
+                      className={`block w-full px-4 py-2 text-left text-sm cursor-pointer text-black ${active ? 'bg-gray-300' : ''
                         }`}
                     >
                       Sign out
