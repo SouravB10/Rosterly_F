@@ -67,6 +67,9 @@ body {
 .bg-rosterRed{
   background-color: #CA6D6D;
 }
+.cursor{
+  cursor: pointer;
+}
 
 /* bg-colors-end----------- */
 

@@ -297,33 +297,6 @@ const TimeSheet = () => {
                     </div>
                 </div>
             </div>
-            {/* <div className="flex h-[400px] w-full border rounded-xl shadow-sm overflow-hidden">
-                <div className="w-1/6 bg-gray-100 p-3 flex flex-col gap-2">
-                    {tabs.map((tab) => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
-                            className={`text-left px-4 py-2 rounded-lg transition-colors ${activeTab === tab.id
-                                    ? "bg-white text-blue-600 font-semibold shadow"
-                                    : "hover:bg-white hover:text-blue-500 text-gray-700"
-                                }`}
-                        >
-                            {tab.title}
-                        </button>
-                    ))}
-                </div>
-
-                <div className="w-3/4 p-6">
-                    {tabs.map(
-                        (tab) =>
-                            tab.id === activeTab && (
-                                <div key={tab.id} className="text-gray-800 text-lg">
-                                    {tab.content}
-                                </div>
-                            )
-                    )}
-                </div>
-            </div> */}
         </>
     );
 };

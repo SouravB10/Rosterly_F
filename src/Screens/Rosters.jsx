@@ -3,7 +3,7 @@ import moment from "moment";
 import { FaFilePdf } from "react-icons/fa";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { SlCalender } from "react-icons/sl";
-import { FaAngleLeft } from "react-icons/fa";
+import { FaAngleLeft, FaPlus } from "react-icons/fa";
 import { FaAngleRight } from "react-icons/fa";
 import { Dialog } from "@headlessui/react";
 
@@ -13,7 +13,6 @@ const Rosters = () => {
   const [stats, setStats] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShiftOpen, setIsShiftOpen] = useState(false);
-
 
   const getWeekRange = (week) => {
     const startOfWeek = moment(week).startOf("isoWeek").format("DD MMM");
@@ -129,10 +128,13 @@ const Rosters = () => {
           </div>
 
           <div className="flex gap-2">
-            <div className="flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2" onClick={handleStats}>
+            <div
+              className="flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2"
+              onClick={handleStats}
+            >
               <IoStatsChartSharp className="icon50" />
             </div>
-            <div className="flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2" >
+            <div className="flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2">
               <FaFilePdf className="icon50" />
             </div>
           </div>
@@ -184,9 +186,7 @@ const Rosters = () => {
             </div>
           </div>
         </div>
-
       )}
-
 
       <div className="mt-8 min-h-screen">
         {/* <div className="bg-white shadow-md rounded-lg overflow-hidden">
@@ -310,8 +310,14 @@ const Rosters = () => {
                       key={colIdx}
                       className="text-center h-20 align-center p-2 border-r"
                     >
-                      <button className="text-gray-400 hover:text-blue-500 font-bold" onClick={() => setIsShiftOpen(true)}>
-                        {d.icon}
+                      <button
+                        className="text-gray-400 hover:text-blue-500 font-bold"
+                        onClick={() => setIsShiftOpen(true)}
+                      >
+                        <FaPlus
+                          className=" hover:text-violet-950 cursor bg-rosterGreen text-white rounded-md p-1"
+                          size={26}
+                        />
                       </button>
                     </td>
                   ))}
@@ -330,8 +336,14 @@ const Rosters = () => {
                       key={colIdx}
                       className="text-center h-20 align-center p-2 border-r"
                     >
-                      <button className="text-gray-400 hover:text-blue-500 font-bold" onClick={() => setIsShiftOpen(true)}>
-                        {d.icon}
+                      <button
+                        className="text-gray-400 hover:text-blue-500 font-bold"
+                        onClick={() => setIsShiftOpen(true)}
+                      >
+                        <FaPlus
+                          className=" hover:text-violet-950 cursor bg-rosterGreen text-white rounded-md p-1"
+                          size={26}
+                        />
                       </button>
                     </td>
                   ))}
@@ -340,8 +352,14 @@ const Rosters = () => {
                       key={colIdx}
                       className="text-center h-20 align-center p-2 border-r"
                     >
-                      <button className="text-gray-400 hover:text-blue-500 font-bold" onClick={() => setIsShiftOpen(true)}>
-                        {d.icon}
+                      <button
+                        className="text-gray-400 hover:text-blue-500 font-bold"
+                        onClick={() => setIsShiftOpen(true)}
+                      >
+                        <FaPlus
+                          className=" hover:text-violet-950 cursor bg-rosterGreen text-white rounded-md p-1"
+                          size={26}
+                        />
                       </button>
                     </td>
                   ))}
@@ -350,8 +368,14 @@ const Rosters = () => {
                       key={colIdx}
                       className="text-center h-20 align-center p-2 border-r"
                     >
-                      <button className="text-gray-400 hover:text-blue-500 font-bold" onClick={() => setIsShiftOpen(true)}>
-                        {d.icon}
+                      <button
+                        className="text-gray-400 hover:text-blue-500 font-bold"
+                        onClick={() => setIsShiftOpen(true)}
+                      >
+                        <FaPlus
+                          className=" hover:text-violet-950 cursor bg-rosterGreen text-white rounded-md p-1"
+                          size={26}
+                        />
                       </button>
                     </td>
                   ))}
@@ -360,8 +384,14 @@ const Rosters = () => {
                       key={colIdx}
                       className="text-center h-20 align-center p-2 border-r"
                     >
-                      <button className="text-gray-400 hover:text-blue-500 font-bold" onClick={() => setIsShiftOpen(true)}>
-                        {d.icon}
+                      <button
+                        className="text-gray-400 hover:text-blue-500 font-bold"
+                        onClick={() => setIsShiftOpen(true)}
+                      >
+                        <FaPlus
+                          className=" hover:text-violet-950 cursor bg-rosterGreen text-white rounded-md p-1"
+                          size={26}
+                        />
                       </button>
                     </td>
                   ))}
@@ -371,7 +401,12 @@ const Rosters = () => {
               {/* Add Employee Button */}
               <tr className="border-t h-15 bg-gray-100">
                 <td className="p-2 border-r">
-                  <button className="buttonSuccess" onClick={() => setIsModalOpen(true)}>+ Employee</button>
+                  <button
+                    className="buttonSuccess"
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    + Employee
+                  </button>
                 </td>
                 {days.map((_, idx) => (
                   <td
@@ -395,9 +430,7 @@ const Rosters = () => {
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="bg-white rounded-lg shadow-lg max-w-md w-full">
             <div className="bg-indigo-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">
-                Add Employee
-              </Dialog.Title>
+              <Dialog.Title className="heading">Add Employee</Dialog.Title>
               <button
                 className="text-white text-2xl font-bold"
                 onClick={() => setIsModalOpen(false)}
@@ -407,14 +440,16 @@ const Rosters = () => {
             </div>
             <form className=" p-6 space-y-3">
               <div>
-                <p className="paragraph"> An employee from any location can be added to this roster. They will be displayed across all pages for this week only. For a permanent addition to this location, change the employee's profile.</p>
+                <p className="paragraph">
+                  {" "}
+                  An employee from any location can be added to this roster.
+                  They will be displayed across all pages for this week only.
+                  For a permanent addition to this location, change the
+                  employee's profile.
+                </p>
               </div>
               <div className="mt-5">
-                <select
-                  name="selectedEmployee"
-                  className="inputFull"
-
-                >
+                <select name="selectedEmployee" className="inputFull">
                   <option value="default">--Select Employee--</option>
                   <option value="Location 1">Vishal</option>
                   <option value="Location 2">Harish</option>
@@ -430,10 +465,7 @@ const Rosters = () => {
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="buttonSuccess"
-                >
+                <button type="submit" className="buttonSuccess">
                   Save
                 </button>
               </div>
@@ -450,18 +482,15 @@ const Rosters = () => {
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="bg-white rounded-lg shadow-lg max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">
-                Add Open Shift
-              </Dialog.Title>
+              <Dialog.Title className="heading">Add Open Shift</Dialog.Title>
               <button
-                className="text-white text-2xl font-bold"
+                className="text-white text-2xl font-bold cursor"
                 onClick={() => setIsShiftOpen(false)}
               >
                 ×
               </button>
             </div>
             <form className="card p-6 space-y-3">
-
               <div className="">
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   {/* Start Time */}
@@ -520,7 +549,6 @@ const Rosters = () => {
                   rows="3"
                   placeholder="Enter description..."
                 ></textarea>
-
               </div>
 
               <div className="flex justify-end gap-2 mt-4">
@@ -531,10 +559,7 @@ const Rosters = () => {
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="buttonSuccess"
-                >
+                <button type="submit" className="buttonSuccess">
                   Save
                 </button>
               </div>
