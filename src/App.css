@@ -1,4 +1,5 @@
 @import "tailwindcss";
+
 /* defaultt start */
 * {
   /* font-family: "Montserrat", sans-serif; */
@@ -35,6 +36,35 @@ body {
 /* defaultt end */
 
 
+/* bg-colors-start----------- */
+
+.bg-white-100 {
+  background-color: #ffffff;
+}
+
+.bg-white-200 {
+  background-color: #F7F1FF;
+}
+
+.bg-white-300 {
+  background-color: #E6D4FE;
+}
+
+.bg-black-100 {
+  background-color: #3E344F;
+}
+
+.bg-black-200 {
+  background-color: #16131C;
+}
+
+.bg-black-300 {
+  background-color: #000000;
+}
+
+/* bg-colors-end----------- */
+
+
 /* Buttons start */
 
 .buttonSuccess {
@@ -59,6 +89,7 @@ body {
     -4px -4px 6px #dedede,
     4px 4px 6px #ddd6d6; */
 }
+
 .bSuccess {
   background-color: #85CA6D;
   border-radius: 5px;
@@ -75,7 +106,7 @@ body {
 .bSuccess:hover {
   background-color: #6EB356;
   transform: translateY(-2px);
- 
+
 }
 
 .buttonDanger {
@@ -151,6 +182,15 @@ body {
 
 /* input start  */
 
+.mixedInput {
+  height: 35px;
+  font-size: var(--font-paragraph);
+  padding: 0 10px;
+  background-color: #ffff;
+  outline: none;
+  /* width: 100%; */
+}
+
 .input {
   height: 35px;
   font-size: var(--font-paragraph);
@@ -182,6 +222,7 @@ body {
   outline: none;
   /* width: 100%; */
 }
+
 .inputS {
   height: 35px;
   font-size: var(--font-paragraph);
@@ -199,6 +240,7 @@ body {
   outline: none;
   /* width: 100%; */
 }
+
 .inputFull {
   height: 35px;
   font-size: var(--font-paragraph);
@@ -220,16 +262,16 @@ body {
   width: 100%;
 }
 
-.textArea{
+.textArea {
   width: 100%;
-  height:35px;
+  height: 35px;
   padding: 0 10px;
   background-color: #ffff;
   box-shadow:
     -5px -5px 5px #f4f4f4,
     5px 5px 5px #f5f5f5;
-    border-radius: 5px;
-    font-size: var(--font-paragraph);
+  border-radius: 5px;
+  font-size: var(--font-paragraph);
 }
 
 /* input end */
@@ -253,10 +295,10 @@ body {
   box-shadow:
     0px 4px 20px #efefef;
   color: #ffff;
-  height:180px;
+  height: 180px;
   width: 200px;
   border: 1px solid #a6c1503e;
-  
+
 }
 
 .cardRed {
@@ -266,10 +308,10 @@ body {
   padding: 20px;
   box-shadow:
     0px 4px 20px #efefef;
-    color: #5e5e5e69;
-    height:180px;
-    width: 200px;
-    border: 1px solid #fe5d5d29;
+  color: #5e5e5e69;
+  height: 180px;
+  width: 200px;
+  border: 1px solid #fe5d5d29;
 }
 
 .cardGrey {
@@ -277,15 +319,15 @@ body {
   border-radius: 10px;
   border: 1px solid #eaeaea;
   padding: 20px;
-  height:180px;
+  height: 180px;
   width: 200px;
   box-shadow:
     0px 4px 20px #efefef;
-    color: #5e5e5e69;
-    border: 1px solid #80808023;
+  color: #5e5e5e69;
+  border: 1px solid #80808023;
 }
 
-.sideBar{
+.sideBar {
   background-color: #3F3897;
 }
 
@@ -305,6 +347,7 @@ body {
   font-weight: 600;
   margin-bottom: 3px;
 }
+
 .headingBold {
   font-size: var(--font-heading);
   font-weight: 800;
@@ -316,6 +359,7 @@ body {
   font-weight: 600;
   margin-bottom: 3px;
 }
+
 /* .subHeadingWhite {
   font-size: var(--font-subheading);
   font-weight: 600;
@@ -334,6 +378,7 @@ body {
   margin-bottom: 3px;
   line-height: 20px;
 }
+
 .paragraphBold {
   font-size: var(--font-paragraph);
   font-weight: 800;
@@ -341,6 +386,7 @@ body {
   line-height: 20px;
   letter-spacing: 0.2px;
 }
+
 .paragraphBoldWhite {
   font-size: var(--font-paragraph);
   font-weight: 800;
@@ -348,6 +394,7 @@ body {
   line-height: 20px;
   color: #f1f1f1;
 }
+
 .paragraphThin {
   font-size: var(--font-paragraph);
   font-weight: 300;
@@ -363,12 +410,12 @@ body {
 
 /* Icons start */
 
-.icon50{
+.icon50 {
   font-size: 15px;
   margin-bottom: 3px;
 }
 
-.bg-theme{
+.bg-theme {
   background-color: #3F3897;
 }
 
