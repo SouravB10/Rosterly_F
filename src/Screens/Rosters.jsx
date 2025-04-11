@@ -316,7 +316,7 @@ const Rosters = () => {
                       >
                         <FaPlus
                           className=" hover:text-violet-950 cursor bg-rosterGreen text-white rounded-md p-1"
-                          size={26}
+                          size={20}
                         />
                       </button>
                     </td>
@@ -342,7 +342,7 @@ const Rosters = () => {
                       >
                         <FaPlus
                           className=" hover:text-violet-950 cursor bg-rosterGreen text-white rounded-md p-1"
-                          size={26}
+                          size={20}
                         />
                       </button>
                     </td>
@@ -358,7 +358,7 @@ const Rosters = () => {
                       >
                         <FaPlus
                           className=" hover:text-violet-950 cursor bg-rosterGreen text-white rounded-md p-1"
-                          size={26}
+                          size={20}
                         />
                       </button>
                     </td>
@@ -374,7 +374,7 @@ const Rosters = () => {
                       >
                         <FaPlus
                           className=" hover:text-violet-950 cursor bg-rosterGreen text-white rounded-md p-1"
-                          size={26}
+                          size={20}
                         />
                       </button>
                     </td>
@@ -390,7 +390,7 @@ const Rosters = () => {
                       >
                         <FaPlus
                           className=" hover:text-violet-950 cursor bg-rosterGreen text-white rounded-md p-1"
-                          size={26}
+                          size={20}
                         />
                       </button>
                     </td>
