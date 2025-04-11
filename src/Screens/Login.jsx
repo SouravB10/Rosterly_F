@@ -139,18 +139,18 @@
 
 
         return (
-            <div className="min-h-screen flex items-center justify-center bg-secondary px-4">
+            <div className="min-h-screen flex items-center justify-center sideBar px-4">
                 <div className={`bg-white p-8 rounded-2xl shadow-lg w-full ${isLogin ? 'max-w-md' : 'max-w-2xl'}`}>
                     <h1 className="text-center text-2xl font-bold text-secondary mb-6">Login</h1>
                     <form className="space-y-5" onSubmit={handleSubmit}>
 
                         <div>
-                            <label className="text-secondary font-semibold mb-1 block">Email</label>
+                            <label className="subHeading">Email</label>
                             <input
                                 type="email"
                                 value={email}
                                 onChange={(e) => handleChange('email', e.target.value)}
-                                className={`custom-focus w-full px-4 py-3 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                                className={`custom-focus w-full paragraphBold px-2 py-3 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
                                 placeholder="Enter your email"
                             />
                             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
@@ -162,7 +162,7 @@
                                 type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={(e) => handleChange('password', e.target.value)}
-                                className={`custom-focus w-full px-4 py-3 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-lg pr-12`}
+                                className={`custom-focus w-full paragraphBold px-2 py-3 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-lg pr-12`}
                                 placeholder="Enter your password"
                             />
                             <span
@@ -183,8 +183,8 @@
                         <div>
                             <button
                                 type="submit"
-                                className={`w-full py-3 mt-3 bg-secondary text-white rounded-lg font-semibold shadow flex items-center justify-center
-                    transition-transform duration-400 ease-in-out hover:scale-105 hover:bg-primary 
+                                className={`w-full py-3 mt-3 sideBar text-white rounded-lg font-semibold shadow flex items-center justify-center
+                    transition-transform duration-400 ease-in-out hover:scale-105 hover:bg-indigo-950
                     ${loading ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
                                 disabled={loading}
                             >
@@ -199,8 +199,8 @@
                         </div>
                     </form>
                     <div className='mt-2 text-center'>
-                        <Link to='/register' className="text-center text-sm text-gray-600">Don’t have an account?
-                            <span className="ml-1 text-primary cursor-pointer font-semibold hover:underline">Create an account</span>
+                        <Link to='/register' className="text-center paragraph text-gray-600">Don’t have an account?
+                            <span className="ml-1 text-primary cursor-pointer paragraphBold hover:underline">Create an account</span>
                         </Link>
                     </div>
                 </div>
