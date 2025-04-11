@@ -61,6 +61,12 @@ body {
 .bg-black-300 {
   background-color: #000000;
 }
+.bg-rosterGreen{
+  background-color: #6EB356;
+}
+.bg-rosterRed{
+  background-color: #CA6D6D;
+}
 
 /* bg-colors-end----------- */
 
@@ -84,6 +90,30 @@ body {
 
 .buttonSuccess:hover {
   background-color: #6EB356;
+  transform: translateY(-2px);
+  /* box-shadow:
+    -4px -4px 6px #dedede,
+    4px 4px 6px #ddd6d6; */
+}
+.buttonSuccessB {
+  /* background-color: #85CA6D; */
+  border-radius: 5px;
+  border: 2px solid #85CA6D;
+  color: #6EB356;
+  font-size: var(--font-paragraph);
+  font-weight: 600;
+  padding: 0 15px;
+  height: 35px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  /* box-shadow:
+    -3px -3px 4px #dedede,
+    3px 3px 4px #ddd6d6; */
+}
+
+.buttonSuccessB:hover {
+  background-color: #6EB356;
+  color: #f1f1f1;
   transform: translateY(-2px);
   /* box-shadow:
     -4px -4px 6px #dedede,

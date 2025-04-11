@@ -128,11 +128,11 @@ const TimeSheet = () => {
                             </button>
                             <div className="flex gap-4 items-center">
                                 <FaPlus
-                                    className=" hover:text-violet-950 bg-green-700 text-white rounded-md p-1"
+                                    className=" hover:text-violet-950 bg-rosterGreen text-white rounded-md p-1"
                                     size={26}
                                 />
                                 <RiDeleteBin6Line
-                                    className=" hover:text-violet-950 bg-red-700 text-white rounded-md p-1"
+                                    className=" hover:text-violet-950 bg-rosterRed text-white rounded-md p-1"
                                     size={26}
                                 />
                             </div>
@@ -283,7 +283,7 @@ const TimeSheet = () => {
                                             <button className="buttonSuccess">
                                                 Approve & Next
                                             </button>
-                                            <button className="border px-3  rounded-md primarybutton paragraph">
+                                            <button className="border px-3  rounded-md buttonSuccessB paragraph">
                                                 Approve
                                             </button>
                                             <button className="buttonDanger">
