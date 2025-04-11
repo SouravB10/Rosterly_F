@@ -28,7 +28,7 @@ const notifications = [
 
 const NotificationPage = () => {
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-gray-50">
       <div className="flex justify-between items-center mb-4">
         <h2 className="heading">Notifications</h2>
         <button className="buttonGrey">

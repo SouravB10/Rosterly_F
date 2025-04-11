@@ -468,7 +468,7 @@ const Rosters = () => {
                   <div className="flex flex-col">
                     <label className="paragraphBold">Start</label>
                     <select
-                      className="input"
+                      className="input paragraph"
                       value={start}
                       onChange={(e) => setStart(e.target.value)}
                     >
@@ -484,7 +484,7 @@ const Rosters = () => {
                   <div className="flex flex-col">
                     <label className="paragraphBold">Finish</label>
                     <select
-                      className="input"
+                      className="input paragraph"
                       value={finish}
                       onChange={(e) => setFinish(e.target.value)}
                     >
@@ -500,7 +500,7 @@ const Rosters = () => {
                   <div className="flex flex-col">
                     <label className="paragraphBold">Break</label>
                     <select
-                      className="input"
+                      className="input paragraph"
                       value={breakTime}
                       onChange={(e) => setBreakTime(e.target.value)}
                     >
@@ -516,7 +516,7 @@ const Rosters = () => {
                 {/* Description Input */}
                 <label className="paragraphBold">Description:</label>
                 <textarea
-                  className=" textarea"
+                  className=" textarea paragraph"
                   rows="3"
                   placeholder="Enter description..."
                 ></textarea>
