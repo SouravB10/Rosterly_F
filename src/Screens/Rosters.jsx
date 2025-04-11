@@ -462,7 +462,7 @@ const Rosters = () => {
             </div>
             <form className=" p-6 space-y-3">
 
-              <div className="">
+              <div className="card">
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   {/* Start Time */}
                   <div className="flex flex-col">
