@@ -8,6 +8,7 @@ import { navItems } from "../assets/Data";
 
 
 const NavBar = ({ toggleSidebar }) => {
+  const baseURL = import.meta.env.VITE_BASE_URL;
 
   const navigate = useNavigate();
 
@@ -22,7 +23,7 @@ const NavBar = ({ toggleSidebar }) => {
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://127.0.0.1:8000/api/admin/logout', {}, {
+      await axios.post(`${baseURL}admin/logout`, {}, {
         headers: {
           Authorization: `Bearer ${token}`
         }

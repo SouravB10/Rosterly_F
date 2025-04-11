@@ -7,6 +7,7 @@
 
 
     export default function Login() {
+        const baseURL = import.meta.env.VITE_BASE_URL;
         const [isLogin, setIsLogin] = useState(true);
         const [firstName, setFirstName] = useState('');
         const [lastName, setLastName] = useState('');
@@ -111,7 +112,7 @@
                 setErrors({});
                 setLoading(true);
                 try {
-                    const response = await axios.post('http://127.0.0.1:8000/api/admin/login', { email, password });
+                    const response = await axios.post(`${baseURL}admin/login`, { email, password });
                     const data = response.data;
 
                     localStorage.setItem('token', data.token);
