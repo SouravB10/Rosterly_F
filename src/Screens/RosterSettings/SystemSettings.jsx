@@ -24,7 +24,8 @@ const SystemSettings = () => {
 
   return (
     <div>
-      <div className='flex items-center justify-between'>
+      <h1 className='heading'>System Settings</h1>
+      <div className='flex items-center justify-between mt-6'>
         {[
           { name: 'General', icon: <IoSettingsOutline size={50} /> },
           { name: 'Roster', icon: <FaUserClock size={50} /> },
@@ -35,17 +36,17 @@ const SystemSettings = () => {
           <div
             key={setting.name}
             className={`p-5 rounded-md w-45 cursor-pointer transition-all duration-200
-              ${selectedSetting === setting.name ? 'bg-indigo-900 text-white' : 'bg-gray-200'}
-              hover:bg-indigo-300`}
+              ${selectedSetting === setting.name ? 'bg-yellow-300 text-black' : 'bg-yellow-200'}
+              hover:bg-yellow-300`}
             onClick={() => setSelectedSetting(setting.name)}
           >
             <div className={`transition-all duration-200 
-              ${selectedSetting === setting.name ? 'text-white' : 'text-gray-600'} 
-              hover:text-indigo-900`}>
+              ${selectedSetting === setting.name ? 'text-black' : 'text-gray-600'} 
+              hover:text-white`}>
               {setting.icon}
             </div>
             <div className='flex justify-between mt-4 items-center'>
-              <div className={`font-semibold text-lg ${selectedSetting == setting.name?'text-white':'text-gray-700'}`}>{setting.name}</div>
+              <div className={`font-semibold text-lg ${selectedSetting == setting.name?'text-black':'text-gray-700'}`}>{setting.name}</div>
               <MdOutlineArrowOutward />
             </div>
           </div>

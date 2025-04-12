@@ -27,7 +27,8 @@ const PayRate = () => {
 
   return (
     <div>
-      <div className='flex items-center justify-between'>
+            <h1 className='heading'>Pay Rate Setup</h1>
+      <div className='flex items-center justify-between mt-6'>
         {[
           { name: 'Employee Types', icon: <FaPeopleGroup size={40} /> },
           { name: 'Pay Rate Level', icon: <BiMoneyWithdraw size={40} /> },
