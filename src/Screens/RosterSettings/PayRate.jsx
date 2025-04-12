@@ -27,7 +27,7 @@ const PayRate = () => {
 
   return (
     <div>
-            <h1 className='heading'>Pay Rate Setup</h1>
+      <h1 className='heading'>Pay Rate Setup</h1>
       <div className='flex items-center justify-between mt-6'>
         {[
           { name: 'Employee Types', icon: <FaPeopleGroup size={40} /> },
@@ -37,18 +37,18 @@ const PayRate = () => {
         ].map((setting) => (
           <div
             key={setting.name}
-            className={`p-4 rounded-md w-45 cursor-pointer transition-all duration-200
-              ${selectedSetting === setting.name ? 'bg-indigo-900 text-white' : 'bg-gray-200'}
-              hover:bg-indigo-300`}
+            className={`p-5 rounded-md w-45 cursor-pointer transition-all duration-200
+                       ${selectedSetting === setting.name ? 'bg-yellow-300 text-black' : 'bg-yellow-200'}
+                       hover:bg-yellow-300`}
             onClick={() => setSelectedSetting(setting.name)}
-          > 
+          >
             <div className={`transition-all duration-200 
-              ${selectedSetting === setting.name ? 'text-white' : 'text-gray-600'} 
-              hover:text-indigo-900`}>
+                       ${selectedSetting === setting.name ? 'text-black' : 'text-gray-600'} 
+                       hover:text-white`}>
               {setting.icon}
             </div>
             <div className='flex justify-between mt-4 items-center'>
-              <div className={`font-semibold text-lg ${selectedSetting == setting.name ? 'text-white' : 'text-gray-700'}`}>{setting.name}</div>
+              <div className={`font-semibold text-lg ${selectedSetting == setting.name ? 'text-black' : 'text-gray-700'}`}>{setting.name}</div>
               <MdOutlineArrowOutward />
             </div>
           </div>
