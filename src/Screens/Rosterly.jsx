@@ -82,8 +82,8 @@ const Rosterly = () => {
           <button
             onClick={handleTimerToggle}
             className={`${
-              activeTimer === "shift" ? "buttonDanger" : "buttonTheme"
-            } mt-1`}
+              activeTimer === "shift" ? "buttonDanger" : "buttonSuccessActive"
+            } mt-2`}
           >
             {getButtonLabel()}
           </button>
@@ -184,13 +184,13 @@ const Rosterly = () => {
             </div>
           </div>
 
-          <div className="mt-4 mr-4">
-            <div className="">
+          <div className="mt-4 mr-4 cardA">
+            <div className="flex flex-col justify-end">
               <p className="font-bold subHeading text-gray-600 text-lg">
                 Weekly Total
               </p>
 
-              <p className="font-weight-800 text-indigo-900 ">
+              <p className="font-weight-800  text-indigo-900">
                 <strong className="mainHeading"> 13.01 </strong>
                 <span className="font-medium">hours</span>
               </p>
@@ -246,7 +246,7 @@ const Rosterly = () => {
                 Date and Time
               </h2>
 
-              <button className="buttonTheme w-30 self-end">Start Your Shift</button>
+              <button className="buttonSuccessActive w-1/3">Start Your Shift</button>
             </div>
           </div>
         </div>

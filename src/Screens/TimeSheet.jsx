@@ -106,7 +106,7 @@ const TimeSheet = () => {
                 </div>
             </div>
             <div className=" mt-6 ">
-                <div className="sideBar text-white p-2 rounded-lg">
+                <div className="bgTable text-black p-2 rounded-lg">
                     <div className="flex justify-between items-center ">
                         <h2 className="subHeading">
                             Harish Dobila

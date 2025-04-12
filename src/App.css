@@ -20,7 +20,7 @@ body {
   --font-main-heading: 1.625rem;
   --font-heading: 1.25rem;
   --font-subheading: 1rem;
-  --font-paragraph: 0.75rem;
+  --font-paragraph: 0.90rem;
   --font-small: 0.625rem;
 }
 
@@ -74,6 +74,15 @@ body {
   background-color: #ffde21;
 }
 
+.bgSucces{
+  background-color: #04f07217;
+  color: #201f1f;
+}
+
+.bgTable{
+  background-color: #85CA6D;
+}
+
 /* bg-colors-end----------- */
 
 
@@ -83,6 +92,20 @@ body {
   background-color: #85CA6D;
   border-radius: 5px;
   color: #ffffff;
+  font-size: var(--font-paragraph);
+  font-weight: 600;
+  padding: 0 15px;
+  height: 35px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  /* box-shadow:
+    -3px -3px 4px #dedede,
+    3px 3px 4px #ddd6d6; */
+}
+.buttonSuccessActive {
+  background-color: #85CA6D;
+  border-radius: 10px;
+  color: #000000c8;
   font-size: var(--font-paragraph);
   font-weight: 600;
   padding: 0 15px;
@@ -250,9 +273,9 @@ body {
   font-size: var(--font-paragraph);
   padding: 0 10px;
   background-color: #ffff;
-  box-shadow:
+  /* box-shadow:
     -5px -5px 5px #f4f4f4,
-    5px 5px 5px #f5f5f5;
+    5px 5px 5px #f5f5f5; */
   border-radius: 5px;
   outline: none;
   /* width: 100%; */
@@ -261,9 +284,9 @@ body {
   font-size: var(--font-paragraph);
   padding: 0 10px;
   background-color: #ffff;
-  box-shadow:
+  /* box-shadow:
     -5px -5px 5px #f4f4f4,
-    5px 5px 5px #f5f5f5;
+    5px 5px 5px #f5f5f5; */
   border-radius: 5px;
   outline: none;
   width: 100%;
@@ -333,36 +356,36 @@ body {
 /* Card start */
 
 .card {
-  background-color: #f9f9f9;
+  background-color: #ededed70;
   border-radius: 10px;
-  border: 1px solid #eaeaea;
+  border: 2px solid #d2d2d2;
   padding: 20px;
   /* box-shadow: 0px 4px 20px #efefef; */
 }
 
 .cardYellow {
-  background-color: #009947;
+  background-color: #04f07217;
   border-radius: 10px;
-  border: 1px solid #eaeaea;
+  /* border: 1px solid #eaeaea; */
   padding: 20px;
   box-shadow:
     0px 4px 20px #efefef;
-  color: #ffff;
+  color: #201f1f;
   height: 180px;
   width: 200px;
-  border: 1px solid #a6c1503e;
+  border: 1px solid #85CA6D;
 
 }
 
 .cardRed {
-  background-color: #ff858570;
+  background-color: #f7ca006c;
   border-radius: 10px;
   border: 1px solid #eaeaea;
   padding: 20px;
   box-shadow:
     0px 4px 20px #efefef;
-  color: #5e5e5e69;
-  height: 180px;
+    color: #201f1f;
+    height: 180px;
   width: 200px;
   border: 1px solid #fe5d5d29;
 }
@@ -370,19 +393,31 @@ body {
 .cardGrey {
   background-color: #cacaca70;
   border-radius: 10px;
-  border: 1px solid #eaeaea;
+  border: 1px solid #7878788a;
   padding: 20px;
   height: 180px;
   width: 200px;
   box-shadow:
     0px 4px 20px #efefef;
   color: #2e2e2e95;
-  border: 1px solid #80808023;
 }
+
+.cardA {
+  background-color: #fffffff9;
+  border-radius: 10px;
+  border: 1px solid #bbbbbba3;
+  padding: 20px;
+  /* height: 180px;
+  width: 200px; */
+  box-shadow:
+    0px 4px 20px #efefef;
+  color: #2e2e2e95;
+}
+
 
 .sideBar {
   /* background-color: #3F3897; */
-  background-color: #009947;
+  background-color: #04f07217;
 }
 
 /* Card end */

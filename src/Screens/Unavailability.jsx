@@ -93,7 +93,7 @@ const Unavailability = () => {
                 <label className="paragraphBold">
                   Specify number of leave hours per week
                 </label>
-                <div className="flex justify-between items-center pl-2 borderRadius5  bg-white-300">
+                <div className="flex justify-between items-center pl-2 borderRadius5 bg-yellow-200">
                   <span className="paragraphBold ">
                     Week 31/03 - 06/04
                   </span>
