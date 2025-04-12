@@ -145,7 +145,7 @@ const People = () => {
         <div className="fixed inset-0 bg-gray-700/70"></div>
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="bg-white rounded-lg shadow-lg max-w-md w-full">
-            <div className="bg-indigo-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
+            <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
               <Dialog.Title className="heading">
                 Add Person
               </Dialog.Title>

@@ -83,7 +83,7 @@ const Rosterly = () => {
             onClick={handleTimerToggle}
             className={`${
               activeTimer === "shift" ? "buttonDanger" : "buttonTheme"
-            }`}
+            } mt-1`}
           >
             {getButtonLabel()}
           </button>
