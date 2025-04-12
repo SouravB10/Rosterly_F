@@ -123,16 +123,16 @@ const TimeSheet = () => {
                                 placeholder="Import 0 Scans"
                             />
 
-                            <button className="bSuccess">
+                            <button className="buttonSubway">
                                 Finalise
                             </button>
                             <div className="flex gap-4 items-center">
                                 <FaPlus
-                                    className=" hover:text-violet-950 bg-rosterGreen text-white rounded-md p-1"
+                                    className=" hover:text-violet-950 bg-yellow text-black cursor rounded-md p-1"
                                     size={26}
                                 />
                                 <RiDeleteBin6Line
-                                    className=" hover:text-violet-950 bg-rosterRed text-white rounded-md p-1"
+                                    className=" hover:text-violet-950 bg-rosterRed text-white cursor rounded-md p-1"
                                     size={26}
                                 />
                             </div>

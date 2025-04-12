@@ -70,6 +70,9 @@ body {
 .cursor{
   cursor: pointer;
 }
+.bg-yellow{
+  background-color: #ffde21;
+}
 
 /* bg-colors-end----------- */
 
@@ -205,6 +208,24 @@ body {
 
 .buttonTheme:hover {
   background-color: #1E1A4D;
+  transform: translateY(-2px);
+  /* box-shadow:
+    -4px -4px 6px #dedede,
+    4px 4px 6px #ddd6d6; */
+}
+.buttonSubway{
+  border-radius: 5px;
+  background-color: #ffde21;
+  color:#000000;
+  font-size: var(--font-paragraph);
+  font-weight: 600;
+  height: 35px;
+  padding: 0 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+.buttonSubway:hover {
+  background-color: #e0c31f;
   transform: translateY(-2px);
   /* box-shadow:
     -4px -4px 6px #dedede,
