@@ -27,11 +27,11 @@ const SystemSettings = () => {
       <h1 className='heading'>System Settings</h1>
       <div className='flex items-center justify-between mt-6'>
         {[
-          { name: 'General', icon: <IoSettingsOutline size={50} /> },
-          { name: 'Roster', icon: <FaUserClock size={50} /> },
-          { name: 'TimeSheet', icon: <GrDocumentTime size={50} /> },
-          { name: 'Integrations', icon: <RiListSettingsLine size={50} /> },
-          { name: 'Permission', icon: <BsNewspaper size={50} /> },
+          { name: 'General', icon: <IoSettingsOutline size={40} /> },
+          { name: 'Roster', icon: <FaUserClock size={40} /> },
+          { name: 'TimeSheet', icon: <GrDocumentTime size={40} /> },
+          { name: 'Integrations', icon: <RiListSettingsLine size={40} /> },
+          { name: 'Permission', icon: <BsNewspaper size={40} /> },
         ].map((setting) => (
           <div
             key={setting.name}
