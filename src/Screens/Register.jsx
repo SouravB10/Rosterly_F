@@ -79,14 +79,14 @@ export default function Register() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-secondary px-4">
+        <div className="min-h-screen flex items-center justify-center sideBar px-4">
             <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-2xl">
                 <h1 className="text-center text-2xl font-bold text-secondary mb-6">
                     Create Your Account
                 </h1>
                 <form className="space-y-5" onSubmit={handleSubmit}>
                     <div className='flex justify-between'>
-                        <div className='w-48'>
+                        <div className='w-full mr-4'>
                             <label className="text-secondary font-semibold mb-1 block">First Name</label>
                             <input
                                 type="text"
@@ -98,7 +98,7 @@ export default function Register() {
                             {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
                         </div>
 
-                        <div className='w-48'>
+                        <div className='w-full'>
                             <label className="text-secondary font-semibold mb-1 block">Last Name</label>
                             <input
                                 type="text"
@@ -111,8 +111,8 @@ export default function Register() {
                         </div>
                     </div>
                     <div className='flex justify-between'>
-                    <div className='w-48'>
-                            <label className="text-secondary font-semibold mb-1 block">Email Address</label>
+                    <div className='w-full mr-4'>
+                    <label className="text-secondary font-semibold mb-1 block">Email Address</label>
                             <input
                                 type="email"
                                 value={email}
@@ -123,7 +123,7 @@ export default function Register() {
                             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                         </div>
 
-                        <div className='w-48'>
+                        <div className='w-full'>
                             <label className="text-secondary font-semibold mb-1 block">Mobile Number</label>
                             <input
                                 type="tel"
@@ -136,8 +136,8 @@ export default function Register() {
                         </div>
                     </div>
                     <div className='flex justify-between '>
-                        <div className='w-48 relative'>
-                                <label className="text-secondary font-semibold mb-1 block">Password</label>
+                    <div className='w-full mr-4 relative'>
+                    <label className="text-secondary font-semibold mb-1 block">Password</label>
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     value={password}
@@ -154,7 +154,7 @@ export default function Register() {
                                 {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                             </div>
 
-                        <div className='w-48 relative'>
+                        <div className='w-full relative'>
                             <label className="text-secondary font-semibold mb-1 block">Confirm Password</label>
                             <input
                                 type={showConfirmPassword ? "text" : "password"}
@@ -175,7 +175,7 @@ export default function Register() {
 
 
                     <div className='flex justify-between'>
-                        <div className='w-48'>
+                        <div className='w-full mr-2'>
                             <label className="text-secondary font-semibold mb-1 block">Company Name</label>
                             <input
                                 type="text"
@@ -186,13 +186,13 @@ export default function Register() {
                             />
                             {errors.company && <p className="text-red-500 text-sm mt-1">{errors.company}</p>}
                         </div>
-                        {/* <div className='w-48'>
+                        {/* <div className=''>
                             <button type="submit" className="cursor-pointer w-full py-3 mt-7 bg-secondary text-white rounded-lg font-semibold hover:bg-primary shadow">Get Started</button>
                             </div> */}
-                        <div className='w-48'>
+                        <div className='w-full'>
                             <button
                                 type="submit"
-                                className={`cursor-pointer w-full py-3 mt-7 bg-secondary text-white rounded-lg font-semibold hover:bg-primary shadow items-center justify-center
+                                className={`cursor-pointer w-full py-3 mt-7 buttonSuccessActive text-white rounded-lg font-semibold hover:bg-primary shadow items-center justify-center
                                 transition-transform duration-400 ease-in-out hover:scale-105 hover:bg-primary 
                                 ${loading ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
                                 disabled={loading}

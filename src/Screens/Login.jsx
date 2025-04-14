@@ -183,7 +183,7 @@
                         <div>
                             <button
                                 type="submit"
-                                className={`w-full py-3 mt-3 sideBar text-white rounded-lg font-semibold shadow flex items-center justify-center
+                                className={`w-full py-3 mt-3 buttonSuccessActive rounded-lg font-semibold shadow flex items-center justify-center
                     transition-transform duration-400 ease-in-out hover:scale-105 hover:bg-indigo-950
                     ${loading ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
                                 disabled={loading}
