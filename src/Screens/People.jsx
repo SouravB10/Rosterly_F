@@ -88,7 +88,7 @@ const People = () => {
               </tr>
             </thead>
             <tbody>
-              <tr className="text-center paragraph">
+              <tr className="text-center">
                 <td className="border border-gray-300 p-2">Sourav</td>
                 <td className="border border-gray-300 p-2">9876543210</td>
                 <td className="border border-gray-300 p-2">25</td>

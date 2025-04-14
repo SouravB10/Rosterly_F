@@ -5,7 +5,6 @@ const Location = () => {
   const [activeTab, setActiveTab] = useState("general");
   const [showModal, setShowModal] = useState(false);
 
-
   const handleLocation = (e) => {
     setSelectLocation(e.target.value);
   };
@@ -106,7 +105,7 @@ const Location = () => {
             )}
 
             {activeTab === "Sales" && (
-              <div className="bg-gray-100 p-6 rounded-xl shadow-md">
+              <div className="card p-6 rounded-xl ">
                 <h2 className="text-lg font-semibold text-purple-700 mb-4">
                   Expected Average Sales
                 </h2>
@@ -132,7 +131,7 @@ const Location = () => {
             )}
 
             {activeTab === "Employees" && (
-              <div className="bg-gray-100 rounded-xl shadow-md p-6 space-y-4">
+              <div className="card rounded-xl p-6 space-y-4">
                 {/* Header */}
                 <div className="flex items-start justify-between">
                   <div>
@@ -191,7 +190,7 @@ const Location = () => {
         </div>
 
         {/* Right Section - 40% (2 columns) */}
-        <div className="col-span-2 bg-gray-100 p-6 rounded-2xl shadow-lg h-[350px]">
+        <div className="col-span-2 bg-gray-100 p-6 rounded-2xl card  h-[350px]">
           <h3 className="heading">Add Location</h3>
           <div className="paragraph">
             <p>
@@ -202,7 +201,7 @@ const Location = () => {
           <input
             type="text"
             placeholder="Add Location"
-            className="input"
+            className="input mr-3"
           />
           <input
             type="text"
