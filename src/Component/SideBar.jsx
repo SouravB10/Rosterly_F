@@ -95,7 +95,7 @@ const Sidebar = () => {
                                                     <Link
                                                         to={sub.path}
                                                         className={` flex items-center gap-2 my-1 px-3 py-2 rounded-lg  transition-all duration-300 
-                                                            ${isSubActive ? "bg-yellow-500 rounded-lg text-black shadow-md" : "bg-yellow-300 text-white hover:bg-yellow-500"}`}
+                                                            ${isSubActive ? "buttonSuccessActive rounded-lg text-black shadow-md" : "bg-green-200 text-black hover:bg-yellow-200"}`}
                                                     >
                                                         <span className="paragraphBold">{sub.icon}</span>
                                                         <span className="text-sm font-light paragraph">{sub.title}</span>

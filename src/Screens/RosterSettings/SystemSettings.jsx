@@ -36,13 +36,13 @@ const SystemSettings = () => {
           <div
             key={setting.name}
             className={`p-5 rounded-md w-45 cursor-pointer transition-all duration-200
-              ${selectedSetting === setting.name ? 'bg-yellow-300 text-black' : 'bg-yellow-200'}
-              hover:bg-yellow-300`}
+              ${selectedSetting === setting.name ? 'buttonSuccessActive  text-black' : 'bg-green-100'}
+              hover:bg-green-200`}
             onClick={() => setSelectedSetting(setting.name)}
           >
             <div className={`transition-all duration-200 
-              ${selectedSetting === setting.name ? 'text-black' : 'text-gray-600'} 
-              hover:text-white`}>
+              ${selectedSetting === setting.name ? 'text-black py-2' : 'text-gray-600'} 
+              `}>
               {setting.icon}
             </div>
             <div className='flex justify-between mt-4 items-center'>
