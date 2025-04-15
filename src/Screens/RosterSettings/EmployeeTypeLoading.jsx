@@ -46,7 +46,7 @@ const EmployeeTypeSettings = () => {
         {/* SAVE BUTTON */}
         <div className="flex justify-end pt-6">
           <button
-            className="successbutton w-30 text-white font-semibold px-6 py-2 rounded"
+            className="buttonSuccess w-30 text-white font-semibold px-6 py-2 rounded"
             onClick={() => {
               console.log('Part Time:', partTimeLoading);
               console.log('Casual:', casualLoading);

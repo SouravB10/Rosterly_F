@@ -17,10 +17,10 @@ const JuniorRate = () => {
           A Level’s Hourly Rate Can Be Reduced Based On An Employee’s Age.
         </p>
         <div className="flex gap-2">
-          <button className="px-4 py-1 text-green-600 font-semibold border border-green-600 rounded-md bg-white hover:bg-green-50">
+          <button className="buttonSuccessB">
             Show Inactive
           </button>
-          <button className="px-4 py-1 text-white font-semibold bg-green-500 hover:bg-green-600 rounded-md">
+          <button className="buttonSuccess">
             + Age
           </button>
         </div>

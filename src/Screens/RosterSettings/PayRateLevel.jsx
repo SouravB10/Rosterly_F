@@ -49,10 +49,10 @@ const LevelsTableUI = () => {
                         Levels allow you to link groups of employees to different pay rates based on their role, experience or classification.
                     </p>
                     <div className="space-x-2">
-                        <button className="bg-gray-400 text-white-500 text-sm px-4 py-1.5 rounded hover:bg-gray-300">
+                        <button className="buttonGrey text-white-500 text-sm px-4 py-1.5 rounded hover:bg-gray-300">
                             Show Inactive
                         </button>
-                        <button className="bg-[#43d168] text-white text-sm px-4 py-1.5 rounded hover:bg-[#36bb59]" onClick={() => setShowModal(true)}>
+                        <button className="buttonSuccess text-white text-sm px-4 py-1.5 rounded hover:bg-[#36bb59]" onClick={() => setShowModal(true)}>
                             + Level
                         </button>
                     </div>
