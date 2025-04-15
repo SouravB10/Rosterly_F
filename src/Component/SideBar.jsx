@@ -86,7 +86,7 @@ const Sidebar = () => {
                                     <ul
                                         className={`overflow-hidden rounded-lg p-1 w-[300px] transition-all duration-300 
                                             ${activeMenu === item.id ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"} 
-                                            ${open ? "w-full" : "absolute left-[80px] top-50% bg-indigo-900 rounded-lg shadow-lg p-2 w-[200px] sm:w-auto"}`}
+                                            ${open ? "w-full" : "absolute left-[80px] top-50% rounded-lg shadow-lg p-2 w-[200px] sm:w-auto"}`}
                                     >
                                             {item.submenu.map((sub) => {
                                             const isSubActive = location.pathname === sub.path;
