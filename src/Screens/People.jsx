@@ -53,8 +53,8 @@ const People = () => {
             onChange={handleBranch}
           >
             <option value="default">--Select Location--</option>
-            <option value="Location 1">Store 1</option>
-            <option value="Location 2">Store 2</option>
+            <option value="store1">Store 1</option>
+            <option value="store2">Store 2</option>
           </select>
 
           <button className="buttonSuccess" onClick={getLocation}>
