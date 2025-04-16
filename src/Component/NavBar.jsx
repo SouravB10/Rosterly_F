@@ -84,19 +84,19 @@ const NavBar = ({ toggleSidebar }) => {
                 <MenuItem>
                   <a
                     onClick={handleProfileClick}
-                    className="block px-4 py-2 paragraph text-black data-focus:bg-gray-400 data-focus:outline-hidden"
+                    className="block px-4 py-2 paragraph cursor text-black data-focus:bg-gray-400 data-focus:outline-hidden"
                   >
                     Your Profile
                   </a>
                 </MenuItem>
-                <MenuItem>
+                {/* <MenuItem>
                   <a
                     href="#"
                     className="block px-4 py-2 paragraph text-black data-focus:bg-gray-400 data-focus:outline-hidden"
                   >
                     Settings
                   </a>
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem>
                   {({ active }) => (
                     <button
