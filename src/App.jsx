@@ -24,6 +24,7 @@ import EmployeeTypeLoading from './Screens/RosterSettings/EmployeeTypeLoading';
 import Permission from './Screens/RosterSettings/Permission';
 import JuniorRate from './Screens/RosterSettings/JuniorRate';
 import PenalityRate from './Screens/RosterSettings/PenalityRate';
+import Profile from './Screens/Profile';
 
 
 function AppWrapper() {
@@ -69,7 +70,7 @@ function AppWrapper() {
               <Route path='/permission' element={<Permission />} />
               <Route path='/JuniorRate' element={<JuniorRate />} />
               <Route path='/PanalityRate' element={<PenalityRate />} />
-
+              <Route path='/Profile' element={<Profile />} />
 
             </Routes>
           </div>
