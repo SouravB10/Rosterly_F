@@ -77,7 +77,7 @@ const People = () => {
       <div className="overflow-x-auto mt-4">
         <div className="card">
           <table className="w-full border-collapse border border-gray-300 text-xs font-semibold">
-            <thead className="bg-gray-100 subHeading">
+            <thead className="bgTable subHeading text-white">
               <tr>
                 <th className="border border-gray-300 p-2">Name</th>
                 <th className="border border-gray-300 p-2">Phone</th>

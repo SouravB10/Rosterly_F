@@ -129,13 +129,23 @@ const Rosters = () => {
 
           <div className="flex gap-2">
             <div
-              className="flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2"
+              className="group relative flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2"
               onClick={handleStats}
             >
               <IoStatsChartSharp className="icon50" />
+              {/* {!stats && ( */}
+                <span className="absolute top-full mt-1 hidden group-hover:flex bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
+                  Statistics
+                </span>
+              {/* )} */}
+
             </div>
-            <div className="flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2">
+
+            <div className="group relative flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2">
               <FaFilePdf className="icon50" />
+              <span className="absolute top-full mt-1 hidden group-hover:flex bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
+                PDF
+              </span>
             </div>
           </div>
         </div>
@@ -265,15 +275,15 @@ const Rosters = () => {
             </tbody>
           </table>
         </div> */}
-        <div className="overflow-x-auto  bg-white shadow">
-          <table className="min-w-full border border-gray-200 text-sm">
+        <div className="overflow-x-auto   ">
+          <table className="min-w-full border border-gray-300 text-sm">
             <thead className="bgTable">
-              <tr className=" border">
-                <th className="w-48 p-2 text-left border-r subHeading"></th>
+              <tr className=" border border-gray-300">
+                <th className="w-48 p-2 text-left border border-gray-300 subHeading"></th>
                 {days.map((day, idx) => (
                   <th
                     key={idx}
-                    className="p-2 text-center text-gray-800 font-bold border-r"
+                    className="p-2 text-center text-gray-800 font-bold border border-gray-300"
                   >
                     {day}
                   </th>
@@ -283,8 +293,8 @@ const Rosters = () => {
 
             <tbody>
               {employees.map((emp, idx) => (
-                <tr key={idx} className="border">
-                  <td className="p-2 border-r bg-gray-50">
+                <tr key={idx} className="border border-gray-300">
+                  <td className="p-2 border border-gray-300 bg-gray-50">
                     <div className="paragraphBold">{emp.name}</div>
                     <div className="smallText">
                       {emp.hours} hrs {emp.cost ? `· ${emp.cost}` : ""}
@@ -294,7 +304,7 @@ const Rosters = () => {
                   {data.map((d, colIdx) => (
                     <td
                       key={colIdx}
-                      className="text-center h-20 align-center p-2 border-r"
+                      className="text-center h-20 align-center p-2 border border-gray-300"
                     >
                       <div className="bgSucces text-white p-2 paragraph rounded">
                         {d.time}
@@ -308,7 +318,7 @@ const Rosters = () => {
                   {data.map((d, colIdx) => (
                     <td
                       key={colIdx}
-                      className="text-center h-20 align-center p-2 border-r"
+                      className="text-center h-20 align-center p-2 border border-gray-300 "
                     >
                       <button
                         className="text-gray-400 hover:text-blue-500 font-bold"
@@ -324,7 +334,7 @@ const Rosters = () => {
                   {data.map((d, colIdx) => (
                     <td
                       key={colIdx}
-                      className="text-center h-20 bg-gray-100 align-center p-2 border-r"
+                      className="text-center h-20 bg-gray-100 align-center p-2 border border-gray-300"
                     >
                       <button className="text-gray-500 paragraph hover:text-blue-500 ">
                         {d.unavail}
@@ -334,7 +344,7 @@ const Rosters = () => {
                   {data.map((d, colIdx) => (
                     <td
                       key={colIdx}
-                      className="text-center h-20 align-center p-2 border-r"
+                      className="text-center h-20 align-center p-2 border border-gray-300"
                     >
                       <button
                         className="text-gray-400 hover:text-blue-500 font-bold"
@@ -350,7 +360,7 @@ const Rosters = () => {
                   {data.map((d, colIdx) => (
                     <td
                       key={colIdx}
-                      className="text-center h-20 align-center p-2 border-r"
+                      className="text-center h-20 align-center p-2 border border-gray-300"
                     >
                       <button
                         className="text-gray-400 hover:text-blue-500 font-bold"
@@ -366,7 +376,7 @@ const Rosters = () => {
                   {data.map((d, colIdx) => (
                     <td
                       key={colIdx}
-                      className="text-center h-20 align-center p-2 border-r"
+                      className="text-center h-20 align-center p-2 border border-gray-300"
                     >
                       <button
                         className="text-gray-400 hover:text-blue-500 font-bold"
@@ -382,7 +392,7 @@ const Rosters = () => {
                   {data.map((d, colIdx) => (
                     <td
                       key={colIdx}
-                      className="text-center h-20 align-center p-2 border-r"
+                      className="text-center h-20 align-center p-2 border border-gray-300"
                     >
                       <button
                         className="text-gray-400 hover:text-blue-500 font-bold"
@@ -399,8 +409,8 @@ const Rosters = () => {
               ))}
 
               {/* Add Employee Button */}
-              <tr className="border h-15 bg-gray-100">
-                <td className="p-2 border-r">
+              <tr className="border border-gray-300 h-15 bg-gray-100">
+                <td className="p-2 border border-gray-300">
                   <button
                     className="buttonSuccess"
                     onClick={() => setIsModalOpen(true)}
@@ -411,7 +421,7 @@ const Rosters = () => {
                 {days.map((_, idx) => (
                   <td
                     key={idx}
-                    className="p-2 text-center paragraphBold border-r"
+                    className="p-2 text-center paragraphBold border border-gray-300"
                   >
                     {hoursPerDay[idx]} hrs
                   </td>

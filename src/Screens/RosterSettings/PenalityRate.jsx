@@ -30,8 +30,8 @@ const PenalityRate = () => {
       {/* Table */}
       <table className="w-full border border-gray-300">
             <thead>
-                <tr className="bg-[#2f2378] text-white">
-                <th className="subHeading border border-gray-300 px-4 py-2 text-left">Priorirt</th>
+                <tr className="bgTable text-white">
+                <th className="subHeading border border-gray-300 px-4 py-2 text-left">Priority</th>
                 <th className="subHeading border border-gray-300 px-4 py-2 text-left">Name</th>
                 <th className="subHeading border border-gray-300 px-4 py-2 text-left">Short Name</th>
                 <th className="subHeading border border-gray-300 px-4 py-2 text-left">Factor</th>

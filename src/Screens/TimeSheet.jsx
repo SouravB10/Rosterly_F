@@ -80,11 +80,23 @@ const TimeSheet = () => {
                     </div>
 
                     <div className="flex gap-2">
-                        <div className="flex items-center justify-center bg-white rounded-lg text-sm text-gray-900 w-10 px-2">
+                        <div
+                            className="group relative flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2"
+                        >
                             <IoStatsChartSharp className="icon50" />
+                            {/* {!stats && ( */}
+                            <span className="absolute top-full mt-1 hidden group-hover:flex bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
+                                Statistics
+                            </span>
+                            {/* )} */}
+
                         </div>
-                        <div className="flex items-center justify-center bg-white rounded-lg text-sm text-gray-900 w-10 px-2">
+
+                        <div className="group relative flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2">
                             <FaFilePdf className="icon50" />
+                            <span className="absolute top-full mt-1 hidden group-hover:flex bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
+                                PDF
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -158,7 +170,7 @@ const TimeSheet = () => {
                         </div>
                     </div>
 
-                    <div className="flex-1 card p-6">
+                    <div className="flex-1 card p-6 mt-2">
                         <div>
                             <div className="grid grid-cols-5 gap-3 f9f9f9card p-6 mb-4">
                                 <div className="flex items-center justify-start paragraphBold my-3">
