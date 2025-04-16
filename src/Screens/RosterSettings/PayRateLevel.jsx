@@ -58,23 +58,23 @@ const LevelsTableUI = () => {
                     </div>
                 </div>
 
-                <table className="min-w-full text-sm border-t border-black-400">
+                <table className="min-w-full text-sm border border-gray-300">
                     <thead className="bgTable text-white">
                         <tr>
-                            <th className="subHeading text-left py-3 px-4">Level Name</th>
-                            <th className="subHeading text-left py-3 px-4">Hourly Rate</th>
-                            <th className="subHeading text-left py-3 px-4">Status</th>
-                            <th className="subHeading text-left py-3 px-4">Junior Rates</th>
-                            <th className="subHeading text-left py-3 px-4"># Attached Employees</th>
+                            <th className="subHeading border border-gray-300 text-left py-3 px-4">Level Name</th>
+                            <th className="subHeading border border-gray-300 text-left py-3 px-4">Hourly Rate</th>
+                            <th className="subHeading border border-gray-300 text-left py-3 px-4">Status</th>
+                            <th className="subHeading border border-gray-300 text-left py-3 px-4">Junior Rates</th>
+                            <th className="subHeading border border-gray-300 text-left py-3 px-4"># Attached Employees</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white text-black-800">
+                    <tbody className="bg-white border border-gray-300 text-black-800">
                         {levels.map((level, idx) => (
-                            <tr key={idx} className="border-t border-black-400">
-                                <td className="paragraphThin py-3 px-4">{level.name}</td>
-                                <td className="paragraphThin py-3 px-4">{level.rate}</td>
-                                <td className="paragraphThin py-3 px-4">{level.status || "-"}</td>
-                                <td className="paragraphThin py-3 px-4 text-blue-600 hover:underline cursor-pointer">
+                            <tr key={idx} className="border border-gray-300">
+                                <td className="paragraphThin border border-gray-300 py-3 px-4">{level.name}</td>
+                                <td className="paragraphThin border border-gray-300 py-3 px-4">{level.rate}</td>
+                                <td className="paragraphThin border border-gray-300 py-3 px-4">{level.status || "-"}</td>
+                                <td className="paragraphThin border border-gray-300 py-3 px-4 text-blue-600 hover:underline cursor-pointer">
                                     {level.junior}
                                 </td>
                                 <td className="paragraphThin py-3 px-4">{level.employees}</td>
