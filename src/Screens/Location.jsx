@@ -106,7 +106,7 @@ const Location = () => {
 
             {activeTab === "Sales" && (
               <div className="card p-6 rounded-xl ">
-                <h2 className="text-lg font-semibold text-purple-700 mb-4">
+                <h2 className="heading">
                   Expected Average Sales
                 </h2>
                 {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map(
@@ -123,7 +123,7 @@ const Location = () => {
                   )
                 )}
                 <div className="flex justify-end mt-6">
-                  <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-md text-sm">
+                  <button className="buttonSuccess">
                     Update
                   </button>
                 </div>
@@ -135,7 +135,7 @@ const Location = () => {
                 {/* Header */}
                 <div className="flex items-start justify-between">
                   <div>
-                    <h4 className="text-xl font-semibold text-purple-700">Employees</h4>
+                    <h4 className="heading">Employees</h4>
                     <p className="text-sm text-gray-600">
                       Employees Assigned to Office<br />
                       <span className="text-xs text-gray-500">
@@ -149,7 +149,7 @@ const Location = () => {
                     <input
                       type="text"
                       placeholder="Search"
-                      className="w-full px-4 py-2 rounded-md border border-gray-300 shadow-sm pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
+                      className="w-full px-4 py-2 rounded-md border border-gray-300 shadow-sm pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-green-200"
                     />
                     <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                       🔍

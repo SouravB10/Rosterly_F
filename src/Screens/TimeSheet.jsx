@@ -158,7 +158,7 @@ const TimeSheet = () => {
                         </div>
                     </div>
 
-                    <div className="flex-1 card p-6">
+                    <div className="flex-1 card p-6 mt-2">
                         <div>
                             <div className="grid grid-cols-5 gap-3 f9f9f9card p-6 mb-4">
                                 <div className="flex items-center justify-start paragraphBold my-3">

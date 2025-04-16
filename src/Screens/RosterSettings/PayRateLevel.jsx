@@ -59,7 +59,7 @@ const LevelsTableUI = () => {
                 </div>
 
                 <table className="min-w-full text-sm border-t border-black-400">
-                    <thead className="bg-[#1e1e50] text-white">
+                    <thead className="bgTable text-white">
                         <tr>
                             <th className="subHeading text-left py-3 px-4">Level Name</th>
                             <th className="subHeading text-left py-3 px-4">Hourly Rate</th>

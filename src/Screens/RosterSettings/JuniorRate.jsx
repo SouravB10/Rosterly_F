@@ -29,7 +29,7 @@ const JuniorRate = () => {
       {/* Table */}
       <table className="w-full border border-gray-300">
             <thead>
-                <tr className="bg-[#2f2378] text-white">
+                <tr className="bgTable text-white">
                 <th className="subHeading border border-gray-300 px-4 py-2 text-left">Age</th>
                 <th className="subHeading border border-gray-300 px-4 py-2 text-left">Percentage Of Full Rate</th>
                 </tr>

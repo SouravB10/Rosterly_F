@@ -282,7 +282,7 @@ body {
 }
 .textarea {
   font-size: var(--font-paragraph);
-  padding: 0 10px;
+  padding: 6px;
   background-color: #ffff;
   /* box-shadow:
     -5px -5px 5px #f4f4f4,
