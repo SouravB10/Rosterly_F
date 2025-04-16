@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import loadingGif from '../assets/Loading/Loading-circle.gif';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
-
 export default function Register() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');

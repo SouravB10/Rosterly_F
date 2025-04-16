@@ -139,7 +139,7 @@ export default function Login() {
 
 
     return (
-        <div className="min-h-screen flex items-center justify-center sideBar px-4 bg-gray-100">
+        <div className="min-h-screen flex items-center justify-center bgimg px-4 bg-gray-100">
             <div className="bg-white rounded-2xl shadow-lg w-full max-w-4xl flex overflow-hidden">
 
                 <div

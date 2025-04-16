@@ -6,6 +6,13 @@
   font-family: "Manrope", sans-serif;
 }
 
+.bgimg {
+  background-image: url(./assets/Background/loginBG.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 body {
   background-color: #f1f1f1;
   font-weight: 400;
