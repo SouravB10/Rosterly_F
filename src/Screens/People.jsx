@@ -144,7 +144,7 @@ const People = () => {
       >
         <div className="fixed inset-0 bg-gray-700/70"></div>
         <div className="fixed inset-0 flex items-center justify-center">
-          <Dialog.Panel className="bg-white rounded-lg shadow-lg max-w-md w-full">
+          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
               <Dialog.Title className="heading">
                 Add Person
@@ -157,37 +157,37 @@ const People = () => {
               </button>
             </div>
             <form className="mt-4 p-6 space-y-3">
-              <div className="">
-                <label className="paragraphBold">First Name</label>
+            <div className="flex flex-col">
+            <label className="paragraphBold">First Name</label>
                 <input
                   type="text"
-                  className="w-full paragraph border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
+                  className="input"
                   placeholder="Enter first name"
                 />
               </div>
-              <div>
+              <div className="flex flex-col">
                 <label className="paragraphBold">Last Name</label>
                 <input
                   type="text"
-                  className="w-full paragraph border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
+                  className="input"
                   placeholder="Enter last name"
                 />
               </div>
-              <div>
+              <div className="flex flex-col">
                 <label className="paragraphBold">Email</label>
                 <input
                   type="email"
-                  className="w-full paragraph border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
+                  className="input"
                   placeholder="Enter email"
                 />
               </div>
-              <div>
+              <div className="flex flex-col">
                 <label className="paragraphBold">
                   Phone Number
                 </label>
                 <input
                   type="text"
-                  className="w-full paragraph border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500 p-2"
+                  className="input"
                   placeholder="Enter phone number"
                 />
               </div>
