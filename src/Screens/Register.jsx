@@ -19,12 +19,12 @@ export default function Register() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-        const togglePasswordVisibility = () => {
-            setShowPassword(!showPassword);
-        };
-        const toggleConfirmPasswordVisibility = () => {
-            setShowConfirmPassword(!showConfirmPassword);
-        };
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+    const toggleConfirmPasswordVisibility = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+    };
     const handleChange = (field, value) => {
         switch (field) {
             case 'firstName': setFirstName(value); break;
@@ -80,13 +80,15 @@ export default function Register() {
 
     return (
         <div className="min-h-screen flex items-center justify-center sideBar px-4">
-            <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-2xl">
+            {/* <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-2xl"> */}
+            <div className="bg-white p-8 rounded-2xl shadow-lg w-[60%]">
+
                 <h1 className="text-center text-2xl font-bold text-secondary mb-6">
                     Create Your Account
                 </h1>
                 <form className="space-y-5" onSubmit={handleSubmit}>
-                    <div className='flex justify-between'>
-                        <div className='w-full mr-4'>
+                    <div className='flex gap-4 justify-between'>
+                        <div className='w-full'>
                             <label className="text-secondary font-semibold mb-1 block">First Name</label>
                             <input
                                 type="text"
@@ -110,9 +112,9 @@ export default function Register() {
                             {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
                         </div>
                     </div>
-                    <div className='flex justify-between'>
-                    <div className='w-full mr-4'>
-                    <label className="text-secondary font-semibold mb-1 block">Email Address</label>
+                    <div className='flex gap-4 justify-between'>
+                        <div className='w-full'>
+                            <label className="text-secondary font-semibold mb-1 block">Email Address</label>
                             <input
                                 type="email"
                                 value={email}
@@ -135,9 +137,10 @@ export default function Register() {
                             {errors.mobile && <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>}
                         </div>
                     </div>
-                    <div className='flex justify-between '>
-                    <div className='w-full mr-4 relative'>
-                    <label className="text-secondary font-semibold mb-1 block">Password</label>
+                    <div className='flex gap-4 justify-between '>
+                        <div className='w-full'>
+                            <label className="text-secondary font-semibold mb-1 block">Password</label>
+                            <div className=' relative'>
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     value={password}
@@ -147,35 +150,43 @@ export default function Register() {
                                 />
                                 <span
                                     onClick={togglePasswordVisibility}
-                                    className="absolute right-4 top-2/3 transform -translate-y-1/2 cursor-pointer text-gray-600"
+                                    className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-600"
                                 >
                                     {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
                                 </span>
-                                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                            </div>
+                            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                        </div>
+
+                        <div className='w-full'>
+                            <label className="text-secondary font-semibold mb-1 block">Confirm Password</label>
+
+                            <div className="relative">
+                                <input
+                                    type={showConfirmPassword ? "text" : "password"}
+                                    value={confirmPassword}
+                                    onChange={(e) => handleChange('confirmPassword', e.target.value)}
+                                    className={`custom-focus w-full px-4 py-3 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-lg pr-12`}
+                                    placeholder="Confirm your password"
+                                />
+                                <span
+                                    onClick={toggleConfirmPasswordVisibility}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-gray-600"
+                                >
+                                    {showConfirmPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                                </span>
                             </div>
 
-                        <div className='w-full relative'>
-                            <label className="text-secondary font-semibold mb-1 block">Confirm Password</label>
-                            <input
-                                type={showConfirmPassword ? "text" : "password"}
-                                value={confirmPassword}
-                                onChange={(e) => handleChange('confirmPassword', e.target.value)}
-                                className={`custom-focus w-full px-4 py-3 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
-                                placeholder="Confirm your password"
-                            />
-                            <span
-                                onClick={toggleConfirmPasswordVisibility}
-                                className="absolute right-4 top-2/3 transform -translate-y-1/2 cursor-pointer text-gray-600"
-                            >
-                                {showConfirmPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
-                            </span>
-                            {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
+                            {errors.confirmPassword && (
+                                <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>
+                            )}
                         </div>
+
                     </div>
 
 
-                    <div className='flex justify-between'>
-                        <div className='w-full mr-2'>
+                    <div className='flex justify-between gap-4'>
+                        <div className='w-full '>
                             <label className="text-secondary font-semibold mb-1 block">Company Name</label>
                             <input
                                 type="text"
@@ -186,25 +197,25 @@ export default function Register() {
                             />
                             {errors.company && <p className="text-red-500 text-sm mt-1">{errors.company}</p>}
                         </div>
-                        {/* <div className=''>
-                            <button type="submit" className="cursor-pointer w-full py-3 mt-7 bg-secondary text-white rounded-lg font-semibold hover:bg-primary shadow">Get Started</button>
-                            </div> */}
-                        <div className='w-full'>
+                        <div className="w-full">
                             <button
                                 type="submit"
-                                className={`cursor-pointer w-full py-3 mt-7 buttonSuccessActive text-white rounded-lg font-semibold hover:bg-primary shadow items-center justify-center
-                                transition-transform duration-400 ease-in-out hover:scale-105 hover:bg-primary 
+                                className={`w-full py-3 mt-7 text-black font-semibold rounded-xl flex items-center justify-center
+                                transition-all duration-300 ease-in-out transform hover:scale-105 loginButton
                                 ${loading ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
                                 disabled={loading}
                             >
                                 {loading ? (
                                     <>
-                                        <img src={loadingGif} alt="Loading..." className="h-5 w-5 mr-2" />
+                                        <img src={loadingGif} alt="Loading..." className="h-5 w-5 mr-2 animate-spin" />
                                         Get Started
                                     </>
-                                ) : 'Get Started'}
+                                ) : (
+                                    'Get Started'
+                                )}
                             </button>
                         </div>
+
                     </div>
                 </form>
                 <p className="text-center mt-2 text-sm text-gray-600">
