@@ -69,13 +69,13 @@ const TimeSheet = () => {
 
                     <div className="flex items-center justify-center bg-white rounded-lg text-sm font-semibold text-gray-900 w-full md:w-75 px-2">
                         <FaAngleLeft
-                            className="text-violet-800 hover:text-violet-950"
+                            className="text-gray-800 hover:text-gray-950"
                             size={16}
                             onClick={handlePrevWeek}
                         />
                         <span className="paragraphBold">{getWeekRange(currentWeek)}</span>
                         <FaAngleRight
-                            className="text-violet-800 hover:text-violet-950"
+                            className="text-gray-800 hover:text-gray-950"
                             size={16}
                             onClick={handleNextWeek}
                         />
