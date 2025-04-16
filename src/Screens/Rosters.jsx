@@ -108,9 +108,8 @@ const Rosters = () => {
             onChange={handleLocation}
           >
             <option value="default">--Select Location--</option>
-            <option value="Location 1">Location 1</option>
-            <option value="Location 2">Location 2</option>
-            <option value="Location 3">Location 3</option>
+            <option value="Location 1">Store 1</option>
+            <option value="Location 2">Store 2</option>
           </select>
 
           <div className="flex items-center justify-center bg-white rounded-lg text-sm font-semibold text-gray-900 w-full md:w-75 px-2">
