@@ -115,8 +115,8 @@ const Location = () => {
                       <label className="font-medium text-sm text-black">{day}</label>
                       <input
                         type="text"
-                        placeholder="₹5000.00"
-                        defaultValue="₹5000.00"
+                        placeholder="$50.00"
+                        defaultValue="$50.00"
                         className="w-1/3 px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                       />
                     </div>
@@ -205,17 +205,17 @@ const Location = () => {
           />
           <input
             type="text"
-            placeholder="Average Daily Sales (₹)"
+            placeholder="Average Daily Sales ($)"
             className="input"
           />
-            <div className="flex justify-end mt-6 gap-3">
-              <button className="buttonGrey">
-                  Close
-              </button>
-              <button className="buttonSuccess">
-                  Create
-              </button>
-            </div>
+          <div className="flex justify-end mt-6 gap-3">
+            <button className="buttonGrey">
+              Close
+            </button>
+            <button className="buttonSuccess">
+              Create
+            </button>
+          </div>
         </div>
       </div>
     </div>
