@@ -1,3 +1,4 @@
+import { Dialog } from "@headlessui/react";
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -7,6 +8,46 @@ import { FaPencilAlt } from "react-icons/fa";
 const Unavailability = () => {
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
+  const [isShiftOpen, setIsShiftOpen] = useState(false);
+  const [selectedDay, setSelectedDay] = useState("");
+
+  const days = [
+    "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+  ];
+
+  const generateTimeOptions = () => {
+    let times = [];
+    let hour = 0;
+    let minute = 0;
+
+    while (hour < 24) {
+      let ampm = hour < 12 ? "AM" : "PM";
+      let displayHour = hour % 12 || 12;
+      let displayMinute = minute === 0 ? "00" : minute;
+      times.push(`${displayHour}:${displayMinute} ${ampm}`);
+
+      minute += 15;
+      if (minute === 60) {
+        minute = 0;
+        hour++;
+      }
+    }
+
+    return times;
+  };
+
+  const timeOptions = generateTimeOptions();
+  const breakOptions = [15, 30, 45, 60];
+  const [start, setStart] = useState(timeOptions[0]);
+  const [finish, setFinish] = useState(timeOptions[0]);
+  const [breakTime, setBreakTime] = useState(breakOptions[0]);
+  const hoursPerDay = ["12.25", "0.00", "0.00", "0.00", "0.00", "0.00", "0.00"];
+
+  const openModal = (day) => {
+    setSelectedDay(day);
+    setIsShiftOpen(true);
+  };
+
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
@@ -138,7 +179,7 @@ const Unavailability = () => {
           </div>
         </div>
 
-        <div className="card rounded-md p-5 md:col-span-1 md:row-span-9">
+        {/* <div className="card rounded-md p-5 md:col-span-1 md:row-span-9">
           <h1 className="text-center subHeading">
             Recurring Unavailability
           </h1>
@@ -201,6 +242,31 @@ const Unavailability = () => {
               <FaPlusSquare />
             </div>
           </div>
+        </div> */}
+
+        <div className="card rounded-md p-5 md:col-span-1 md:row-span-9">
+          <h1 className="text-center subHeading">Recurring Unavailability</h1>
+
+          {days.map((day, index) => (
+            <div
+              key={index}
+              className="flex rounded-md justify-between my-2 bg-white-100 items-center p-3"
+            >
+              <div>
+                <p className={`paragraphBold ${day === "Saturday" || day === "Sunday" ? "text-red-600" : ""}`}>
+                  {day}
+                </p>
+                {(day === "Saturday" || day === "Sunday") && (
+                  <p className="paragraphThin">
+                    {day === "Saturday" ? "8:00am - 11:00am / off" : "8:00am - 11:00pm / it's Sunday"}
+                  </p>
+                )}
+              </div>
+              <div className="mx-3 cursor-pointer" onClick={() => openModal(day)}>
+                <FaPlusSquare />
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Requested Days Off List */}
@@ -246,6 +312,100 @@ const Unavailability = () => {
 
         {/* Recurring Unavailability (Full Height in Large Screens) */}
       </div>
+      <Dialog
+            open={isShiftOpen}
+            onClose={() => setIsShiftOpen(false)}
+            className="relative z-50 rounded-lg"
+          >
+            <div className="fixed inset-0 bg-gray-700/70"></div>
+            <div className="fixed inset-0 flex items-center justify-center">
+              <Dialog.Panel className="bg-white rounded-lg shadow-lg max-w-md w-full">
+                <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
+                  <Dialog.Title className="heading">Add Unavailability</Dialog.Title>
+                  <button
+                    className="text-white text-2xl font-bold cursor"
+                    onClick={() => setIsShiftOpen(false)}
+                  >
+                    ×
+                  </button>
+                </div>
+                <form className="card p-6 space-y-3">
+                  <div className="">
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      {/* Start Time */}
+                      <div className="flex flex-col">
+                        <label className="paragraphBold">Start</label>
+                        <select
+                          className="input paragraph"
+                          value={start}
+                          onChange={(e) => setStart(e.target.value)}
+                        >
+                          {timeOptions.map((time, index) => (
+                            <option key={index} value={time}>
+                              {time}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+    
+                      {/* Finish Time */}
+                      <div className="flex flex-col">
+                        <label className="paragraphBold">Finish</label>
+                        <select
+                          className="input paragraph"
+                          value={finish}
+                          onChange={(e) => setFinish(e.target.value)}
+                        >
+                          {timeOptions.map((time, index) => (
+                            <option key={index} value={time}>
+                              {time}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+    
+                      {/* Break Time */}
+                      {/* <div className="flex flex-col">
+                        <label className="paragraphBold">Break</label>
+                        <select
+                          className="input paragraph"
+                          value={breakTime}
+                          onChange={(e) => setBreakTime(e.target.value)}
+                        >
+                          {breakOptions.map((breakOption, index) => (
+                            <option key={index} value={breakOption}>
+                              {breakOption} min
+                            </option>
+                          ))}
+                        </select>
+                      </div> */}
+                    </div>
+    
+                    {/* Description Input */}
+                    <label className="paragraphBold">Description:</label>
+                    <textarea
+                      className=" textarea paragraph"
+                      rows="3"
+                      placeholder="Enter description..."
+                    ></textarea>
+                  </div>
+    
+                  <div className="flex justify-end gap-2 mt-4">
+                    <button
+                      type="button"
+                      className="buttonGrey"
+                      onClick={() => setIsShiftOpen(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button type="submit" className="buttonSuccess">
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </Dialog.Panel>
+            </div>
+          </Dialog>
     </>
   );
 };
