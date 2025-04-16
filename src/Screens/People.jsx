@@ -5,6 +5,7 @@ import { FaSearch } from "react-icons/fa";
 const People = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewButtonModel, setViewButtonModel] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState("default");
   const[selectedBranch, setSelectedBranch] = useState("default"); 
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,10 +26,10 @@ const People = () => {
     console.log("Fetching data for:", selectedLocation);
   };
 
-  const handleAddPerson = (e) => {
-    e.preventDefault();
-    setIsModalOpen(false); // close modal after action
-  };
+  // const handleAddPerson = (e) => {
+  //   e.preventDefault();
+  //   setIsModalOpen(false); // close modal after action
+  // };
 
   return (
     <div className="flex flex-col gap-3 p-4">
@@ -52,8 +53,8 @@ const People = () => {
             onChange={handleBranch}
           >
             <option value="default">--Select Location--</option>
-            <option value="main">Main Office</option>
-            <option value="office">Office</option>
+            <option value="Location 1">Store 1</option>
+            <option value="Location 2">Store 2</option>
           </select>
 
           <button className="buttonSuccess" onClick={getLocation}>
@@ -100,7 +101,7 @@ const People = () => {
                 <td className="border border-gray-300 p-2">sourav@gmail.com</td>
                 <td className="border border-gray-300 p-2">few days ago</td>
                 <td className="border border-gray-300 p-2 space-x-2">
-                  <button className="buttonGrey">View</button>
+                  <button className="buttonGrey" onClick={() => setViewButtonModel(true)}>View</button>
                   <button className="buttonSuccess">Add Note</button>
                 </td>
               </tr>
@@ -222,6 +223,79 @@ const People = () => {
                   className="buttonSuccess"
                 >
                   Save
+                </button>
+              </div>
+            </form>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
+      <Dialog
+        open={viewButtonModel}
+        onClose={() => setViewButtonModel(false)}
+        className="relative z-50 rounded-lg"
+      >
+        <div className="fixed inset-0 bg-gray-700/70"></div>
+        <div className="fixed inset-0 flex items-center justify-center">
+          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
+            <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
+              <Dialog.Title className="heading">
+                Person Details
+              </Dialog.Title>
+              <button
+                className="text-white font-bold text-2xl"
+                onClick={() => setViewButtonModel(false)}
+              >
+                ×
+              </button>
+            </div>
+            <form className="mt-4 p-6 space-y-3">
+            <div className="flex flex-col">
+            <label className="paragraphBold">First Name</label>
+                <input
+                  type="text"
+                  className="input"
+                  value="Sourav"
+                />
+              </div>
+              <div className="flex flex-col">
+                <label className="paragraphBold">Last Name</label>
+                <input
+                  type="text"
+                  className="input"
+                   value="Behuria"
+                />
+              </div>
+              <div className="flex flex-col">
+                <label className="paragraphBold">Email</label>
+                <input
+                  type="email"
+                  className="input"
+                   value="sourav.glansa@gmail.com"
+                />
+              </div>
+              <div className="flex flex-col">
+                <label className="paragraphBold">
+                  Phone Number
+                </label>
+                <input
+                  type="text"
+                  className="input"
+                   value="9876543210"
+                />
+              </div>
+              <div className="flex justify-end gap-2 mt-4">
+                <button
+                  type="button"
+                  className="buttonGrey"
+                  onClick={() => setViewButtonModel(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="buttonTheme"
+                >
+                  Update
                 </button>
               </div>
             </form>

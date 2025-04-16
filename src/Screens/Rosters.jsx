@@ -54,9 +54,9 @@ const Rosters = () => {
 
   const employees = [
     { name: "Open Shifts", hours: "8.25", cost: null },
-    { name: "Harish Dobila", hours: "0.00", cost: "₹0.00" },
-    { name: "Sourav Behuria", hours: "4.00", cost: "₹840.00" },
-    { name: "Vishal Kattera", hours: "0.00", cost: "₹0.00" },
+    { name: "Harish Dobila", hours: "5.00", cost: "$10.00" },
+    { name: "Sourav Behuria", hours: "4.00", cost: "$9.00" },
+    { name: "Vishal Kattera", hours: "8.00", cost: "$20.00" },
   ];
 
   const handleStats = () => {
@@ -108,9 +108,8 @@ const Rosters = () => {
             onChange={handleLocation}
           >
             <option value="default">--Select Location--</option>
-            <option value="Location 1">Location 1</option>
-            <option value="Location 2">Location 2</option>
-            <option value="Location 3">Location 3</option>
+            <option value="Location 1">Store 1</option>
+            <option value="Location 2">Store 2</option>
           </select>
 
           <div className="flex items-center justify-center bg-white rounded-lg text-sm font-semibold text-gray-900 w-full md:w-75 px-2">
@@ -134,9 +133,9 @@ const Rosters = () => {
             >
               <IoStatsChartSharp className="icon50" />
               {/* {!stats && ( */}
-                <span className="absolute top-full mt-1 hidden group-hover:flex bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
-                  Statistics
-                </span>
+              <span className="absolute top-full mt-1 hidden group-hover:flex bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
+                Statistics
+              </span>
               {/* )} */}
 
             </div>
@@ -227,10 +226,10 @@ const Rosters = () => {
                 <td className="p-4"></td>
               </tr>
               {[
-                { name: "Harish Dobila", hours: "0.50hrs", salary: "₹800.25" },
-                { name: "Prudhvi Raj", hours: "0.40hrs", salary: "₹700.25" },
-                { name: "Vishal Kattera", hours: "0.50hrs", salary: "₹800.25" },
-                { name: "Sourav", hours: "0.50hrs", salary: "₹800.25" },
+                { name: "Harish Dobila", hours: "0.50hrs", salary: "$800.25" },
+                { name: "Prudhvi Raj", hours: "0.40hrs", salary: "$700.25" },
+                { name: "Vishal Kattera", hours: "0.50hrs", salary: "$800.25" },
+                { name: "Sourav", hours: "0.50hrs", salary: "$800.25" },
               ].map((person, index) => (
                 <tr key={index} className="border-b">
                   <td className="p-4 paragraph">

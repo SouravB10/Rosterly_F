@@ -164,6 +164,9 @@ const Unavailability = () => {
                 </label>
                 <select className="input w-full custom-focus">
                   <option>-- Select --</option>
+                  <option>Vishal</option>
+                  <option>Sourav</option>
+                  <option value="">Naveen</option>  
                 </select>
               </div>
 

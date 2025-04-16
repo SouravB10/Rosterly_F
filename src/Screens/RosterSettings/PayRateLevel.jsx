@@ -2,9 +2,9 @@ import React, { useState } from "react";
 
 const LevelsTableUI = () => {
     const [levels, setLevels] = useState([
-        { name: "Level 1", rate: "₹21.0000", status: "Default", junior: "Apply", employees: 4 },
-        { name: "Level 2", rate: "₹21.0000", status: "", junior: "Apply", employees: 0 },
-        { name: "Level 3", rate: "₹23.0000", status: "", junior: "Apply", employees: 2 },
+        { name: "Level 1", rate: "$20", status: "Default", junior: "Apply", employees: 4 },
+        { name: "Level 2", rate: "$21", status: "", junior: "Apply", employees: 0 },
+        { name: "Level 3", rate: "$20", status: "", junior: "Apply", employees: 2 },
     ]);
 
     const [showModal, setShowModal] = useState(false);
@@ -26,7 +26,7 @@ const LevelsTableUI = () => {
     const handleSave = () => {
         const newLevel = {
             name: formData.levelName,
-            rate: `₹${parseFloat(formData.hourlyRate).toFixed(4)}`,
+            rate: `$${parseFloat(formData.hourlyRate).toFixed(4)}`,
             status: formData.defaultRate ? "Default" : "",
             junior: formData.juniorRates ? "Apply" : "N/A",
             employees: 0,
