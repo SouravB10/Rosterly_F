@@ -330,7 +330,9 @@ const Unavailability = () => {
                   </button>
                 </div>
                 <form className="card p-6 space-y-3">
-                  <div className="">
+                <p className="paragraph text-gray-500">Enter the times that you will NOT be available.</p>
+
+                  <div className="mt-3">
                     <div className="grid grid-cols-2 gap-4 mb-4">
                       {/* Start Time */}
                       <div className="flex flex-col">

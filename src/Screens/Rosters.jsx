@@ -450,7 +450,7 @@ const Rosters = () => {
             </div>
             <form className=" p-6 space-y-3">
               <div>
-                <p className="paragraph">
+                <p className="paragraph text-gray-500">
                   {" "}
                   An employee from any location can be added to this roster.
                   They will be displayed across all pages for this week only.

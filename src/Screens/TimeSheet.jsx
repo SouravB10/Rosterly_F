@@ -9,10 +9,12 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaArrowCircleDown } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
 import { ImCheckmark } from "react-icons/im";
+import { Dialog } from "@headlessui/react";
 
 const TimeSheet = () => {
     const [selectedLocation, setSelectedLocation] = useState("default");
     const [currentWeek, setCurrentWeek] = useState(moment());
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const getWeekRange = (week) => {
         const startOfWeek = moment(week).startOf("isoWeek").format("DD MMM");
@@ -112,7 +114,7 @@ const TimeSheet = () => {
                         <option value="Location 3">Anita</option>
                     </select>
 
-                    <button className="buttonSuccess">
+                    <button className="buttonSuccess" onClick={() => setIsModalOpen(true)}>
                         Employee +
                     </button>
                 </div>
@@ -309,6 +311,59 @@ const TimeSheet = () => {
                     </div>
                 </div>
             </div>
+
+            <Dialog
+                open={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                className="relative z-50 rounded-lg"
+            >
+                <div className="fixed inset-0 bg-gray-700/70"></div>
+                <div className="fixed inset-0 flex items-center justify-center">
+                    <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
+                        <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
+                            <Dialog.Title className="heading">Add Employee</Dialog.Title>
+                            <button
+                                className="text-white text-2xl font-bold"
+                                onClick={() => setIsModalOpen(false)}
+                            >
+                                ×
+                            </button>
+                        </div>
+                        <form className=" p-6 space-y-3">
+                            <div>
+                                <p className="paragraph text-gray-500">
+                                    {" "}
+                                    An employee from any location can be added to this roster.
+                                    They will be displayed across all pages for this week only.
+                                    For a permanent addition to this location, change the
+                                    employee's profile.
+                                </p>
+                            </div>
+                            <div className="mt-5">
+                                <select name="selectedEmployee" className="inputFull">
+                                    <option value="default">--Select Employee--</option>
+                                    <option value="Location 1">Vishal</option>
+                                    <option value="Location 2">Harish</option>
+                                    <option value="Location 3">Anita</option>
+                                </select>
+                            </div>
+
+                            <div className="flex justify-end gap-2 mt-4">
+                                <button
+                                    type="button"
+                                    className="buttonGrey"
+                                    onClick={() => setIsModalOpen(false)}
+                                >
+                                    Cancel
+                                </button>
+                                <button type="submit" className="buttonSuccess">
+                                    Save
+                                </button>
+                            </div>
+                        </form>
+                    </Dialog.Panel>
+                </div>
+            </Dialog>
         </>
     );
 };
