@@ -129,13 +129,23 @@ const Rosters = () => {
 
           <div className="flex gap-2">
             <div
-              className="flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2"
+              className="group relative flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2"
               onClick={handleStats}
             >
               <IoStatsChartSharp className="icon50" />
+              {/* {!stats && ( */}
+                <span className="absolute top-full mt-1 hidden group-hover:flex bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
+                  Statistics
+                </span>
+              {/* )} */}
+
             </div>
-            <div className="flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2">
+
+            <div className="group relative flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2">
               <FaFilePdf className="icon50" />
+              <span className="absolute top-full mt-1 hidden group-hover:flex bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
+                PDF
+              </span>
             </div>
           </div>
         </div>
