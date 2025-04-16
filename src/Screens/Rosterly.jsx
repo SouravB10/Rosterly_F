@@ -1,5 +1,6 @@
+import moment from "moment";
 import React, { useEffect, useState, useRef } from "react";
-import { FaRegClock, FaMapMarkerAlt, FaUserTimes } from "react-icons/fa";
+import { FaRegClock, FaMapMarkerAlt, FaUserTimes, FaAngleLeft, FaAngleRight } from "react-icons/fa";
 
 const Rosterly = () => {
   const [userName, setUserName] = useState("");
@@ -9,6 +10,7 @@ const Rosterly = () => {
   const [elapsed, setElapsed] = useState(0); // current mode's elapsed
   const [shiftElapsed, setShiftElapsed] = useState(0);
   const [breakElapsed, setBreakElapsed] = useState(0);
+  const [currentWeek, setCurrentWeek] = useState(moment());
   const timerRef = useRef(null);
 
   useEffect(() => {
@@ -72,6 +74,21 @@ const Rosterly = () => {
     return `${hrs}:${mins}:${secs}`;
   };
 
+  const getWeekRange = (week) => {
+    const startOfWeek = moment(week).startOf("isoWeek").format("DD MMM");
+    const endOfWeek = moment(week).endOf("isoWeek").format("DD MMM");
+    return `${startOfWeek} - ${endOfWeek}`;
+  };
+
+  const handlePrevWeek = () => {
+    setCurrentWeek((prev) => moment(prev).subtract(1, "week"));
+  };
+
+  const handleNextWeek = () => {
+    setCurrentWeek((prev) => moment(prev).add(1, "week"));
+  };
+
+
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4">
@@ -97,8 +114,22 @@ const Rosterly = () => {
       </div>
 
       <div className="card w-full">
-        <h2 className="subHeading text-lg sm:text-xl">Shift Details</h2>
-
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="subHeading text-lg sm:text-xl">Shift Details</h2>
+          <div className="flex items-center justify-center bg-white rounded-lg text-sm font-semibold text-gray-900 w-1/5 p-1 border border-gray-300 shadow-sm">
+            <FaAngleLeft
+              className="text-gray-800 hover:text-gray-950"
+              size={16}
+              onClick={handlePrevWeek}
+            />
+            <span className="paragraphBold">{getWeekRange(currentWeek)}</span>
+            <FaAngleRight
+              className="text-gray-800 hover:text-gray-950"
+              size={16}
+              onClick={handleNextWeek}
+            />
+          </div>
+        </div>
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {/* Repeatable Shift Card */}
           {[

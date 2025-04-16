@@ -6,11 +6,16 @@ const People = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState("default");
+  const[selectedBranch, setSelectedBranch] = useState("default"); 
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleLocation = (e) => {
     setSelectedLocation(e.target.value);
     console.log("Selected Location:", e.target.value);
+  };
+  const handleBranch = (e) => {
+    setSelectedBranch(e.target.value);
+    console.log("Selected Branch:", e.target.value);
   };
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -43,12 +48,12 @@ const People = () => {
           <select
             name="selectedLocation"
             className="input"
-            value={selectedLocation}
-            onChange={handleLocation}
+            value={selectedBranch}
+            onChange={handleBranch}
           >
             <option value="default">--Select Location--</option>
-            <option value="Location 1">Main Office</option>
-            <option value="Location 2">Office</option>
+            <option value="main">Main Office</option>
+            <option value="office">Office</option>
           </select>
 
           <button className="buttonSuccess" onClick={getLocation}>
