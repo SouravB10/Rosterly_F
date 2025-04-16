@@ -16,6 +16,10 @@ const NavBar = ({ toggleSidebar }) => {
   const handleClick = () => {
     navigate('/notification');
   };
+
+  const handleProfileClick = () => {
+    navigate('/profile');
+  };
   const location = useLocation();
 
   const activeMenu = navItems.find((item) => item.path === location.pathname || (item.submenu && item.submenu.some(sub => sub.path === location.pathname)));
@@ -79,7 +83,7 @@ const NavBar = ({ toggleSidebar }) => {
 
                 <MenuItem>
                   <a
-                    href="#"
+                    onClick={handleProfileClick}
                     className="block px-4 py-2 paragraph text-black data-focus:bg-gray-400 data-focus:outline-hidden"
                   >
                     Your Profile
