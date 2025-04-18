@@ -58,7 +58,7 @@ const Location = () => {
                         <input
                           type="text"
                           value="7780290335"
-                          className="input w-full border border-gray-500 border"
+                          className="input w-full border border-gray-500 "
                         />
                       </div>
                     </div>
@@ -72,7 +72,7 @@ const Location = () => {
                         <input
                           type="text"
                           value="anita.glansa@gmail.com"
-                          className="input w-full border border-gray-500 border"
+                          className="input w-full border border-gray-500 "
                         />
                       </div>
                     </div>
