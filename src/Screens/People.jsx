@@ -7,7 +7,7 @@ const People = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewButtonModel, setViewButtonModel] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState("default");
-  const[selectedBranch, setSelectedBranch] = useState("default"); 
+  const [selectedBranch, setSelectedBranch] = useState("default");
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleLocation = (e) => {
@@ -87,9 +87,9 @@ const People = () => {
               <tr>
                 <th className="border border-gray-300 p-2">Name</th>
                 <th className="border border-gray-300 p-2">Phone</th>
-                <th className="border border-gray-300 p-2">Age</th>
+                {/* <th className="border border-gray-300 p-2">Age</th> */}
                 <th className="border border-gray-300 p-2">Email</th>
-                <th className="border border-gray-300 p-2">Last Active</th>
+                {/* <th className="border border-gray-300 p-2">Last Active</th> */}
                 <th className="border border-gray-300 p-2">Action</th>
               </tr>
             </thead>
@@ -97,9 +97,9 @@ const People = () => {
               <tr className="text-center">
                 <td className="border border-gray-300 p-2">Sourav</td>
                 <td className="border border-gray-300 p-2">9876543210</td>
-                <td className="border border-gray-300 p-2">25</td>
+                {/* <td className="border border-gray-300 p-2">25</td> */}
                 <td className="border border-gray-300 p-2">sourav@gmail.com</td>
-                <td className="border border-gray-300 p-2">few days ago</td>
+                {/* <td className="border border-gray-300 p-2">few days ago</td> */}
                 <td className="border border-gray-300 p-2 space-x-2">
                   <button className="buttonGrey" onClick={() => setViewButtonModel(true)}>View</button>
                   <button className="buttonSuccess">Add Note</button>
@@ -108,9 +108,9 @@ const People = () => {
               <tr className="text-center">
                 <td className="border border-gray-300 p-2">Anita</td>
                 <td className="border border-gray-300 p-2">9125676080</td>
-                <td className="border border-gray-300 p-2">28</td>
+                {/* <td className="border border-gray-300 p-2">28</td> */}
                 <td className="border border-gray-300 p-2">anita@gmail.com</td>
-                <td className="border border-gray-300 p-2">2 hours ago</td>
+                {/* <td className="border border-gray-300 p-2">2 hours ago</td> */}
                 <td className="border border-gray-300 p-2 space-x-2">
                   <button className="buttonGrey">View</button>
                   <button className="buttonSuccess">Add Note</button>
@@ -119,9 +119,9 @@ const People = () => {
               <tr className="text-center">
                 <td className="border border-gray-300 p-2">Navin</td>
                 <td className="border border-gray-300 p-2">9876543210</td>
-                <td className="border border-gray-300 p-2">24</td>
+                {/* <td className="border border-gray-300 p-2">24</td> */}
                 <td className="border border-gray-300 p-2">navin@gmail.com</td>
-                <td className="border border-gray-300 p-2">few days ago</td>
+                {/* <td className="border border-gray-300 p-2">few days ago</td> */}
                 <td className="border border-gray-300 p-2 space-x-2">
                   <button className="buttonGrey">View</button>
                   <button className="buttonSuccess">Add Note</button>
@@ -130,9 +130,9 @@ const People = () => {
               <tr className="text-center">
                 <td className="border border-gray-300 p-2">Vishal</td>
                 <td className="border border-gray-300 p-2">9876543210</td>
-                <td className="border border-gray-300 p-2">25</td>
+                {/* <td className="border border-gray-300 p-2">25</td> */}
                 <td className="border border-gray-300 p-2">vishal@gmail.com</td>
-                <td className="border border-gray-300 p-2">few days ago</td>
+                {/* <td className="border border-gray-300 p-2">few days ago</td> */}
                 <td className="border border-gray-300 p-2 space-x-2">
                   <button className="buttonGrey">View</button>
                   <button className="buttonSuccess">Add Note</button>
@@ -163,8 +163,8 @@ const People = () => {
               </button>
             </div>
             <form className="mt-4 p-6 space-y-3">
-            <div className="flex flex-col">
-            <label className="paragraphBold">First Name</label>
+              <div className="flex flex-col">
+                <label className="paragraphBold">First Name</label>
                 <input
                   type="text"
                   className="input"
@@ -249,8 +249,8 @@ const People = () => {
               </button>
             </div>
             <form className="mt-4 p-6 space-y-3">
-            <div className="flex flex-col">
-            <label className="paragraphBold">First Name</label>
+              <div className="flex flex-col">
+                <label className="paragraphBold">First Name</label>
                 <input
                   type="text"
                   className="input"
@@ -262,7 +262,7 @@ const People = () => {
                 <input
                   type="text"
                   className="input"
-                   value="Behuria"
+                  value="Behuria"
                 />
               </div>
               <div className="flex flex-col">
@@ -270,7 +270,7 @@ const People = () => {
                 <input
                   type="email"
                   className="input"
-                   value="sourav.glansa@gmail.com"
+                  value="sourav.glansa@gmail.com"
                 />
               </div>
               <div className="flex flex-col">
@@ -280,7 +280,7 @@ const People = () => {
                 <input
                   type="text"
                   className="input"
-                   value="9876543210"
+                  value="9876543210"
                 />
               </div>
               <div className="flex justify-end gap-2 mt-4">
