@@ -55,8 +55,8 @@ export const navItems = [
     },
     {
         id: 7,
-        title: 'System Settings',
-        icon: <MdDisplaySettings className="text-xl text-black" />,
+        title: 'Settings',
+        icon:  <IoSettings className="text-xl text-black" />,
         path: '/systemsettings'
     },
     // {
