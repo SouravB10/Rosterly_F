@@ -36,7 +36,7 @@ const Location = () => {
 
             {/* Tab Switcher */}
             <div className="subHeading flex gap-6 mb-6">
-              {["general", "Sales", "Employees", "Status"].map((tab) => (
+              {["general", "Sales", "Employees"].map((tab) => (
                 <label key={tab} className="flex items-center gap-2">
                   <input
                     type="radio"
@@ -76,7 +76,7 @@ const Location = () => {
                   </div>
 
                   {/* Location Short Name */}
-                  <div className="card flex justify-between">
+                  {/* <div className="card flex justify-between">
                     <div className="w-1/2 pr-4">
                       <h4 className="subHeading">Location Short Name</h4>
                       <p className="paragraphThin">
@@ -87,7 +87,7 @@ const Location = () => {
                     <div className="w-1/2">
                       <input type="text" placeholder="MNB" className="input" />
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="flex justify-end">
                     <button className="buttonTheme">Update</button>
@@ -184,16 +184,16 @@ const Location = () => {
                   </div>
                 </div>
               )}
-              {activeTab === "Status" && (
+              {/* {activeTab === "Status" && (
                 <p className="text-slate-500 font-light">
                   Status tab content here.
                 </p>
-              )}
+              )} */}
             </div>
           </div>
         </div>
         {/* Right Section - 40% (2 columns) */}
-        <div className="col-span-2">
+        {/* <div className="col-span-2">
           <h3 className="heading">Add Location</h3>
           <div className=" bg-gray-200 p-6 borderRadius10 mt-5 h-[350px]">
             <div className="paragraph">
@@ -220,7 +220,7 @@ const Location = () => {
               <button className="buttonSuccess">Create</button>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

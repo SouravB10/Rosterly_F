@@ -22,7 +22,7 @@ const Location = () => {
 
           {/* Tab Switcher */}
           <div className="subHeading flex gap-6 mb-6">
-            {["general", "Notes", "Username", "Password", "LinkAccount"].map(
+            {["general", "Username", "Password"].map(
               (tab) => (
                 <label key={tab} className="flex items-center gap-2">
                   <input
@@ -47,8 +47,8 @@ const Location = () => {
               <div className="space-y-4">
                 {/* Location Name */}
                 <div className="cardA">
-                  <div className="grid grid-cols-1 grid-rows-2 gap-4 items-center">
-                    <div>
+                  <div className="grid grid-cols-1 mb-3 items-center">
+                    {/* <div>
                       <div className="">
                         <label htmlFor="" className="paragraph">
                           Mobile
@@ -61,7 +61,7 @@ const Location = () => {
                           className="input w-full border border-gray-500 border"
                         />
                       </div>
-                    </div>
+                    </div> */}
                     <div>
                       <div className="">
                         <label htmlFor="" className="paragraph">
@@ -85,7 +85,7 @@ const Location = () => {
               </div>
             )}
 
-            {activeTab === "Notes" && (
+            {/* {activeTab === "Notes" && (
               <div className="cardA">
                 <div className="grid grid-cols-1 grid-rows-1 gap-4 items-center">
                   <div className="sideBar p-4 rounded-lg">
@@ -96,7 +96,7 @@ const Location = () => {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
 
             {activeTab === "Username" && (
               <>
@@ -174,7 +174,7 @@ const Location = () => {
                 </div>
               </>
             )}
-            {activeTab === "LinkAccount" && (
+            {/* {activeTab === "LinkAccount" && (
               <>
                 <div className="cardA">
                   <div className="grid grid-cols-1 grid-rows-1 gap-4 items-center">
@@ -194,7 +194,7 @@ const Location = () => {
                   <button className="buttonTheme">Update</button>
                 </div>
               </>
-            )}
+            )} */}
           </div>
         </div>
       </div>
