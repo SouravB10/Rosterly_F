@@ -89,7 +89,7 @@ const Unavailability = () => {
                   />
                 </div>
 
-                <div className="w-1/2 bg-white-100 pt-2 text-center ml-1">
+                <div className=" bg-white-100 pt-2 text-center ml-1">
                   <label className="paragraphBold">
                     To Date
                   </label>
@@ -120,7 +120,7 @@ const Unavailability = () => {
                 </div>
               </div>
 
-              <div>
+              {/* <div>
                 <label className="paragraphBold">
                   Specify the leave type
                 </label>
@@ -128,9 +128,9 @@ const Unavailability = () => {
                   <option>--Select One--</option>
                   <option>Without Pay</option>
                 </select>
-              </div>
+              </div> */}
 
-              <div>
+              {/* <div>
                 <label className="paragraphBold">
                   Specify number of leave hours per week
                 </label>
@@ -144,7 +144,7 @@ const Unavailability = () => {
                     defaultValue="16.00"
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="w-full md:w-[48%] flex flex-col pt-2 gap-4">
