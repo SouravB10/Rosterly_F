@@ -86,20 +86,20 @@ const LevelsTableUI = () => {
 
             {/* Modal */}
             {showModal && (
-                <div className="fixed inset-0 z-50 bg-opacity-40 backdrop-blur-xs flex items-center justify-center">
+                <div className="fixed inset-0 bg-gray-700/70 flex items-center justify-center">
                     <div className="bg-white rounded-lg w-full max-w-sm shadow-lg">
-                        <div className="bg-blue-500 text-white px-4 py-2 rounded-t-lg flex justify-between items-center">
+                        <div className="bg-gray-800 text-white px-4 py-2 rounded-t-lg flex justify-between items-center">
                             <h2 className="text-md font-semibold">Add Pay Rate Level</h2>
-                            <button onClick={() => setShowModal(false)} className="text-white text-xl font-bold">
+                            <button onClick={() => setShowModal(false)} className="text-white text-3xl font-bold">
                                 &times;
                             </button>
                         </div>
 
-                        <div className="px-4 py-3">
-                            <p className="text-sm text-gray-600 mb-2">
+                        <div className="px-4 py-3 bg-gray-200">
+                            <p className="text-sm text-gray-500 mb-2">
                                 Enter an hourly base rate without any loadings (i.e. without a casual 25% loading).
                             </p>
-                            <p className="text-sm text-gray-600 mb-4">
+                            <p className="text-sm text-gray-500 mb-2">
                                 One level must be designated as 'default' for those employees whose pay rate is calculated automatically by iRoster.
                             </p>
 
@@ -109,7 +109,7 @@ const LevelsTableUI = () => {
                                 placeholder="Level Name"
                                 value={formData.levelName}
                                 onChange={handleChange}
-                                className="w-full px-3 py-2 border rounded mb-3"
+                                className="input w-full my-2"
                             />
                             <input
                                 type="number"
@@ -117,7 +117,7 @@ const LevelsTableUI = () => {
                                 placeholder="Hourly Rate"
                                 value={formData.hourlyRate}
                                 onChange={handleChange}
-                                className="w-full px-3 py-2 border rounded mb-3"
+                                className="input w-full my-2"
                             />
 
                             <div className="flex items-center mb-2">
@@ -143,16 +143,16 @@ const LevelsTableUI = () => {
                             </div>
                         </div>
 
-                        <div className="px-4 py-3 flex justify-end space-x-2 border-t">
+                        <div className="px-4 py-3 bg-gray-200 flex justify-end space-x-2 border-t">
                             <button
                                 onClick={() => setShowModal(false)}
-                                className="px-4 py-1.5 rounded border text-sm hover:bg-gray-100"
+                                className="buttonGrey"
                             >
                                 Close
                             </button>
                             <button
                                 onClick={handleSave}
-                                className="bg-green-500 hover:bg-green-600 text-white px-4 py-1.5 rounded text-sm"
+                                className="buttonSuccess"
                             >
                                 Save
                             </button>

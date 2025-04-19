@@ -85,7 +85,7 @@ const Rosters = () => {
   };
 
   const timeOptions = generateTimeOptions();
-  const breakOptions = [15, 30, 45, 60];
+  const breakOptions = [0, 15, 30, 45, 60];
   const [start, setStart] = useState(timeOptions[0]);
   const [finish, setFinish] = useState(timeOptions[0]);
   const [breakTime, setBreakTime] = useState(breakOptions[0]);

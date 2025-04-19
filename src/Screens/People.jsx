@@ -9,6 +9,7 @@ const People = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewButtonModel, setViewButtonModel] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState("default");
+  const [selectedBranch, setSelectedBranch] = useState("default");
   const [searchTerm, setSearchTerm] = useState("");
   const [date, setDate] = useState(new Date());
 
@@ -16,6 +17,10 @@ const People = () => {
   const handleLocation = (e) => {
     setSelectedLocation(e.target.value);
     console.log("Selected Location:", e.target.value);
+  };
+  const handleBranch = (e) => {
+    setSelectedBranch(e.target.value);
+    console.log("Selected Branch:", e.target.value);
   };
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -48,12 +53,12 @@ const People = () => {
           <select
             name="selectedLocation"
             className="input"
-            value={selectedLocation}
-            onChange={handleLocation}
+            value={selectedBranch}
+            onChange={handleBranch}
           >
             <option value="default">--Select Location--</option>
-            <option value="Location 1">Store 1</option>
-            <option value="Location 2">Store 2</option>
+            <option value="store1">Store 1</option>
+            <option value="store2">Store 2</option>
           </select>
 
           <button className="buttonSuccess" onClick={getLocation}>
@@ -239,9 +244,9 @@ const People = () => {
               <tr>
                 <th className="border border-gray-300 p-2">Name</th>
                 <th className="border border-gray-300 p-2">Phone</th>
-                <th className="border border-gray-300 p-2">Age</th>
+                {/* <th className="border border-gray-300 p-2">Age</th> */}
                 <th className="border border-gray-300 p-2">Email</th>
-                <th className="border border-gray-300 p-2">Last Active</th>
+                {/* <th className="border border-gray-300 p-2">Last Active</th> */}
                 <th className="border border-gray-300 p-2">Action</th>
               </tr>
             </thead>
@@ -249,9 +254,9 @@ const People = () => {
               <tr className="text-center">
                 <td className="border border-gray-300 p-2">Sourav</td>
                 <td className="border border-gray-300 p-2">9876543210</td>
-                <td className="border border-gray-300 p-2">25</td>
+                {/* <td className="border border-gray-300 p-2">25</td> */}
                 <td className="border border-gray-300 p-2">sourav@gmail.com</td>
-                <td className="border border-gray-300 p-2">few days ago</td>
+                {/* <td className="border border-gray-300 p-2">few days ago</td> */}
                 <td className="border border-gray-300 p-2 space-x-2">
                   <button
                     className="buttonGrey"
@@ -265,9 +270,9 @@ const People = () => {
               <tr className="text-center">
                 <td className="border border-gray-300 p-2">Anita</td>
                 <td className="border border-gray-300 p-2">9125676080</td>
-                <td className="border border-gray-300 p-2">28</td>
+                {/* <td className="border border-gray-300 p-2">28</td> */}
                 <td className="border border-gray-300 p-2">anita@gmail.com</td>
-                <td className="border border-gray-300 p-2">2 hours ago</td>
+                {/* <td className="border border-gray-300 p-2">2 hours ago</td> */}
                 <td className="border border-gray-300 p-2 space-x-2">
                   <button className="buttonGrey">View</button>
                   <button className="buttonSuccess">Add Note</button>
@@ -276,9 +281,9 @@ const People = () => {
               <tr className="text-center">
                 <td className="border border-gray-300 p-2">Navin</td>
                 <td className="border border-gray-300 p-2">9876543210</td>
-                <td className="border border-gray-300 p-2">24</td>
+                {/* <td className="border border-gray-300 p-2">24</td> */}
                 <td className="border border-gray-300 p-2">navin@gmail.com</td>
-                <td className="border border-gray-300 p-2">few days ago</td>
+                {/* <td className="border border-gray-300 p-2">few days ago</td> */}
                 <td className="border border-gray-300 p-2 space-x-2">
                   <button className="buttonGrey">View</button>
                   <button className="buttonSuccess">Add Note</button>
@@ -287,9 +292,9 @@ const People = () => {
               <tr className="text-center">
                 <td className="border border-gray-300 p-2">Vishal</td>
                 <td className="border border-gray-300 p-2">9876543210</td>
-                <td className="border border-gray-300 p-2">25</td>
+                {/* <td className="border border-gray-300 p-2">25</td> */}
                 <td className="border border-gray-300 p-2">vishal@gmail.com</td>
-                <td className="border border-gray-300 p-2">few days ago</td>
+                {/* <td className="border border-gray-300 p-2">few days ago</td> */}
                 <td className="border border-gray-300 p-2 space-x-2">
                   <button className="buttonGrey">View</button>
                   <button className="buttonSuccess">Add Note</button>
