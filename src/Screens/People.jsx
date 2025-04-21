@@ -2,16 +2,22 @@ import React, { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { FaSearch, FaEye, FaEdit } from "react-icons/fa";
 import ProfileImage from "../assets/images/profile.png";
+import Sourav from "../assets/images/IMG_20230225_033746_011.jpg";
+import deadPool from "../assets/images/Screenshot 2025-04-21 111413.png";
+import BlackWidow from "../assets/images/Screenshot 2025-04-21 111629.png"
 import DatePicker from "react-datepicker";
 
 const People = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewButtonModel, setViewButtonModel] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState("default");
   const [selectedBranch, setSelectedBranch] = useState("default");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [date, setDate] = useState(new Date());
+  const [addNoteModal, setAddNoteModal] = useState(false);
+  const [note, setNote] = useState('');
 
 
   const handleLocation = (e) => {
@@ -22,10 +28,7 @@ const People = () => {
     setSelectedBranch(e.target.value);
     console.log("Selected Branch:", e.target.value);
   };
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    console.log("Search Term:", e.target.value);
-  };
+
   const getLocation = () => {
     console.log("Fetching data for:", selectedLocation);
   };
@@ -34,6 +37,107 @@ const People = () => {
   //   e.preventDefault();
   //   setIsModalOpen(false); // close modal after action
   // };
+
+  const profiles = [
+    {
+      id: 1,
+      firstName: 'Vishal',
+      lastName: 'Kattera',
+      email: 'vishal.glansa@gmail.com',
+      phone: '7780290335',
+      dob: '1998-10-09',
+      payrate: '50%',
+      location: 'Store 1',
+      image: ProfileImage,
+    },
+    {
+      id: 2,
+      firstName: 'Sourav',
+      lastName: 'Behuria',
+      email: "sourav@gmail.com",
+      phone: "1234567890",
+      dob: '1999-09-10',
+      payrate: '30%',
+      location: "Store 2",
+      image: Sourav,
+    },
+    {
+      id: 3,
+      firstName: 'Naveen',
+      lastName: 'Nagam',
+      email: "naveen@gmail.com",
+      phone: "9876543210",
+      dob: '2002-04-10',
+      payrate: '20%',
+      location: "Store 2",
+      image: deadPool,
+    },
+    {
+      id: 4,
+      firstName: 'Anita',
+      lastName: 'Seth',
+      email: "anita@gmail.com",
+      phone: "9876543210",
+      dob: '1997-05-23',
+      payrate: '40%',
+      location: "Store 1",
+      image: BlackWidow,
+    },
+    {
+      id: 5,
+      firstName: 'Prudvi',
+      lastName: 'Raj',
+      email: "prudvi@gmail.com",
+      phone: "9876543210",
+      dob: '1999-04-10',
+      payrate: '30%',
+      location: "Store 1",
+      image: deadPool,
+    },
+    {
+      id: 6,
+      firstName: 'Harish',
+      lastName: 'Dobilla',
+      email: "harish@gmail.com",
+      phone: "9876512210",
+      dob: '1995-01-10',
+      payrate: '60%',
+      location: "Store 1",
+      image: ProfileImage,
+    },
+    {
+      id: 7,
+      firstName: 'Sudiksha',
+      lastName: 'Reddy',
+      email: "sudiksha@gmail.com",
+      phone: "9833543210",
+      dob: '1998-10-09',
+      payrate: '60%',
+      location: "Store 2",
+      image: BlackWidow,
+    },
+  ];
+
+  const [filteredProfiles, setFilteredProfiles] = useState(profiles);
+
+  const handleSearch = (e) => {
+    const keyword = e.target.value.toLowerCase();
+    setSearchTerm(keyword);
+
+    const filtered = profiles.filter((profile) => {
+      return (
+        profile.firstName.toLowerCase().includes(keyword) ||
+        profile.lastName.toLowerCase().includes(keyword) ||
+        profile.email.toLowerCase().includes(keyword) ||
+        profile.phone.toLowerCase().includes(keyword) ||
+        profile.location.toLowerCase().includes(keyword) ||
+        profile.payrate.includes(keyword) ||
+        profile.dob.includes(keyword)
+      );
+    });
+
+    setFilteredProfiles(filtered);
+  };
 
   return (
     <div className="flex flex-col gap-3 p-4">
@@ -77,165 +181,59 @@ const People = () => {
         </div>
         <div className="flex gap-5">
           <button className="buttonTheme" onClick={() => setIsModalOpen(true)}>
-            + People
+            + Employee
           </button>
         </div>
 
         {/* </div> */}
       </div>
       <div className="grid grid-cols-4 gap-4">
-        <div>
-          <div className="@container bg-white p-3 rounded-xl">
-            <div className="flex flex-1/3 gap-4 justify-between">
-              <div className="flex flex-col @md:flex-row">
-                <img
-                  alt="Profile"
-                  src={ProfileImage}
-                  className="h-20 w-20 rounded"
-                />
+        {filteredProfiles.map((profile) => (
+          <div key={profile.id}>
+            <div className="@container bg-white p-3 rounded-xl">
+              <div className="flex flex-1/3 gap-4 justify-between">
+                <div className="flex flex-col @md:flex-row">
+                  <img
+                    alt="Profile"
+                    src={profile.image}
+                    className="h-20 w-20 rounded"
+                  />
+                </div>
+                <div className="flex flex-col @md:flex-row">
+                  <h3 className="subHeadingBold">
+                    {profile.firstName} {profile.lastName}
+                  </h3>
+                  <h6 className="paragraphThin">{profile.email}</h6>
+                  <h6 className="paragraphThin">{profile.phone}</h6>
+                </div>
               </div>
-              <div className="flex flex-col @md:flex-row">
-                <h3 className="subHeadingBold">Vishal Kattera</h3>
-                <h6 className="paragraphThin">vishal.glansa@gmail.com</h6>
-                <h6 className="paragraphThin">7780290335</h6>
-              </div>
-            </div>
-            <div className="flex flex-1/3 gap-4 justify-end items-end">
-              <div>
-                <h6 className="paragraphBold">Location:Store 1</h6>
-              </div>
-              <div className=" flex flex-1/3 mt-3 gap-4 justify-end">
-                <FaEye
-                  className="text-indigo-950 bg-amber-300 cursor p-2 rounded-md size-8"
-                  onClick={() => setViewButtonModel(true)}
-                />
-                <FaEdit className="text-indigo-950  bg-gray-200 cursor p-2 rounded-md size-8" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div className="@container bg-white p-3 rounded-xl">
-            <div className="flex flex-1/3 gap-4 justify-between">
-              <div className="flex flex-col @md:flex-row">
-                <img
-                  alt="Profile"
-                  src={ProfileImage}
-                  className="h-20 w-20 rounded"
-                />
-              </div>
-              <div className="flex flex-col @md:flex-row">
-                <h3 className="subHeadingBold">Vishal Kattera</h3>
-                <h6 className="paragraphThin">vishal.glansa@gmail.com</h6>
-                <h6 className="paragraphThin">7780290335</h6>
-              </div>
-            </div>
-            <div className="flex flex-1/3 gap-4 justify-end items-end">
-              <div>
-                <h6 className="paragraphBold">Location:Store 1</h6>
-              </div>
-              <div className=" flex flex-1/3 mt-3 gap-4 justify-end">
-                <FaEye
-                  className="text-indigo-950 bg-amber-300 cursor p-2 rounded-md size-8"
-                  onClick={() => setViewButtonModel(true)}
-                />
-                <FaEdit className="text-indigo-950  bg-gray-200 cursor p-2 rounded-md size-8" />
+              <div className="flex flex-1/3 gap-4 justify-end items-end">
+                <div>
+                  <h6 className="paragraphBold">Location: {profile.location}</h6>
+                </div>
+                <div className="flex flex-1/3 mt-3 gap-4 justify-end">
+                  <FaEye
+                    className="text-indigo-950 bg-amber-300 cursor p-2 rounded-md size-8"
+                    onClick={() => {
+                      setSelectedProfile(profile);
+                      setViewButtonModel(true);
+                    }}
+                  />
+                  <FaEdit
+                    title="Add Note"
+                    className="text-indigo-950 bg-gray-200 cursor p-2 rounded-md size-8"
+                    onClick={() => {
+                      setSelectedProfile(profile);
+                      setAddNoteModal(true);
+                    }}
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div>
-          <div className="@container bg-white p-3 rounded-xl">
-            <div className="flex flex-1/3 gap-4 justify-between">
-              <div className="flex flex-col @md:flex-row">
-                <img
-                  alt="Profile"
-                  src={ProfileImage}
-                  className="h-20 w-20 rounded"
-                />
-              </div>
-              <div className="flex flex-col @md:flex-row">
-                <h3 className="subHeadingBold">Vishal Kattera</h3>
-                <h6 className="paragraphThin">vishal.glansa@gmail.com</h6>
-                <h6 className="paragraphThin">7780290335</h6>
-              </div>
-            </div>
-            <div className="flex flex-1/3 gap-4 justify-end items-end">
-              <div>
-                <h6 className="paragraphBold">Location:Store 1</h6>
-              </div>
-              <div className=" flex flex-1/3 mt-3 gap-4 justify-end">
-                <FaEye
-                  className="text-indigo-950 bg-amber-300 cursor p-2 rounded-md size-8"
-                  onClick={() => setViewButtonModel(true)}
-                />
-                <FaEdit className="text-indigo-950  bg-gray-200 cursor p-2 rounded-md size-8" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div className="@container bg-white p-3 rounded-xl">
-            <div className="flex flex-1/3 gap-4 justify-between">
-              <div className="flex flex-col @md:flex-row">
-                <img
-                  alt="Profile"
-                  src={ProfileImage}
-                  className="h-20 w-20 rounded"
-                />
-              </div>
-              <div className="flex flex-col @md:flex-row">
-                <h3 className="subHeadingBold">Vishal Kattera</h3>
-                <h6 className="paragraphThin">vishal.glansa@gmail.com</h6>
-                <h6 className="paragraphThin">7780290335</h6>
-              </div>
-            </div>
-            <div className="flex flex-1/3 gap-4 justify-end items-end">
-              <div>
-                <h6 className="paragraphBold">Location:Store 1</h6>
-              </div>
-              <div className=" flex flex-1/3 mt-3 gap-4 justify-end">
-                <FaEye
-                  className="text-indigo-950 bg-amber-300 cursor p-2 rounded-md size-8"
-                  onClick={() => setViewButtonModel(true)}
-                />
-                <FaEdit className="text-indigo-950  bg-gray-200 cursor p-2 rounded-md size-8" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div className="@container bg-white p-3 rounded-xl">
-            <div className="flex flex-1/3 gap-4 justify-between">
-              <div className="flex flex-col @md:flex-row">
-                <img
-                  alt="Profile"
-                  src={ProfileImage}
-                  className="h-20 w-20 rounded"
-                />
-              </div>
-              <div className="flex flex-col @md:flex-row">
-                <h3 className="subHeadingBold">Vishal Kattera</h3>
-                <h6 className="paragraphThin">vishal.glansa@gmail.com</h6>
-                <h6 className="paragraphThin">7780290335</h6>
-              </div>
-            </div>
-            <div className="flex flex-1/3 gap-4 justify-end items-end">
-              <div>
-                <h6 className="paragraphBold">Location:Store 1</h6>
-              </div>
-              <div className=" flex flex-1/3 mt-3 gap-4 justify-end">
-                <FaEye
-                  className="text-indigo-950 bg-amber-300 cursor p-2 rounded-md size-8"
-                  onClick={() => setViewButtonModel(true)}
-                />
-                <FaEdit className="text-indigo-950  bg-gray-200 cursor p-2 rounded-md size-8" />
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* End */}
+        ))}
       </div>
+
 
 
       <Dialog
@@ -247,7 +245,7 @@ const People = () => {
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">Add Person</Dialog.Title>
+              <Dialog.Title className="heading">Add Employee</Dialog.Title>
               <button
                 className="text-white font-bold text-2xl"
                 onClick={() => setIsModalOpen(false)}
@@ -259,11 +257,11 @@ const People = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="paragraphBold">First Name</label>
-                  <input type="text" className="input"/>
+                  <input type="text" className="input" />
                 </div>
                 <div className="flex flex-col">
                   <label className="paragraphBold">Last Name</label>
-                  <input type="text" className="input"/>
+                  <input type="text" className="input" />
                 </div>
               </div>
               <div className="flex flex-col">
@@ -278,18 +276,18 @@ const People = () => {
                 <DatePicker
                   type="text"
                   className="input w-100"
-                  selected={date}
-                  onChange={(date) => setDate(date)}
+                // selected={date}
+                // onChange={(date) => setDate(date)}
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="paragraphBold">Payrate Percentage</label>
-                  <input type="text" className="input"/>
+                  <input type="text" className="input" />
                 </div>
                 <div className="flex flex-col">
                   <label className="paragraphBold">Phone Number</label>
-                  <input type="text" className="input"/>
+                  <input type="text" className="input" />
                 </div>
               </div>
 
@@ -330,11 +328,19 @@ const People = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="paragraphBold">First Name</label>
-                  <input type="text" className="input" value="Vishal" />
+                  <input
+                    type="text"
+                    className="input"
+                    value={selectedProfile?.firstName || ''}
+                  />
                 </div>
                 <div className="flex flex-col">
                   <label className="paragraphBold">Last Name</label>
-                  <input type="text" className="input" value="Kattera" />
+                  <input
+                    type="text"
+                    className="input"
+                    value={selectedProfile?.lastName || ''}
+                  />
                 </div>
               </div>
               <div className="flex flex-col">
@@ -342,27 +348,33 @@ const People = () => {
                 <input
                   type="email"
                   className="input"
-                  value="vishal.glansa@gmail.com"
+                  value={selectedProfile?.email || ''}
                 />
               </div>
               <div className="flex flex-col">
                 <label className="paragraphBold">Date of Birth</label>
                 <DatePicker
-                  type="text"
                   className="input w-100"
-                  value="09-10-1998"
-                  selected={date}
+                  selected={selectedProfile?.dob ? new Date(selectedProfile.dob) : null}
                   onChange={(date) => setDate(date)}
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="paragraphBold">Payrate Percentage</label>
-                  <input type="text" className="input" value="50%" />
+                  <input
+                    type="text"
+                    className="input"
+                    value={selectedProfile?.payrate || ''}
+                  />
                 </div>
                 <div className="flex flex-col">
                   <label className="paragraphBold">Phone Number</label>
-                  <input type="text" className="input" value="7780290335" />
+                  <input
+                    type="text"
+                    className="input"
+                    value={selectedProfile?.phone || ''}
+                  />
                 </div>
               </div>
 
@@ -376,6 +388,53 @@ const People = () => {
                 </button>
                 <button type="submit" className="buttonTheme">
                   Update
+                </button>
+              </div>
+            </form>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
+      <Dialog
+        open={addNoteModal}
+        onClose={() => setAddNoteModal(false)}
+        className="relative z-50 rounded-lg"
+      >
+        <div className="fixed inset-0 bg-gray-700/70"></div>
+        <div className="fixed inset-0 flex items-center justify-center">
+          <Dialog.Panel className="bg-white rounded-lg shadow-lg max-w-md w-full">
+            <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
+              <Dialog.Title className="heading">Add Note</Dialog.Title>
+              <button
+                className="text-white font-bold text-2xl"
+                onClick={() => setAddNoteModal(false)}
+              >
+                ×
+              </button>
+            </div>
+            <form className="p-6 space-y-4">
+              <textarea
+                className="w-full h-32 border border-gray-300 rounded-md p-2"
+                placeholder="Write your note here..."
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+              />
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  className="buttonGrey"
+                  onClick={() => setAddNoteModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="buttonTheme"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSaveNote(selectedProfile.id, note);
+                  }}
+                >
+                  Save
                 </button>
               </div>
             </form>

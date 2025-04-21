@@ -27,7 +27,7 @@ export const navItems = [
     },
     {
         id: 3,
-        title: 'People',
+        title: 'Employees',
         icon: <FaPeopleGroup className="text-xl text-black" />,
         path: '/people',
         // submenu: [
