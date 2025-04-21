@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FaSearch } from "react-icons/fa";
 
 const Location = () => {
   const [selectLocation, setSelectLocation] = useState("");
@@ -70,7 +71,7 @@ const Location = () => {
                       <input
                         type="text"
                         placeholder="Main Branch"
-                        className="input"
+                        className="input border border-gray-300"
                       />
                     </div>
                   </div>
@@ -118,7 +119,7 @@ const Location = () => {
                         type="text"
                         placeholder="$50.00"
                         defaultValue="$50.00"
-                        className="w-1/3 px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-1/3 px-4 py-2 text-sm border bg-white border-gray-300 rounded-md focus:outline-none"
                       />
                     </div>
                   ))}
@@ -144,15 +145,13 @@ const Location = () => {
                     </div>
 
                     {/* Search Bar */}
-                    <div className="relative w-1/3">
+                    <div className="relative w-64">
+                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-950" />
                       <input
                         type="text"
-                        placeholder="Search"
-                        className="w-full px-4 py-2 rounded-md border border-gray-300 shadow-sm pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-green-200"
+                        placeholder="Search..."
+                        className="pl-8 pr-4 py-2 border border-gray-300 bg-white rounded-md text-sm w-full"                       
                       />
-                      <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                        🔍
-                      </span>
                     </div>
                   </div>
 

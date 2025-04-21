@@ -13,7 +13,7 @@ const People = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewButtonModel, setViewButtonModel] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState(null);
-  const [selectedLocation, setSelectedLocation] = useState('default');
+  const [selectedLocation, setSelectedLocation] = useState('all');
   const [selectedBranch, setSelectedBranch] = useState("default");
   const [searchTerm, setSearchTerm] = useState('');
   const [date, setDate] = useState(new Date());
@@ -118,7 +118,7 @@ const People = () => {
         profile.dob.includes(keyword);
 
       const matchesStore =
-        selectedLocation === 'default' ||
+        selectedLocation === 'all' ||
         profile.location.toLowerCase() === selectedLocation.toLowerCase();
 
       return matchesKeyword && matchesStore;
@@ -140,7 +140,7 @@ const People = () => {
       //   profile.dob.includes(searchTerm);
 
       const matchesStore =
-        selectedLocation === 'default' ||
+        selectedLocation === 'all' ||
         profile.location.toLowerCase() === selectedLocation.toLowerCase();
 
       return matchesStore;
@@ -169,7 +169,7 @@ const People = () => {
             value={selectedLocation}
             onChange={(e) => setSelectedLocation(e.target.value)}
           >
-            <option value="default">--Select Location--</option>
+            <option value="all">All Stores</option>
             <option value="Store 1">Store 1</option>
             <option value="Store 2">Store 2</option>
           </select>
@@ -177,18 +177,19 @@ const People = () => {
           <button className="buttonSuccess" onClick={handleFilter}>
             Filter Data
           </button>
+
+        </div>
+        <div className="flex gap-3">
           <div className="relative w-64">
             <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-950" />
             <input
               type="text"
               placeholder="Search..."
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm w-full"
+              className="pl-8 pr-4 py-2 border border-gray-300 bg-white rounded-md text-sm w-full"
               value={searchTerm}
               onChange={handleSearch}
             />
           </div>
-        </div>
-        <div className="flex gap-5">
           <button className="buttonTheme" onClick={() => setIsModalOpen(true)}>
             + Employee
           </button>
@@ -327,7 +328,7 @@ const People = () => {
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">Person Details</Dialog.Title>
+              <Dialog.Title className="heading">Employee Details</Dialog.Title>
               <button
                 className="text-white font-bold text-2xl"
                 onClick={() => setViewButtonModel(false)}
@@ -444,9 +445,11 @@ const People = () => {
       >
         <div className="fixed inset-0 bg-gray-700/70"></div>
         <div className="fixed inset-0 flex items-center justify-center">
-          <Dialog.Panel className="bg-white rounded-lg shadow-lg max-w-md w-full">
+          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">Add Note</Dialog.Title>
+              <Dialog.Title className="heading">
+                {selectedProfile ? `Add Note (for ${selectedProfile.firstName})` : 'Add Note'}
+              </Dialog.Title>
               <button
                 className="text-white font-bold text-2xl"
                 onClick={() => setAddNoteModal(false)}
@@ -456,7 +459,7 @@ const People = () => {
             </div>
             <form className="p-6 space-y-4">
               <textarea
-                className="w-full h-32 border border-gray-300 rounded-md p-2"
+                className="w-full h-32 border bg-white border-gray-300 rounded-md p-2"
                 placeholder="Write your note here..."
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
