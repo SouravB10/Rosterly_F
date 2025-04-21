@@ -169,7 +169,7 @@ const People = () => {
             value={selectedLocation}
             onChange={(e) => setSelectedLocation(e.target.value)}
           >
-            <option value="all">All Stores</option>
+            <option value="all">--All Stores--</option>
             <option value="Store 1">Store 1</option>
             <option value="Store 2">Store 2</option>
           </select>
@@ -200,7 +200,7 @@ const People = () => {
       <div className="grid grid-cols-4 gap-4">
         {filteredProfiles.map((profile) => (
           <div key={profile.id}>
-            <div className="@container bg-white p-3 rounded-xl">
+            <div className="@container bg-white shadow-xl p-3 rounded-xl">
               <div className="flex flex-1/3 gap-4 justify-between">
                 <div className="flex flex-col @md:flex-row">
                   <img
