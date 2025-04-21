@@ -50,7 +50,7 @@ const People = () => {
       lastName: 'Nagam',
       email: "naveen@gmail.com",
       phone: "9876543210",
-      dob: '2002-04-10',
+      dob: '2002-10-04',
       payrate: '20%',
       location: "Store 2",
       image: deadPool,
@@ -61,7 +61,7 @@ const People = () => {
       lastName: 'Seth',
       email: "anita@gmail.com",
       phone: "9876543210",
-      dob: '1997-05-23',
+      dob: '1997-23-05',
       payrate: '40%',
       location: "Store 1",
       image: BlackWidow,
@@ -72,7 +72,7 @@ const People = () => {
       lastName: 'Raj',
       email: "prudvi@gmail.com",
       phone: "9876543210",
-      dob: '1999-04-10',
+      dob: '1999-10-04',
       payrate: '30%',
       location: "Store 1",
       image: deadPool,
@@ -83,7 +83,7 @@ const People = () => {
       lastName: 'Dobilla',
       email: "harish@gmail.com",
       phone: "9876512210",
-      dob: '1995-01-10',
+      dob: '1995-19-01',
       payrate: '60%',
       location: "Store 1",
       image: ProfileImage,
@@ -94,7 +94,7 @@ const People = () => {
       lastName: 'Reddy',
       email: "sudiksha@gmail.com",
       phone: "9833543210",
-      dob: '1998-10-09',
+      dob: '1984-06-06',
       payrate: '60%',
       location: "Store 2",
       image: BlackWidow,
@@ -180,15 +180,17 @@ const People = () => {
 
         </div>
         <div className="flex gap-3">
-          <div className="relative w-64">
-            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-950" />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="pl-8 pr-4 py-2 border border-gray-300 bg-white rounded-md text-sm w-full"
-              value={searchTerm}
-              onChange={handleSearch}
-            />
+          <div className="bg-white rounded-lg border border-gray-300">
+            <div className="flex flex-row items-center w-64 px-3 ">
+              <FaSearch className="text-indigo-950" />
+              <input
+                type="text"
+                placeholder="Search..."
+                className="input"
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+            </div>
           </div>
           <button className="buttonTheme" onClick={() => setIsModalOpen(true)}>
             + Employee

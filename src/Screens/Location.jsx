@@ -145,13 +145,16 @@ const Location = () => {
                     </div>
 
                     {/* Search Bar */}
-                    <div className="relative w-64">
-                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-950" />
-                      <input
-                        type="text"
-                        placeholder="Search..."
-                        className="pl-8 pr-4 py-2 border border-gray-300 bg-white rounded-md text-sm w-full"                       
-                      />
+                    <div className="bg-white rounded-lg border border-gray-300">
+                      <div className="flex flex-row items-center w-64 px-3 ">
+                        <FaSearch className="text-indigo-950" />
+                        <input
+                          type="text"
+                          placeholder="Search..."
+                          className="input"
+                         
+                        />
+                      </div>
                     </div>
                   </div>
 
