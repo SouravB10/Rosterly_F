@@ -6,37 +6,20 @@ import Sourav from "../assets/images/IMG_20230225_033746_011.jpg";
 import deadPool from "../assets/images/Screenshot 2025-04-21 111413.png";
 import BlackWidow from "../assets/images/Screenshot 2025-04-21 111629.png"
 import DatePicker from "react-datepicker";
+import { set } from "date-fns";
 
 const People = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewButtonModel, setViewButtonModel] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState(null);
-  const [selectedLocation, setSelectedLocation] = useState("default");
+  const [selectedLocation, setSelectedLocation] = useState('default');
   const [selectedBranch, setSelectedBranch] = useState("default");
   const [searchTerm, setSearchTerm] = useState('');
   const [date, setDate] = useState(new Date());
   const [addNoteModal, setAddNoteModal] = useState(false);
   const [note, setNote] = useState('');
-
-
-  const handleLocation = (e) => {
-    setSelectedLocation(e.target.value);
-    console.log("Selected Location:", e.target.value);
-  };
-  const handleBranch = (e) => {
-    setSelectedBranch(e.target.value);
-    console.log("Selected Branch:", e.target.value);
-  };
-
-  const getLocation = () => {
-    console.log("Fetching data for:", selectedLocation);
-  };
-
-  // const handleAddPerson = (e) => {
-  //   e.preventDefault();
-  //   setIsModalOpen(false); // close modal after action
-  // };
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
 
   const profiles = [
     {
@@ -125,15 +108,42 @@ const People = () => {
     setSearchTerm(keyword);
 
     const filtered = profiles.filter((profile) => {
-      return (
+      const matchesKeyword =
         profile.firstName.toLowerCase().includes(keyword) ||
         profile.lastName.toLowerCase().includes(keyword) ||
         profile.email.toLowerCase().includes(keyword) ||
         profile.phone.toLowerCase().includes(keyword) ||
         profile.location.toLowerCase().includes(keyword) ||
         profile.payrate.includes(keyword) ||
-        profile.dob.includes(keyword)
-      );
+        profile.dob.includes(keyword);
+
+      const matchesStore =
+        selectedLocation === 'default' ||
+        profile.location.toLowerCase() === selectedLocation.toLowerCase();
+
+      return matchesKeyword && matchesStore;
+    });
+
+    setFilteredProfiles(filtered);
+  };
+
+
+  const handleFilter = () => {
+    const filtered = profiles.filter((profile) => {
+      // const matchesKeyword =
+      //   profile.firstName.toLowerCase().includes(searchTerm) ||
+      //   profile.lastName.toLowerCase().includes(searchTerm) ||
+      //   profile.email.toLowerCase().includes(searchTerm) ||
+      //   profile.phone.toLowerCase().includes(searchTerm) ||
+      //   profile.location.toLowerCase().includes(searchTerm) ||
+      //   profile.payrate.includes(searchTerm) ||
+      //   profile.dob.includes(searchTerm);
+
+      const matchesStore =
+        selectedLocation === 'default' ||
+        profile.location.toLowerCase() === selectedLocation.toLowerCase();
+
+      return matchesStore;
     });
 
     setFilteredProfiles(filtered);
@@ -146,8 +156,7 @@ const People = () => {
           <select
             name="selectedLocation"
             className="input"
-            value={selectedLocation}
-            onChange={handleLocation}
+
           >
             <option value="default">--Select Status--</option>
             <option value="Location 1">Active</option>
@@ -157,15 +166,15 @@ const People = () => {
           <select
             name="selectedLocation"
             className="input"
-            value={selectedBranch}
-            onChange={handleBranch}
+            value={selectedLocation}
+            onChange={(e) => setSelectedLocation(e.target.value)}
           >
             <option value="default">--Select Location--</option>
-            <option value="store1">Store 1</option>
-            <option value="store2">Store 2</option>
+            <option value="Store 1">Store 1</option>
+            <option value="Store 2">Store 2</option>
           </select>
 
-          <button className="buttonSuccess" onClick={getLocation}>
+          <button className="buttonSuccess" onClick={handleFilter}>
             Filter Data
           </button>
           <div className="relative w-64">
@@ -213,6 +222,7 @@ const People = () => {
                 </div>
                 <div className="flex flex-1/3 mt-3 gap-4 justify-end">
                   <FaEye
+                    title="View Profile"
                     className="text-indigo-950 bg-amber-300 cursor p-2 rounded-md size-8"
                     onClick={() => {
                       setSelectedProfile(profile);
@@ -234,8 +244,7 @@ const People = () => {
         ))}
       </div>
 
-
-
+      {/* Add Employee Modal */}
       <Dialog
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -295,18 +304,20 @@ const People = () => {
                 <button
                   type="button"
                   className="buttonGrey"
-                  onClick={() => setViewButtonModel(false)}
+                  onClick={() => setIsModalOpen(false)}
                 >
                   Cancel
                 </button>
                 <button type="submit" className="buttonTheme">
-                  Update
+                  Add
                 </button>
               </div>
             </form>
           </Dialog.Panel>
         </div>
       </Dialog>
+
+      {/* View Profile Modal */}
       <Dialog
         open={viewButtonModel}
         onClose={() => setViewButtonModel(false)}
@@ -332,6 +343,12 @@ const People = () => {
                     type="text"
                     className="input"
                     value={selectedProfile?.firstName || ''}
+                    onChange={(e) =>
+                      setSelectedProfile((prev) => ({
+                        ...prev,
+                        firstName: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="flex flex-col">
@@ -340,6 +357,12 @@ const People = () => {
                     type="text"
                     className="input"
                     value={selectedProfile?.lastName || ''}
+                    onChange={(e) =>
+                      setSelectedProfile((prev) => ({
+                        ...prev,
+                        lastName: e.target.value,
+                      }))
+                    }
                   />
                 </div>
               </div>
@@ -349,6 +372,12 @@ const People = () => {
                   type="email"
                   className="input"
                   value={selectedProfile?.email || ''}
+                  onChange={(e) =>
+                    setSelectedProfile((prev) => ({
+                      ...prev,
+                      email: e.target.value,
+                    }))
+                  }
                 />
               </div>
               <div className="flex flex-col">
@@ -366,6 +395,12 @@ const People = () => {
                     type="text"
                     className="input"
                     value={selectedProfile?.payrate || ''}
+                    onChange={(e) =>
+                      setSelectedProfile((prev) => ({
+                        ...prev,
+                        payrate: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="flex flex-col">
@@ -374,6 +409,12 @@ const People = () => {
                     type="text"
                     className="input"
                     value={selectedProfile?.phone || ''}
+                    onChange={(e) =>
+                      setSelectedProfile((prev) => ({
+                        ...prev,
+                        phone: e.target.value,
+                      }))
+                    }
                   />
                 </div>
               </div>
@@ -394,6 +435,8 @@ const People = () => {
           </Dialog.Panel>
         </div>
       </Dialog>
+
+      {/* Add Note Modal */}
       <Dialog
         open={addNoteModal}
         onClose={() => setAddNoteModal(false)}
