@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ProfileImage from "../assets/images/profile.png";
 
 const Location = () => {
   const [selectLocation, setSelectLocation] = useState("");
@@ -14,193 +15,81 @@ const Location = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="grid grid-cols-6 gap-6 w-full bg-white rounded-lg shadow-md p-4 mb-6">
-        her
-      </div>
+    <div className=" bg-white rounded-lg shadow-lg p-5 mb-6">
+      <h3 className="heading">Profile Information</h3>
 
+      <div className="flex gap-10 w-full mt-3">
 
-      <div className="grid grid-cols-6 gap-6 w-full">
-        {/* Left Section - 60% (3 columns) */}
-        <div className="col-span-4">
-          <h6 className="heading">Profile Settings</h6>
+        <div className="w-1/2">
+          <img
+            alt=""
+            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+            className="size-80 rounded "
+          />
+          <h3 className="SunHeading mt-2">Anita Verma</h3>
+        </div>
+        <div className=" w-full">
+          <form action="" className="grid gap-2" method="post">
+            <div className="">
+              <label htmlFor="" className="paragraph">
+                Username
+              </label>
+              <input
+                type="text"
+                value="Anita Verma"
+                className="input w-full border border-gray-500"
+              />
+            </div>
+            <div className="">
+              <label htmlFor="" className="paragraph">
+                Email
+              </label>
+              <input
+                type="text"
+                value="anita.glansa@gmail.com"
+                className="input w-full border border-gray-500 "
+              />
+            </div>
+            <div className="mt-5">
+              <h3 className="subHeading">Change Password</h3>
+            </div>
+            <div className="">
+              <label htmlFor="" className="paragraph">
+                Current Password
+              </label>
+              <input
+                type="text"
+                value=""
+                className="input w-full border border-gray-500"
+              />
+            </div>
+            <div className="">
+              <label htmlFor="" className="paragraph">
+                New Password
+              </label>
+              <input
+                type="text"
+                value=""
+                className="input w-full border border-gray-500"
+              />
+            </div>
+            <div className="">
+              <label htmlFor="" className="paragraph">
+                Confirm New Password
+              </label>
+              <input
+                type="text"
+                value=""
+                className="input w-full border border-gray-500"
+              />
+            </div>
+            <div className="flex justify-end gap-2 mt-4">
 
-          {/* Tab Switcher */}
-          <div className="subHeading flex gap-6 mb-6">
-            {["general", "Username", "Password"].map(
-              (tab) => (
-                <label key={tab} className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="tabOption"
-                    value={tab}
-                    checked={activeTab === tab}
-                    onChange={() => setActiveTab(tab)}
-                    className="form-radio text-purple-600"
-                  />
-                  <span className="text-sm font-semibold text-slate-900 capitalize">
-                    {tab}
-                  </span>
-                </label>
-              )
-            )}
-          </div>
-
-          {/* Tab Content */}
-          <div className="space-y-6 mt-6">
-            {activeTab === "general" && (
-              <div className="space-y-4">
-                {/* Location Name */}
-                <div className="cardA">
-                  <div className="grid grid-cols-1 mb-3 items-center">
-                    {/* <div>
-                      <div className="">
-                        <label htmlFor="" className="paragraph">
-                          Mobile
-                        </label>
-                      </div>
-                      <div className="">
-                        <input
-                          type="text"
-                          value="7780290335"
-                          className="input w-full border border-gray-500 "
-                        />
-                      </div>
-                    </div> */}
-                    <div>
-                      <div className="">
-                        <label htmlFor="" className="paragraph">
-                          Email
-                        </label>
-                      </div>
-                      <div className="">
-                        <input
-                          type="text"
-                          value="anita.glansa@gmail.com"
-                          className="input w-full border border-gray-500 "
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex justify-end">
-                  <button className="buttonTheme">Update</button>
-                </div>
-              </div>
-            )}
-
-            {/* {activeTab === "Notes" && (
-              <div className="cardA">
-                <div className="grid grid-cols-1 grid-rows-1 gap-4 items-center">
-                  <div className="sideBar p-4 rounded-lg">
-                    <p className="paragraph">
-                      {" "}
-                      There are no notes recorded on your profile.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )} */}
-
-            {activeTab === "Username" && (
-              <>
-                <div className="cardA">
-                  <div className="grid grid-cols-1 grid-rows-2 gap-4 items-center">
-                    <div>
-                      <div className="">
-                        <label htmlFor="" className="paragraph">
-                          Current Username
-                        </label>
-                      </div>
-                      <div className="">
-                        <input
-                          type="text"
-                          value="Anita Verma"
-                          className="input w-full border border-gray-500"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="">
-                        <label htmlFor="" className="paragraph">
-                          New Username
-                        </label>
-                      </div>
-                      <div className="">
-                        <input type="text" value="" className="input w-full border border-gray-500" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex justify-end">
-                  <button className="buttonTheme">Update</button>
-                </div>
-              </>
-            )}
-            {activeTab === "Password" && (
-              <>
-                <div className="cardA">
-                  <div className="grid grid-cols-1 grid-rows-2 gap-4 items-center">
-                    <div>
-                      <div className="">
-                        <label htmlFor="" className="paragraph">
-                          Current Password
-                        </label>
-                      </div>
-                      <div className="">
-                        <input type="text" value="" className="input w-full border border-gray-500" />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="">
-                        <label htmlFor="" className="paragraph">
-                          New Password
-                        </label>
-                      </div>
-                      <div className="">
-                        <input type="text" value="" className="input w-full border border-gray-500" />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="">
-                        <label htmlFor="" className="paragraph">
-                          Confirm New Password
-                        </label>
-                      </div>
-                      <div className="">
-                        <input type="text" value="" className="input w-full border border-gray-500" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex justify-end">
-                  <button className="buttonTheme">Update</button>
-                </div>
-              </>
-            )}
-            {/* {activeTab === "LinkAccount" && (
-              <>
-                <div className="cardA">
-                  <div className="grid grid-cols-1 grid-rows-1 gap-4 items-center">
-                    <div>
-                      <div className="">
-                        <label htmlFor="" className="paragraph">
-                          Link to username
-                        </label>
-                      </div>
-                      <div className="">
-                        <input type="text" value="" className="input w-full border border-gray-500" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex justify-end">
-                  <button className="buttonTheme">Update</button>
-                </div>
-              </>
-            )} */}
-          </div>
+              <button type="submit" className="buttonSuccess w-40">
+                Save
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
