@@ -63,7 +63,7 @@ const Sidebar = () => {
 
                         return (
                             <li key={item.id}>
-                                <Link to={item.path}
+                                <Link to={item.path} title={item.title}
                                     // className={`paragraphBold flex items-center gap-2 p-3 rounded-2xl transition-all duration-300 text-white hover:bg-indigo-400 hover:shadow-md cursor-pointer
                                     //     ${isActive ? "bg-indigo-400 shadow-md" : ""}`}
                                     className={`paragraphBold flex items-center gap-2 p-3 rounded-2xl transition-all duration-300 hover:bg-yellow-200 hover:shadow-md hover:text-gray-700 cursor-pointer

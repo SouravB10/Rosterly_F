@@ -37,7 +37,7 @@ const Location = () => {
                 </button>
               </div>
               {activeTab === "general" && (
-                <button className="buttonTheme" onClick={() => setIsModalOpen(true)}>
+                <button className="buttonTheme" title="Add Location" onClick={() => setIsModalOpen(true)}>
                   + Location
                 </button>
               )

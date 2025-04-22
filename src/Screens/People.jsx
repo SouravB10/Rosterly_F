@@ -85,7 +85,7 @@ const People = () => {
       phone: "9876512210",
       dob: '1995-12-01',
       payrate: '60%',
-      location: "Store 1",
+      location: "Store 2",
       image: ProfileImage,
     },
     {
@@ -192,7 +192,7 @@ const People = () => {
               />
             </div>
           </div>
-          <button className="buttonTheme" onClick={() => setIsModalOpen(true)}>
+          <button className="buttonTheme" title="Add Employee" onClick={() => setIsModalOpen(true)}>
             + Employee
           </button>
         </div>

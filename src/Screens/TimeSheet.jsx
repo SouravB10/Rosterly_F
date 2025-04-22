@@ -133,9 +133,10 @@ const TimeSheet = () => {
 
           <button
             className="buttonSuccess"
+            title="Add Employee"
             onClick={() => setIsModalOpen(true)}
           >
-            Employee +
+           + Employee
           </button>
         </div>
       </div>
