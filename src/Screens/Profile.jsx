@@ -15,6 +15,11 @@ const Location = () => {
 
   return (
     <div className="p-6">
+      <div className="grid grid-cols-6 gap-6 w-full bg-white rounded-lg shadow-md p-4 mb-6">
+        her
+      </div>
+
+
       <div className="grid grid-cols-6 gap-6 w-full">
         {/* Left Section - 60% (3 columns) */}
         <div className="col-span-4">
