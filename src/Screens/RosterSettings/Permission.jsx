@@ -90,11 +90,8 @@ const Permission = () => {
         ))}
 
         {/* UPDATE BUTTON */}
-        <div className="flex justify-end pt-6">
-          <button
-            className="buttonSuccess"
-            onClick={() => console.log('Updated Permissions:', permissions)}
-          >
+        <div className='flex justify-end'>
+          <button className="buttonSuccess w-50">
             Update
           </button>
         </div>

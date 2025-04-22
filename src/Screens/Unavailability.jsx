@@ -59,7 +59,7 @@ const Unavailability = () => {
           <div className="flex flex-wrap gap-4 ">
             <div className="w-full md:w-[48%] flex flex-col gap-4">
               <div className="flex mb-2 font12">
-                <div className="w-1/2 bg-white-100 pt-2 text-center relative">
+                <div className="w-1/2 bg-white-100 pt-2 text-center relative rounded-lg">
                   <label className="paragraphBold">
                     From Date
                   </label>
@@ -69,7 +69,7 @@ const Unavailability = () => {
                     onChange={(date) => setFromDate(date)}
                     dateFormat="dd/MM/yyyy"
                     customInput={
-                      <div className="w-full bg-white-100  rounded-md px-4 py-2 flex justify-between items-center cursor-pointer">
+                      <div className="w-full bg-white-100 z-99 rounded-lg px-4 py-2 flex justify-between items-center cursor-pointer">
                         <span className="black-100 font12">
                           {fromDate.toLocaleDateString("en-GB")}
                         </span>
@@ -89,7 +89,7 @@ const Unavailability = () => {
                   />
                 </div>
 
-                <div className=" bg-white-100 pt-2 text-center ml-1">
+                <div className=" bg-white-100 pt-2 text-center ml-1 rounded-lg">
                   <label className="paragraphBold">
                     To Date
                   </label>
@@ -99,7 +99,7 @@ const Unavailability = () => {
                     onChange={(date) => setToDate(date)}
                     dateFormat="dd/MM/yyyy"
                     customInput={
-                      <div className="w-full bg-white-100  rounded-md px-4 py-2 flex justify-between items-center cursor-pointer">
+                      <div className="w-full bg-white-100  rounded-md px-4 py-2 flex justify-end items-center cursor-pointer">
                         <span className="black-100 font12">
                           {toDate.toLocaleDateString("en-GB")}
                         </span>
@@ -145,19 +145,19 @@ const Unavailability = () => {
                   />
                 </div>
               </div> */}
-            </div>
-
-            <div className="w-full md:w-[48%] flex flex-col pt-2 gap-4">
               <div>
                 <label className="paragraphBold">
                   Please provide a brief reason
                 </label>
                 <textarea
-                  rows="1"
-                  className="textArea custom-focus"
+                  rows="2"
+                  className="textarea custom-focus"
                 />
               </div>
 
+            </div>
+
+            <div className="w-full md:w-[48%] flex flex-col gap-4">
               <div>
                 <label className="paragraphBold">
                   Select a manager to notify
@@ -169,6 +169,8 @@ const Unavailability = () => {
                   <option value="">Naveen</option>
                 </select>
               </div>
+
+
 
               <div className="flex justify-end gap-4 mt-auto pt-2">
                 <button className="buttonSuccess button font12 font-weight-500">
@@ -253,9 +255,9 @@ const Unavailability = () => {
           {days.map((day, index) => (
             <div
               key={index}
-              className="flex rounded-md justify-between my-2 bg-white-100 items-center p-3"
+              className="flex rounded-md justify-between p-5 my-3 bg-white-100 items-center "
             >
-              <div>
+              <div className="flex items-center">
                 {/* <p className={`paragraphBold ${day === "Saturday" || day === "Sunday" ? "text-red-600" : ""}`}> */}
                 <p className={`paragraphBold ${day === "Saturday" || day === "Sunday" ? "text-black-600" : ""}`}>
                   {day}
@@ -266,7 +268,7 @@ const Unavailability = () => {
                   </p>
                 )}
               </div>
-              <div className="mx-3 cursor-pointer" onClick={() => openModal(day)}>
+              <div className="mx-3 cursor-pointer" title="Add Unavailability" onClick={() => openModal(day)}>
                 <FaPlusSquare />
               </div>
             </div>
