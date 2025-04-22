@@ -5,7 +5,6 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { navItems } from "../assets/Data";
-import { TiThMenu } from "react-icons/ti";
 
 
 const NavBar = ({ toggleSidebar }) => {
@@ -48,12 +47,6 @@ const NavBar = ({ toggleSidebar }) => {
     <Disclosure as="nav" className="bg-white backdrop-blur-lg mt-3 mx-3 mb-1 rounded-2xl">
       <div className="mx-auto max-w-7xl px-2 sm:px-3 lg:px-4">
         <div className="relative flex h-14 items-center justify-between">
-          <button
-            onClick={toggleSidebar}
-            className="md:hidden p-2 text-gray-700"
-          >
-            <TiThMenu className="text-2xl" />
-          </button>
           <div className="font-bold hidden sm:block">
             <h1>{activeMenu ? activeMenu.title : "My Rosterly"}</h1>
           </div>

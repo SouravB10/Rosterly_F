@@ -29,21 +29,7 @@ import Profile from './Screens/Profile';
 
 function AppWrapper() {
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const location = useLocation();
-
-  useEffect(() => {
-    if (isMobile && sidebarOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isMobile, sidebarOpen]);
-
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -56,15 +42,9 @@ function AppWrapper() {
     <>
 
       <div className='flex h-screen overflow-hidden'>
-        {!isLoginPage && !isRegisterPage && sidebarOpen && isMobile && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-30 z-40"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-        {!isLoginPage && !isRegisterPage && sidebarOpen && (
-          <div className=" top-0 left-0 h-full z-50 absolute md:relative">
-            <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+        {!isLoginPage && !isRegisterPage && (
+          <div className=" top-0 left-0 h-full">
+            <Sidebar open={sidebarOpen} />
           </div>
         )}
         <div className='flex-1 flex flex-col'>

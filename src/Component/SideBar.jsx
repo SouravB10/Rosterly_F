@@ -6,39 +6,31 @@ import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { TiThMenu } from "react-icons/ti";
 import { GiHeavyTimer } from "react-icons/gi";
 
-const Sidebar = ({open,setOpen}) => {
-    // const [open, setOpen] = useState(() => {
-    //     const saved = localStorage.getItem("sidebarOpen");
-    //     return saved !== null ? JSON.parse(saved) : window.innerWidth > 768;
-    // });
+const Sidebar = () => {
+    const [open, setOpen] = useState(window.innerWidth > 768);
     const [activeMenu, setActiveMenu] = useState(null);
     const location = useLocation();
-
-
-    useEffect(() => {
-        localStorage.setItem("sidebarOpen", JSON.stringify(open));
-    }, [open]);
 
     const toggleMenu = (id) => {
         setActiveMenu(activeMenu === id ? null : id);
     };
 
-    // useEffect(() => {
-    //     const handleResize = () => {
-    //         if (window.innerWidth <= 768) {
-    //             setOpen(false);
-    //         }
-    //     };
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth <= 768) {
+                setOpen(false);
+            }
+        };
 
-    //     window.addEventListener("resize", handleResize);
-    //     return () => window.removeEventListener("resize", handleResize);
-    // }, []);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     return (
         <div className="flex items-start">
 
             <div className={`h-[96vh] inset-shadow-amber-600 transition-all duration-300 sideBar backdrop-blur-lg m-3 rounded-2xl overflow-x-hidden overflow-y-auto
-            ${open ? 'w-[250px]' : 'w-[80px]'}`}>
+            ${open ? 'w-[250px]' : 'w-[70px]'}`}>
 
                 <div className="flex flex-col">
                     <div className={`flex items-center p-4 w-full ${open ? 'justify-between' : 'justify-center'}`}>
@@ -53,7 +45,7 @@ const Sidebar = ({open,setOpen}) => {
 
                         <button
                             onClick={() => setOpen(!open)}
-                            className="cursor-pointer p-2 text-xl text-gray-800 transition-all duration-300 flex"
+                            className=" p-2 text-xl text-gray-800 transition-all duration-300 flex"
                         >
                             {open ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="size-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -96,7 +88,7 @@ const Sidebar = ({open,setOpen}) => {
                                             ${activeMenu === item.id ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"} 
                                             ${open ? "w-full" : "absolute left-[80px] top-50% rounded-lg shadow-lg p-2 w-[200px] sm:w-auto"}`}
                                     >
-                                        {item.submenu.map((sub) => {
+                                            {item.submenu.map((sub) => {
                                             const isSubActive = location.pathname === sub.path;
                                             return (
                                                 <li key={sub.id} className="w-full">
