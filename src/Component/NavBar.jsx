@@ -5,6 +5,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { navItems } from "../assets/Data";
+import { TiThMenu } from "react-icons/ti";
 
 
 const NavBar = ({ toggleSidebar }) => {
@@ -50,6 +51,9 @@ const NavBar = ({ toggleSidebar }) => {
           <div className="font-bold hidden sm:block">
             <h1>{activeMenu ? activeMenu.title : "My Rosterly"}</h1>
           </div>
+          <button onClick={toggleSidebar} className="sm:hidden p-2 text-gray-800">
+            <TiThMenu className="text-xl" />
+          </button>
           <div className="absolute inset-y-0 right-0 flex gap-5 items-center pr-2 sm:static sm:inset-auto sm:ml-2 sm:pr-0">
             <button
               type="button"

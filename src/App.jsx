@@ -29,23 +29,41 @@ import Profile from './Screens/Profile';
 
 function AppWrapper() {
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const location = useLocation();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      if (mobile) {
+        setSidebarOpen(false);
+      } else {
+        setSidebarOpen(true); // expanded view for desktop
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const isLoginPage = location.pathname === '/';
   const isRegisterPage = location.pathname === '/register';
 
   return (
     <>
-
       <div className='flex h-screen overflow-hidden'>
         {!isLoginPage && !isRegisterPage && (
-          <div className=" top-0 left-0 h-full">
-            <Sidebar open={sidebarOpen} />
-          </div>
+          
+        <div className=" top-0 left-0 h-full">
+          {(sidebarOpen || !isMobile) && (
+            <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} isMobile={isMobile} />
+          )}
+        </div>
         )}
         <div className='flex-1 flex flex-col'>
           {!isLoginPage && !isRegisterPage && <NavBar toggleSidebar={toggleSidebar} />}
