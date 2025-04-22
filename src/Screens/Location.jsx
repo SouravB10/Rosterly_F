@@ -1,10 +1,11 @@
+import { Dialog } from "@headlessui/react";
 import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
 const Location = () => {
   const [selectLocation, setSelectLocation] = useState("");
   const [activeTab, setActiveTab] = useState("general");
-  const [showModal, setShowModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleLocation = (e) => {
     setSelectLocation(e.target.value);
@@ -15,24 +16,33 @@ const Location = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="grid grid-cols-5 gap-6 w-full">
+    <div className=" ">
+      <div className="">
         {/* Left Section - 60% (3 columns) */}
         <div className="col-span-3">
           <h6 className="heading">By Location</h6>
 
           <div className="bg-gray-200 p-4 borderRadius10 mt-5">
             {/* Dropdown + Button */}
-            <div className="flex items-center gap-4 mb-6">
-              <select className="input" onChange={handleLocation}>
-                <option>-- Select location --</option>
-                <option value="Location 1">Store 1</option>
-                <option value="Location 2">Store 2</option>
-                {/* Add your options here */}
-              </select>
-              <button className="buttonSuccess" onClick={getLocation}>
-                Get Data
-              </button>
+            <div className="flex justify-between  mb-6">
+              <div className="flex gap-4">
+                <select className="input" onChange={handleLocation}>
+                  <option>-- Select location --</option>
+                  <option value="Location 1">Store 1</option>
+                  <option value="Location 2">Store 2</option>
+                  {/* Add your options here */}
+                </select>
+                <button className="buttonSuccess" onClick={getLocation}>
+                  Get Data
+                </button>
+              </div>
+              {activeTab === "general" && (
+                <button className="buttonTheme" onClick={() => setIsModalOpen(true)}>
+                  + Location
+                </button>
+              )
+              }
+
             </div>
 
             {/* Tab Switcher */}
@@ -58,16 +68,15 @@ const Location = () => {
             <div className="space-y-6">
               {activeTab === "general" && (
                 <div className="space-y-4">
-                  {/* Location Name */}
-                  <div className="card flex justify-between">
-                    <div className="w-1/2 pr-4">
+                  <div className="card flex justify-between ">
+                    <div className="w-full">
                       <h4 className="subHeading">Location Name</h4>
                       <p className="paragraphThin">
                         What you normally refer to the roster location as. For
                         example, Brisbane CBD.
                       </p>
                     </div>
-                    <div className="w-1/2">
+                    <div className="w-full flex justify-end">
                       <input
                         type="text"
                         placeholder="Main Branch"
@@ -152,7 +161,7 @@ const Location = () => {
                           type="text"
                           placeholder="Search..."
                           className="input"
-                         
+
                         />
                       </div>
                     </div>
@@ -194,36 +203,60 @@ const Location = () => {
             </div>
           </div>
         </div>
-        {/* Right Section - 40% (2 columns) */}
-        {/* <div className="col-span-2">
-          <h3 className="heading">Add Location</h3>
-          <div className=" bg-gray-200 p-6 borderRadius10 mt-5 h-[350px]">
-            <div className="paragraph">
-              <p>
-                <strong>Location Name</strong> is what you normally refer to the
-                roster location as. For example, Brisbane CBD.
-              </p>
-            </div>
-            <div className="grid grid-flow gap-5 mt-5">
-              <input
-                type="text"
-                placeholder="Add Location"
-                className="input"
-              />
-              <input
-                type="text"
-                placeholder="Average Daily Sales ($)"
-                className="input"
-              />
-            </div>
-
-            <div className="flex justify-end mt-6 gap-3">
-              <button className="buttonGrey">Close</button>
-              <button className="buttonSuccess">Create</button>
-            </div>
-          </div>
-        </div> */}
       </div>
+
+      <Dialog
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        className="relative z-50 rounded-lg"
+      >
+        <div className="fixed inset-0 bg-gray-700/70"></div>
+        <div className="fixed inset-0 flex items-center justify-center">
+          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
+            <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
+              <Dialog.Title className="heading">Add Location</Dialog.Title>
+              <button
+                className="text-white font-bold text-2xl"
+                onClick={() => setIsModalOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+            <form className="mt-1 p-4 space-y-3">
+              <div>
+                <p className="paragraph text-gray-500">                 
+                  'Location Name' is what you normally refer to the roster location as. For example, if it was a Subway store in Brisbane CBD you might refer to it as Brisbane CBD.
+                </p>
+              </div>
+              <div className="flex flex-col gap-4">
+
+                <div className="flex flex-col">
+                  <label className="paragraphBold">Location Name</label>
+                  <input type="text" className="input" />
+                </div>
+                <div className="flex flex-col">
+                  <label className="paragraphBold">Average Daily Sales ($)</label>
+                  <input type="text" className="input" />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 mt-4">
+                <button
+                  type="button"
+                  className="buttonGrey"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="buttonTheme">
+                  Add
+                </button>
+              </div>
+            </form>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
+
     </div>
   );
 };
