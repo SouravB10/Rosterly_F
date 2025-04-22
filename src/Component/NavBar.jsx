@@ -54,19 +54,18 @@ const NavBar = ({ toggleSidebar }) => {
             <button
               type="button"
               onClick={handleClick}
-              className="relative rounded-full bg-gray-200 p-1 text-black-400 hover:text-gray focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-500 focus:outline-hidden hover:bg-gray-400"
+              className="cursor-pointer relative rounded-full bg-gray-200 p-1 text-black-400 hover:text-gray focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-500 focus:outline-hidden hover:bg-gray-400"
             >
               <span className="absolute -inset-1.5" />
               <span className="sr-only">View notifications</span>
               <BellIcon aria-hidden="true" className="size-6" />
               <span className="absolute top-0 right-0 transform translate-x -translate-y block h-2 w-2 rounded-full bg-red-600 ring-1 ring-white" />
-
             </button>
 
             {/* Profile dropdown */}
             <Menu as="div" className="relative">
               <div>
-                <MenuButton className="relative flex rounded-full text-sm focus:ring-2 focus:ring-white">
+                <MenuButton className="cursor-pointer relative flex rounded-full text-sm focus:ring-2 focus:ring-white">
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
                   <img

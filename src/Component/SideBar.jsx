@@ -45,7 +45,7 @@ const Sidebar = () => {
 
                         <button
                             onClick={() => setOpen(!open)}
-                            className=" p-2 text-xl text-gray-800 transition-all duration-300 flex"
+                            className="cursor-pointer p-2 text-xl text-gray-800 transition-all duration-300 flex"
                         >
                             {open ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="size-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -88,7 +88,7 @@ const Sidebar = () => {
                                             ${activeMenu === item.id ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"} 
                                             ${open ? "w-full" : "absolute left-[80px] top-50% rounded-lg shadow-lg p-2 w-[200px] sm:w-auto"}`}
                                     >
-                                            {item.submenu.map((sub) => {
+                                        {item.submenu.map((sub) => {
                                             const isSubActive = location.pathname === sub.path;
                                             return (
                                                 <li key={sub.id} className="w-full">
