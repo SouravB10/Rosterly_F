@@ -15,22 +15,24 @@ const Location = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="grid grid-cols-6 gap-6 w-full bg-white rounded-lg shadow-md p-5 mb-6">
-        <div className="col-span-2 grid">
+    <div className=" bg-white rounded-lg shadow-lg p-5 mb-6">
+      <h3 className="heading">Profile Information</h3>
+
+      <div className="flex gap-10 w-full mt-3">
+
+        <div className="w-1/2">
           <img
             alt=""
             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-            className="size-80 rounded"
+            className="size-80 rounded "
           />
-          <h3 className="heading">Anita Verma</h3>
+          <h3 className="SunHeading mt-2">Anita Verma</h3>
         </div>
-        <div className="col-span-4 ">
-          <form action="" className="grid gap-4" method="post">
-            <h3 className="subHeading">Profile Information</h3>
+        <div className=" w-full">
+          <form action="" className="grid gap-2" method="post">
             <div className="">
               <label htmlFor="" className="paragraph">
-                Current Username
+                Username
               </label>
               <input
                 type="text"
@@ -48,7 +50,9 @@ const Location = () => {
                 className="input w-full border border-gray-500 "
               />
             </div>
-            <h3 className="subHeading">Change Password</h3>
+            <div className="mt-5">
+              <h3 className="subHeading">Change Password</h3>
+            </div>
             <div className="">
               <label htmlFor="" className="paragraph">
                 Current Password
@@ -78,6 +82,12 @@ const Location = () => {
                 value=""
                 className="input w-full border border-gray-500"
               />
+            </div>
+            <div className="flex justify-end gap-2 mt-4">
+
+              <button type="submit" className="buttonSuccess w-40">
+                Save
+              </button>
             </div>
           </form>
         </div>
