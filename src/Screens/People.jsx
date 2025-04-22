@@ -83,7 +83,7 @@ const People = () => {
       lastName: 'Dobilla',
       email: "harish@gmail.com",
       phone: "9876512210",
-      dob: '1995-19-01',
+      dob: '1995-12-01',
       payrate: '60%',
       location: "Store 1",
       image: ProfileImage,
@@ -94,7 +94,7 @@ const People = () => {
       lastName: 'Reddy',
       email: "sudiksha@gmail.com",
       phone: "9833543210",
-      dob: '1984-06-06',
+      dob: '1984-12-05',
       payrate: '60%',
       location: "Store 2",
       image: BlackWidow,
@@ -302,6 +302,34 @@ const People = () => {
                   <input type="text" className="input" />
                 </div>
               </div>
+              <div className="flex flex-col">
+                <label className="paragraphBold">Profile Image</label>
+                <input
+                  type="file"
+                  className="bg-white rounded p-2"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        setSelectedProfile((prev) => ({
+                          ...prev,
+                          image: reader.result,
+                        }));
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                />
+              </div>
+              {selectedProfile?.image && (
+                <img
+                  src={selectedProfile.image}
+                  alt="Preview"
+                  className="mt-2 w-32 h-32 object-cover rounded-md"
+                />
+              )}
 
               <div className="flex justify-end gap-2 mt-4">
                 <button
@@ -420,7 +448,36 @@ const People = () => {
                     }
                   />
                 </div>
+                <div className="flex flex-col">
+                  <label className="paragraphBold">Profile Image</label>
+                  <input
+                    type="file"
+                    className="bg-white rounded p-2"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          setSelectedProfile((prev) => ({
+                            ...prev,
+                            image: reader.result, // Base64 image data
+                          }));
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                  />
+                </div>
               </div>
+              {selectedProfile?.image && (
+                <img
+                  src={selectedProfile.image}
+                  alt="Preview"
+                  className="mt-2 w-32 h-32 object-cover rounded-md"
+                />
+              )}
+
 
               <div className="flex justify-end gap-2 mt-4">
                 <button
