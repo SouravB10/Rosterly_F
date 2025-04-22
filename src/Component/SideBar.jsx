@@ -6,25 +6,33 @@ import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { TiThMenu } from "react-icons/ti";
 import { GiHeavyTimer } from "react-icons/gi";
 
-const Sidebar = () => {
-    const [open, setOpen] = useState(window.innerWidth > 768);
+const Sidebar = ({open,setOpen}) => {
+    // const [open, setOpen] = useState(() => {
+    //     const saved = localStorage.getItem("sidebarOpen");
+    //     return saved !== null ? JSON.parse(saved) : window.innerWidth > 768;
+    // });
     const [activeMenu, setActiveMenu] = useState(null);
     const location = useLocation();
+
+
+    useEffect(() => {
+        localStorage.setItem("sidebarOpen", JSON.stringify(open));
+    }, [open]);
 
     const toggleMenu = (id) => {
         setActiveMenu(activeMenu === id ? null : id);
     };
 
-    useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth <= 768) {
-                setOpen(false);
-            }
-        };
+    // useEffect(() => {
+    //     const handleResize = () => {
+    //         if (window.innerWidth <= 768) {
+    //             setOpen(false);
+    //         }
+    //     };
 
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
+    //     window.addEventListener("resize", handleResize);
+    //     return () => window.removeEventListener("resize", handleResize);
+    // }, []);
 
     return (
         <div className="flex items-start">
