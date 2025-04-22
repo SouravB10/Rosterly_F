@@ -30,13 +30,13 @@ const Sidebar = ({ open, setOpen, isMobile }) => {
         <div className="flex items-start">
 
             <div className={`transition-all duration-300 sideBar backdrop-blur-lg rounded-2xl overflow-x-hidden overflow-y-auto z-50
-  ${open ? (isMobile ? 'fixed top-0 left-0 h-full w-[250px] shadow-lg' : 'w-[250px]') : (isMobile ? 'hidden' : 'w-[75px]')}
-  ${!isMobile ? 'h-[96vh] m-3' : ''}`}>
+                     ${open ? (isMobile ? 'fixed top-0 left-0 h-full w-[250px] shadow-lg' : 'w-[250px]') : (isMobile ? 'hidden' : 'w-[80px]')}
+                     ${!isMobile ? 'h-[96vh] m-3' : ''}`}>
 
                 <div className="flex flex-col">
                     <div className={`flex items-center p-4 w-full ${open ? 'justify-between' : 'justify-center'}`}>
                         <div className="flex items-center gap-2">
-                            <div className={`bg-gradient-to-b from-yellow-300 to-yellow-500 text-white rounded-lg p-[4px] transition-all duration-300 
+                            <div className={`bg-gradient-to-b from-yellow-300 to-yellow-500 text-white rounded-md p-[4px] transition-all duration-300 
                                 ${!open ? 'hidden' : 'block'}`}>
                                 <GiHeavyTimer />
                             </div>
@@ -94,12 +94,12 @@ const Sidebar = ({ open, setOpen, isMobile }) => {
                                 <Link
                                     to={item.path}
                                     title={item.title}
-                                    className={`paragraphBold flex items-center gap-2 p-3 rounded-2xl transition-all duration-300 hover:bg-yellow-200 hover:shadow-md hover:text-gray-700 cursor-pointer
+                                    className={`paragraphBold flex items-center gap-2 p-3 rounded-xl transition-all duration-300 hover:bg-yellow-200 hover:shadow-md hover:text-gray-700 cursor-pointer
                                         ${isActive ? 'buttonSuccessActive text-black shadow-md' : 'text-black'}`}
                                     onClick={() => (item.submenu ? toggleMenu(item.id) : null)}
                                 >
                                     <div className="flex justify-center">
-                                        <span className="">{item.icon}</span>
+                                        <span className="text-2xl">{item.icon}</span>
                                     </div>
                                     <span className={`transition-all duration-300 ${!open ? 'hidden' : 'inline'}`}>
                                         {item.title}

@@ -16,19 +16,19 @@ export const navItems = [
     {
         id: 1,
         title: 'My Rosterly',
-        icon: <FaHome className="text-xl text-black" />,
+        icon: <FaHome className="text-2xl text-black" />,
         path: '/myrosterly'
     },
     {
         id: 2,
         title: 'Unavailability',
-        icon: <CgUnavailable className="text-xl text-black" />,
+        icon: <CgUnavailable className="text-2xl text-black" />,
         path: '/unavailability'
     },
     {
         id: 3,
         title: 'Employees',
-        icon: <FaPeopleGroup className="text-xl text-black" />,
+        icon: <FaPeopleGroup className="text-2xl text-black" />,
         path: '/people',
         // submenu: [
         //     { id: 1, title: 'Active', path: '/active', icon: <RiNotificationLine className="text-xl text-black"/> },
@@ -38,25 +38,25 @@ export const navItems = [
     {
         id: 4,
         title: 'Location',
-        icon: <FaLocationDot className="text-xl text-black" />,
+        icon: <FaLocationDot className="text-2xl text-black" />,
         path: '/location'
     },
     {
         id: 5,
         title: 'Rosters',
         path: '/roster',
-        icon: <TbCircleLetterRFilled className="text-xl text-black" />
+        icon: <TbCircleLetterRFilled className="text-2xl text-black" />
     },
     {
         id: 6,
         title: 'Timesheet',
         path: '/timesheet',
-        icon: <PiArticleNyTimesFill className="text-xl text-black" />
+        icon: <PiArticleNyTimesFill className="text-2xl text-black" />
     },
     {
         id: 7,
         title: 'Settings',
-        icon:  <IoSettings className="text-xl text-black" />,
+        icon:  <IoSettings className="text-2xl text-black" />,
         path: '/systemsettings'
     },
     // {
