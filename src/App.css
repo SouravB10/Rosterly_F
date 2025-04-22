@@ -450,6 +450,7 @@ body {
 .sideBar {
   /* background-color: #3F3897; */
   background-color: #04f07217;
+  border: 2px solid #292929c1;
 }
 
 /* Card end */

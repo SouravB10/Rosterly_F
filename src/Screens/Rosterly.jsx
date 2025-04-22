@@ -133,14 +133,14 @@ const Rosterly = () => {
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {/* Repeatable Shift Card */}
           {[
-            { day: "Mon 07/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-1" },
-            { day: "Tue 08/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-2" },
-            { day: "Wed 09/04", unavailable: true },
-            { day: "Thu 10/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-1" },
+            { day: "Wed 09/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-1" },
+            { day: "Thu 10/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-2" },
+            { day: "Fri 11/04", unavailable: true },
+            { day: "Sat 12/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-1" },
             { total: true, hours: "13.01" },
-            { day: "Fri 11/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-1" },
-            { day: "Sat 12/04", off: true },
-            { day: "Sun 13/04", off: true }
+            { day: "Sun 13/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-1" },
+            { day: "Mon 14/04", off: true },
+            { day: "Tue 15/04", off: true }
           ].map((shift, i) => (
             <div key={i} className="mt-2 mr-2">
               <div className={shift.total ? "cardA" : shift.unavailable ? 'cardGrey' : shift.off ? "cardRed" : "cardYellow"}>
