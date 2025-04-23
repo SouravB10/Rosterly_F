@@ -28,7 +28,12 @@ const Sidebar = ({ open, setOpen, isMobile }) => {
 
     return (
         <div className="flex items-start">
-
+            {isMobile && open && (
+                <div
+                    className="fixed inset-0 bg-white/50 bg-opacity-10 z-20"
+                    onClick={() => setOpen(false)}
+                />
+            )}
             <div className={`transition-all duration-300 sideBar backdrop-blur-lg rounded-2xl overflow-x-hidden overflow-y-auto z-50
                      ${open ? (isMobile ? 'fixed top-0 left-0 h-full w-[250px] shadow-lg' : 'w-[250px]') : (isMobile ? 'hidden' : 'w-[80px]')}
                      ${!isMobile ? 'h-[96vh] m-3' : ''}`}>

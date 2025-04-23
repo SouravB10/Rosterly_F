@@ -218,7 +218,7 @@ const People = () => {
                     className="h-20 w-20 rounded object-cover"
                   />
                   <div className="text-left md:text-left">
-                    <h3 className="subHeadingBold">
+                    <h3 className="paragraphBold md:subheadingBold">
                       {profile.firstName} {profile.lastName}
                     </h3>
                     <h6 className="paragraphThin">{profile.email}</h6>
