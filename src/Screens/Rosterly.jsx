@@ -91,7 +91,8 @@ const Rosterly = () => {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4">
+      {/* Top Section: Welcome & Timer */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4 px-4">
         <div className="text-indigo-950">
           <p className="text-sm sm:text-base font-bold">Welcome,</p>
           <p className="text-lg sm:text-xl font-bold">{userName}</p>
@@ -113,25 +114,28 @@ const Rosterly = () => {
         )}
       </div>
 
-      <div className="card w-full">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="subHeading text-lg sm:text-xl">Shift Details</h2>
-          <div className="flex items-center justify-center bg-white rounded-lg text-sm font-semibold text-gray-900 w-1/5 p-1 border border-gray-300 shadow-sm">
+      {/* Card Container */}
+      <div className="card w-full px-4">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
+          <h2 className="subHeading text-lg sm:text-xl text-indigo-900">Shift Details</h2>
+          <div className="flex items-center justify-center bg-white rounded-lg text-sm font-semibold text-gray-900 w-full sm:w-fit px-2 py-1 border border-gray-300 shadow-sm">
             <FaAngleLeft
-              className="text-gray-800 hover:text-gray-950"
+              className="text-gray-800 hover:text-gray-950 cursor-pointer"
               size={16}
               onClick={handlePrevWeek}
             />
-            <span className="paragraphBold">{getWeekRange(currentWeek)}</span>
+            <span className="mx-2 paragraphBold">{getWeekRange(currentWeek)}</span>
             <FaAngleRight
-              className="text-gray-800 hover:text-gray-950"
+              className="text-gray-800 hover:text-gray-950 cursor-pointer"
               size={16}
               onClick={handleNextWeek}
             />
           </div>
         </div>
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-          {/* Repeatable Shift Card */}
+
+        {/* Shift Cards Grid */}
+        <div className="grid grid-cols-[repeat(auto-fit,_minmax(220px,_1fr))] gap-4">
           {[
             { day: "Wed 09/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-1" },
             { day: "Thu 10/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-2" },
@@ -142,8 +146,8 @@ const Rosterly = () => {
             { day: "Mon 14/04", off: true },
             { day: "Tue 15/04", off: true }
           ].map((shift, i) => (
-            <div key={i} className="mt-2 mr-2">
-              <div className={shift.total ? "cardA" : shift.unavailable ? 'cardGrey' : shift.off ? "cardRed" : "cardYellow"}>
+            <div key={i} className="mt-2">
+              <div className={shift.total ? "cardA" : shift.unavailable ? "cardGrey" : shift.off ? "cardRed" : "cardYellow"}>
                 <p className="subHeading">{shift.day || (shift.total && "Weekly Total")}</p>
                 {shift.unavailable ? (
                   <div className="flex items-center">
@@ -153,12 +157,9 @@ const Rosterly = () => {
                 ) : shift.off ? (
                   <p className="headingBold">Requested Off</p>
                 ) : shift.total ? (
-                  <>
-                    {/* <p className="text-gray-600 text-lg font-bold">Weekly Total</p> */}
-                    <p className="text-indigo-900 font-bold text-xl">
-                      {shift.hours} <span className="font-medium">hours</span>
-                    </p>
-                  </>
+                  <p className="text-indigo-900 font-bold text-xl">
+                    {shift.hours} <span className="font-medium">hours</span>
+                  </p>
                 ) : (
                   <>
                     <div className="flex items-center">

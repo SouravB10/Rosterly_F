@@ -7,39 +7,44 @@ const RosterSettingsPage = () => {
 
   return (
     <div className="card">
-      <div className="space-y-6">
+      <h1 className='heading text-indigo-900 '>Roster Settings</h1>
 
-        <div className="flex justify-between items-center">
-          <div className="w-[60%]">
+      <div className="space-y-6 my-4">
+
+        {/** Timezone Setting */}
+        <div className="flex flex-col sm:flex-row justify-between gap-3 sm:items-center">
+          <div className="w-full sm:w-[60%]">
             <h6 className="subHeading">Timezone</h6>
             <p className="paragraphThin">Which Timezone Do Your Locations Belong To?</p>
             <p className="paragraphBold">1:31:31 PM</p>
           </div>
-          <div className="w-[35%] text-right">
-            <select className="input">
+          <div className="w-full sm:w-[35%] sm:text-right">
+            <select className="input w-full">
               <option>(UTC+05:30) Asia/Kolkata</option>
             </select>
           </div>
         </div>
 
-        <div className="flex justify-between items-center">
-          <div className="w-[60%]">
+        {/** Default Employee Type */}
+        <div className="flex flex-col sm:flex-row justify-between gap-3 sm:items-center">
+          <div className="w-full sm:w-[60%]">
             <h6 className="subHeading">Default Employee Type</h6>
             <p className="paragraphThin">When Adding A New Employee, By Default What Should Their Employment Type Be?</p>
           </div>
-          <div className="w-[35%] text-right">
-            <select className="input w-45">
+          <div className="w-full sm:w-[35%] sm:text-right">
+            <select className="input w-full">
               <option>Full</option>
             </select>
           </div>
         </div>
 
-        <div className="flex justify-between items-center">
-          <div className="w-[60%]">
+        {/** Approval Toggle */}
+        <div className="flex flex-col sm:flex-row justify-between gap-3 sm:items-center">
+          <div className="w-full sm:w-[60%]">
             <h6 className="subHeading">Availability Changes Require Approval</h6>
             <p className="paragraphThin">Check To Require Management Approval Before Implementing And Using Employee Initiated Unavailability Updates.</p>
           </div>
-          <div className="w-[35%] text-right">
+          <div className="w-full sm:w-[35%] sm:text-right">
             <input
               type="checkbox"
               checked={approval}
@@ -49,12 +54,13 @@ const RosterSettingsPage = () => {
           </div>
         </div>
 
-        <div className="flex justify-between items-center">
-          <div className="w-[60%]">
+        {/** Same Location Managers */}
+        <div className="flex flex-col sm:flex-row justify-between gap-3 sm:items-center">
+          <div className="w-full sm:w-[60%]">
             <h6 className="subHeading">Only Show Same Location Managers</h6>
             <p className="paragraphThin">Check To Only Display Managers Within The Same Location(S) As The Employee When The Employee Is Selecting Who Should Approve Their Availability Change Request.</p>
           </div>
-          <div className="w-[35%] text-right">
+          <div className="w-full sm:w-[35%] sm:text-right">
             <input
               type="checkbox"
               checked={sameLocationManagers}
@@ -64,12 +70,13 @@ const RosterSettingsPage = () => {
           </div>
         </div>
 
-        <div className="flex justify-between items-center">
-          <div className="w-[60%]">
+        {/** Email Notification */}
+        <div className="flex flex-col sm:flex-row justify-between gap-3 sm:items-center">
+          <div className="w-full sm:w-[60%]">
             <h6 className="subHeading">Send All Unavailability Request Notifications By Email To Manager</h6>
             <p className="paragraphThin">Check To Notify Selected Manager By Email Of All Unavailability Or Leave Requests/Updates As They Occur.</p>
           </div>
-          <div className="w-[35%] text-right">
+          <div className="w-full sm:w-[35%] sm:text-right">
             <input
               type="checkbox"
               checked={emailNotification}
@@ -79,13 +86,16 @@ const RosterSettingsPage = () => {
           </div>
         </div>
 
+        {/** Save Button */}
         <div className='flex justify-end'>
-          <button className="buttonSuccess w-50">
+          <button className="buttonSuccess w-full sm:w-50">
             Save
           </button>
         </div>
+
       </div>
     </div>
+
 
   );
 };

@@ -51,7 +51,7 @@ const NavBar = ({ toggleSidebar }) => {
           <div className="font-bold hidden sm:block">
             <h1>{activeMenu ? activeMenu.title : "My Rosterly"}</h1>
           </div>
-          <button onClick={toggleSidebar} className="sm:hidden p-2 text-gray-800 fixed top-4 left-4 z-30">
+          <button onClick={toggleSidebar} className="sm:hidden text-gray-800 fixed top-4 left-4 z-30">
             <TiThMenu className="text-2xl" />
           </button>
           <div className="absolute inset-y-0 right-0 flex gap-5 items-center pr-2 sm:static sm:inset-auto sm:ml-2 sm:pr-0">

@@ -24,34 +24,36 @@ const SystemSettings = () => {
 
   return (
     <div>
-      <h1 className='heading'>System Settings</h1>
-      <div className='flex items-center justify-between mt-6'>
-        {[
-          { name: 'General', icon: <IoSettingsOutline size={40} /> },
-          { name: 'Roster', icon: <FaUserClock size={40} /> },
-          { name: 'TimeSheet', icon: <GrDocumentTime size={40} /> },
-          { name: 'Integrations', icon: <RiListSettingsLine size={40} /> },
-          { name: 'Permission', icon: <BsNewspaper size={40} /> },
-        ].map((setting) => (
-          <div
-            key={setting.name}
-            className={`p-5 rounded-md w-45 cursor-pointer transition-all duration-200
-              ${selectedSetting === setting.name ? 'buttonSuccessActive  text-black' : 'bg-green-100'}
+      <div className="mt-2 w-full">
+        <div className="flex flex-wrap gap-2 justify-between px-1">
+          {[
+            { name: 'General', icon: <IoSettingsOutline className="text-xl sm:text-3xl" /> },
+            { name: 'Roster', icon: <FaUserClock className="text-xl sm:text-3xl" /> },
+            { name: 'TimeSheet', icon: <GrDocumentTime className="text-xl sm:text-3xl" /> },
+            { name: 'Integrations', icon: <RiListSettingsLine className="text-xl sm:text-3xl" /> },
+            { name: 'Permission', icon: <BsNewspaper className="text-xl sm:text-3xl" /> },
+
+          ].map((setting) => (
+            <div
+              key={setting.name}
+              className={`w-[18%] p-2 sm:p-4 rounded-md transition-all duration-200 cursor-pointer text-xs sm:text-sm
+              flex flex-col items-center text-center
+              ${selectedSetting === setting.name ? 'buttonSuccessActive text-black' : 'bg-green-100'}
               hover:bg-green-200`}
-            onClick={() => setSelectedSetting(setting.name)}
-          >
-            <div className={`transition-all duration-200 
-              ${selectedSetting === setting.name ? 'text-black py-2' : 'text-gray-600'} 
-              `}>
-              {setting.icon}
+              onClick={() => setSelectedSetting(setting.name)}
+            >
+              <div className={`mb-1 ${selectedSetting === setting.name ? 'text-black' : 'text-gray-600'}`}>
+                {setting.icon}
+              </div>
+              <div className={`font-semibold hidden sm:block ${selectedSetting === setting.name ? 'text-black' : 'text-gray-700'}`}>
+                {setting.name}
+              </div>
             </div>
-            <div className='flex justify-between mt-4 items-center'>
-              <div className={`font-semibold text-lg ${selectedSetting == setting.name?'text-black':'text-gray-700'}`}>{setting.name}</div>
-              <MdOutlineArrowOutward />
-            </div>
-          </div>
-        ))}
+
+          ))}
+        </div>
       </div>
+
       <div className="mt-5">
         {renderComponent()}
       </div>

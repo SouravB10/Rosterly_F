@@ -439,8 +439,8 @@ body {
   border-radius: 10px;
   border: 1px solid #bbbbbba3;
   padding: 20px;
-  /* height: 180px;
-  width: 200px; */
+    /* height: 180px; */
+  width: 200px;
   box-shadow:
     0px 4px 20px #efefef;
   color: #2e2e2e95;

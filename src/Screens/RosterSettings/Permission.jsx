@@ -26,7 +26,9 @@ const Permission = () => {
 
   return (
     <div className="card">
-      <div className="mx-auto space-y-6">
+      <h1 className='heading text-indigo-900 '>Permission Settings</h1>
+
+      <div className="space-y-6 my-4">
         {[
           {
             label: 'Roster Design',
@@ -66,18 +68,18 @@ const Permission = () => {
         ].map(item => (
           <div
             key={item.key}
-            className="flex justify-between items-start gap-4"
+            className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4"
           >
-            {/* LEFT SIDE - 60% */}
-            <div className="w-[60%]">
+            {/* LEFT SIDE - Label and description */}
+            <div className="w-full md:w-[60%]">
               <h3 className="subHeading">{item.label}</h3>
               <p className="paragraphThin">{item.desc}</p>
             </div>
 
-            {/* RIGHT SIDE - 40% */}
-            <div className="w-[40%] flex justify-end">
+            {/* RIGHT SIDE - Dropdown */}
+            <div className="w-full md:w-[40%] flex md:justify-end">
               <select
-                className="input"
+                className="input w-full md:w-auto"
                 value={permissions[item.key]}
                 onChange={(e) => handleChange(item.key, e.target.value)}
               >
@@ -89,14 +91,15 @@ const Permission = () => {
           </div>
         ))}
 
-        {/* UPDATE BUTTON */}
-        <div className='flex justify-end'>
-          <button className="buttonSuccess w-50">
+        {/* Update button */}
+        <div className="flex justify-end">
+          <button className="buttonSuccess w-full md:w-50">
             Update
           </button>
         </div>
       </div>
     </div>
+
   );
 };
 
