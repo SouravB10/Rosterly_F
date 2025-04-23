@@ -38,8 +38,8 @@ const SystemSettings = () => {
               key={setting.name}
               className={`w-[18%] p-2 sm:p-4 rounded-md transition-all duration-200 cursor-pointer text-xs sm:text-sm
               flex flex-col items-center text-center
-              ${selectedSetting === setting.name ? 'buttonSuccessActive text-black' : 'bg-green-100'}
-              hover:bg-green-200`}
+              ${selectedSetting === setting.name ? 'buttonSuccessActive text-black' : 'sideBar'}
+              `}
               onClick={() => setSelectedSetting(setting.name)}
             >
               <div className={`mb-1 ${selectedSetting === setting.name ? 'text-black' : 'text-gray-600'}`}>
