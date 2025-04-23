@@ -151,12 +151,12 @@ const People = () => {
 
   return (
     <div className="flex flex-col gap-3 p-4">
-      <div className="flex justify-between items-center mb-2">
-        <div className="flex gap-5">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-2">
+        {/* Left side: Filters */}
+        <div className="flex flex-wrap gap-3 w-full md:w-auto">
           <select
-            name="selectedLocation"
-            className="input"
-
+            name="selectedStatus"
+            className="input flex-1 min-w-[120px]"
           >
             <option value="default">--Select Status--</option>
             <option value="Location 1">Active</option>
@@ -165,7 +165,7 @@ const People = () => {
 
           <select
             name="selectedLocation"
-            className="input"
+            className="input flex-1 min-w-[120px]"
             value={selectedLocation}
             onChange={(e) => setSelectedLocation(e.target.value)}
           >
@@ -174,59 +174,67 @@ const People = () => {
             <option value="Store 2">Store 2</option>
           </select>
 
-          <button className="buttonSuccess" onClick={handleFilter}>
+          <button
+            className="buttonSuccess flex-1 min-w-[120px]"
+            onClick={handleFilter}
+          >
             Filter Data
           </button>
-
         </div>
-        <div className="flex gap-3">
-          <div className="bg-white rounded-lg border border-gray-300">
-            <div className="flex flex-row items-center w-64 px-3 ">
-              <FaSearch className="text-indigo-950" />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="input"
-                value={searchTerm}
-                onChange={handleSearch}
-              />
-            </div>
+
+        {/* Right side: Search + Add */}
+        <div className="flex flex-wrap gap-3 w-full md:w-auto">
+          <div className="bg-white rounded-lg border border-gray-300 flex items-center px-3 flex-1 min-w-[200px]">
+            <FaSearch className="text-indigo-950" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="input w-full border-none focus:ring-0"
+              value={searchTerm}
+              onChange={handleSearch}
+            />
           </div>
-          <button className="buttonTheme" title="Add Employee" onClick={() => setIsModalOpen(true)}>
+
+          <button
+            className="buttonTheme flex-1 min-w-[120px]"
+            title="Add Employee"
+            onClick={() => setIsModalOpen(true)}
+          >
             + Employee
           </button>
         </div>
-
-        {/* </div> */}
       </div>
-      <div className="grid grid-cols-4 gap-4">
+
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {filteredProfiles.map((profile) => (
-          <div key={profile.id}>
-            <div className="@container bg-white shadow-xl p-3 rounded-xl">
-              <div className="flex flex-1/3 gap-4 justify-between">
-                <div className="flex flex-col @md:flex-row">
+          <div key={profile.id} className="w-full">
+            <div className="bg-white shadow-xl p-4 rounded-xl h-full flex flex-col justify-between">
+              <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+                <div className="flex flex-col items-center md:flex-row gap-4">
                   <img
                     alt="Profile"
                     src={profile.image}
-                    className="h-20 w-20 rounded"
+                    className="h-20 w-20 rounded object-cover"
                   />
-                </div>
-                <div className="flex flex-col @md:flex-row">
-                  <h3 className="subHeadingBold">
-                    {profile.firstName} {profile.lastName}
-                  </h3>
-                  <h6 className="paragraphThin">{profile.email}</h6>
-                  <h6 className="paragraphThin">{profile.phone}</h6>
+                  <div className="text-center md:text-left">
+                    <h3 className="subHeadingBold">
+                      {profile.firstName} {profile.lastName}
+                    </h3>
+                    <h6 className="paragraphThin">{profile.email}</h6>
+                    <h6 className="paragraphThin">{profile.phone}</h6>
+                  </div>
                 </div>
               </div>
-              <div className="flex flex-1/3 gap-4 justify-end items-end">
-                <div>
-                  <h6 className="paragraphBold">Location: {profile.location}</h6>
-                </div>
-                <div className="flex flex-1/3 mt-3 gap-4 justify-end">
+
+              <div className="mt-4 flex flex-row justify-between items-center gap-2">
+                <h6 className="paragraphBold">
+                  Location: {profile.location}
+                </h6>
+                <div className="flex gap-2">
                   <FaEye
                     title="View Profile"
-                    className="text-indigo-950 bg-amber-300 cursor p-2 rounded-md size-8"
+                    className="text-indigo-950 bg-amber-300 cursor-pointer p-2 rounded-md size-8"
                     onClick={() => {
                       setSelectedProfile(profile);
                       setViewButtonModel(true);
@@ -234,7 +242,7 @@ const People = () => {
                   />
                   <FaEdit
                     title="Add Note"
-                    className="text-indigo-950 bg-gray-200 cursor p-2 rounded-md size-8"
+                    className="text-indigo-950 bg-gray-200 cursor-pointer p-2 rounded-md size-8"
                     onClick={() => {
                       setSelectedProfile(profile);
                       setAddNoteModal(true);
@@ -242,10 +250,12 @@ const People = () => {
                   />
                 </div>
               </div>
+
             </div>
           </div>
         ))}
       </div>
+
 
       {/* Add Employee Modal */}
       <Dialog
@@ -255,7 +265,7 @@ const People = () => {
       >
         <div className="fixed inset-0 bg-gray-700/70"></div>
         <div className="fixed inset-0 flex items-center justify-center">
-          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
+          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-sm sm:max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
               <Dialog.Title className="heading">Add Employee</Dialog.Title>
               <button
@@ -356,7 +366,7 @@ const People = () => {
       >
         <div className="fixed inset-0 bg-gray-700/70"></div>
         <div className="fixed inset-0 flex items-center justify-center">
-          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
+          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-sm sm:max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
               <Dialog.Title className="heading">Employee Details</Dialog.Title>
               <button
@@ -504,7 +514,7 @@ const People = () => {
       >
         <div className="fixed inset-0 bg-gray-700/70"></div>
         <div className="fixed inset-0 flex items-center justify-center">
-          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
+          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-sm sm:max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
               <Dialog.Title className="heading">
                 {selectedProfile ? `Add Note (for ${selectedProfile.firstName})` : 'Add Note'}
