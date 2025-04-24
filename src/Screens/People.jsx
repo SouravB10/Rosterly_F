@@ -217,20 +217,20 @@ const People = () => {
                     src={profile.image}
                     className="h-20 w-20 rounded object-cover"
                   />
-                  <div className="text-left md:text-left">
-                    <h3 className="paragraphBold md:subheadingBold">
+                  <div className="text-left md:text-left w-full">
+                    <h3 className="paragraphBold md:subheadingBold truncate overflow-hidden text-ellipsis">
                       {profile.firstName} {profile.lastName}
                     </h3>
-                    <h6 className="paragraphThin">{profile.email}</h6>
-                    <h6 className="paragraphThin">{profile.phone}</h6>
+                    <p className="paragraphThin truncate overflow-hidden text-ellipsis">{profile.email}</p>
+                    <p className="paragraphThin truncate overflow-hidden text-ellipsis">{profile.phone}</p>
                   </div>
                 </div>
               </div>
 
               <div className="mt-4 flex flex-row justify-between items-center gap-2">
-                <h6 className="paragraphBold">
+                <p className="paragraphBold">
                   Location: {profile.location}
-                </h6>
+                </p>
                 <div className="flex gap-2">
                   <FaEye
                     title="View Profile"

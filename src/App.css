@@ -27,7 +27,7 @@ body {
   --font-main-heading: 1.625rem;
   --font-heading: 1.25rem;
   --font-subheading: 1rem;
-  --font-paragraph: 0.90rem;
+  --font-paragraph: 0.80rem;
   --font-small: 0.625rem;
 }
 
@@ -520,7 +520,7 @@ body {
 
 .paragraphThin {
   font-size: var(--font-paragraph);
-  font-weight: 300;
+  font-weight: 400;
   margin-bottom: 3px;
   line-height: 20px;
 }
