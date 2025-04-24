@@ -16,7 +16,7 @@ const Location = () => {
   };
 
   return (
-    <div className=" ">
+    <div className=" py-2">
       <div className="">
         {/* Left Section - 60% (3 columns) */}
         <div className="col-span-3">

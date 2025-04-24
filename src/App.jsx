@@ -67,7 +67,7 @@ function AppWrapper() {
         )}
         <div className='flex-1 flex flex-col'>
           {!isLoginPage && !isRegisterPage && <NavBar toggleSidebar={toggleSidebar} />}
-          <div className={`flex-1 overflow-auto ${isLoginPage || isRegisterPage ? 'p-0' : 'p-4'}`}>
+          <div className={`flex-1 overflow-auto ${isLoginPage || isRegisterPage ? 'p-0' : 'px-4'}`}>
             <Routes>
               <Route path='/' element={<Login />} />
               <Route path='/register' element={<Register />} />

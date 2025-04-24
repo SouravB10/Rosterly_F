@@ -92,7 +92,7 @@ const Rosterly = () => {
   return (
     <>
       {/* Top Section: Welcome & Timer */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4 px-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4 p-2">
         <div className="text-indigo-950">
           <p className="text-sm sm:text-base font-bold">Welcome,</p>
           <p className="text-lg sm:text-xl font-bold">{userName}</p>

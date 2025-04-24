@@ -36,7 +36,7 @@ const Sidebar = ({ open, setOpen, isMobile }) => {
             )}
             <div className={`transition-all duration-300 sideBar backdrop-blur-lg rounded-2xl overflow-x-hidden overflow-y-auto z-50
                      ${open ? (isMobile ? 'fixed top-0 left-0 h-full w-[250px] shadow-lg' : 'w-[250px]') : (isMobile ? 'hidden' : 'w-[80px]')}
-                     ${!isMobile ? 'h-[96vh] m-3' : ''}`}>
+                     ${!isMobile ? 'h-[96vh] m-3' : ''} hide-scrollbar`}>
 
                 <div className="flex flex-col">
                     <div className={`flex items-center p-4 w-full ${open ? 'justify-between' : 'justify-center'}`}>

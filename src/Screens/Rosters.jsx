@@ -92,7 +92,7 @@ const Rosters = () => {
   const hoursPerDay = ["12.25", "0.00", "0.00", "0.00", "0.00", "0.00", "0.00"];
   return (
     <>
-      <div className="flex flex-col md:flex-row justify-between items-center mb-2 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-2 gap-4 py-2">
         <div className="flex flex-wrap gap-3 w-full md:w-auto">
           <select
             name="selectedLocation"
