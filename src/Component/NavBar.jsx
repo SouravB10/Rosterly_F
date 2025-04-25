@@ -81,7 +81,7 @@ const NavBar = ({ toggleSidebar }) => {
               </div>
               <MenuItems
                 transition
-                className="absolute right-0 z-[9999] mt-2 w-49 origin-top-right rounded-md bg-gray-300 py-1 shadow-3xl ring-1 ring-black/5 focus:outline-none"
+                className="absolute border border-dashed right-0 z-[9999] mt-2 w-49 origin-top-right rounded-md bg-gray-300 py-1 shadow-3xl ring-1 ring-black/5 focus:outline-none"
               >
 
                 <MenuItem>

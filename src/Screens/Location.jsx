@@ -83,7 +83,7 @@ const Location = () => {
                   </div>
 
                   {/* Location Short Name */}
-                  <div className="card flex flex-col md:flex-row justify-between">
+                  {/* <div className="card flex flex-col md:flex-row justify-between">
                     <div className="w-full md:w-1/2 md:pr-4">
                       <h4 className="subHeading">Location Short Name</h4>
                       <p className="paragraphThin">
@@ -94,7 +94,7 @@ const Location = () => {
                     <div className="w-full md:w-1/2">
                       <input type="text" placeholder="MNB" className="input" />
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="flex justify-end">
                     <button className="buttonTheme w-full md:w-auto">Update</button>
