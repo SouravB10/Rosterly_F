@@ -25,6 +25,7 @@ import Permission from './Screens/RosterSettings/Permission';
 import JuniorRate from './Screens/RosterSettings/JuniorRate';
 import PenalityRate from './Screens/RosterSettings/PenalityRate';
 import Profile from './Screens/Profile';
+import ClickSpark from './Component/ClickSpark';
 
 
 function AppWrapper() {
@@ -56,44 +57,52 @@ function AppWrapper() {
 
   return (
     <>
-      <div className='flex h-screen overflow-hidden'>
-        {!isLoginPage && !isRegisterPage && (
-          
-        <div className=" top-0 left-0 h-full">
-          {(sidebarOpen || !isMobile) && (
-            <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} isMobile={isMobile} />
-          )}
-        </div>
-        )}
-        <div className='flex-1 flex flex-col'>
-          {!isLoginPage && !isRegisterPage && <NavBar toggleSidebar={toggleSidebar} />}
-          <div className={`flex-1 overflow-auto ${isLoginPage || isRegisterPage ? 'p-0' : 'px-4'}`}>
-            <Routes>
-              <Route path='/' element={<Login />} />
-              <Route path='/register' element={<Register />} />
-              <Route path='/dashboard' element={<Dashboard />} />
-              <Route path='/myrosterly' element={<Rosterly />} />
-              <Route path='/unavailability' element={<Unavailability />} />
-              <Route path='/people' element={<People />} />
-              <Route path='/location' element={<Location />} />
-              <Route path='/systemsettings' element={<SystemSettings />} />
-              <Route path='/payrate' element={<PayRate />} />
-              <Route path='/utilities' element={<Utilities />} />
-              <Route path='/roster' element={<Rosters />} />
-              <Route path='/timesheet' element={<TimeSheet />} />
-              <Route path='/notification' element={<Notification />} />
-              <Route path='/generalsettings' element={<General />} />
-              <Route path='/rostersetting' element={<RosterSetting />} />
-              <Route path='/employeetypeloading' element={<EmployeeTypeLoading />} />
-              <Route path='/permission' element={<Permission />} />
-              <Route path='/JuniorRate' element={<JuniorRate />} />
-              <Route path='/PanalityRate' element={<PenalityRate />} />
-              <Route path='/Profile' element={<Profile />} />
+      <ClickSpark
+        sparkColor='#111111'
+        sparkSize={8}
+        sparkRadius={15}
+        sparkCount={5}
+        duration={400}
+      >
+        <div className='flex h-screen overflow-hidden'>
+          {!isLoginPage && !isRegisterPage && (
 
-            </Routes>
+            <div className=" top-0 left-0 h-full">
+              {(sidebarOpen || !isMobile) && (
+                <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} isMobile={isMobile} />
+              )}
+            </div>
+          )}
+          <div className='flex-1 flex flex-col'>
+            {!isLoginPage && !isRegisterPage && <NavBar toggleSidebar={toggleSidebar} />}
+            <div className={`flex-1 overflow-auto ${isLoginPage || isRegisterPage ? 'p-0' : 'px-4'}`}>
+              <Routes>
+                <Route path='/' element={<Login />} />
+                <Route path='/register' element={<Register />} />
+                <Route path='/dashboard' element={<Dashboard />} />
+                <Route path='/myrosterly' element={<Rosterly />} />
+                <Route path='/unavailability' element={<Unavailability />} />
+                <Route path='/people' element={<People />} />
+                <Route path='/location' element={<Location />} />
+                <Route path='/systemsettings' element={<SystemSettings />} />
+                <Route path='/payrate' element={<PayRate />} />
+                <Route path='/utilities' element={<Utilities />} />
+                <Route path='/roster' element={<Rosters />} />
+                <Route path='/timesheet' element={<TimeSheet />} />
+                <Route path='/notification' element={<Notification />} />
+                <Route path='/generalsettings' element={<General />} />
+                <Route path='/rostersetting' element={<RosterSetting />} />
+                <Route path='/employeetypeloading' element={<EmployeeTypeLoading />} />
+                <Route path='/permission' element={<Permission />} />
+                <Route path='/JuniorRate' element={<JuniorRate />} />
+                <Route path='/PanalityRate' element={<PenalityRate />} />
+                <Route path='/Profile' element={<Profile />} />
+
+              </Routes>
+            </div>
           </div>
         </div>
-      </div>
+      </ClickSpark>
     </>
   )
 }
