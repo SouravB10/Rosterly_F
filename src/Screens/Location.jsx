@@ -23,14 +23,12 @@ const Location = () => {
           <h6 className="heading">By Location</h6>
 
           <div className="bg-gray-200 p-4 borderRadius10 mt-5">
-            {/* Dropdown + Button */}
             <div className="flex justify-between  mb-6">
               <div className="flex gap-4">
                 <select className="input" onChange={handleLocation}>
                   <option>-- Select location --</option>
                   <option value="Location 1">Store 1</option>
                   <option value="Location 2">Store 2</option>
-                  {/* Add your options here */}
                 </select>
                 <button className="buttonSuccess" onClick={getLocation}>
                   Get Data
@@ -45,7 +43,6 @@ const Location = () => {
 
             </div>
 
-            {/* Tab Switcher */}
             <div className="subHeading flex gap-6 mb-6">
               {["general", "Sales", "Employees"].map((tab) => (
                 <label key={tab} className="flex items-center gap-2">
@@ -64,7 +61,6 @@ const Location = () => {
               ))}
             </div>
 
-            {/* Tab Content */}
             <div className="space-y-6">
               {activeTab === "general" && (
                 <div className="space-y-4">

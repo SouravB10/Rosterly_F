@@ -151,7 +151,7 @@ const People = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="sticky top-0 z-10 bg-[#f1f1f1] py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div className="sticky top-0 z-[1] bg-[#f1f1f1] py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         {/* Left side: Filters */}
         <div className="flex flex-wrap gap-3 w-full md:w-auto">
           <select
@@ -211,7 +211,7 @@ const People = () => {
           <div key={profile.id} className="w-full">
             <div className="bg-white shadow-xl p-4 rounded-xl h-full flex flex-col justify-between">
               <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-                <div className="flex flex-row items-center md:flex-row gap-4">
+                <div className="flex flex-row items-center min-w-0 md:flex-row gap-4">
                   <img
                     alt="Profile"
                     src={profile.image}
