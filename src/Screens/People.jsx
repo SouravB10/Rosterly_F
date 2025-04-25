@@ -151,7 +151,7 @@ const People = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="sticky top-0 z-[1] bg-[#f1f1f1] py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div className="sticky top-0 bg-[#f1f1f1] py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         {/* Left side: Filters */}
         <div className="flex flex-wrap gap-3 w-full md:w-auto">
           <select

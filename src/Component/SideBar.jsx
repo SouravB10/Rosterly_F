@@ -28,14 +28,9 @@ const Sidebar = ({ open, setOpen, isMobile }) => {
 
     return (
         <div className="flex items-start">
-            {isMobile && open && (
-                <div
-                    className="fixed inset-0 bg-white/50 bg-opacity-10 z-20"
-                    onClick={() => setOpen(false)}
-                />
-            )}
-            <div className={`transition-all duration-300 sideBar backdrop-blur-lg rounded-2xl overflow-x-hidden overflow-y-auto z-50
-                     ${open ? (isMobile ? 'fixed top-0 left-0 h-full w-[250px] shadow-lg' : 'w-[250px]') : (isMobile ? 'hidden' : 'w-[80px]')}
+          
+            <div className={`transition-all duration-300 mSideBar backdrop-blur-xl rounded-2xl overflow-x-hidden overflow-y-auto z-10
+                     ${open ? (isMobile ? 'fixed top-0 left-0 h-full w-[200px] shadow-lg' : 'w-[250px]') : (isMobile ? 'hidden' : 'w-[80px]')}
                      ${!isMobile ? 'h-[96vh] m-3' : ''} hide-scrollbar`}>
 
                 <div className="flex flex-col">
@@ -144,6 +139,12 @@ const Sidebar = ({ open, setOpen, isMobile }) => {
                     })}
                 </ul>
             </div>
+            {isMobile && open && (
+                <div
+                    className="fixed inset-0 bg-black/20 bg-opacity-10 z-1 "
+                    onClick={() => setOpen(false)}
+                />
+            )}
         </div>
 
     );
