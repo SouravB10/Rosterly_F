@@ -61,7 +61,7 @@ const People = () => {
       lastName: 'Seth',
       email: "anita@gmail.com",
       phone: "9876543210",
-      dob: '1997-23-05',
+      dob: '1997-05-05',
       payrate: '40%',
       location: "Store 1",
       image: BlackWidow,

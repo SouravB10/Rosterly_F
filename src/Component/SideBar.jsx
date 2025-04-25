@@ -40,7 +40,7 @@ const Sidebar = ({ open, setOpen, isMobile }) => {
                                 ${!open ? 'hidden' : 'block'}`}>
                                 <GiHeavyTimer />
                             </div>
-                            <p className={`text-green-95    0 text-[22px] sub-heading font-semibold transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
+                            <p className={`text-green-95 0 text-[22px] sub-heading font-semibold transition-all duration-300 ${!open ? 'hidden' : 'block'}`}>
                                 Rosterly
                             </p>
                         </div>
