@@ -23,7 +23,7 @@ const Location = () => {
 
           <div className="bg-gray-200 p-4 borderRadius10 mt-5">
             <div className="flex flex-col md:flex-row justify-between mb-6 gap-4">
-              <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex md:flex-row gap-4">
                 <select className="input w-full md:w-auto" onChange={handleLocation}>
                   <option>-- Select location --</option>
                   <option value="Location 1">Store 1</option>
@@ -44,7 +44,7 @@ const Location = () => {
               )}
             </div>
 
-            <div className="subHeading flex flex-col md:flex-row gap-6 mb-6">
+            <div className="subHeading flex  md:flex-row gap-6 mb-6">
               {["general", "Sales", "Employees"].map((tab) => (
                 <label key={tab} className="flex items-center gap-2">
                   <input
