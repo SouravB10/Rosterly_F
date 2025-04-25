@@ -79,15 +79,13 @@ export default function Register() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bgimg px-4">
-            {/* <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-2xl"> */}
-            <div className="bg-white p-8 rounded-2xl shadow-lg w-[60%]">
-
+            <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-2xl md:w-[60%]">
                 <h1 className="text-center text-2xl font-bold text-secondary mb-6">
                     Create Your Account
                 </h1>
                 <form className="space-y-5" onSubmit={handleSubmit}>
-                    <div className='flex gap-4 justify-between'>
-                        <div className='w-full'>
+                    <div className="flex flex-col md:flex-row gap-4 justify-between">
+                        <div className="w-full">
                             <label className="text-secondary font-semibold mb-1 block">First Name</label>
                             <input
                                 type="text"
@@ -99,7 +97,7 @@ export default function Register() {
                             {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
                         </div>
 
-                        <div className='w-full'>
+                        <div className="w-full">
                             <label className="text-secondary font-semibold mb-1 block">Last Name</label>
                             <input
                                 type="text"
@@ -111,8 +109,8 @@ export default function Register() {
                             {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
                         </div>
                     </div>
-                    <div className='flex gap-4 justify-between'>
-                        <div className='w-full'>
+                    <div className="flex flex-col md:flex-row gap-4 justify-between">
+                        <div className="w-full">
                             <label className="text-secondary font-semibold mb-1 block">Email Address</label>
                             <input
                                 type="email"
@@ -124,7 +122,7 @@ export default function Register() {
                             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                         </div>
 
-                        <div className='w-full'>
+                        <div className="w-full">
                             <label className="text-secondary font-semibold mb-1 block">Mobile Number</label>
                             <input
                                 type="tel"
@@ -136,10 +134,10 @@ export default function Register() {
                             {errors.mobile && <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>}
                         </div>
                     </div>
-                    <div className='flex gap-4 justify-between '>
-                        <div className='w-full'>
+                    <div className="flex flex-col md:flex-row gap-4 justify-between">
+                        <div className="w-full">
                             <label className="text-secondary font-semibold mb-1 block">Password</label>
-                            <div className=' relative'>
+                            <div className="relative">
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     value={password}
@@ -157,9 +155,8 @@ export default function Register() {
                             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                         </div>
 
-                        <div className='w-full'>
+                        <div className="w-full">
                             <label className="text-secondary font-semibold mb-1 block">Confirm Password</label>
-
                             <div className="relative">
                                 <input
                                     type={showConfirmPassword ? "text" : "password"}
@@ -175,17 +172,13 @@ export default function Register() {
                                     {showConfirmPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
                                 </span>
                             </div>
-
                             {errors.confirmPassword && (
                                 <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>
                             )}
                         </div>
-
                     </div>
-
-
-                    <div className='flex justify-between gap-4'>
-                        <div className='w-full '>
+                    <div className="flex flex-col md:flex-row justify-between gap-4">
+                        <div className="w-full">
                             <label className="text-secondary font-semibold mb-1 block">Company Name</label>
                             <input
                                 type="text"
@@ -214,13 +207,12 @@ export default function Register() {
                                 )}
                             </button>
                         </div>
-
                     </div>
                 </form>
                 <p className="text-center mt-2 text-sm text-gray-600">
                     "Already have an account?"
                     <Link
-                        to='/'
+                        to="/"
                         className="ml-1 text-primary cursor-pointer font-semibold hover:underline"
                     >
                         "Login here"
