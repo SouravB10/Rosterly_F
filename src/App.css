@@ -452,6 +452,11 @@ body {
   background-color: #04f07217;
   border: 1px solid #0171354f;
 }
+.mSideBar {
+  /* background-color: #3F3897; */
+  background-color: #dcf2e6;
+  border: 1px solid #0171354f;
+}
 
 /* Card end */
 

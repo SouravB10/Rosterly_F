@@ -45,13 +45,13 @@ const NavBar = ({ toggleSidebar }) => {
 
   return (
 
-    <Disclosure as="nav" className="bg-white backdrop-blur-lg mt-3 mx-3 mb-1 rounded-2xl">
-      <div className="mx-auto max-w-7xl px-2 sm:px-3 lg:px-4">
+    <Disclosure as="nav" className="bg-white z-1 ackdrop-blur-lg mt-3 mx-3 mb-1 rounded-2xl">
+      <div className="px-4 sm:px-3 lg:px-4">
         <div className="relative flex h-14 items-center justify-between">
           <div className="font-bold hidden sm:block">
             <h1>{activeMenu ? activeMenu.title : "My Rosterly"}</h1>
           </div>
-          <button onClick={toggleSidebar} className="sm:hidden text-gray-800 fixed top-4 left-4 z-30">
+          <button onClick={toggleSidebar} className="sm:hidden text-gray-800 fixed z-30">
             <TiThMenu className="text-2xl" />
           </button>
           <div className="absolute inset-y-0 right-0 flex gap-5 items-center pr-2 sm:static sm:inset-auto sm:ml-2 sm:pr-0">
@@ -81,7 +81,7 @@ const NavBar = ({ toggleSidebar }) => {
               </div>
               <MenuItems
                 transition
-                className="absolute right-0 z-99 mt-2 w-49 origin-top-right rounded-md bg-gray-300 py-1 shadow-3xl ring-1 ring-black/5 focus:outline-none"
+                className="absolute right-0 z-[9999] mt-2 w-49 origin-top-right rounded-md bg-gray-300 py-1 shadow-3xl ring-1 ring-black/5 focus:outline-none"
               >
 
                 <MenuItem>
