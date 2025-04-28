@@ -15,22 +15,22 @@ const Location = () => {
   };
 
   return (
-    <div className=" bg-white rounded-lg shadow-lg p-5 mb-6">
-      <h3 className="heading">Profile Information</h3>
+    <div className="bg-white rounded-lg shadow-lg p-5 my-4">
+      <h3 className="heading text-indigo-900">Profile Information</h3>
 
-      <div className="flex md:flex-col items-center gap-5 w-full mt-3">
-
-        <div className="w-1/2">
+      <div className="flex flex-col md:flex-row items-center gap-2 w-full mt-3">
+        <div className="w-full md:w-1/2 flex flex-col items-center ">
           <img
             alt=""
             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-            className="md:size-80 size-40 rounded "
+            className="size-40 md:size-70 rounded"
           />
           <h3 className="SunHeading mt-2">Anita Verma</h3>
         </div>
-        <div className=" w-full">
+
+        <div className="w-full">
           <form action="" className="grid gap-2" method="post">
-            <div className="">
+            <div>
               <label htmlFor="" className="paragraph">
                 Username
               </label>
@@ -40,51 +40,53 @@ const Location = () => {
                 className="input w-full border border-gray-500"
               />
             </div>
-            <div className="">
+            <div>
               <label htmlFor="" className="paragraph">
                 Email
               </label>
               <input
                 type="text"
                 value="anita.glansa@gmail.com"
-                className="input w-full border border-gray-500 "
+                className="input w-full border border-gray-500"
               />
             </div>
+
             <div className="mt-5">
               <h3 className="subHeading">Change Password</h3>
             </div>
-            <div className="">
+
+            <div>
               <label htmlFor="" className="paragraph">
                 Current Password
               </label>
               <input
-                type="text"
+                type="password"
                 value=""
                 className="input w-full border border-gray-500"
               />
             </div>
-            <div className="">
+            <div>
               <label htmlFor="" className="paragraph">
                 New Password
               </label>
               <input
-                type="text"
+                type="password"
                 value=""
                 className="input w-full border border-gray-500"
               />
             </div>
-            <div className="">
+            <div>
               <label htmlFor="" className="paragraph">
                 Confirm New Password
               </label>
               <input
-                type="text"
+                type="password"
                 value=""
                 className="input w-full border border-gray-500"
               />
             </div>
-            <div className="flex justify-end gap-2 mt-4">
 
+            <div className="flex justify-end gap-2 mt-4">
               <button type="submit" className="buttonSuccess w-40">
                 Save
               </button>
@@ -93,6 +95,7 @@ const Location = () => {
         </div>
       </div>
     </div>
+
   );
 };
 

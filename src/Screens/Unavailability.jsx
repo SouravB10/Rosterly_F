@@ -50,7 +50,7 @@ const Unavailability = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full py-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full py-2 my-2">
         <div className="card">
           <h1 className="heading">
             Days Off Adding
@@ -276,7 +276,7 @@ const Unavailability = () => {
         </div>
 
         {/* Requested Days Off List */}
-        <div className="card rounded-md p-5 md:row-span-8">
+        <div className="card rounded-md p-5 md:row-span-8 overflow-auto hide-scrollbar">
           <h1 className="subHeading">
             Requested Days Off
           </h1>
@@ -298,7 +298,83 @@ const Unavailability = () => {
           </div>
 
           {/* Row 2 */}
-          <div className="py-2">
+          <div className="py-2 ">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="paragraphBold">
+                  04/04/25 - 05/04/25
+                </p>
+                <p className="paragraphThin">
+                  16.00hrs of Without Pay Leave (Sample visit)
+                </p>
+              </div>
+              <button className="black-100 hover:texttheme mt-1">
+                <FaPencilAlt className="w-4 h-4" />
+              </button>
+            </div>
+            <hr className="white-300" />
+          </div>
+          <div className="py-2 ">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="paragraphBold">
+                  04/04/25 - 05/04/25
+                </p>
+                <p className="paragraphThin">
+                  16.00hrs of Without Pay Leave (Sample visit)
+                </p>
+              </div>
+              <button className="black-100 hover:texttheme mt-1">
+                <FaPencilAlt className="w-4 h-4" />
+              </button>
+            </div>
+            <hr className="white-300" />
+          </div> <div className="py-2 ">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="paragraphBold">
+                  04/04/25 - 05/04/25
+                </p>
+                <p className="paragraphThin">
+                  16.00hrs of Without Pay Leave (Sample visit)
+                </p>
+              </div>
+              <button className="black-100 hover:texttheme mt-1">
+                <FaPencilAlt className="w-4 h-4" />
+              </button>
+            </div>
+            <hr className="white-300" />
+          </div> <div className="py-2 ">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="paragraphBold">
+                  04/04/25 - 05/04/25
+                </p>
+                <p className="paragraphThin">
+                  16.00hrs of Without Pay Leave (Sample visit)
+                </p>
+              </div>
+              <button className="black-100 hover:texttheme mt-1">
+                <FaPencilAlt className="w-4 h-4" />
+              </button>
+            </div>
+            <hr className="white-300" />
+          </div> <div className="py-2 ">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="paragraphBold">
+                  04/04/25 - 05/04/25
+                </p>
+                <p className="paragraphThin">
+                  16.00hrs of Without Pay Leave (Sample visit)
+                </p>
+              </div>
+              <button className="black-100 hover:texttheme mt-1">
+                <FaPencilAlt className="w-4 h-4" />
+              </button>
+            </div>
+            <hr className="white-300" />
+          </div> <div className="py-2 ">
             <div className="flex items-start justify-between">
               <div>
                 <p className="paragraphBold">

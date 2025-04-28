@@ -61,7 +61,7 @@ const Sidebar = ({ open, setOpen, isMobile }) => {
                                     setOpen(!open); // toggle collapse on desktop
                                 }
                             }}
-                            className="p-2 text-xl text-gray-800 transition-all duration-300 flex"
+                            className="p-2 text-xl text-gray-800 transition-all duration-300 flex cursor-pointer"
                         >
                             {open ? (
                                 <svg
@@ -70,7 +70,7 @@ const Sidebar = ({ open, setOpen, isMobile }) => {
                                     viewBox="0 0 24 24"
                                     strokeWidth={2.5}
                                     stroke="currentColor"
-                                    className="size-6"
+                                    className="size-6 "
                                 >
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                                 </svg>
