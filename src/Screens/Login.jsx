@@ -62,108 +62,112 @@ export default function Login() {
     }
   }, [navigate]);
 
-  const handleChange = (field, value) => {
-    switch (field) {
-      case "firstName":
-        setFirstName(value);
-        break;
-      case "lastName":
-        setLastName(value);
-        break;
-      case "company":
-        setCompany(value);
-        break;
-      case "mobile":
-        setMobile(value);
-        break;
-      case "email":
-        setEmail(value);
-        break;
-      case "password":
-        setPassword(value);
-        break;
-      case "confirmPassword":
-        setConfirmPassword(value);
-        break;
-      default:
-        break;
-    }
+  // const handleChange = (field, value) => {
+  //   switch (field) {
+  //     case "firstName":
+  //       setFirstName(value);
+  //       break;
+  //     case "lastName":
+  //       setLastName(value);
+  //       break;
+  //     case "company":
+  //       setCompany(value);
+  //       break;
+  //     case "mobile":
+  //       setMobile(value);
+  //       break;
+  //     case "email":
+  //       setEmail(value);
+  //       break;
+  //     case "password":
+  //       setPassword(value);
+  //       break;
+  //     case "confirmPassword":
+  //       setConfirmPassword(value);
+  //       break;
+  //     default:
+  //       break;
+  //   }
 
-    setErrors((prev) => {
-      const newErrors = { ...prev };
-      delete newErrors[field];
-      return newErrors;
-    });
-  };
+  //   setErrors((prev) => {
+  //     const newErrors = { ...prev };
+  //     delete newErrors[field];
+  //     return newErrors;
+  //   });
+  // };
 
-  const validate = () => {
-    const newErrors = {};
+  // const validate = () => {
+  //   const newErrors = {};
 
-    if (!email) newErrors.email = "Email is required.";
-    else if (!/\S+@\S+\.\S+/.test(email))
-      newErrors.email = "Enter a valid email address.";
+  //   if (!email) newErrors.email = "Email is required.";
+  //   else if (!/\S+@\S+\.\S+/.test(email))
+  //     newErrors.email = "Enter a valid email address.";
 
-    if (!password) newErrors.password = "Password is required.";
-    else if (password.length < 6)
-      newErrors.password = "Password must be at least 6 characters.";
+  //   if (!password) newErrors.password = "Password is required.";
+  //   else if (password.length < 6)
+  //     newErrors.password = "Password must be at least 6 characters.";
 
-    if (!isLogin) {
-      if (!firstName) newErrors.firstName = "First name is required.";
-      if (!lastName) newErrors.lastName = "Last name is required.";
-      if (!company) newErrors.company = "Company name is required.";
-      if (!mobile) newErrors.mobile = "Mobile number is required.";
-      else if (!/^\d{10}$/.test(mobile.replace(/\s/g, "")))
-        newErrors.mobile = "Enter a valid 10-digit mobile number.";
+  //   if (!isLogin) {
+  //     if (!firstName) newErrors.firstName = "First name is required.";
+  //     if (!lastName) newErrors.lastName = "Last name is required.";
+  //     if (!company) newErrors.company = "Company name is required.";
+  //     if (!mobile) newErrors.mobile = "Mobile number is required.";
+  //     else if (!/^\d{10}$/.test(mobile.replace(/\s/g, "")))
+  //       newErrors.mobile = "Enter a valid 10-digit mobile number.";
 
-      if (!confirmPassword)
-        newErrors.confirmPassword = "Please confirm your password.";
-      else if (password !== confirmPassword)
-        newErrors.confirmPassword = "Passwords do not match.";
+  //     if (!confirmPassword)
+  //       newErrors.confirmPassword = "Please confirm your password.";
+  //     else if (password !== confirmPassword)
+  //       newErrors.confirmPassword = "Passwords do not match.";
 
-      if (!agreeTerms)
-        newErrors.terms = "You must agree to the terms and conditions.";
-    }
+  //     if (!agreeTerms)
+  //       newErrors.terms = "You must agree to the terms and conditions.";
+  //   }
 
-    return newErrors;
-  };
+  //   return newErrors;
+  // };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-    } else {
-      setErrors({});
-      setLoading(true);
-      try {
-        const response = await axios.post(`${baseURL}admin/login`, {
-          email,
-          password,
-        });
-        const data = response.data;
+  const handleSubmit = () => {
+    navigate("/myrosterly")
+  }
 
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("firstName", data.admin.firstName);
-        localStorage.setItem("lastName", data.admin.lastName);
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const validationErrors = validate();
+  //   if (Object.keys(validationErrors).length > 0) {
+  //     setErrors(validationErrors);
+  //   } else {
+  //     setErrors({});
+  //     setLoading(true);
+  //     try {
+  //       const response = await axios.post(`${baseURL}admin/login`, {
+  //         email,
+  //         password,
+  //       });
+  //       const data = response.data;
 
-        setModalTitle("Success");
-        setModalMessage("Login successful!");
-        setIsModalOpen(true);
+  //       localStorage.setItem("token", data.token);
+  //       localStorage.setItem("firstName", data.admin.firstName);
+  //       localStorage.setItem("lastName", data.admin.lastName);
 
-        console.log("Login successful:", data);
-        navigate("/myrosterly");
-      } catch (error) {
-        const errorMessage =
-          error.response?.data?.message || "Email or password is incorrect.";
+  //       setModalTitle("Success");
+  //       setModalMessage("Login successful!");
+  //       setIsModalOpen(true);
 
-        setModalTitle("Error");
-        setModalMessage(errorMessage);
-        setIsModalOpen(true);
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
+  //       console.log("Login successful:", data);
+  //       navigate("/myrosterly");
+  //     } catch (error) {
+  //       const errorMessage =
+  //         error.response?.data?.message || "Email or password is incorrect.";
+
+  //       setModalTitle("Error");
+  //       setModalMessage(errorMessage);
+  //       setIsModalOpen(true);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+  // };
 
   return (
     <div className="min-h-screen flex items-center justify-center bgimg px-4 bg-gray-100">
@@ -196,9 +200,8 @@ export default function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => handleChange("email", e.target.value)}
-                className={`custom-focus w-full paragraphBold px-2 py-3 border ${
-                  errors.email ? "border-red-500" : "border-gray-300"
-                } rounded-lg`}
+                className={`custom-focus w-full paragraphBold px-2 py-3 border ${errors.email ? "border-red-500" : "border-gray-300"
+                  } rounded-lg`}
                 placeholder="Enter your email"
               />
               {errors.email && (
@@ -215,9 +218,8 @@ export default function Login() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => handleChange("password", e.target.value)}
-                  className={`custom-focus w-full paragraphBold px-2 py-3 border ${
-                    errors.password ? "border-red-500" : "border-gray-300"
-                  } rounded-lg pr-12`}
+                  className={`custom-focus w-full paragraphBold px-2 py-3 border ${errors.password ? "border-red-500" : "border-gray-300"
+                    } rounded-lg pr-12`}
                   placeholder="Enter your password"
                 />
                 <span
