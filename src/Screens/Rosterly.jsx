@@ -2,18 +2,21 @@ import moment from "moment";
 import React, { useEffect, useState, useRef } from "react";
 import { FaRegClock, FaMapMarkerAlt, FaUserTimes, FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const Rosterly = () => {
   const [userName, setUserName] = useState("");
 
   // State updates
   const [activeTimer, setActiveTimer] = useState(null); // 'shift' | 'break' | null
+  const [isShiftFinished, setIsShiftFinished] = useState(false);
   const [elapsed, setElapsed] = useState(0); // current mode's elapsed
   const [breakRemaining, setBreakRemaining] = useState(900);
   const [shiftElapsed, setShiftElapsed] = useState(0);
   const [breakElapsed, setBreakElapsed] = useState(0);
   const [currentWeek, setCurrentWeek] = useState(moment());
   const timerRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const firstName = localStorage.getItem("firstName") || "";
@@ -48,36 +51,7 @@ const Rosterly = () => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
-    }
-  };
-
-  // Handler to toggle between shift and break modes
-  const handleTimerToggle = () => {
-    if (activeTimer === null) {
-      // Start shift timer if nothing is running
-      setActiveTimer("shift");
-      setElapsed(0);
-      startTimer();
-    } else if (activeTimer === "shift") {
-      // Stop shift and start break
-      stopTimer();
-      setActiveTimer("break");
-      setElapsed(0);
-      startTimer();
-    } else if (activeTimer === "break") {
-      // Stop break and resume shift
-      stopTimer();
-      setActiveTimer("shift");
-      setElapsed(0);
-      startTimer();
-    }
-  };
-
-  // Determine button text based on current mode
-  const getButtonLabel = () => {
-    if (activeTimer === null) return "Start Your Shift";
-    if (activeTimer === "shift") return "Stop Shift & Start Break";
-    if (activeTimer === "break") return "Stop Break & Resume Shift";
+   }
   };
 
   const formatTime = (seconds) => {
@@ -106,24 +80,39 @@ const Rosterly = () => {
   };
 
   const handleShiftToggle = () => {
+    if (isShiftFinished) return;
+
     if (activeTimer !== "shift") {
       setActiveTimer("shift");
-      startTimer("shift");
+      startTimer('shift');
     }
   };
 
   const handleBreakToggle = () => {
-    if (activeTimer !== "break") {
-      setActiveTimer("break");
-      startTimer("break");
-    } else {
-      // if already on break, stop break and resume shift
+    if (isShiftFinished) return; 
+
+    if (activeTimer === "break") {
+      // Stop break and resume shift
       stopTimer();
       setActiveTimer("shift");
       startTimer("shift");
+    } else {
+      // Start break and pause shift
+      stopTimer();
+      setActiveTimer("break");
+      startTimer("break");
     }
   };
 
+  const handleFinishShift = () => {
+    stopTimer();              
+    setActiveTimer(null);       
+    setIsShiftFinished(true);  
+  };
+
+  const unavailabilityHandler = () => {
+    navigate("/unavailability");
+  };
 
   return (
     <>
@@ -142,20 +131,28 @@ const Rosterly = () => {
 
           <button
             onClick={handleBreakToggle}
-            className={`buttonDanger mt-2 w-full sm:w-auto`}
+            className={`buttonDanger mt-2 mr-2 w-full sm:w-auto`}
           >
             {activeTimer === "break" ? "Stop Break" : "Start Break"}
           </button>
+
+          <button
+            onClick={handleFinishShift}
+            className={`buttonSuccess mt-2 w-full sm:w-auto`}
+            disabled={isShiftFinished || !shiftElapsed}
+          >
+            {isShiftFinished ? "Shift Finished" : "Finish Shift"}
+          </button>
         </div>
 
-        {(activeTimer || shiftElapsed > 0) && (
+        {(shiftElapsed > 0 || isShiftFinished) && (
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 80 }}
             className="flex flex-col justify-end flex-1 mt-10 text-right text-indigo-950"
           >
-            <p className="py-1 heading">Shift Time:<strong> {formatTime(shiftElapsed)}</strong></p>
+            <p className="py-1 heading">Shift Time: <strong>{formatTime(shiftElapsed)}</strong></p>
             <p className="subHeading">Break Time Left: {formatTime(breakRemaining)}</p>
           </motion.div>
         )}
@@ -237,7 +234,7 @@ const Rosterly = () => {
                 <h2 className="text-indigo-900 subHeading">date and time.</h2>
               </div>
               <div className="flex justify-end mt-4">
-                <button className="buttonSuccessActive w-full sm:w-1/2">Start Your Shift</button>
+                <button className="buttonSuccessActive w-full sm:w-1/2" onClick={unavailabilityHandler}>Select Your Unavailability</button>
               </div>
             </div>
           </div>
