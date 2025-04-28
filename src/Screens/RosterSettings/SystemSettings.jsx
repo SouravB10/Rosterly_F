@@ -25,7 +25,7 @@ const SystemSettings = () => {
   return (
     <div>
       <div className="mt-2 w-full">
-        <div className="flex flex-wrap gap-2 justify-between px-1">
+        <div className="flex flex-wrap gap-2 justify-between px-1 ">
           {[
             { name: 'General', icon: <IoSettingsOutline className="text-xl sm:text-3xl" /> },
             { name: 'Roster', icon: <FaUserClock className="text-xl sm:text-3xl" /> },
@@ -37,10 +37,11 @@ const SystemSettings = () => {
             <div
               key={setting.name}
               className={`w-[18%] p-2 sm:p-4 rounded-md transition-all duration-200 cursor-pointer text-xs sm:text-sm
-              flex flex-col items-center text-center
+              flex flex-col items-center text-center 
               ${selectedSetting === setting.name ? 'buttonSuccessActive text-black' : 'sideBar'}
               `}
               onClick={() => setSelectedSetting(setting.name)}
+              title={`${setting.name} Settings`}
             >
               <div className={`mb-1 ${selectedSetting === setting.name ? 'text-black' : 'text-gray-600'}`}>
                 {setting.icon}

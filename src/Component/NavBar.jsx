@@ -49,7 +49,7 @@ const NavBar = ({ toggleSidebar }) => {
       <div className="px-4 sm:px-3 lg:px-4">
         <div className="relative flex h-14 items-center justify-between">
           <div className="font-bold hidden sm:block">
-            <h1>{activeMenu ? activeMenu.title : "My Rosterly"}</h1>
+            <h1>{activeMenu ? activeMenu.title : "Rosterly"}</h1>
           </div>
           <button onClick={toggleSidebar} className="sm:hidden text-gray-800 fixed z-30">
             <TiThMenu className="text-2xl" />

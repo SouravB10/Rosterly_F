@@ -1,6 +1,7 @@
 import moment from "moment";
 import React, { useEffect, useState, useRef } from "react";
 import { FaRegClock, FaMapMarkerAlt, FaUserTimes, FaAngleLeft, FaAngleRight } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const Rosterly = () => {
   const [userName, setUserName] = useState("");
@@ -8,6 +9,7 @@ const Rosterly = () => {
   // State updates
   const [activeTimer, setActiveTimer] = useState(null); // 'shift' | 'break' | null
   const [elapsed, setElapsed] = useState(0); // current mode's elapsed
+  const [breakRemaining, setBreakRemaining] = useState(900);
   const [shiftElapsed, setShiftElapsed] = useState(0);
   const [breakElapsed, setBreakElapsed] = useState(0);
   const [currentWeek, setCurrentWeek] = useState(moment());
@@ -20,10 +22,25 @@ const Rosterly = () => {
   }, []);
 
   // Starts a timer that ticks every second
-  const startTimer = () => {
-    timerRef.current = setInterval(() => {
-      setElapsed((prev) => prev + 1);
-    }, 1000);
+  const startTimer = (type) => {
+    stopTimer(); // clear any previous timers
+    if (type === "shift") {
+      timerRef.current = setInterval(() => {
+        setShiftElapsed((prev) => prev + 1);
+      }, 1000);
+    } else if (type === "break") {
+      timerRef.current = setInterval(() => {
+        setBreakRemaining((prev) => {
+          if (prev <= 1) {
+            stopTimer();
+            setActiveTimer("shift");
+            startTimer("shift"); // Auto resume shift after break ends
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
   };
 
   // Stops any running timer
@@ -88,30 +105,63 @@ const Rosterly = () => {
     setCurrentWeek((prev) => moment(prev).add(1, "week"));
   };
 
+  const handleShiftToggle = () => {
+    if (activeTimer !== "shift") {
+      setActiveTimer("shift");
+      startTimer("shift");
+    }
+  };
+
+  const handleBreakToggle = () => {
+    if (activeTimer !== "break") {
+      setActiveTimer("break");
+      startTimer("break");
+    } else {
+      // if already on break, stop break and resume shift
+      stopTimer();
+      setActiveTimer("shift");
+      startTimer("shift");
+    }
+  };
+
 
   return (
     <>
       {/* Top Section: Welcome & Timer */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4 p-2">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 p-1">
         <div className="text-indigo-950">
           <p className="text-sm sm:text-base font-bold">Welcome,</p>
           <p className="text-lg sm:text-xl font-bold">{userName}</p>
+
           <button
-            onClick={handleTimerToggle}
-            className={`${activeTimer === "shift" ? "buttonDanger" : "buttonSuccessActive"} mt-2 w-full sm:w-auto`}
+            onClick={handleShiftToggle}
+            className={`buttonSuccess mt-2 mr-2 w-full sm:w-auto`}
           >
-            {getButtonLabel()}
+            {activeTimer === "shift" ? "Shift Running..." : "Start/Resume Shift"}
+          </button>
+
+          <button
+            onClick={handleBreakToggle}
+            className={`buttonDanger mt-2 w-full sm:w-auto`}
+          >
+            {activeTimer === "break" ? "Stop Break" : "Start Break"}
           </button>
         </div>
 
-        {activeTimer && (
-          <div className="text-right text-indigo-950 text-sm sm:text-xl">
-            <p>
-              {activeTimer === "shift" ? "Shift Timer: " : "Break Timer: "}{" "}
-              {formatTime(elapsed)}
-            </p>
-          </div>
+        {(activeTimer || shiftElapsed > 0) && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 80 }}
+            className="flex flex-col justify-end flex-1 mt-10 text-right text-indigo-950"
+          >
+            <p className="py-1 heading">Shift Time:<strong> {formatTime(shiftElapsed)}</strong></p>
+            <p className="subHeading">Break Time Left: {formatTime(breakRemaining)}</p>
+          </motion.div>
         )}
+        {/* <div className="flex flex-col justify-end flex-1 mt-10 text-right text-indigo-950">
+
+        </div> */}
       </div>
 
       {/* Card Container */}
