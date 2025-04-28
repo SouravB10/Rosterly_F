@@ -1,17 +1,22 @@
 import moment from "moment";
 import React, { useEffect, useState, useRef } from "react";
 import { FaRegClock, FaMapMarkerAlt, FaUserTimes, FaAngleLeft, FaAngleRight } from "react-icons/fa";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const Rosterly = () => {
   const [userName, setUserName] = useState("");
 
   // State updates
   const [activeTimer, setActiveTimer] = useState(null); // 'shift' | 'break' | null
+  const [isShiftFinished, setIsShiftFinished] = useState(false);
   const [elapsed, setElapsed] = useState(0); // current mode's elapsed
+  const [breakRemaining, setBreakRemaining] = useState(900);
   const [shiftElapsed, setShiftElapsed] = useState(0);
   const [breakElapsed, setBreakElapsed] = useState(0);
   const [currentWeek, setCurrentWeek] = useState(moment());
   const timerRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const firstName = localStorage.getItem("firstName") || "";
@@ -20,10 +25,25 @@ const Rosterly = () => {
   }, []);
 
   // Starts a timer that ticks every second
-  const startTimer = () => {
-    timerRef.current = setInterval(() => {
-      setElapsed((prev) => prev + 1);
-    }, 1000);
+  const startTimer = (type) => {
+    stopTimer(); // clear any previous timers
+    if (type === "shift") {
+      timerRef.current = setInterval(() => {
+        setShiftElapsed((prev) => prev + 1);
+      }, 1000);
+    } else if (type === "break") {
+      timerRef.current = setInterval(() => {
+        setBreakRemaining((prev) => {
+          if (prev <= 1) {
+            stopTimer();
+            setActiveTimer("shift");
+            startTimer("shift"); // Auto resume shift after break ends
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
   };
 
   // Stops any running timer
@@ -31,36 +51,7 @@ const Rosterly = () => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
-    }
-  };
-
-  // Handler to toggle between shift and break modes
-  const handleTimerToggle = () => {
-    if (activeTimer === null) {
-      // Start shift timer if nothing is running
-      setActiveTimer("shift");
-      setElapsed(0);
-      startTimer();
-    } else if (activeTimer === "shift") {
-      // Stop shift and start break
-      stopTimer();
-      setActiveTimer("break");
-      setElapsed(0);
-      startTimer();
-    } else if (activeTimer === "break") {
-      // Stop break and resume shift
-      stopTimer();
-      setActiveTimer("shift");
-      setElapsed(0);
-      startTimer();
-    }
-  };
-
-  // Determine button text based on current mode
-  const getButtonLabel = () => {
-    if (activeTimer === null) return "Start Your Shift";
-    if (activeTimer === "shift") return "Stop Shift & Start Break";
-    if (activeTimer === "break") return "Stop Break & Resume Shift";
+   }
   };
 
   const formatTime = (seconds) => {
@@ -88,30 +79,86 @@ const Rosterly = () => {
     setCurrentWeek((prev) => moment(prev).add(1, "week"));
   };
 
+  const handleShiftToggle = () => {
+    if (isShiftFinished) return;
+
+    if (activeTimer !== "shift") {
+      setActiveTimer("shift");
+      startTimer('shift');
+    }
+  };
+
+  const handleBreakToggle = () => {
+    if (isShiftFinished) return; 
+
+    if (activeTimer === "break") {
+      // Stop break and resume shift
+      stopTimer();
+      setActiveTimer("shift");
+      startTimer("shift");
+    } else {
+      // Start break and pause shift
+      stopTimer();
+      setActiveTimer("break");
+      startTimer("break");
+    }
+  };
+
+  const handleFinishShift = () => {
+    stopTimer();              
+    setActiveTimer(null);       
+    setIsShiftFinished(true);  
+  };
+
+  const unavailabilityHandler = () => {
+    navigate("/unavailability");
+  };
 
   return (
     <>
       {/* Top Section: Welcome & Timer */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4 p-2">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 p-1">
         <div className="text-indigo-950">
           <p className="text-sm sm:text-base font-bold">Welcome,</p>
           <p className="text-lg sm:text-xl font-bold">{userName}</p>
+
           <button
-            onClick={handleTimerToggle}
-            className={`${activeTimer === "shift" ? "buttonDanger" : "buttonSuccessActive"} mt-2 w-full sm:w-auto`}
+            onClick={handleShiftToggle}
+            className={`buttonSuccess mt-2 mr-2 w-full sm:w-auto`}
           >
-            {getButtonLabel()}
+            {activeTimer === "shift" ? "Shift Running..." : "Start/Resume Shift"}
+          </button>
+
+          <button
+            onClick={handleBreakToggle}
+            className={`buttonDanger mt-2 mr-2 w-full sm:w-auto`}
+          >
+            {activeTimer === "break" ? "Stop Break" : "Start Break"}
+          </button>
+
+          <button
+            onClick={handleFinishShift}
+            className={`buttonSuccess mt-2 w-full sm:w-auto`}
+            disabled={isShiftFinished || !shiftElapsed}
+          >
+            {isShiftFinished ? "Shift Finished" : "Finish Shift"}
           </button>
         </div>
 
-        {activeTimer && (
-          <div className="text-right text-indigo-950 text-sm sm:text-xl">
-            <p>
-              {activeTimer === "shift" ? "Shift Timer: " : "Break Timer: "}{" "}
-              {formatTime(elapsed)}
-            </p>
-          </div>
+        {(shiftElapsed > 0 || isShiftFinished) && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 80 }}
+            className="flex flex-col justify-end flex-1 mt-10 text-right text-indigo-950"
+          >
+            <p className="py-1 heading">Shift Time: <strong>{formatTime(shiftElapsed)}</strong></p>
+            <p className="subHeading">Break Time Left: {formatTime(breakRemaining)}</p>
+          </motion.div>
         )}
+        {/* <div className="flex flex-col justify-end flex-1 mt-10 text-right text-indigo-950">
+
+        </div> */}
       </div>
 
       {/* Card Container */}
@@ -187,7 +234,7 @@ const Rosterly = () => {
                 <h2 className="text-indigo-900 subHeading">date and time.</h2>
               </div>
               <div className="flex justify-end mt-4">
-                <button className="buttonSuccessActive w-full sm:w-1/2">Start Your Shift</button>
+                <button className="buttonSuccessActive w-full sm:w-1/2" onClick={unavailabilityHandler}>Select Your Unavailability</button>
               </div>
             </div>
           </div>
