@@ -22,10 +22,10 @@ const Location = () => {
         <div className="w-full md:w-1/2 flex flex-col items-center ">
           <img
             alt=""
-            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+            src="https://sketchok.com/images/articles/06-anime/002-one-piece/26/16.jpg"
             className="size-40 md:size-70 rounded"
           />
-          <h3 className="SunHeading mt-2">Anita Verma</h3>
+          <h3 className="SunHeading mt-2">Monkey D Luffy</h3>
         </div>
 
         <div className="w-full">
@@ -36,7 +36,7 @@ const Location = () => {
               </label>
               <input
                 type="text"
-                value="Anita Verma"
+                value="Monkey D Luffy"
                 className="input w-full border border-gray-500"
               />
             </div>
@@ -46,7 +46,7 @@ const Location = () => {
               </label>
               <input
                 type="text"
-                value="anita.glansa@gmail.com"
+                value="luffy.glansa@gmail.com"
                 className="input w-full border border-gray-500"
               />
             </div>
