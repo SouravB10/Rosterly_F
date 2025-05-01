@@ -62,39 +62,39 @@ export default function Login() {
     }
   }, [navigate]);
 
-  // const handleChange = (field, value) => {
-  //   switch (field) {
-  //     case "firstName":
-  //       setFirstName(value);
-  //       break;
-  //     case "lastName":
-  //       setLastName(value);
-  //       break;
-  //     case "company":
-  //       setCompany(value);
-  //       break;
-  //     case "mobile":
-  //       setMobile(value);
-  //       break;
-  //     case "email":
-  //       setEmail(value);
-  //       break;
-  //     case "password":
-  //       setPassword(value);
-  //       break;
-  //     case "confirmPassword":
-  //       setConfirmPassword(value);
-  //       break;
-  //     default:
-  //       break;
-  //   }
+  const handleChange = (field, value) => {
+    switch (field) {
+      case "firstName":
+        setFirstName(value);
+        break;
+      case "lastName":
+        setLastName(value);
+        break;
+      case "company":
+        setCompany(value);
+        break;
+      case "mobile":
+        setMobile(value);
+        break;
+      case "email":
+        setEmail(value);
+        break;
+      case "password":
+        setPassword(value);
+        break;
+      case "confirmPassword":
+        setConfirmPassword(value);
+        break;
+      default:
+        break;
+    }
 
-  //   setErrors((prev) => {
-  //     const newErrors = { ...prev };
-  //     delete newErrors[field];
-  //     return newErrors;
-  //   });
-  // };
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors[field];
+      return newErrors;
+    });
+  };
 
   // const validate = () => {
   //   const newErrors = {};
@@ -126,11 +126,9 @@ export default function Login() {
 
   //   return newErrors;
   // };
-
   const handleSubmit = () => {
     navigate("/myrosterly")
   }
-
   // const handleSubmit = async (e) => {
   //   e.preventDefault();
   //   const validationErrors = validate();
