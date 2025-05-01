@@ -1,18 +1,7 @@
 import React, { useState } from "react";
 import ProfileImage from "../assets/images/profile.png";
 
-const Location = () => {
-  const [selectLocation, setSelectLocation] = useState("");
-  const [activeTab, setActiveTab] = useState("general");
-  const [showModal, setShowModal] = useState(false);
-
-  const handleLocation = (e) => {
-    setSelectLocation(e.target.value);
-  };
-
-  const getLocation = () => {
-    alert(selectLocation);
-  };
+const Profile = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-5 my-4">
@@ -99,4 +88,4 @@ const Location = () => {
   );
 };
 
-export default Location;
+export default Profile;
