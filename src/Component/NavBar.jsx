@@ -75,7 +75,7 @@ const NavBar = ({ toggleSidebar }) => {
                   <img
                     alt=""
                     src="https://sketchok.com/images/articles/06-anime/002-one-piece/26/16.jpg"
-                    className="size-9 rounded p-1"
+                    className="size-8 rounded p-1"
                   />
                 </MenuButton>
               </div>
