@@ -67,7 +67,7 @@ const NavBar = ({ toggleSidebar }) => {
             </button>
 
             {/* Profile dropdown */}
-            <Menu as="div" className="relative">
+            <Menu as="div" className="relative border rounded-full">
               <div>
                 <MenuButton className="cursor-pointer relative flex rounded-full text-sm focus:ring-2 focus:ring-white">
                   <span className="absolute -inset-1.5" />
@@ -75,7 +75,7 @@ const NavBar = ({ toggleSidebar }) => {
                   <img
                     alt=""
                     src="https://sketchok.com/images/articles/06-anime/002-one-piece/26/16.jpg"
-                    className="size-9 rounded"
+                    className="size-8 rounded p-1"
                   />
                 </MenuButton>
               </div>
