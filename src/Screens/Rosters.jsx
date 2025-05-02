@@ -53,7 +53,7 @@ const Rosters = () => {
   ];
 
   const employees = [
-    { name: "Open Shifts", hours: "8.25", cost: null },
+    { name: "Unassigned shifts", hours: "8.25", cost: null },
     { name: "Harish Dobila", hours: "5.00", cost: "$10.00" },
     { name: "Sourav Behuria", hours: "4.00", cost: "$9.00" },
     { name: "Vishal Kattera", hours: "8.00", cost: "$20.00" },

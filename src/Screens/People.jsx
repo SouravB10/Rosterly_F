@@ -169,7 +169,7 @@ const People = () => {
             value={selectedLocation}
             onChange={(e) => setSelectedLocation(e.target.value)}
           >
-            <option value="all">--All Stores--</option>
+            <option value="all">--All Locations--</option>
             <option value="Store 1">Store 1</option>
             <option value="Store 2">Store 2</option>
           </select>

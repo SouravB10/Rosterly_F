@@ -53,7 +53,7 @@ const Unavailability = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full py-2 my-2">
         <div className="card">
           <h1 className="heading">
-            Days Off Adding
+          Unavailable days
           </h1>
 
           <div className="flex flex-wrap gap-4 ">
