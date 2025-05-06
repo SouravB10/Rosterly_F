@@ -26,6 +26,8 @@ import JuniorRate from './Screens/RosterSettings/JuniorRate';
 import PenalityRate from './Screens/RosterSettings/PenalityRate';
 import Profile from './Screens/Profile';
 import ClickSpark from './Component/ClickSpark';
+import ShiftBoard from './Screens/ShiftBoard';
+import NotFound from './Component/NotFound';
 
 
 function AppWrapper() {
@@ -55,6 +57,30 @@ function AppWrapper() {
   const isLoginPage = location.pathname === '/';
   const isRegisterPage = location.pathname === '/register';
 
+  const isNotFound = ![
+    '/',
+    '/register',
+    '/dashboard',
+    '/myrosterly',
+    '/unavailability',
+    '/people',
+    '/location',
+    '/systemsettings',
+    '/payrate',
+    '/utilities',
+    '/roster',
+    '/timesheet',
+    '/notification',
+    '/generalsettings',
+    '/rostersetting',
+    '/employeetypeloading',
+    '/permission',
+    '/JuniorRate',
+    '/PanalityRate',
+    '/Profile',
+    '/drag',
+  ].includes(location.pathname);
+
   return (
     <>
       <ClickSpark
@@ -65,7 +91,7 @@ function AppWrapper() {
         duration={400}
       >
         <div className='flex h-screen overflow-hidden'>
-          {!isLoginPage && !isRegisterPage && (
+          {!isLoginPage && !isRegisterPage && !isNotFound && (
 
             <div className=" top-0 left-0 h-full">
               {(sidebarOpen || !isMobile) && (
@@ -74,8 +100,8 @@ function AppWrapper() {
             </div>
           )}
           <div className='flex-1 flex flex-col'>
-            {!isLoginPage && !isRegisterPage && <NavBar toggleSidebar={toggleSidebar} />}
-            <div className={`flex-1 overflow-auto ${isLoginPage || isRegisterPage ? 'p-0' : 'px-4'}`}>
+            {!isLoginPage && !isRegisterPage && !isNotFound && <NavBar toggleSidebar={toggleSidebar} />}
+            <div className={`flex-1 overflow-auto ${isLoginPage || isRegisterPage ? 'p-0' : 'px-4'} ${isNotFound ? 'flex items-center justify-center' : ''}`}>
               <Routes>
                 <Route path='/' element={<Login />} />
                 <Route path='/register' element={<Register />} />
@@ -97,6 +123,15 @@ function AppWrapper() {
                 <Route path='/JuniorRate' element={<JuniorRate />} />
                 <Route path='/PanalityRate' element={<PenalityRate />} />
                 <Route path='/Profile' element={<Profile />} />
+                <Route path='/drag' element={<ShiftBoard />} />
+                <Route
+                  path='*'
+                  element={
+                    <NotFound baseIntensity={0.2} hoverIntensity={0.5} enableHover={true}>
+                      {"404\nnot found"}
+                    </NotFound>
+                  }
+                />
 
               </Routes>
             </div>

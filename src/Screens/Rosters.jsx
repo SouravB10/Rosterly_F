@@ -97,13 +97,6 @@ const Rosters = () => {
           <select
             name="selectedLocation"
             className="input w-50 "
-            // style={{
-            //   backgroundImage:
-            //     "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='black'><path stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/></svg>\")",
-            //   backgroundRepeat: "no-repeat",
-            //   backgroundPosition: "right 1rem center",
-            //   backgroundSize: "1.25rem",
-            // }}
             value={selectedLocation}
             onChange={handleLocation}
           >
@@ -132,11 +125,9 @@ const Rosters = () => {
               onClick={handleStats}
             >
               <IoStatsChartSharp className="icon50" />
-              {/* {!stats && ( */}
               <span className="absolute top-full mt-1 hidden group-hover:flex bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
                 Statistics
               </span>
-              {/* )} */}
 
             </div>
 
@@ -198,82 +189,6 @@ const Rosters = () => {
       )}
 
       <div className="mt-8 min-h-screen">
-        {/* <div className="bg-white shadow-md rounded-lg overflow-hidden">
-          <table className="w-full font12 table-fixed">
-            <thead>
-              <tr className="bg-gray-300 paragraphBold">
-                <th className="p-4">Open Shifts</th>
-                <th className="p-4">Mon 07/04</th>
-                <th className="p-4">Tue 08/04</th>
-                <th className="p-4">Wed 09/04</th>
-                <th className="p-4">Thu 10/04</th>
-                <th className="p-4">Fri 11/04</th>
-                <th className="p-4">Sat 12/04</th>
-                <th className="p-4">Sun 13/04</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b paragraph">
-                <th className="p-4 flex items-center gap-2 font-semibold">
-                  <SlCalender className="text-xl" /> Open Shifts
-                </th>
-                <td className="p-4"></td>
-                <td className="p-4"></td>
-                <td className="p-4"></td>
-                <td className="p-4"></td>
-                <td className="p-4"></td>
-                <td className="p-4"></td>
-                <td className="p-4"></td>
-              </tr>
-              {[
-                { name: "Harish Dobila", hours: "0.50hrs", salary: "$800.25" },
-                { name: "Prudhvi Raj", hours: "0.40hrs", salary: "$700.25" },
-                { name: "Vishal Kattera", hours: "0.50hrs", salary: "$800.25" },
-                { name: "Sourav", hours: "0.50hrs", salary: "$800.25" },
-              ].map((person, index) => (
-                <tr key={index} className="border-b">
-                  <td className="p-4 paragraph">
-                    {person.name} <br />
-                    <span className="paragraphBold">
-                      {person.hours} {person.salary}
-                    </span>
-                  </td>
-                  <td className="p-4">
-                    <div className="bg-violet-400 text-white p-2 paragraph">
-                      1:30 PM - 2:15 PM <br />
-                      <span className="text-xs">0.50 Hrs (15 Min)</span> <br />
-                      <span className="text-xs">Lunch</span>
-                    </div>
-                  </td>
-                  <td className="p-4"></td>
-                  <td className="p-4 paragraph">
-                    Unavailable <br /> 8:00 AM - 10:00 PM
-                  </td>
-                  <td className="p-4 paragraph">
-                    Unavailable <br /> 8:00 AM - 10:00 PM
-                  </td>
-                  <td className="p-4"></td>
-                  <td className="p-4 paragraph">
-                    Unavailable <br /> 8:00 AM - 10:00 PM
-                  </td>
-                  <td className="p-4 paragraph">
-                    Unavailable <br /> 8:00 AM - 10:00 PM
-                  </td>
-                </tr>
-              ))}
-              <tr className="bg-gray-200 font-semibold">
-                <td className="p-4">Total</td>
-                <td className="p-4">2.17 Hrs</td>
-                <td className="p-4">0.00 Hrs</td>
-                <td className="p-4">0.00 Hrs</td>
-                <td className="p-4">0.00 Hrs</td>
-                <td className="p-4">0.00 Hrs</td>
-                <td className="p-4">0.00 Hrs</td>
-                <td className="p-4">0.00 Hrs</td>
-              </tr>
-            </tbody>
-          </table>
-        </div> */}
         <div className="overflow-x-auto   ">
           <table className="min-w-full border border-gray-300 text-sm">
             <thead className="bgTable">
