@@ -51,7 +51,7 @@ const Rosterly = () => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
-   }
+    }
   };
 
   const formatTime = (seconds) => {
@@ -66,9 +66,9 @@ const Rosterly = () => {
   };
 
   const getWeekRange = (week) => {
-    const startOfWeek = moment(week).startOf("isoWeek").format("DD MMM");
-    const endOfWeek = moment(week).endOf("isoWeek").format("DD MMM");
-    return `${startOfWeek} - ${endOfWeek}`;
+    const startOfWeek = moment(week).isoWeekday(3); // Wednesday
+    const endOfWeek = moment(startOfWeek).add(6, 'days'); // Tuesday (6 days after Wednesday)
+    return `${startOfWeek.format("DD MMM")} - ${endOfWeek.format("DD MMM")}`;
   };
 
   const handlePrevWeek = () => {
@@ -89,7 +89,7 @@ const Rosterly = () => {
   };
 
   const handleBreakToggle = () => {
-    if (isShiftFinished) return; 
+    if (isShiftFinished) return;
 
     if (activeTimer === "break") {
       // Stop break and resume shift
@@ -105,9 +105,9 @@ const Rosterly = () => {
   };
 
   const handleFinishShift = () => {
-    stopTimer();              
-    setActiveTimer(null);       
-    setIsShiftFinished(true);  
+    stopTimer();
+    setActiveTimer(null);
+    setIsShiftFinished(true);
   };
 
   const unavailabilityHandler = () => {
@@ -154,7 +154,7 @@ const Rosterly = () => {
             className="flex flex-col justify-end flex-1 mt-10 text-right text-indigo-950"
           >
             <p className="py-1 heading">Shift Time: <strong>{formatTime(shiftElapsed)}</strong></p>
-            <p className="subHeading">Break Time Left: {formatTime(breakRemaining)}</p>
+            <p className="subHeading text-red-700">Break Time Left: {formatTime(breakRemaining)}</p>
           </motion.div>
         )}
         {/* <div className="flex flex-col justify-end flex-1 mt-10 text-right text-indigo-950">

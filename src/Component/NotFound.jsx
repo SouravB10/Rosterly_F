@@ -15,7 +15,7 @@ const NotFound = ({
     useEffect(() => {
         let animationFrameId;
         let isCancelled = false;
-        const canvas = canvasRef.current;
+        const  canvas = canvasRef.current;
         if (!canvas) return;
 
         const init = async () => {

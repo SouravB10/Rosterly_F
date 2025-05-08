@@ -77,7 +77,7 @@ function AppWrapper() {
     '/permission',
     '/JuniorRate',
     '/PanalityRate',
-    '/Profile',
+    '/profile',
     '/drag',
   ].includes(location.pathname);
 
@@ -101,7 +101,7 @@ function AppWrapper() {
           )}
           <div className='flex-1 flex flex-col'>
             {!isLoginPage && !isRegisterPage && !isNotFound && <NavBar toggleSidebar={toggleSidebar} />}
-            <div className={`flex-1 overflow-auto ${isLoginPage || isRegisterPage ? 'p-0' : 'px-4'} ${isNotFound ? 'flex items-center justify-center' : ''}`}>
+            <div className={`flex-1 overflow-auto ${isLoginPage || isRegisterPage ? 'p-0' : 'px-4'} ${isNotFound ? 'flex items-center p-12 justify-center' : ''}`}>
               <Routes>
                 <Route path='/' element={<Login />} />
                 <Route path='/register' element={<Register />} />
@@ -122,7 +122,7 @@ function AppWrapper() {
                 <Route path='/permission' element={<Permission />} />
                 <Route path='/JuniorRate' element={<JuniorRate />} />
                 <Route path='/PanalityRate' element={<PenalityRate />} />
-                <Route path='/Profile' element={<Profile />} />
+                <Route path='/profile' element={<Profile />} />
                 <Route path='/drag' element={<ShiftBoard />} />
                 <Route
                   path='*'
