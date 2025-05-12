@@ -2,6 +2,7 @@ import moment from "moment";
 import React, { useEffect, useState, useRef } from "react";
 import { FaRegClock, FaMapMarkerAlt, FaUserTimes, FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { getDistance } from "geolib";
 import { useNavigate } from "react-router-dom";
 
 const Rosterly = () => {
@@ -15,6 +16,9 @@ const Rosterly = () => {
   const [shiftElapsed, setShiftElapsed] = useState(0);
   const [breakElapsed, setBreakElapsed] = useState(0);
   const [currentWeek, setCurrentWeek] = useState(moment());
+  const [isAtStore, setIsAtStore] = useState(false);
+  const [locationError, setLocationError] = useState('');
+  const [isCheckingLocation, setIsCheckingLocation] = useState(false);
   const timerRef = useRef(null);
   const navigate = useNavigate();
 
@@ -114,6 +118,48 @@ const Rosterly = () => {
     navigate("/unavailability");
   };
 
+  // 17.43920120470179, 78.38736913783626
+  const STORE_LOCATION = {
+    latitude: 17.43920120470179,
+    longitude: 78.38736913783626,
+  };
+  
+  const ALLOWED_RADIUS_METERS = 500; // e.g., 500m radius
+
+  const checkLocation = () => {
+    setIsCheckingLocation(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+
+        // Log current location to console
+        console.log("Latitude:", latitude);
+        console.log("Longitude:", longitude);
+
+        const distance = getDistance({ latitude, longitude }, STORE_LOCATION);
+        console.log("Distance from store (in meters):", distance);
+
+        if (distance <= ALLOWED_RADIUS_METERS) {
+          setIsAtStore(true);
+          setLocationError('');
+        } else {
+          setIsAtStore(false);
+          setLocationError("You must be at the store to start your shift.");
+        }
+
+        setIsCheckingLocation(false);
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        setIsAtStore(false);
+        setLocationError("Unable to fetch location. Please enable location access.");
+        setIsCheckingLocation(false);
+      },
+      { enableHighAccuracy: true }
+    );
+  };
+
+
   return (
     <>
       {/* Top Section: Welcome & Timer */}
@@ -123,27 +169,41 @@ const Rosterly = () => {
           {/* <p className="text-lg sm:text-xl font-bold">{userName}</p> */}
           <p className="text-lg sm:text-xl font-bold">Anita Verma</p>
 
-          <button
-            onClick={handleShiftToggle}
-            className={`buttonSuccess mt-2 mr-2 w-full sm:w-auto`}
-          >
-            {activeTimer === "shift" ? "Shift Running..." : "Start/Resume Shift"}
-          </button>
+          {isAtStore ? (
+            <>
+              <button
+                onClick={handleShiftToggle}
+                className="buttonSuccess mt-2 mr-2 w-full sm:w-auto"
+              >
+                {activeTimer === "shift" ? "Shift Running..." : "Start/Resume Shift"}
+              </button>
 
-          <button
-            onClick={handleBreakToggle}
-            className={`buttonDanger mt-2 mr-2 w-full sm:w-auto`}
-          >
-            {activeTimer === "break" ? "Stop Break" : "Start Break"}
-          </button>
+              <button
+                onClick={handleBreakToggle}
+                className="buttonDanger mt-2 mr-2 w-full sm:w-auto"
+              >
+                {activeTimer === "break" ? "Stop Break" : "Start Break"}
+              </button>
 
-          <button
-            onClick={handleFinishShift}
-            className={`buttonSuccess mt-2 w-full sm:w-auto`}
-            disabled={isShiftFinished || !shiftElapsed}
-          >
-            {isShiftFinished ? "Shift Finished" : "Finish Shift"}
-          </button>
+              <button
+                onClick={handleFinishShift}
+                className="buttonSuccess mt-2 w-full sm:w-auto"
+                disabled={isShiftFinished || !shiftElapsed}
+              >
+                {isShiftFinished ? "Shift Finished" : "Finish Shift"}
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="buttonSuccess mt-2" disabled={isCheckingLocation} onClick={checkLocation}>
+                {isCheckingLocation ? "Checking..." : "Get Location"}
+              </button>
+              {locationError && (
+                <p className="text-red-600 mt-2 paragraph">{locationError}</p>
+              )}
+            </>
+          )}
+
         </div>
 
         {(shiftElapsed > 0 || isShiftFinished) && (
@@ -157,9 +217,6 @@ const Rosterly = () => {
             <p className="subHeading text-red-700">Break Time Left: {formatTime(breakRemaining)}</p>
           </motion.div>
         )}
-        {/* <div className="flex flex-col justify-end flex-1 mt-10 text-right text-indigo-950">
-
-        </div> */}
       </div>
 
       {/* Card Container */}
