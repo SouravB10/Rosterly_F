@@ -96,76 +96,76 @@ export default function Login() {
     });
   };
 
-  // const validate = () => {
-  //   const newErrors = {};
+  const validate = () => {
+    const newErrors = {};
 
-  //   if (!email) newErrors.email = "Email is required.";
-  //   else if (!/\S+@\S+\.\S+/.test(email))
-  //     newErrors.email = "Enter a valid email address.";
+    if (!email) newErrors.email = "Email is required.";
+    else if (!/\S+@\S+\.\S+/.test(email))
+      newErrors.email = "Enter a valid email address.";
 
-  //   if (!password) newErrors.password = "Password is required.";
-  //   else if (password.length < 6)
-  //     newErrors.password = "Password must be at least 6 characters.";
+    if (!password) newErrors.password = "Password is required.";
+    else if (password.length < 6)
+      newErrors.password = "Password must be at least 6 characters.";
 
-  //   if (!isLogin) {
-  //     if (!firstName) newErrors.firstName = "First name is required.";
-  //     if (!lastName) newErrors.lastName = "Last name is required.";
-  //     if (!company) newErrors.company = "Company name is required.";
-  //     if (!mobile) newErrors.mobile = "Mobile number is required.";
-  //     else if (!/^\d{10}$/.test(mobile.replace(/\s/g, "")))
-  //       newErrors.mobile = "Enter a valid 10-digit mobile number.";
+    if (!isLogin) {
+      if (!firstName) newErrors.firstName = "First name is required.";
+      if (!lastName) newErrors.lastName = "Last name is required.";
+      if (!company) newErrors.company = "Company name is required.";
+      if (!mobile) newErrors.mobile = "Mobile number is required.";
+      else if (!/^\d{10}$/.test(mobile.replace(/\s/g, "")))
+        newErrors.mobile = "Enter a valid 10-digit mobile number.";
 
-  //     if (!confirmPassword)
-  //       newErrors.confirmPassword = "Please confirm your password.";
-  //     else if (password !== confirmPassword)
-  //       newErrors.confirmPassword = "Passwords do not match.";
+      if (!confirmPassword)
+        newErrors.confirmPassword = "Please confirm your password.";
+      else if (password !== confirmPassword)
+        newErrors.confirmPassword = "Passwords do not match.";
 
-  //     if (!agreeTerms)
-  //       newErrors.terms = "You must agree to the terms and conditions.";
-  //   }
+      if (!agreeTerms)
+        newErrors.terms = "You must agree to the terms and conditions.";
+    }
 
-  //   return newErrors;
-  // };
-  const handleSubmit = () => {
-    navigate("/myrosterly")
-  }
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const validationErrors = validate();
-  //   if (Object.keys(validationErrors).length > 0) {
-  //     setErrors(validationErrors);
-  //   } else {
-  //     setErrors({});
-  //     setLoading(true);
-  //     try {
-  //       const response = await axios.post(`${baseURL}admin/login`, {
-  //         email,
-  //         password,
-  //       });
-  //       const data = response.data;
+    return newErrors;
+  };
+  // const handleSubmit = () => {
+  //   navigate("/myrosterly")
+  // }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+    } else {
+      setErrors({});
+      setLoading(true);
+      try {
+        const response = await axios.post(`${baseURL}admin/login`, {
+          email,
+          password,
+        });
+        const data = response.data;
 
-  //       localStorage.setItem("token", data.token);
-  //       localStorage.setItem("firstName", data.admin.firstName);
-  //       localStorage.setItem("lastName", data.admin.lastName);
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("firstName", data.admin.firstName);
+        localStorage.setItem("lastName", data.admin.lastName);
 
-  //       setModalTitle("Success");
-  //       setModalMessage("Login successful!");
-  //       setIsModalOpen(true);
+        setModalTitle("Success");
+        setModalMessage("Login successful!");
+        setIsModalOpen(true);
 
-  //       console.log("Login successful:", data);
-  //       navigate("/myrosterly");
-  //     } catch (error) {
-  //       const errorMessage =
-  //         error.response?.data?.message || "Email or password is incorrect.";
+        console.log("Login successful:", data);
+        navigate("/myrosterly");
+      } catch (error) {
+        const errorMessage =
+          error.response?.data?.message || "Email or password is incorrect.";
 
-  //       setModalTitle("Error");
-  //       setModalMessage(errorMessage);
-  //       setIsModalOpen(true);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-  // };
+        setModalTitle("Error");
+        setModalMessage(errorMessage);
+        setIsModalOpen(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bgimg px-4 bg-gray-100">
