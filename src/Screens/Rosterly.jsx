@@ -4,6 +4,7 @@ import { FaRegClock, FaMapMarkerAlt, FaUserTimes, FaAngleLeft, FaAngleRight } fr
 import { motion } from "framer-motion";
 import { getDistance } from "geolib";
 import { useNavigate } from "react-router-dom";
+import Dashboard from "./Dashboard";
 
 const Rosterly = () => {
   const [userName, setUserName] = useState("");
@@ -12,13 +13,15 @@ const Rosterly = () => {
   const [activeTimer, setActiveTimer] = useState(null); // 'shift' | 'break' | null
   const [isShiftFinished, setIsShiftFinished] = useState(false);
   const [elapsed, setElapsed] = useState(0); // current mode's elapsed
-  const [breakRemaining, setBreakRemaining] = useState(900);
-  const [shiftElapsed, setShiftElapsed] = useState(0);
   const [breakElapsed, setBreakElapsed] = useState(0);
+  const breakStartTimeRef = useRef(null);
+  const [shiftElapsed, setShiftElapsed] = useState(0);
   const [currentWeek, setCurrentWeek] = useState(moment());
   const [isAtStore, setIsAtStore] = useState(false);
   const [locationError, setLocationError] = useState('');
   const [isCheckingLocation, setIsCheckingLocation] = useState(false);
+  const [shiftStartTime, setShiftStartTime] = useState(null);
+  const [shiftEndTime, setShiftEndTime] = useState(null);
   const timerRef = useRef(null);
   const navigate = useNavigate();
 
@@ -29,23 +32,30 @@ const Rosterly = () => {
   }, []);
 
   // Starts a timer that ticks every second
+  const shiftStartTimeRef = useRef(null);
+
   const startTimer = (type) => {
-    stopTimer(); // clear any previous timers
+    stopTimer();
+
     if (type === "shift") {
+      if (!shiftStartTimeRef.current) {
+        shiftStartTimeRef.current = Date.now();
+      }
+
       timerRef.current = setInterval(() => {
-        setShiftElapsed((prev) => prev + 1);
+        const now = Date.now();
+        const elapsedInSeconds = Math.floor((now - shiftStartTimeRef.current) / 1000);
+        setShiftElapsed(elapsedInSeconds);
       }, 1000);
-    } else if (type === "break") {
+    }
+
+    if (type === "break") {
+      breakStartTimeRef.current = Date.now(); // Set break start time
+
       timerRef.current = setInterval(() => {
-        setBreakRemaining((prev) => {
-          if (prev <= 1) {
-            stopTimer();
-            setActiveTimer("shift");
-            startTimer("shift"); // Auto resume shift after break ends
-            return 0;
-          }
-          return prev - 1;
-        });
+        const now = Date.now();
+        const elapsed = Math.floor((now - breakStartTimeRef.current) / 1000);
+        setBreakElapsed(elapsed);
       }, 1000);
     }
   };
@@ -87,22 +97,24 @@ const Rosterly = () => {
     if (isShiftFinished) return;
 
     if (activeTimer !== "shift") {
+      const now = Date.now();
+      if (!shiftStartTime) {
+        setShiftStartTime(now); // store shift start time only once
+      }
       setActiveTimer("shift");
       startTimer('shift');
     }
   };
-
   const handleBreakToggle = () => {
     if (isShiftFinished) return;
 
     if (activeTimer === "break") {
-      // Stop break and resume shift
       stopTimer();
       setActiveTimer("shift");
       startTimer("shift");
     } else {
-      // Start break and pause shift
       stopTimer();
+      setBreakElapsed(0);
       setActiveTimer("break");
       startTimer("break");
     }
@@ -110,8 +122,15 @@ const Rosterly = () => {
 
   const handleFinishShift = () => {
     stopTimer();
+    setShiftEndTime(Date.now()); // store end time
     setActiveTimer(null);
     setIsShiftFinished(true);
+  };
+
+  const formatDisplayTime = (timestamp) => {
+    if (!timestamp) return '';
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
   const unavailabilityHandler = () => {
@@ -123,7 +142,7 @@ const Rosterly = () => {
     latitude: 17.43920120470179,
     longitude: 78.38736913783626,
   };
-  
+
   const ALLOWED_RADIUS_METERS = 500; // e.g., 500m radius
 
   const checkLocation = () => {
@@ -162,12 +181,11 @@ const Rosterly = () => {
 
   return (
     <>
-      {/* Top Section: Welcome & Timer */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 p-1">
         <div className="text-indigo-950">
           <p className="text-sm sm:text-base font-bold">Welcome,</p>
-          {/* <p className="text-lg sm:text-xl font-bold">{userName}</p> */}
-          <p className="text-lg sm:text-xl font-bold">Anita Verma</p>
+          <p className="text-lg sm:text-xl font-bold">{userName}</p>
+          {/* <p className="text-lg sm:text-xl font-bold">Anita Verma</p> */}
 
           {isAtStore ? (
             <>
@@ -213,15 +231,24 @@ const Rosterly = () => {
             transition={{ type: "spring", stiffness: 80 }}
             className="flex flex-col justify-end flex-1 mt-10 text-right text-indigo-950"
           >
-            <p className="py-1 heading">Shift Time: <strong>{formatTime(shiftElapsed)}</strong></p>
-            <p className="subHeading text-red-700">Break Time Left: {formatTime(breakRemaining)}</p>
+            {shiftStartTime && (
+              <p className="subHeading text-green-800">
+                Start Time: {formatDisplayTime(shiftStartTime)}
+              </p>
+            )}
+
+            <p className="py-1 subHeading">Shift Time: <strong>{formatTime(shiftElapsed)}(8 hrs)</strong></p>
+            {shiftEndTime && (
+              <p className="subHeading text-red-700">
+                End Time: {formatDisplayTime(shiftEndTime)}
+              </p>
+            )}
+            <p className="subHeading text-red-700">Break Time: {formatTime(breakElapsed)}(15 mins)</p>
           </motion.div>
         )}
       </div>
 
-      {/* Card Container */}
       <div className="card w-full px-4">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
           <h2 className="subHeading text-lg sm:text-xl text-indigo-900">Shift Details</h2>
           <div className="flex items-center justify-center bg-white rounded-lg text-sm font-semibold text-gray-900 w-full sm:w-fit px-2 py-1 border border-gray-300 shadow-sm">
@@ -239,7 +266,6 @@ const Rosterly = () => {
           </div>
         </div>
 
-        {/* Shift Cards Grid */}
         <div className="grid grid-cols-[repeat(auto-fit,_minmax(220px,_1fr))] gap-4">
           {[
             { day: "Wed 09/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-1" },
@@ -298,6 +324,7 @@ const Rosterly = () => {
           </div>
         </div>
       </div>
+      {/* <Dashboard /> */}
     </>
 
   );
