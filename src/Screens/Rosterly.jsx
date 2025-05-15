@@ -124,14 +124,14 @@ const Rosterly = () => {
     longitude: 78.38736913783626,
   };
   
-  const ALLOWED_RADIUS_METERS = 500; // e.g., 500m radius
+  const ALLOWED_RADIUS_METERS = 100; // e.g., 500m radius
 
   const checkLocation = () => {
     setIsCheckingLocation(true);
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-
+        
         // Log current location to console
         console.log("Latitude:", latitude);
         console.log("Longitude:", longitude);
