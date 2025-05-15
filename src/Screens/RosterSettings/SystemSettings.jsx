@@ -11,7 +11,7 @@ import { BsNewspaper } from "react-icons/bs";
 
 
 const SystemSettings = () => {
-  const [selectedSetting, setSelectedSetting] = useState(null);
+  const [selectedSetting, setSelectedSetting] = useState('General');
 
   const renderComponent = () => {
     switch (selectedSetting) {
