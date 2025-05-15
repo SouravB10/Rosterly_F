@@ -8,6 +8,7 @@ import { FaUser } from "react-icons/fa";
 
 export default function Login() {
   const baseURL = import.meta.env.VITE_BASE_URL;
+  const localURL = import.meta.env.VITE_LOCAL_URL;
   const [isLogin, setIsLogin] = useState(true);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -138,21 +139,23 @@ export default function Login() {
       setErrors({});
       setLoading(true);
       try {
-        const response = await axios.post(`${baseURL}admin/login`, {
+        const response = await axios.post(`${localURL}/login`, {
           email,
           password,
         });
         const data = response.data;
 
         localStorage.setItem("token", data.token);
-        localStorage.setItem("firstName", data.admin.firstName);
-        localStorage.setItem("lastName", data.admin.lastName);
+        localStorage.setItem("firstName", data.user.firstName);
+        localStorage.setItem("lastName", data.user.lastName);
+        localStorage.setItem("role_id", response.data.user.role_id);
 
         setModalTitle("Success");
         setModalMessage("Login successful!");
         setIsModalOpen(true);
 
         console.log("Login successful:", data);
+        console.log("Role ID from localStorage:", data.user.role_id);
         navigate("/myrosterly");
       } catch (error) {
         const errorMessage =

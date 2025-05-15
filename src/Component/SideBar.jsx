@@ -5,6 +5,7 @@ import { TbCircleLetterRFilled } from "react-icons/tb";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { TiThMenu } from "react-icons/ti";
 import { GiHeavyTimer } from "react-icons/gi";
+import { getRoleId } from "./RoleId";
 
 const Sidebar = ({ open, setOpen, isMobile }) => {
     // const [open, setOpen] = useState(window.innerWidth > 768);
@@ -26,9 +27,17 @@ const Sidebar = ({ open, setOpen, isMobile }) => {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
+    // const getRoleId = () => {
+    //     const storedRoleId = localStorage.getItem("role_id");
+    //     return storedRoleId ? parseInt(storedRoleId) : null;
+    // };
+
+    const roleId = getRoleId();
+    const filteredNavItems = roleId ? navItems.filter(item => item.roles.includes(roleId)) : [];
+
     return (
         <div className="flex items-start">
-          
+
             <div className={`transition-all duration-300 mSideBar backdrop-blur-xl rounded-2xl overflow-x-hidden overflow-y-auto z-10
                      ${open ? (isMobile ? 'fixed top-0 left-0 h-full w-[200px] shadow-lg' : 'w-[250px]') : (isMobile ? 'hidden' : 'w-[80px]')}
                      ${!isMobile ? 'h-[96vh] m-3' : ''} hide-scrollbar`}>
@@ -84,7 +93,7 @@ const Sidebar = ({ open, setOpen, isMobile }) => {
                 </div>
 
                 <ul className="flex flex-col gap-2 p-4 mt-4">
-                    {navItems.map((item) => {
+                    {filteredNavItems.map((item) => {
                         const isActive =
                             location.pathname === item.path ||
                             (item.submenu && item.submenu.some((sub) => location.pathname === sub.path));

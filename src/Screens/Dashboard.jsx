@@ -17,9 +17,18 @@ export default function Dashboard() {
             <h2 className="text-xl font-semibold">Pending Approvals</h2>
             <p className="text-2xl font-bold mt-2">8</p>
           </div>
+         
           <div className="bg-white p-4 rounded-lg shadow">
-            <h2 className="text-xl font-semibold">New Messages</h2>
+            <h2 className="text-xl font-semibold">Managers</h2>
             <p className="text-2xl font-bold mt-2">5</p>
+          </div>
+           <div className="bg-white p-4 rounded-lg shadow">
+            <h2 className="text-xl font-semibold">Stores</h2>
+            <p className="text-2xl font-bold mt-2">5</p>
+          </div>
+           <div className="bg-white p-4 rounded-lg shadow">
+            <h2 className="text-xl font-semibold">Employees</h2>
+            <p className="text-2xl font-bold mt-2">105</p>
           </div>
         </div>
       </div>
