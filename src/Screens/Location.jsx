@@ -7,6 +7,13 @@ const Location = () => {
   const [activeTab, setActiveTab] = useState("general");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [locationName, setLocationName] = useState("");
+  const [sales, setSales] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
+  const [errors, setErrors] = useState({});
+  const [address, setAddress] = useState("");
+
   const handleLocation = (e) => {
     setSelectLocation(e.target.value);
   };
@@ -14,6 +21,43 @@ const Location = () => {
   const getLocation = () => {
     alert(selectLocation);
   };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!locationName.trim()) newErrors.locationName = "Location name is required.";
+    if (!sales.trim() || isNaN(sales)) newErrors.sales = "Enter a valid number for sales.";
+    if (!latitude.trim() || isNaN(latitude)) newErrors.latitude = "Enter a valid latitude.";
+    if (!longitude.trim() || isNaN(longitude)) newErrors.longitude = "Enter a valid longitude.";
+    // if (!address.trim()) newErrors.address = "Address is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      console.log({ locationName, sales, latitude, longitude });
+
+      setLocationName("");
+      setSales("");
+      setLatitude("");
+      setLongitude("");
+      setErrors({});
+      setIsModalOpen(false);
+    }
+  };
+  const handleCloseModal = () => {
+    setLocationName("");
+    setSales("");
+    setLatitude("");
+    setLongitude("");
+    setAddress("");
+    setErrors({});
+    setIsModalOpen(false);
+  };
+
 
   return (
     <div className=" py-2">
@@ -213,12 +257,12 @@ const Location = () => {
               <Dialog.Title className="heading">Add Location</Dialog.Title>
               <button
                 className="text-white font-bold text-2xl"
-                onClick={() => setIsModalOpen(false)}
+                onClick={handleCloseModal}
               >
                 ×
               </button>
             </div>
-            <form className="mt-1 p-4 space-y-3">
+            <form className="mt-1 p-4 space-y-3" onSubmit={handleSubmit}>
               <div>
                 <p className="paragraph text-gray-500">
                   'Location Name' is what you normally refer to the roster location as. For example, if it was a Subway store in Brisbane CBD you might refer to it as Brisbane CBD.
@@ -228,19 +272,78 @@ const Location = () => {
 
                 <div className="flex flex-col">
                   <label className="paragraphBold">Location Name</label>
-                  <input type="text" className="input" />
+                  {/* <input type="text" className="input" /> */}
+                  <input
+                    type="text"
+                    className="input"
+                    value={locationName}
+                    onChange={(e) => setLocationName(e.target.value)}
+                  />
+                  {errors.locationName && (
+                    <span className="text-sm text-red-600">{errors.locationName}</span>
+                  )}
                 </div>
-                <div className="flex flex-col">
+
+                {/* <div className="flex flex-col">
                   <label className="paragraphBold">Average Daily Sales ($)</label>
-                  <input type="text" className="input" />
+                  <input
+                    type="text"
+                    className="input"
+                    value={sales}
+                    onChange={(e) => setSales(e.target.value)}
+                  />
+                  {errors.sales && (
+                    <span className="text-sm text-red-600">{errors.sales}</span>
+                  )}
+                </div> */}
+
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex flex-col w-full md:w-1/2">
+                    <label className="paragraphBold">Latitude</label>
+                    <input
+                      type="text"
+                      className="input"
+                      value={latitude}
+                      onChange={(e) => setLatitude(e.target.value)}
+                    />
+                    {errors.latitude && (
+                      <span className="text-sm text-red-600">{errors.latitude}</span>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col w-full md:w-1/2">
+                    <label className="paragraphBold">Longitude</label>
+                    <input
+                      type="text"
+                      className="input"
+                      value={longitude}
+                      onChange={(e) => setLongitude(e.target.value)}
+                    />
+                    {errors.longitude && (
+                      <span className="text-sm text-red-600">{errors.longitude}</span>
+                    )}
+                  </div>
                 </div>
+
+
+                <div className="flex flex-col">
+                  <label className="paragraphBold">Address <span className="smallFont">(optional)</span> </label>
+                  <textarea
+                    type="text"
+                    className="input"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
+                </div>
+
               </div>
+
 
               <div className="flex justify-end gap-2 mt-4">
                 <button
                   type="button"
                   className="buttonGrey"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={handleCloseModal}
                 >
                   Cancel
                 </button>
