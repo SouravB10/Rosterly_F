@@ -45,6 +45,72 @@ body {
 
 /* bg-colors-start----------- */
 
+
+
+
+.bg-white-100 {
+  background-color: #ffffff;
+}
+
+.bg-white-200 {
+  background-color: #F7F1FF;
+}
+
+.bg-white-300 {
+  background-color: #E6D4FE;
+}
+
+
+.bg-black-100 {
+  background-color: #3E344F;
+}
+
+.bg-black-200 {
+  background-color: #16131C;
+}
+
+.bg-black-300 {
+  background-color: #000000;
+}
+
+
+.bg-rosterGreen {
+  background-color: #6db3569a;
+}
+
+.bg-rosterRed {
+  background-color: #CA6D6D;
+}
+
+.bg-yellow {
+  background-color: #ffd900;
+}
+
+.bgSucces {
+  background-color: #04f07217;
+}
+
+.bgTable {
+  background-color: #85CA6D;
+}
+
+.bg-theme {
+  background-color: #3F3897;
+}
+
+.sideBar {
+  background-color: #04f07217;
+}
+
+.mSideBar {
+  background-color: #dcf2e6;
+}
+
+
+
+
+
+
 .bg-white-100 {
   background-color: #ffffff;
 }
@@ -266,23 +332,24 @@ body {
     4px 4px 6px #ddd6d6; */
 }
 
-.glowingButton{
+.glowingButton {
   border-radius: 5px;
   font-size: var(--font-paragraph);
   font-weight: 600;
   height: 35px;
   padding: 0 15px;
   cursor: pointer;
-    /* transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease; */
+  /* transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease; */
   box-shadow: 0 0 5px cyan,
-  0 0 25px cyan;
+    0 0 25px cyan;
 }
-.glowingButton:hover{
+
+.glowingButton:hover {
   box-shadow: 0 0 5px cyan,
-  0 0 25px cyan,
-  0 0 50px cyan,
-  0 0 100px cyan,
-  0 0 200px cyan;
+    0 0 25px cyan,
+    0 0 50px cyan,
+    0 0 100px cyan,
+    0 0 200px cyan;
 
 }
 
@@ -459,7 +526,7 @@ body {
   border-radius: 10px;
   border: 1px solid #bbbbbba3;
   padding: 20px;
-    /* height: 180px; */
+  /* height: 180px; */
   width: 200px;
   box-shadow:
     0px 4px 20px #efefef;
@@ -472,6 +539,7 @@ body {
   background-color: #04f07217;
   border: 1px solid #0171354f;
 }
+
 .mSideBar {
   /* background-color: #3F3897; */
   background-color: #dcf2e6;
@@ -575,6 +643,8 @@ body {
 }
 
 .hide-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none;    /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
