@@ -139,7 +139,7 @@ export default function Login() {
       setErrors({});
       setLoading(true);
       try {
-        const response = await axios.post(`${localURL}/login`, {
+        const response = await axios.post(`${baseURL}/login`, {
           email,
           password,
         });

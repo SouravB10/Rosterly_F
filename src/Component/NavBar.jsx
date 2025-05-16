@@ -28,14 +28,14 @@ const NavBar = ({ toggleSidebar }) => {
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`${baseURL}admin/logout`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      // await axios.post(`${baseURL}admin/logout`, {}, {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`
+      //   }
+      // });
       localStorage.removeItem('token');
-      alert('Logged out successfully!');
-      console.log("Token:", token);
+      // alert('Logged out successfully!');
+      // console.log("Token:", token);
       navigate('/');
     } catch (error) {
       alert('Logout failed!');

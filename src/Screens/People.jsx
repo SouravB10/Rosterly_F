@@ -305,10 +305,15 @@ const People = () => {
               <div className="flex flex-col">
                 <label className="paragraphBold">Date of Birth</label>
                 <DatePicker
-                  type="text"
                   className="input w-100"
-                // selected={date}
-                // onChange={(date) => setDate(date)}
+                  selected={date}
+                  onChange={(date) => setDate(date)}
+                  showYearDropdown
+                  showMonthDropdown
+                  dateFormat="dd/MM/yyyy" // or "yyyy-MM-dd" if you prefer
+                  scrollableYearDropdown
+                  yearDropdownItemNumber={100} // optional: sets how many years to show
+                  placeholderText="Select date"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
