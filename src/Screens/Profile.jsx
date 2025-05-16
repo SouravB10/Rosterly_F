@@ -3,7 +3,7 @@ import DefaultProfileImage from "../assets/images/profile.png";
 import axios from "axios";
 
 const Profile = () => {
-  const [user, setUser] = useState({ name: "", email: "", profileImage:"" });
+  const [user, setUser] = useState({ name: "", email: "", profileImage:"", mobileNumber:"" });
   const baseURL = import.meta.env.VITE_BASE_URL;
   const profileURL = import.meta.env.VITE_PROFILE_BASE_URL;
   const token = localStorage.getItem("token");
@@ -23,6 +23,7 @@ const Profile = () => {
         setUser({
           name: `${userData.firstName} ${userData.lastName}`,
           email: userData.email,
+          mobileNumber:userData.mobileNumber,
           profileImage: userData.profileImage
         });
         console.log("Profile data", response);
@@ -81,21 +82,21 @@ const Profile = () => {
               />
             </div>
 
-            <div className="mt-5">
-              <h3 className="subHeading">Change Password</h3>
-            </div>
+            {/* <div className="mt-5">
+              <h3 className="subHeading">Mobile Number</h3>
+            </div> */}
 
             <div>
               <label htmlFor="" className="paragraph">
-                Current Password
+                Mobile Number
               </label>
               <input
-                type="password"
-                value=""
+                type="number"
+                value={user.mobileNumber}
                 className="input w-full border border-gray-500"
               />
             </div>
-            <div>
+            {/* <div>
               <label htmlFor="" className="paragraph">
                 New Password
               </label>
@@ -114,7 +115,7 @@ const Profile = () => {
                 value=""
                 className="input w-full border border-gray-500"
               />
-            </div>
+            </div> */}
 
             <div className="flex justify-end gap-2 mt-4">
               <button type="submit" className="buttonSuccess w-40">
