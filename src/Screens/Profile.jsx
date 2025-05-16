@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import ProfileImage from "../assets/images/profile.png";
+import DefaultProfileImage from "../assets/images/profile.png";
 import axios from "axios";
 
 const Profile = () => {
-  const [user, setUser] = useState({ name: "", email: "" });
+  const [user, setUser] = useState({ name: "", email: "", profileImage:"" });
   const baseURL = import.meta.env.VITE_BASE_URL;
+  const profileURL = import.meta.env.VITE_PROFILE_BASE_URL;
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -22,6 +23,7 @@ const Profile = () => {
         setUser({
           name: `${userData.firstName} ${userData.lastName}`,
           email: userData.email,
+          profileImage: userData.profileImage
         });
         console.log("Profile data", response);
       } catch (error) {
@@ -34,16 +36,22 @@ const Profile = () => {
     }
   }, [baseURL, token]);
 
+  // Construct full image URL or use default image
+  const profileImageUrl = user.profileImage
+    ? `${profileURL}/${user.profileImage}` // Laravel path
+    : DefaultProfileImage;
+
+
   return (
     <div className="bg-white rounded-lg shadow-lg p-5 my-4">
       <h3 className="heading text-indigo-900">Profile Information</h3>
 
       <div className="flex flex-col md:flex-row items-center gap-2 w-full mt-3">
         <div className="w-full md:w-1/2 flex flex-col items-center ">
-          <img
-            alt=""
-            src="https://sketchok.com/images/articles/06-anime/002-one-piece/26/16.jpg"
-            className="size-40 md:size-70 rounded"
+           <img
+            alt="User Profile"
+            src={profileImageUrl}
+            className="size-40 md:size-70 rounded object-cover"
           />
           <h3 className="SunHeading mt-2">{user.name}</h3>
         </div>
