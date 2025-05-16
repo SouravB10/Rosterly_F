@@ -4,7 +4,7 @@ const ChangePassword = () => {
     return (
 
         <div className="bg-white rounded-lg shadow-lg p-5 my-4">
-            <h3 className="heading text-indigo-900">Profile Information</h3>
+            <h3 className="heading text-indigo-900">Change Password</h3>
 
             <div className="flex flex-col md:flex-row items-center gap-2 w-full mt-3">
 
