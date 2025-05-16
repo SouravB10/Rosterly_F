@@ -1,7 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProfileImage from "../assets/images/profile.png";
+import axios from "axios";
 
 const Profile = () => {
+  const [user, setUser] = useState({ name: "", email: "" });
+  const baseURL = import.meta.env.VITE_BASE_URL;
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const id = localStorage.getItem("id");
+      try {
+        const response = await axios.get(`${baseURL}/users/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const userData = response.data.data;
+
+        setUser({
+          name: `${userData.firstName} ${userData.lastName}`,
+          email: userData.email,
+        });
+        console.log("Profile data", response);
+      } catch (error) {
+        console.error("Error fetching profile", error);
+      }
+    };
+
+    if (token) {
+      fetchProfile();
+    }
+  }, [baseURL, token]);
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-5 my-4">
@@ -14,7 +45,7 @@ const Profile = () => {
             src="https://sketchok.com/images/articles/06-anime/002-one-piece/26/16.jpg"
             className="size-40 md:size-70 rounded"
           />
-          <h3 className="SunHeading mt-2">Monkey D Luffy</h3>
+          <h3 className="SunHeading mt-2">{user.name}</h3>
         </div>
 
         <div className="w-full">
@@ -25,7 +56,8 @@ const Profile = () => {
               </label>
               <input
                 type="text"
-                value="Monkey D Luffy"
+                value={user.name}
+                  onChange={(e) => setUser({ ...user, name: e.target.value })}
                 className="input w-full border border-gray-500"
               />
             </div>
@@ -35,7 +67,8 @@ const Profile = () => {
               </label>
               <input
                 type="text"
-                value="luffy.glansa@gmail.com"
+                value={user.email}
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
                 className="input w-full border border-gray-500"
               />
             </div>

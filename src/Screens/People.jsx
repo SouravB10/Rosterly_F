@@ -21,15 +21,6 @@ const People = () => {
   const [note, setNote] = useState('');
   const [filteredEmployees, setFilteredEmployees] = useState([]);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const peoplePerPage = 6;
-
-  const indexOfLastPerson = currentPage * peoplePerPage;
-  const indexOfFirstPerson = indexOfLastPerson - peoplePerPage;
-  const currentPeople = people.slice(indexOfFirstPerson, indexOfLastPerson);
-
-  const totalPages = Math.ceil(people.length / peoplePerPage);
-
   const profiles = [
     {
       id: 1,
