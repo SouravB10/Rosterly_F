@@ -149,6 +149,7 @@ export default function Login() {
         localStorage.setItem("firstName", data.user.firstName);
         localStorage.setItem("lastName", data.user.lastName);
         localStorage.setItem("role_id", response.data.user.role_id);
+        localStorage.setItem("id", response.data.user.id);
 
         setModalTitle("Success");
         setModalMessage("Login successful!");

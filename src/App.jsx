@@ -65,7 +65,7 @@ function AppWrapper() {
     '/dashboard',
     '/myrosterly',
     '/unavailability',
-    '/people',
+    '/employee',
     '/location',
     '/systemsettings',
     '/payrate',
