@@ -28,6 +28,8 @@ import Profile from './Screens/Profile';
 import ClickSpark from './Component/ClickSpark';
 import ShiftBoard from './Screens/ShiftBoard';
 import NotFound from './Component/NotFound';
+import ProtectedRoutes from './Component/ProtectedRoutes';
+import Forbidden from './Component/Forbidden';
 
 
 function AppWrapper() {
@@ -81,6 +83,9 @@ function AppWrapper() {
     '/drag',
   ].includes(location.pathname);
 
+  const role_id = localStorage.getItem("role_id");
+  const userRole = role_id ? parseInt(role_id) : null;
+
   return (
     <>
       <ClickSpark
@@ -105,16 +110,69 @@ function AppWrapper() {
               <Routes>
                 <Route path='/' element={<Login />} />
                 <Route path='/register' element={<Register />} />
-                <Route path='/dashboard' element={<Dashboard />} />
-                <Route path='/myrosterly' element={<Rosterly />} />
-                <Route path='/unavailability' element={<Unavailability />} />
-                <Route path='/people' element={<People />} />
-                <Route path='/location' element={<Location />} />
-                <Route path='/systemsettings' element={<SystemSettings />} />
+                <Route path='/myrosterly/*'
+                  element={
+                    <ProtectedRoutes
+                      element={<Rosterly />}
+                      allowedRoles={[1, 2, 3]}
+                      userRole={userRole}
+                    />
+                  }
+                />
+                <Route path='/unavailability'
+                  element={
+                    <ProtectedRoutes
+                      element={<Unavailability />}
+                      allowedRoles={[2, 3]}
+                      userRole={userRole}
+                    />
+                  } />
+                <Route path='/employee'
+                  element={
+                    <ProtectedRoutes
+                      element={<People />}
+                      allowedRoles={[1, 2]}
+                      userRole={userRole}
+                    />
+                  } />
+                <Route
+                  path="/location"
+                  element={
+                    <ProtectedRoutes
+                      element={<Location />}
+                      allowedRoles={[1, 2]}
+                      userRole={userRole}
+                    />
+                  }
+                />
+                <Route
+                  path="/systemsettings"
+                  element={
+                    <ProtectedRoutes
+                      element={<SystemSettings />}
+                      allowedRoles={[1]}
+                      userRole={userRole}
+                    />
+                  }
+                />
                 <Route path='/payrate' element={<PayRate />} />
                 <Route path='/utilities' element={<Utilities />} />
-                <Route path='/roster' element={<Rosters />} />
-                <Route path='/timesheet' element={<TimeSheet />} />
+                <Route path='/roster'
+                  element={
+                    <ProtectedRoutes
+                      element={<Rosters />}
+                      allowedRoles={[1, 2]}
+                      userRole={userRole}
+                    />
+                  } />
+                <Route path='/timesheet'
+                  element={
+                    <ProtectedRoutes
+                      element={<TimeSheet />}
+                      allowedRoles={[1, 2]}
+                      userRole={userRole}
+                    />
+                  } />
                 <Route path='/notification' element={<Notification />} />
                 <Route path='/generalsettings' element={<General />} />
                 <Route path='/rostersetting' element={<RosterSetting />} />
@@ -125,14 +183,14 @@ function AppWrapper() {
                 <Route path='/profile' element={<Profile />} />
                 <Route path='/drag' element={<ShiftBoard />} />
                 <Route
-                  path='*'
+                  path='/*'
                   element={
                     <NotFound baseIntensity={0.2} hoverIntensity={0.5} enableHover={true}>
                       {"404\nnot found"}
                     </NotFound>
                   }
                 />
-
+                <Route path='/forbidden' element={<Forbidden />} />
               </Routes>
             </div>
           </div>

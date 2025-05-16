@@ -31,7 +31,7 @@ export const navItems = [
         id: 3,
         title: 'Employees',
         icon: <FaPeopleGroup className="text-2xl text-black" />,
-        path: '/people',
+        path: '/employee',
         roles:[1,2]
         // submenu: [
         //     { id: 1, title: 'Active', path: '/active', icon: <RiNotificationLine className="text-xl text-black"/> },
