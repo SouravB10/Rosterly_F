@@ -16,14 +16,31 @@ const NavBar = ({ toggleSidebar }) => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-  const image = localStorage.getItem("profileImage");
-  if (image) {
-    setProfileImage(`${profileURL}/${image}`); // <-- prepend baseURL here
-  }
-}, []);
+//   useEffect(() => {
+//   const image = localStorage.getItem("profileImage");
+//   if (image) {
+//     setProfileImage(`${profileURL}/${image}`); // <-- prepend baseURL here
+//   }
+// }, []);
 
+useEffect(() => {
+  const loadImage = () => {
+    const image = localStorage.getItem("profileImage");
+    if (image) {
+      setProfileImage(`${profileURL}/${image}`);
+    }
+  };
 
+  loadImage();
+
+  // Update when profile image changes
+  const handleUpdate = () => loadImage();
+  window.addEventListener("profileImageUpdated", handleUpdate);
+
+  return () => {
+    window.removeEventListener("profileImageUpdated", handleUpdate);
+  };
+}, [profileURL]);
 
   const handleClick = () => {
     navigate('/notification');

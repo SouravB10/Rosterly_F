@@ -160,8 +160,8 @@ export default function Login() {
         localStorage.setItem("profileImage", data.user.profileImage);
 
         setModalTitle("Success");
-        setModalMessage("Login successful!");
-        setIsModalOpen(true);
+        // setModalMessage("Login successful!");
+        // setIsModalOpen(true);
 
         console.log("Login successful:", data);
         console.log("Role ID from localStorage:", data.user.role_id);
@@ -246,11 +246,11 @@ export default function Login() {
               {errors.password && (
                 <p className="text-red-500 text-sm mt-1">{errors.password}</p>
               )}
-              <div className="mt-2 flex justify-end">
+              <div className="my-2 flex justify-end">
                 <button
                   type="button"
                   onClick={() => setForgotPasswordModalOpen(true)}
-                  className="text-sm text-gray-500 hover:text-primary transition-colors duration-200"
+                  className="text-sm text-gray-600 hover:text-black transition-colors cursor-pointer duration-200"
                 >
                   Forgot Password?
                 </button>
@@ -280,7 +280,7 @@ export default function Login() {
                       <p className="text-sm text-red-500 mt-1">{forgotError}</p>
                     )}
                     {forgotSuccess && (
-                      <p className="text-sm text-green-600 mt-1">{forgotSuccess}</p>
+                      <p className="text-sm text-gray-700 mt-1">{forgotSuccess}</p>
                     )}
 
                     <div className="flex justify-end mt-4">
