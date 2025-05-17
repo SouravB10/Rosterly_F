@@ -3,7 +3,7 @@ import DefaultProfileImage from "../assets/images/profile.png";
 import axios from "axios";
 
 const Profile = () => {
-  const [user, setUser] = useState({ name: "", email: "", profileImage:"", mobileNumber:"" });
+  const [user, setUser] = useState({ name: "", email: "", profileImage: "", mobileNumber: "" });
   const [selectedFile, setSelectedFile] = useState(null); // For profile image
   const baseURL = import.meta.env.VITE_BASE_URL;
   const profileURL = import.meta.env.VITE_PROFILE_BASE_URL;
@@ -12,7 +12,7 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const id = localStorage.getItem("id");
+      // const id = localStorage.getItem("id");
       try {
         const response = await axios.get(`${baseURL}/users/${id}`, {
           headers: {
@@ -25,7 +25,7 @@ const Profile = () => {
         setUser({
           name: `${userData.firstName} ${userData.lastName}`,
           email: userData.email,
-          mobileNumber:userData.mobileNumber,
+          mobileNumber: userData.mobileNumber,
           profileImage: userData.profileImage
         });
         console.log("Profile data", response);
@@ -63,6 +63,11 @@ const Profile = () => {
         },
       });
 
+      if (response.data.data?.profileImage) {
+        localStorage.setItem("profileImage", response.data.data.profileImage);
+        window.dispatchEvent(new Event("profileImageUpdated"));
+      }
+
       console.log("Profile updated:", response.data);
       alert("Profile updated successfully!");
 
@@ -72,6 +77,7 @@ const Profile = () => {
       alert("Failed to update profile.");
     }
   };
+
 
   // Construct full image URL or use default image
   const profileImageUrl = user.profileImage
@@ -85,7 +91,7 @@ const Profile = () => {
 
       <div className="flex flex-col md:flex-row items-center gap-2 w-full mt-3">
         <div className="w-full md:w-1/2 flex flex-col items-center ">
-           <img
+          <img
             alt="User Profile"
             src={selectedFile ? URL.createObjectURL(selectedFile) : profileImageUrl}
             className="size-40 md:size-70 rounded object-cover"
@@ -103,7 +109,7 @@ const Profile = () => {
               <input
                 type="text"
                 value={user.name}
-                  onChange={(e) => setUser({ ...user, name: e.target.value })}
+                onChange={(e) => setUser({ ...user, name: e.target.value })}
                 className="input w-full border border-gray-500"
               />
             </div>

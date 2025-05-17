@@ -30,6 +30,7 @@ import ShiftBoard from './Screens/ShiftBoard';
 import NotFound from './Component/NotFound';
 import ProtectedRoutes from './Component/ProtectedRoutes';
 import Forbidden from './Component/Forbidden';
+import ChangePassword from './Screens/ChangePassword';
 
 
 function AppWrapper() {
@@ -81,6 +82,7 @@ function AppWrapper() {
     '/PanalityRate',
     '/profile',
     '/drag',
+    '/changepassword',
   ].includes(location.pathname);
 
   const role_id = localStorage.getItem("role_id");
@@ -186,6 +188,7 @@ function AppWrapper() {
                 <Route path='/PanalityRate' element={<PenalityRate />} />
                 <Route path='/profile' element={<Profile />} />
                 <Route path='/drag' element={<ShiftBoard />} />
+                <Route path='/changepassword' element={<ChangePassword />} />
                 <Route
                   path='*'
                   element={
