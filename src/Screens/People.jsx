@@ -45,6 +45,7 @@ const People = () => {
     dob: '',
     profileImage: '',
     role_id: null,
+    location_id: null,
   });
 
   useEffect(() => {
@@ -76,6 +77,7 @@ const People = () => {
     form.append("created_by", currentUserId);
     form.append("created_on", new Date());
     form.append("password", "defaultPassword123");
+    form.append("location_id", formData.location_id);
 
 
     if (selectedProfile.file) {
@@ -185,7 +187,7 @@ const People = () => {
       formData.append('firstName', selectedProfile.firstName);
       formData.append('lastName', selectedProfile.lastName);
       formData.append('email', selectedProfile.email);
-      formData.append('dob', date?.toISOString().split('T')[0] || selectedProfile.dob); // format DOB
+      formData.append('dob', editDate?.toISOString().split('T')[0] || selectedProfile.dob); // format DOB
       formData.append('mobileNumber', selectedProfile.mobileNumber);
       formData.append('payrate', selectedProfile.payrate);
 
@@ -332,7 +334,7 @@ const People = () => {
 
               <div className="mt-4 flex flex-row justify-between items-center gap-2">
                 <p className="paragraphBold">
-                  Location: {profile.location}
+                  Location: {profile.location_id ? profile.location : "Not assigned yet"}
                 </p>
                 <div className="flex gap-2">
                   <FaEye
