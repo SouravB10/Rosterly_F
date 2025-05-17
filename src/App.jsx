@@ -108,8 +108,22 @@ function AppWrapper() {
             {!isLoginPage && !isRegisterPage && !isNotFound && <NavBar toggleSidebar={toggleSidebar} />}
             <div className={`flex-1 overflow-auto ${isLoginPage || isRegisterPage ? 'p-0' : 'px-4'} ${isNotFound ? 'flex items-center p-12 justify-center' : ''}`}>
               <Routes>
-                <Route path='/' element={<Login />} />
-                <Route path='/register' element={<Register />} />
+                <Route path='/'
+                  element={
+                    <ProtectedRoutes
+                      element={<Login />}
+                      allowedRoles={[1, 2, 3]}
+                      userRole={userRole}
+                    />
+                  } />
+                <Route path='/register'
+                  element={
+                    <ProtectedRoutes
+                      element={<Register />}
+                      allowedRoles={[1, 2, 3]}
+                      userRole={userRole}
+                    />
+                  } />
                 <Route path='/myrosterly/*'
                   element={
                     <ProtectedRoutes

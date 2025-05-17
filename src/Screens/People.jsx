@@ -19,7 +19,8 @@ const People = () => {
   const [selectedLocation, setSelectedLocation] = useState('all');
   const [selectedBranch, setSelectedBranch] = useState("default");
   const [searchTerm, setSearchTerm] = useState('');
-  const [date, setDate] = useState(new Date());
+  const [createDate, setCreateDate] = useState(null);
+  const [editDate, setEditDate] = useState(null);
   const [addNoteModal, setAddNoteModal] = useState(false);
   const [note, setNote] = useState('');
   const [filteredEmployees, setFilteredEmployees] = useState([]);
@@ -35,7 +36,7 @@ const People = () => {
     payrate: '',
     password: '',
     location_Id: '', // If needed
-    dateOfBirth: '',
+    dob: '',
     profileImage: '',
     role_id: null,
   });
@@ -47,13 +48,13 @@ const People = () => {
   }, []);
 
   useEffect(() => {
-    if (date) {
+    if (createDate) {
       setFormData((prev) => ({
         ...prev,
-        dateOfBirth: date.toISOString().split('T')[0], // or other format if needed
+        dob: createDate.toISOString().split('T')[0],
       }));
     }
-  }, [date]);
+  }, [createDate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,7 +63,7 @@ const People = () => {
     form.append("firstName", formData.firstName);
     form.append("lastName", formData.lastName);
     form.append("email", formData.email);
-    form.append("dob", formData.dateOfBirth);
+    form.append("dob", formData.dob);
     form.append("payrate", formData.payrate);
     form.append("mobileNumber", formData.mobileNumber);
     form.append("role_id", formData.role_id || 3);
@@ -163,6 +164,49 @@ const People = () => {
     setFilteredProfiles(filtered);
   };
 
+  const updateUser = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('firstName', selectedProfile.firstName);
+      formData.append('lastName', selectedProfile.lastName);
+      formData.append('email', selectedProfile.email);
+      formData.append('dob', date?.toISOString().split('T')[0] || selectedProfile.dob); // format DOB
+      formData.append('mobileNumber', selectedProfile.mobileNumber);
+      formData.append('payrate', selectedProfile.payrate);
+
+      if (selectedProfile.image && selectedProfile.image.startsWith("data:image")) {
+        const blob = await fetch(selectedProfile.image).then(r => r.blob());
+        formData.append("profileImage", blob, "profile.jpg");
+      }
+
+      const response = await axios.post(`${baseURL}/users/${selectedProfile.id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log('User updated:', response.data);
+      fetchUsers(); // refresh user list
+      setViewButtonModel(false); // close modal
+    } catch (error) {
+      console.error("Error updating user:", error.response?.data || error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedProfile?.dob) {
+      setEditDate(new Date(selectedProfile.dob));
+    } else {
+      setEditDate(null);
+    }
+  }, [selectedProfile]);
+
   return (
     <div className="flex flex-col gap-3">
       <div className="sticky top-0 bg-[#f1f1f1] py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -220,11 +264,11 @@ const People = () => {
       </div>
 
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
         {loading && <p>Loading users...</p>}
         {Array.isArray(filteredProfiles) && filteredProfiles.map((profile) => (
           <div key={profile.id} className="w-full">
-            <div className="bg-white shadow-xl p-4 rounded-xl h-full flex flex-col justify-between">
+            <div className="mSideBar shadow-xl p-4 rounded-xl h-full flex flex-col justify-between">
               <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                 <div className="flex flex-row items-center min-w-0 md:flex-row gap-4">
                   <img
@@ -314,8 +358,8 @@ const People = () => {
                 <label className="paragraphBold">Date of Birth</label>
                 <DatePicker
                   className="input w-100"
-                  selected={date}
-                  onChange={(date) => setDate(date)}
+                  selected={createDate}
+                  onChange={(date) => setCreateDate(date)}
                   showYearDropdown
                   showMonthDropdown
                   dateFormat="dd/MM/yyyy" // or "yyyy-MM-dd" if you prefer
@@ -407,7 +451,7 @@ const People = () => {
                 ×
               </button>
             </div>
-            <form className="mt-4 p-6 space-y-3">
+            <form className="mt-4 p-6 space-y-3" onSubmit={updateUser}>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="paragraphBold">First Name</label>
@@ -456,8 +500,20 @@ const People = () => {
                 <label className="paragraphBold">Date of Birth</label>
                 <DatePicker
                   className="input w-100"
-                  selected={selectedProfile?.dob ? new Date(selectedProfile.dob) : null}
-                  onChange={(date) => setDate(date)}
+                  selected={editDate} // <-- use the actual state
+                  onChange={(date) => {
+                    setEditDate(date);
+                    setSelectedProfile((prev) => ({
+                      ...prev,
+                      dob: date.toISOString().split("T")[0], // Optional: update dob in selectedProfile if needed
+                    }));
+                  }}
+                  showYearDropdown
+                  showMonthDropdown
+                  dateFormat="dd/MM/yyyy"
+                  scrollableYearDropdown
+                  yearDropdownItemNumber={100}
+                  placeholderText="Select date"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
