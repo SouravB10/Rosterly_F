@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Login from './Screens/Login';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Sidebar from './Component/SideBar';
 import Rosterly from './Screens/Rosterly';
 import Unavailability from './Screens/Unavailability';
@@ -84,7 +84,11 @@ function AppWrapper() {
   ].includes(location.pathname);
 
   const role_id = localStorage.getItem("role_id");
-  const userRole = role_id ? parseInt(role_id) : null;
+  const userRole = role_id ? parseInt(role_id, 10) : null;
+
+   if (!userRole && !['/', '/register'].includes(location.pathname)) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <>
@@ -183,7 +187,7 @@ function AppWrapper() {
                 <Route path='/profile' element={<Profile />} />
                 <Route path='/drag' element={<ShiftBoard />} />
                 <Route
-                  path='/*'
+                  path='*'
                   element={
                     <NotFound baseIntensity={0.2} hoverIntensity={0.5} enableHover={true}>
                       {"404\nnot found"}
