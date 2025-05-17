@@ -4,9 +4,11 @@ import axios from "axios";
 
 const Profile = () => {
   const [user, setUser] = useState({ name: "", email: "", profileImage:"", mobileNumber:"" });
+  const [selectedFile, setSelectedFile] = useState(null); // For profile image
   const baseURL = import.meta.env.VITE_BASE_URL;
   const profileURL = import.meta.env.VITE_PROFILE_BASE_URL;
   const token = localStorage.getItem("token");
+  const id = localStorage.getItem("id");
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -37,6 +39,40 @@ const Profile = () => {
     }
   }, [baseURL, token]);
 
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData();
+      formData.append("name", user.name);
+      formData.append("email", user.email);
+      formData.append("mobileNumber", user.mobileNumber);
+
+      if (selectedFile) {
+        formData.append("profileImage", selectedFile); // Key must match Laravel controller field name
+      }
+
+      const response = await axios.post(`${baseURL}/users/${id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("Profile updated:", response.data);
+      alert("Profile updated successfully!");
+
+      // Optional: re-fetch updated profile data
+    } catch (error) {
+      console.error("Error updating profile", error);
+      alert("Failed to update profile.");
+    }
+  };
+
   // Construct full image URL or use default image
   const profileImageUrl = user.profileImage
     ? `${profileURL}/${user.profileImage}` // Laravel path
@@ -51,14 +87,15 @@ const Profile = () => {
         <div className="w-full md:w-1/2 flex flex-col items-center ">
            <img
             alt="User Profile"
-            src={profileImageUrl}
+            src={selectedFile ? URL.createObjectURL(selectedFile) : profileImageUrl}
             className="size-40 md:size-70 rounded object-cover"
           />
+          <input type="file" onChange={handleFileChange} className="mt-2" />
           <h3 className="SunHeading mt-2">{user.name}</h3>
         </div>
 
         <div className="w-full">
-          <form action="" className="grid gap-2" method="post">
+          <form onSubmit={handleSubmit} className="grid gap-2" method="post">
             <div>
               <label htmlFor="" className="paragraph">
                 Username
@@ -93,29 +130,10 @@ const Profile = () => {
               <input
                 type="number"
                 value={user.mobileNumber}
+                onChange={(e) => setUser({ ...user, mobileNumber: e.target.value })}
                 className="input w-full border border-gray-500"
               />
             </div>
-            {/* <div>
-              <label htmlFor="" className="paragraph">
-                New Password
-              </label>
-              <input
-                type="password"
-                value=""
-                className="input w-full border border-gray-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="" className="paragraph">
-                Confirm New Password
-              </label>
-              <input
-                type="password"
-                value=""
-                className="input w-full border border-gray-500"
-              />
-            </div> */}
 
             <div className="flex justify-end gap-2 mt-4">
               <button type="submit" className="buttonSuccess w-40">

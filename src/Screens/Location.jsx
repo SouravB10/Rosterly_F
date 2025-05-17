@@ -1,8 +1,10 @@
 import { Dialog } from "@headlessui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import axios from "axios";
 
 const Location = () => {
+  const baseURL = import.meta.env.VITE_BASE_URL;
   const [selectLocation, setSelectLocation] = useState("");
   const [activeTab, setActiveTab] = useState("general");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,13 +15,110 @@ const Location = () => {
   const [longitude, setLongitude] = useState("");
   const [errors, setErrors] = useState({});
   const [address, setAddress] = useState("");
+  const id = localStorage.getItem('id');
+
+  useEffect(() => {
+    console.log("user ID:", id);
+  }, []);
+
+
+  const [locations, setLocations] = useState([]);
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${baseURL}/locations`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("Locations:", response.data);
+        setLocations(response.data.data || response.data);
+      } catch (error) {
+        console.error("Failed to fetch locations", error);
+      }
+    };
+
+    fetchLocations();
+  }, []);
+
 
   const handleLocation = (e) => {
     setSelectLocation(e.target.value);
   };
 
-  const getLocation = () => {
-    alert(selectLocation);
+  const updateLocation = async () => {
+    if (!selectLocation) return;
+
+    if (!validateForm()) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.put(
+        `${baseURL}/locations/${selectLocation}`,
+        {
+          location_name: locationName,
+          sales: parseFloat(sales),
+          latitude: parseFloat(latitude),
+          longitude: parseFloat(longitude),
+          address: address,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Location updated successfully", response.data);
+      alert("Location updated!");
+
+      const updatedLocations = await axios.get(`${baseURL}/locations`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setLocations(updatedLocations.data.data || updatedLocations.data);
+
+      const updatedLocation = await axios.get(`${baseURL}/locations/${selectLocation}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      console.log("Verified updated location:", updatedLocation.data.data || updatedLocation.data);
+
+    } catch (error) {
+      console.error("Update error:", error);
+      if (error.response?.data?.errors) {
+        setErrors(error.response.data.errors);
+      }
+    }
+  };
+
+
+  const getLocation = async () => {
+    // alert(selectLocation);
+    if (!selectLocation) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${baseURL}/locations/${selectLocation}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = response.data.data || response.data;
+      console.log("Fetched Location:", data);
+
+      setLocationName(data.location_name || "");
+      setSales(data.sales?.toString() || "");
+      setLatitude(data.latitude?.toString() || "");
+      setLongitude(data.longitude?.toString() || "");
+      setAddress(data.address || "");
+    } catch (error) {
+      console.error("Failed to fetch location", error);
+    }
   };
 
   const validateForm = () => {
@@ -35,19 +134,50 @@ const Location = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log({ locationName, sales, latitude, longitude });
 
-      setLocationName("");
-      setSales("");
-      setLatitude("");
-      setLongitude("");
-      setErrors({});
-      setIsModalOpen(false);
+
+      try {
+        const token = localStorage.getItem('token');
+
+        const response = await axios.post(`${baseURL}/locations`,
+          {
+            location_name: locationName,
+            sales: parseFloat(sales),
+            latitude: parseFloat(latitude),
+            longitude: parseFloat(longitude),
+            address: address,
+            created_by: id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        console.log("Location added successfully", response.data);
+
+        setLocationName("");
+        setSales("");
+        setLatitude("");
+        setLongitude("");
+        setAddress("");
+        setErrors({});
+        setIsModalOpen(false);
+
+      } catch (error) {
+        console.error('API Error:', error);
+        if (error.response && error.response.data.errors) {
+          setErrors(error.response.data.errors);
+        }
+      }
     }
   };
+
   const handleCloseModal = () => {
     setLocationName("");
     setSales("");
@@ -58,7 +188,6 @@ const Location = () => {
     setIsModalOpen(false);
   };
 
-
   return (
     <div className=" py-2">
       <div className="">
@@ -68,11 +197,19 @@ const Location = () => {
           <div className="bg-gray-200 p-4 borderRadius10 mt-5">
             <div className="flex flex-col md:flex-row justify-between mb-6 gap-4">
               <div className="flex md:flex-row gap-4">
-                <select className="input w-full md:w-auto" onChange={handleLocation}>
-                  <option>-- Select location --</option>
-                  <option value="Location 1">Store 1</option>
-                  <option value="Location 2">Store 2</option>
+                <select
+                  className="input w-full md:w-auto"
+                  onChange={handleLocation}
+                  value={selectLocation}
+                >
+                  <option value="">-- Select location --</option>
+                  {locations.map((loc) => (
+                    <option key={loc.id} value={loc.id}>
+                      {loc.location_name}
+                    </option>
+                  ))}
                 </select>
+
                 <button className="buttonSuccess w-full md:w-auto" onClick={getLocation}>
                   Get Data
                 </button>
@@ -118,11 +255,19 @@ const Location = () => {
                       </p>
                     </div>
                     <div className="w-full flex justify-end">
+                      {/* <input
+                        type="text"
+                        placeholder="Main Branch"
+                        className="input border border-gray-300 w-full md:w-auto"
+                      /> */}
                       <input
                         type="text"
                         placeholder="Main Branch"
                         className="input border border-gray-300 w-full md:w-auto"
+                        value={locationName}
+                        onChange={(e) => setLocationName(e.target.value)}
                       />
+
                     </div>
                   </div>
 
@@ -140,9 +285,19 @@ const Location = () => {
                     </div>
                   </div> */}
 
-                  <div className="flex justify-end">
+                  {/* <div className="flex justify-end">
                     <button className="buttonTheme w-full md:w-auto">Update</button>
+                  </div> */}
+                  <div className="flex justify-end">
+                    <button
+                      className="buttonTheme w-full md:w-auto"
+                      onClick={updateLocation}
+                      disabled={!selectLocation}
+                    >
+                      Update
+                    </button>
                   </div>
+
                 </div>
               )}
 
@@ -173,9 +328,19 @@ const Location = () => {
                       />
                     </div>
                   ))}
-                  <div className="flex justify-end mt-6">
+                  {/* <div className="flex justify-end mt-6">
                     <button className="buttonSuccess w-full md:w-auto">Update</button>
+                  </div> */}
+                  <div className="flex justify-end">
+                    <button
+                      className="buttonTheme w-full md:w-auto"
+                      onClick={updateLocation}
+                      disabled={!selectLocation}
+                    >
+                      Update
+                    </button>
                   </div>
+
                 </div>
               )}
 
@@ -284,7 +449,7 @@ const Location = () => {
                   )}
                 </div>
 
-                {/* <div className="flex flex-col">
+                <div className="flex flex-col">
                   <label className="paragraphBold">Average Daily Sales ($)</label>
                   <input
                     type="text"
@@ -295,7 +460,7 @@ const Location = () => {
                   {errors.sales && (
                     <span className="text-sm text-red-600">{errors.sales}</span>
                   )}
-                </div> */}
+                </div>
 
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="flex flex-col w-full md:w-1/2">

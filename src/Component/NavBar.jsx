@@ -18,6 +18,9 @@ const NavBar = ({ toggleSidebar }) => {
     navigate('/notification');
   };
 
+  const handlechangepasswordClick = () => {
+    navigate('/changepassword');
+  };
   const handleProfileClick = () => {
     navigate('/profile');
   };
@@ -90,6 +93,14 @@ const NavBar = ({ toggleSidebar }) => {
                     className="block px-4 py-2 paragraph cursor text-black data-focus:bg-yellow-200 data-focus:outline-hidden"
                   >
                     Your Profile
+                  </a>
+                </MenuItem>
+                <MenuItem>
+                  <a
+                    onClick={handlechangepasswordClick}
+                    className="block px-4 py-2 paragraph cursor text-black data-focus:bg-yellow-200 data-focus:outline-hidden"
+                  >
+                    Change Password
                   </a>
                 </MenuItem>
                 {/* <MenuItem>
