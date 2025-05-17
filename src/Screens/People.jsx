@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { FaSearch, FaEye, FaEdit } from "react-icons/fa";
 import ProfileImage from "../assets/images/profile.png";
@@ -7,8 +7,11 @@ import deadPool from "../assets/images/Screenshot 2025-04-21 111413.png";
 import BlackWidow from "../assets/images/Screenshot 2025-04-21 111629.png"
 import DatePicker from "react-datepicker";
 import { set } from "date-fns";
+import axios from "axios";
 
 const People = () => {
+  const baseURL = import.meta.env.VITE_BASE_URL;
+  const [users, setUsers] = useState([]);
   const [activeTab, setActiveTab] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewButtonModel, setViewButtonModel] = useState(false);
@@ -16,138 +19,193 @@ const People = () => {
   const [selectedLocation, setSelectedLocation] = useState('all');
   const [selectedBranch, setSelectedBranch] = useState("default");
   const [searchTerm, setSearchTerm] = useState('');
-  const [date, setDate] = useState(new Date());
+  const [createDate, setCreateDate] = useState(null);
+  const [editDate, setEditDate] = useState(null);
   const [addNoteModal, setAddNoteModal] = useState(false);
   const [note, setNote] = useState('');
   const [filteredEmployees, setFilteredEmployees] = useState([]);
+  const currentUserRole = parseInt(localStorage.getItem("role_id"));
+  const currentUserId = parseInt(localStorage.getItem("id"));
+  const [loading, setLoading] = useState(false);
 
-  const profiles = [
-    {
-      id: 1,
-      firstName: 'Vishal',
-      lastName: 'Kattera',
-      email: 'vishal.glansa@gmail.com',
-      phone: '7780290335',
-      dob: '1998-10-09',
-      payrate: '50%',
-      location: 'Store 1',
-      image: ProfileImage,
-    },
-    {
-      id: 2,
-      firstName: 'Sourav',
-      lastName: 'Behuria',
-      email: "sourav@gmail.com",
-      phone: "1234567890",
-      dob: '1999-09-10',
-      payrate: '30%',
-      location: "Store 2",
-      image: Sourav,
-    },
-    {
-      id: 3,
-      firstName: 'Naveen',
-      lastName: 'Nagam',
-      email: "naveen@gmail.com",
-      phone: "9876543210",
-      dob: '2002-10-04',
-      payrate: '20%',
-      location: "Store 2",
-      image: deadPool,
-    },
-    {
-      id: 4,
-      firstName: 'Anita',
-      lastName: 'Seth',
-      email: "anita@gmail.com",
-      phone: "9876543210",
-      dob: '1997-05-05',
-      payrate: '40%',
-      location: "Store 1",
-      image: BlackWidow,
-    },
-    {
-      id: 5,
-      firstName: 'Prudvi',
-      lastName: 'Raj',
-      email: "prudvi@gmail.com",
-      phone: "9876543210",
-      dob: '1999-10-04',
-      payrate: '30%',
-      location: "Store 1",
-      image: deadPool,
-    },
-    {
-      id: 6,
-      firstName: 'Harish',
-      lastName: 'Dobilla',
-      email: "harish@gmail.com",
-      phone: "9876512210",
-      dob: '1995-12-01',
-      payrate: '60%',
-      location: "Store 2",
-      image: ProfileImage,
-    },
-    {
-      id: 7,
-      firstName: 'Sudiksha',
-      lastName: 'Reddy',
-      email: "sudiksha@gmail.com",
-      phone: "9833543210",
-      dob: '1984-12-05',
-      payrate: '60%',
-      location: "Store 2",
-      image: BlackWidow,
-    },
-  ];
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    mobileNumber: '',
+    payrate: '',
+    password: '',
+    location_Id: '', // If needed
+    dob: '',
+    profileImage: '',
+    role_id: null,
+  });
 
-  const [filteredProfiles, setFilteredProfiles] = useState(profiles);
+  useEffect(() => {
+    if (currentUserRole === 2) {
+      setFormData((prev) => ({ ...prev, role_id: 3 }));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (createDate) {
+      setFormData((prev) => ({
+        ...prev,
+        dob: createDate.toISOString().split('T')[0],
+      }));
+    }
+  }, [createDate]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const form = new FormData();
+    form.append("firstName", formData.firstName);
+    form.append("lastName", formData.lastName);
+    form.append("email", formData.email);
+    form.append("dob", formData.dob);
+    form.append("payrate", formData.payrate);
+    form.append("mobileNumber", formData.mobileNumber);
+    form.append("role_id", formData.role_id || 3);
+    form.append("created_by", currentUserId);
+    form.append("created_on", new Date());
+    form.append("password", "defaultPassword123");
+
+
+    if (selectedProfile.file) {
+      form.append("profileImage", selectedProfile.file);
+    }
+
+    try {
+      const response = await axios.post(`${baseURL}/users`, form, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("User created:", response.data);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error creating user:", error);
+    }
+  };
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${baseURL}/users`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setUsers(response.data.data);
+      setFilteredProfiles(response.data.data);
+    } catch (error) {
+      console.error("Error fetching users:", error.response?.data || error.message);
+    }
+    finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    if (users.length > 0) {
+      setFilteredProfiles(users);
+    }
+  }, [users]);
+
+
+  const [filteredProfiles, setFilteredProfiles] = useState([]);
 
   const handleSearch = (e) => {
     const keyword = e.target.value.toLowerCase();
     setSearchTerm(keyword);
 
-    const filtered = profiles.filter((profile) => {
+    const filtered = users.filter((profile) => {
+      const firstName = profile.firstName?.toLowerCase() || '';
+      const lastName = profile.lastName?.toLowerCase() || '';
+      const email = profile.email?.toLowerCase() || '';
+      const mobile = profile.mobileNumber?.toString().toLowerCase() || '';
+      const location = profile.location?.toLowerCase() || '';
+      const payrate = profile.payrate?.toString() || '';
+      const dob = profile.dob || '';
+
       const matchesKeyword =
-        profile.firstName.toLowerCase().includes(keyword) ||
-        profile.lastName.toLowerCase().includes(keyword) ||
-        profile.email.toLowerCase().includes(keyword) ||
-        profile.phone.toLowerCase().includes(keyword) ||
-        profile.location.toLowerCase().includes(keyword) ||
-        profile.payrate.includes(keyword) ||
-        profile.dob.includes(keyword);
+        firstName.includes(keyword) ||
+        lastName.includes(keyword) ||
+        email.includes(keyword) ||
+        mobile.includes(keyword) ||
+        location.includes(keyword) ||
+        payrate.includes(keyword) ||
+        dob.includes(keyword);
 
-      const matchesStore =
+      const matchesLocation =
         selectedLocation === 'all' ||
-        profile.location.toLowerCase() === selectedLocation.toLowerCase();
+        location === selectedLocation.toLowerCase();
 
-      return matchesKeyword && matchesStore;
+      return matchesKeyword && matchesLocation;
     });
 
     setFilteredProfiles(filtered);
   };
+
 
 
   const handleFilter = () => {
-    const filtered = profiles.filter((profile) => {
-      // const matchesKeyword =
-      //   profile.firstName.toLowerCase().includes(searchTerm) ||
-      //   profile.lastName.toLowerCase().includes(searchTerm) ||
-      //   profile.email.toLowerCase().includes(searchTerm) ||
-      //   profile.phone.toLowerCase().includes(searchTerm) ||
-      //   profile.location.toLowerCase().includes(searchTerm) ||
-      //   profile.payrate.includes(searchTerm) ||
-      //   profile.dob.includes(searchTerm);
-
-      const matchesStore =
-        selectedLocation === 'all' ||
-        profile.location.toLowerCase() === selectedLocation.toLowerCase();
-
-      return matchesStore;
+    const filtered = users.filter((profile) => {
+      const location = profile.location?.toLowerCase() || '';
+      return selectedLocation === 'all' || location === selectedLocation.toLowerCase();
     });
 
     setFilteredProfiles(filtered);
   };
+
+  const updateUser = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('firstName', selectedProfile.firstName);
+      formData.append('lastName', selectedProfile.lastName);
+      formData.append('email', selectedProfile.email);
+      formData.append('dob', date?.toISOString().split('T')[0] || selectedProfile.dob); // format DOB
+      formData.append('mobileNumber', selectedProfile.mobileNumber);
+      formData.append('payrate', selectedProfile.payrate);
+
+      if (selectedProfile.image && selectedProfile.image.startsWith("data:image")) {
+        const blob = await fetch(selectedProfile.image).then(r => r.blob());
+        formData.append("profileImage", blob, "profile.jpg");
+      }
+
+      const response = await axios.post(`${baseURL}/users/${selectedProfile.id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log('User updated:', response.data);
+      fetchUsers(); // refresh user list
+      setViewButtonModel(false); // close modal
+    } catch (error) {
+      console.error("Error updating user:", error.response?.data || error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedProfile?.dob) {
+      setEditDate(new Date(selectedProfile.dob));
+    } else {
+      setEditDate(null);
+    }
+  }, [selectedProfile]);
 
   return (
     <div className="flex flex-col gap-3">
@@ -206,10 +264,11 @@ const People = () => {
       </div>
 
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {filteredProfiles.map((profile) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+        {loading && <p>Loading users...</p>}
+        {Array.isArray(filteredProfiles) && filteredProfiles.map((profile) => (
           <div key={profile.id} className="w-full">
-            <div className="bg-white shadow-xl p-4 rounded-xl h-full flex flex-col justify-between">
+            <div className="mSideBar shadow-xl p-4 rounded-xl h-full flex flex-col justify-between">
               <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                 <div className="flex flex-row items-center min-w-0 md:flex-row gap-4">
                   <img
@@ -222,7 +281,7 @@ const People = () => {
                       {profile.firstName} {profile.lastName}
                     </h3>
                     <p className="paragraphThin truncate overflow-hidden text-ellipsis">{profile.email}</p>
-                    <p className="paragraphThin truncate overflow-hidden text-ellipsis">{profile.phone}</p>
+                    <p className="paragraphThin truncate overflow-hidden text-ellipsis">{profile.mobileNumber}</p>
                   </div>
                 </div>
               </div>
@@ -275,15 +334,15 @@ const People = () => {
                 ×
               </button>
             </div>
-            <form className="mt-4 p-6 space-y-3">
+            <form className="mt-4 p-6 space-y-3" onSubmit={handleSubmit}>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="paragraphBold">First Name</label>
-                  <input type="text" className="input" />
+                  <input type="text" className="input" value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} />
                 </div>
                 <div className="flex flex-col">
                   <label className="paragraphBold">Last Name</label>
-                  <input type="text" className="input" />
+                  <input type="text" className="input" value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} />
                 </div>
               </div>
               <div className="flex flex-col">
@@ -291,14 +350,16 @@ const People = () => {
                 <input
                   type="email"
                   className="input"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
               <div className="flex flex-col">
                 <label className="paragraphBold">Date of Birth</label>
                 <DatePicker
                   className="input w-100"
-                  selected={date}
-                  onChange={(date) => setDate(date)}
+                  selected={createDate}
+                  onChange={(date) => setCreateDate(date)}
                   showYearDropdown
                   showMonthDropdown
                   dateFormat="dd/MM/yyyy" // or "yyyy-MM-dd" if you prefer
@@ -310,13 +371,29 @@ const People = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="paragraphBold">Payrate Percentage</label>
-                  <input type="text" className="input" />
+                  <input type="text" className="input" value={formData.payrate} onChange={(e) => setFormData({ ...formData, payrate: e.target.value })} />
                 </div>
                 <div className="flex flex-col">
                   <label className="paragraphBold">Phone Number</label>
-                  <input type="text" className="input" />
+                  <input type="text" className="input" value={formData.mobileNumber} onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })} />
                 </div>
               </div>
+              {currentUserRole === 1 && (
+                <div className="flex flex-col">
+                  <label className="paragraphBold">Role</label>
+                  <select
+                    className="input"
+                    value={formData.role_id || ""}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, role_id: parseInt(e.target.value) }))
+                    }
+                  >
+                    <option value="">Select Role</option>
+                    <option value="2">Manager</option>
+                    <option value="3">Employee</option>
+                  </select>
+                </div>
+              )}
               <div className="flex flex-col">
                 <label className="paragraphBold">Profile Image</label>
                 <input
@@ -326,14 +403,7 @@ const People = () => {
                   onChange={(e) => {
                     const file = e.target.files[0];
                     if (file) {
-                      const reader = new FileReader();
-                      reader.onloadend = () => {
-                        setSelectedProfile((prev) => ({
-                          ...prev,
-                          image: reader.result,
-                        }));
-                      };
-                      reader.readAsDataURL(file);
+                      setSelectedProfile({ image: URL.createObjectURL(file), file });
                     }
                   }}
                 />
@@ -381,7 +451,7 @@ const People = () => {
                 ×
               </button>
             </div>
-            <form className="mt-4 p-6 space-y-3">
+            <form className="mt-4 p-6 space-y-3" onSubmit={updateUser}>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="paragraphBold">First Name</label>
@@ -430,8 +500,20 @@ const People = () => {
                 <label className="paragraphBold">Date of Birth</label>
                 <DatePicker
                   className="input w-100"
-                  selected={selectedProfile?.dob ? new Date(selectedProfile.dob) : null}
-                  onChange={(date) => setDate(date)}
+                  selected={editDate} // <-- use the actual state
+                  onChange={(date) => {
+                    setEditDate(date);
+                    setSelectedProfile((prev) => ({
+                      ...prev,
+                      dob: date.toISOString().split("T")[0], // Optional: update dob in selectedProfile if needed
+                    }));
+                  }}
+                  showYearDropdown
+                  showMonthDropdown
+                  dateFormat="dd/MM/yyyy"
+                  scrollableYearDropdown
+                  yearDropdownItemNumber={100}
+                  placeholderText="Select date"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -454,11 +536,11 @@ const People = () => {
                   <input
                     type="text"
                     className="input"
-                    value={selectedProfile?.phone || ''}
+                    value={selectedProfile?.mobileNumber || ''}
                     onChange={(e) =>
                       setSelectedProfile((prev) => ({
                         ...prev,
-                        phone: e.target.value,
+                        mobileNumber: e.target.value,
                       }))
                     }
                   />

@@ -32,6 +32,13 @@ export default function Login() {
     setShowPassword(!showPassword);
   };
 
+  const [forgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotError, setForgotError] = useState("");
+  const [forgotSuccess, setForgotSuccess] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
+
+
   const navigate = useNavigate();
 
   const openModal = () => {
@@ -211,7 +218,7 @@ export default function Login() {
               )}
             </div>
 
-            <div>
+            <div className="m-0">
               <label className="text-secondary font-semibold mb-1 block">
                 Password
               </label>
@@ -238,11 +245,109 @@ export default function Login() {
               {errors.password && (
                 <p className="text-red-500 text-sm mt-1">{errors.password}</p>
               )}
+              <div className="mt-2 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setForgotPasswordModalOpen(true)}
+                  className="text-sm text-gray-500 hover:text-primary transition-colors duration-200"
+                >
+                  Forgot Password?
+                </button>
+              </div>
+
+
+              {forgotPasswordModalOpen && (
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                  <div className="bg-white p-6 rounded-lg shadow-2xl w-96">
+                    <h3 className="text-lg font-semibold text-center text-secondary">
+                      Reset Password
+                    </h3>
+                    <p className="text-sm text-gray-600 text-center mb-4">
+                      Enter your email to receive a password reset link.
+                    </p>
+
+                    <input
+                      type="email"
+                      placeholder="Email address"
+                      value={forgotEmail}
+                      onChange={(e) => setForgotEmail(e.target.value)}
+                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${forgotError ? "border-red-500 focus:ring-red-300" : "focus:ring-primary"
+                        }`}
+                    />
+
+                    {forgotError && (
+                      <p className="text-sm text-red-500 mt-1">{forgotError}</p>
+                    )}
+                    {forgotSuccess && (
+                      <p className="text-sm text-green-600 mt-1">{forgotSuccess}</p>
+                    )}
+
+                    <div className="flex justify-end mt-4">
+                      <button
+                        className="buttonGrey py-2 px-4 rounded-lg"
+                        onClick={() => {
+                          setForgotPasswordModalOpen(false);
+                          setForgotEmail("");
+                          setForgotError("");
+                          setForgotSuccess("");
+                        }}
+                      >
+                        Cancel
+                      </button>
+
+                      <button
+                        className={`buttonSuccess py-2 ml-2 px-4 rounded-lg ${forgotLoading ? "opacity-60 cursor-not-allowed" : ""
+                          }`}
+                        disabled={forgotLoading}
+                        onClick={async () => {
+                          setForgotError("");
+                          setForgotSuccess("");
+
+                          if (!forgotEmail.trim()) {
+                            setForgotError("Email is required.");
+                            return;
+                          } else if (!/\S+@\S+\.\S+/.test(forgotEmail)) {
+                            setForgotError("Enter a valid email address.");
+                            return;
+                          }
+
+                          setForgotLoading(true);
+                          try {
+                            const response = await axios.post(`${baseURL}/`, {
+                              email: forgotEmail,
+                            });
+
+                            setForgotSuccess(
+                              response?.data?.message || "Reset link sent to your email."
+                            );
+                            setForgotError("");
+                          } catch (error) {
+                            setForgotError(
+                              error.response?.data?.message ||
+                              "Failed to send reset link. Please try again."
+                            );
+                            setForgotSuccess("");
+                          } finally {
+                            setForgotLoading(false);
+                          }
+                        }}
+                      >
+                        {forgotLoading ? "Submitting..." : "Submit"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+
+
+
+
             </div>
             <div>
               <button
                 type="submit"
-                className={`w-full py-3 mt-4 rounded-xl font-semibold text-black shadow-md flex items-center justify-center
+                className={`w-full py-3 mt-1 rounded-xl font-semibold text-black shadow-md flex items-center justify-center
         transition-all duration-300 ease-in-out transform hover:scale-105 loginButton
         ${loading ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
                 disabled={loading}

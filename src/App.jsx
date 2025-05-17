@@ -30,6 +30,7 @@ import ShiftBoard from './Screens/ShiftBoard';
 import NotFound from './Component/NotFound';
 import ProtectedRoutes from './Component/ProtectedRoutes';
 import Forbidden from './Component/Forbidden';
+import ChangePassword from './Screens/ChangePassword';
 
 
 function AppWrapper() {
@@ -80,6 +81,7 @@ function AppWrapper() {
     '/JuniorRate',
     '/PanalityRate',
     '/profile',
+    '/changepassword',
     '/drag',
   ].includes(location.pathname);
 
@@ -108,8 +110,22 @@ function AppWrapper() {
             {!isLoginPage && !isRegisterPage && !isNotFound && <NavBar toggleSidebar={toggleSidebar} />}
             <div className={`flex-1 overflow-auto ${isLoginPage || isRegisterPage ? 'p-0' : 'px-4'} ${isNotFound ? 'flex items-center p-12 justify-center' : ''}`}>
               <Routes>
-                <Route path='/' element={<Login />} />
-                <Route path='/register' element={<Register />} />
+                <Route path='/'
+                  element={
+                    <ProtectedRoutes
+                      element={<Login />}
+                      allowedRoles={[1, 2, 3]}
+                      userRole={userRole}
+                    />
+                  } />
+                <Route path='/register'
+                  element={
+                    <ProtectedRoutes
+                      element={<Register />}
+                      allowedRoles={[1, 2, 3]}
+                      userRole={userRole}
+                    />
+                  } />
                 <Route path='/myrosterly/*'
                   element={
                     <ProtectedRoutes
@@ -181,6 +197,7 @@ function AppWrapper() {
                 <Route path='/JuniorRate' element={<JuniorRate />} />
                 <Route path='/PanalityRate' element={<PenalityRate />} />
                 <Route path='/profile' element={<Profile />} />
+                <Route path='/changepassword' element={<ChangePassword />} />
                 <Route path='/drag' element={<ShiftBoard />} />
                 <Route
                   path='/*'
