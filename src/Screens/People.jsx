@@ -30,6 +30,10 @@ const People = () => {
   const currentUserId = parseInt(localStorage.getItem("id"));
   const [loading, setLoading] = useState(false);
 
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -87,8 +91,14 @@ const People = () => {
       });
       console.log("User created:", response.data);
       setIsModalOpen(false);
+      setFeedbackMessage(response.data?.message || "User created successfully");
+      setFeedbackModalOpen(true);
+
     } catch (error) {
       console.error("Error creating user:", error);
+      setFeedbackMessage(error.response?.data?.message || "Error creating user");
+      setFeedbackModalOpen(true);
+
     }
   };
 
@@ -192,10 +202,15 @@ const People = () => {
       });
 
       console.log('User updated:', response.data);
+      setFeedbackMessage(response.data?.message || "User updated successfully");
+      setFeedbackModalOpen(true);
       fetchUsers(); // refresh user list
-      setViewButtonModel(false); // close modal
+      setViewButtonModel(false); // close the edit modal
+
     } catch (error) {
       console.error("Error updating user:", error.response?.data || error.message);
+      setFeedbackMessage(error.response?.data?.message || "Error updating user");
+      setFeedbackModalOpen(true);
     } finally {
       setLoading(false);
     }
@@ -629,7 +644,8 @@ const People = () => {
         </div>
       </Dialog>
 
-      {/* Add Note Modal */}
+
+
       <Dialog
         open={addNoteModal}
         onClose={() => setAddNoteModal(false)}
@@ -679,6 +695,41 @@ const People = () => {
           </Dialog.Panel>
         </div>
       </Dialog>
+
+
+      {/* message modal start */}
+      <Dialog
+        open={feedbackModalOpen}
+        onClose={() => setFeedbackModalOpen(false)}
+        className="relative z-50"
+      >
+        <div className="fixed inset-0 bg-black/50 transition-opacity duration-300" />
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel
+            className={`w-full max-w-sm transform overflow-hidden rounded-xl bg-white shadow-xl transition-all duration-300 ease-out 
+      scale-95 opacity-0 animate-fadeIn`}
+          >
+            <div className="flex flex-col items-center p-6 text-center">
+              <Dialog.Title className="text-lg font-semibold text-gray-800 mt-2">
+                {feedbackMessage}
+              </Dialog.Title>
+              <div className="mt-6">
+                <button
+                  onClick={() => setFeedbackModalOpen(false)}
+                  className="px-5 py-2 text-sm font-medium text-white bg-blue-600 borderRadius5 hover:bg-blue-700 transition-all"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
+
+      {/* message modal emd */}
+
+
+
     </div>
   );
 };
