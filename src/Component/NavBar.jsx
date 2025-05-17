@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
@@ -9,9 +9,20 @@ import { TiThMenu } from "react-icons/ti";
 
 
 const NavBar = ({ toggleSidebar }) => {
+  const [profileImage, setProfileImage] = useState('');
   const baseURL = import.meta.env.VITE_BASE_URL;
+  const profileURL = import.meta.env.VITE_PROFILE_BASE_URL;
+
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+  const image = localStorage.getItem("profileImage");
+  if (image) {
+    setProfileImage(`${profileURL}/${image}`); // <-- prepend baseURL here
+  }
+}, []);
+
 
 
   const handleClick = () => {
@@ -77,7 +88,7 @@ const NavBar = ({ toggleSidebar }) => {
                   <span className="sr-only">Open user menu</span>
                   <img
                     alt=""
-                    src="https://sketchok.com/images/articles/06-anime/002-one-piece/26/16.jpg"
+                    src={profileImage || 'https://via.placeholder.com/150'} // fallback if null
                     className="size-8 rounded p-1"
                   />
                 </MenuButton>

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Login from './Screens/Login';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Sidebar from './Component/SideBar';
 import Rosterly from './Screens/Rosterly';
 import Unavailability from './Screens/Unavailability';
@@ -30,7 +30,6 @@ import ShiftBoard from './Screens/ShiftBoard';
 import NotFound from './Component/NotFound';
 import ProtectedRoutes from './Component/ProtectedRoutes';
 import Forbidden from './Component/Forbidden';
-import ChangePassword from './Screens/ChangePassword';
 
 
 function AppWrapper() {
@@ -81,12 +80,15 @@ function AppWrapper() {
     '/JuniorRate',
     '/PanalityRate',
     '/profile',
-    '/changepassword',
     '/drag',
   ].includes(location.pathname);
 
   const role_id = localStorage.getItem("role_id");
-  const userRole = role_id ? parseInt(role_id) : null;
+  const userRole = role_id ? parseInt(role_id, 10) : null;
+
+   if (!userRole && !['/', '/register'].includes(location.pathname)) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <>
@@ -110,22 +112,8 @@ function AppWrapper() {
             {!isLoginPage && !isRegisterPage && !isNotFound && <NavBar toggleSidebar={toggleSidebar} />}
             <div className={`flex-1 overflow-auto ${isLoginPage || isRegisterPage ? 'p-0' : 'px-4'} ${isNotFound ? 'flex items-center p-12 justify-center' : ''}`}>
               <Routes>
-                <Route path='/'
-                  element={
-                    <ProtectedRoutes
-                      element={<Login />}
-                      allowedRoles={[1, 2, 3]}
-                      userRole={userRole}
-                    />
-                  } />
-                <Route path='/register'
-                  element={
-                    <ProtectedRoutes
-                      element={<Register />}
-                      allowedRoles={[1, 2, 3]}
-                      userRole={userRole}
-                    />
-                  } />
+                <Route path='/' element={<Login />} />
+                <Route path='/register' element={<Register />} />
                 <Route path='/myrosterly/*'
                   element={
                     <ProtectedRoutes
@@ -197,10 +185,9 @@ function AppWrapper() {
                 <Route path='/JuniorRate' element={<JuniorRate />} />
                 <Route path='/PanalityRate' element={<PenalityRate />} />
                 <Route path='/profile' element={<Profile />} />
-                <Route path='/changepassword' element={<ChangePassword />} />
                 <Route path='/drag' element={<ShiftBoard />} />
                 <Route
-                  path='/*'
+                  path='*'
                   element={
                     <NotFound baseIntensity={0.2} hoverIntensity={0.5} enableHover={true}>
                       {"404\nnot found"}

@@ -155,8 +155,9 @@ export default function Login() {
         localStorage.setItem("token", data.token);
         localStorage.setItem("firstName", data.user.firstName);
         localStorage.setItem("lastName", data.user.lastName);
-        localStorage.setItem("role_id", response.data.user.role_id);
-        localStorage.setItem("id", response.data.user.id);
+        localStorage.setItem("role_id", data.user.role_id);
+        localStorage.setItem("id", data.user.id);
+        localStorage.setItem("profileImage", data.user.profileImage);
 
         setModalTitle("Success");
         setModalMessage("Login successful!");
@@ -313,7 +314,7 @@ export default function Login() {
 
                           setForgotLoading(true);
                           try {
-                            const response = await axios.post(`${baseURL}/`, {
+                            const response = await axios.post(`${baseURL}/forgotPassword`, {
                               email: forgotEmail,
                             });
 
