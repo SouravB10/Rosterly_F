@@ -8,9 +8,11 @@ import BlackWidow from "../assets/images/Screenshot 2025-04-21 111629.png"
 import DatePicker from "react-datepicker";
 import { set } from "date-fns";
 import axios from "axios";
+import { CgProfile } from "react-icons/cg";
 
 const People = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
+  const profileBaseURL = import.meta.env.VITE_PROFILE_BASE_URL;
   const [users, setUsers] = useState([]);
   const [activeTab, setActiveTab] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -207,6 +209,27 @@ const People = () => {
     }
   }, [selectedProfile]);
 
+  const handleDelete = async () => {
+    if (!selectedProfile?.id) return;
+
+    const confirmDelete = window.confirm("Are you sure you want to delete this user?");
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(`${baseURL}/users/${selectedProfile.id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      alert("User deleted successfully.");
+      setViewButtonModel(false);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      alert("Failed to delete user.");
+    }
+  };
+
   return (
     <div className="flex flex-col gap-3">
       <div className="sticky top-0 bg-[#f1f1f1] py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -273,7 +296,13 @@ const People = () => {
                 <div className="flex flex-row items-center min-w-0 md:flex-row gap-4">
                   <img
                     alt="Profile"
-                    src={profile.image}
+                    src={
+                      profile.profileImage
+                        ? (profile.profileImage.startsWith("http")
+                          ? profile.profileImage
+                          : `${profileBaseURL}/${profile.profileImage}`)
+                        : CgProfile
+                    }
                     className="h-20 w-20 rounded object-cover"
                   />
                   <div className="text-left md:text-left w-full">
@@ -569,7 +598,7 @@ const People = () => {
               </div>
               {selectedProfile?.image && (
                 <img
-                  src={selectedProfile.image}
+                  src={selectedProfile.profileImage}
                   alt="Preview"
                   className="mt-2 w-32 h-32 object-cover rounded-md"
                 />
@@ -583,6 +612,13 @@ const People = () => {
                   onClick={() => setViewButtonModel(false)}
                 >
                   Cancel
+                </button>
+                <button
+                  type="button"
+                  className="buttonDanger"
+                  onClick={handleDelete}
+                >
+                  Delete
                 </button>
                 <button type="submit" className="buttonTheme">
                   Update
