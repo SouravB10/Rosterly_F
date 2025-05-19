@@ -382,19 +382,19 @@ const People = () => {
                     }
                     className="h-20 w-20 rounded object-cover"
                   />
-                  <div className="text-left md:text-left w-full">
-                    <h3 className="paragraphBold md:subheadingBold truncate overflow-hidden text-ellipsis">
+                  <div className="text-left md:text-left w-full min-w-0 overflow-hidden">
+                    <h3 className="paragraphBold md:subheadingBold break-words">
                       {profile.firstName} {profile.lastName}
                     </h3>
-                    <p className="paragraphThin truncate overflow-hidden text-ellipsis">{profile.email}</p>
-                    <p className="paragraphThin truncate overflow-hidden text-ellipsis">{profile.mobileNumber}</p>
+                    <p className="paragraphThin break-words">{profile.email}</p>
+                    <p className="paragraphThin break-words">{profile.mobileNumber}</p>
                   </div>
                 </div>
               </div>
 
               <div className="mt-4 flex flex-row justify-between items-center gap-2">
                 <p className="paragraphBold">
-                  Location: {profile.location_id ? profile.location : "Not assigned yet"}
+                  {/* Location: {profile.location_id ? profile.location : "N/A"} */}
                 </p>
                 <div className="flex gap-2">
                   <FaEye
