@@ -95,7 +95,7 @@ const ChangePassword = () => {
                 {show ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
             </button>
             {showValidation && passwordMessage && (
-                <p className={`text-sm mt-1 ${passwordValid ? 'text-green-600' : 'text-red-600'}`}>
+                <p className={`text-xs mt-1 ${passwordValid ? 'text-green-700' : 'text-red-600'}`}>
                     {passwordMessage}
                 </p>
             )}
@@ -103,45 +103,47 @@ const ChangePassword = () => {
     );
 
     return (
-        <div className="bg-white rounded-lg shadow-lg p-5 my-4">
-            <h3 className="heading text-indigo-900">Change Password</h3>
-            <div className="flex flex-col md:flex-row items-center gap-2 w-full mt-3">
-                <div className="w-full">
-                    <form onSubmit={handleSubmit} className="grid gap-2" method="post">
-                        {renderPasswordField(
-                            "Current Password",
-                            currentPassword,
-                            setCurrentPassword,
-                            showCurrent,
-                            setShowCurrent,
-                            (e) => setCurrentPassword(e.target.value)
-                        )}
+        <div className='flex flex-col items-center justify-center min-h-screen '>
+            <div className="bg-white rounded-lg shadow-lg p-5 my-4 w-1/2 mx-auto">
+                <h3 className="heading text-indigo-900">Change Password</h3>
+                <div className="flex flex-col md:flex-row items-center gap-2 w-full mt-3">
+                    <div className="w-full">
+                        <form onSubmit={handleSubmit} className="grid gap-2" method="post">
+                            {renderPasswordField(
+                                "Current Password",
+                                currentPassword,
+                                setCurrentPassword,
+                                showCurrent,
+                                setShowCurrent,
+                                (e) => setCurrentPassword(e.target.value)
+                            )}
 
-                        {renderPasswordField(
-                            "New Password",
-                            newPassword,
-                            setNewPassword,
-                            showNew,
-                            setShowNew,
-                            handleNewPasswordChange,
-                            true
-                        )}
+                            {renderPasswordField(
+                                "New Password",
+                                newPassword,
+                                setNewPassword,
+                                showNew,
+                                setShowNew,
+                                handleNewPasswordChange,
+                                true
+                            )}
 
-                        {renderPasswordField(
-                            "Confirm Password",
-                            confirmPassword,
-                            setConfirmPassword,
-                            showConfirm,
-                            setShowConfirm,
-                            (e) => setConfirmPassword(e.target.value)
-                        )}
+                            {renderPasswordField(
+                                "Confirm Password",
+                                confirmPassword,
+                                setConfirmPassword,
+                                showConfirm,
+                                setShowConfirm,
+                                (e) => setConfirmPassword(e.target.value)
+                            )}
 
-                        <div className="flex justify-end gap-2 mt-4">
-                            <button type="submit" className="buttonSuccess w-40">
-                                Save
-                            </button>
-                        </div>
-                    </form>
+                            <div className="flex justify-end gap-2 mt-4">
+                                <button type="submit" className="buttonSuccess w-40">
+                                    Save
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

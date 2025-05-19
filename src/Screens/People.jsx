@@ -8,9 +8,11 @@ import BlackWidow from "../assets/images/Screenshot 2025-04-21 111629.png"
 import DatePicker from "react-datepicker";
 import { set } from "date-fns";
 import axios from "axios";
+import { CgProfile } from "react-icons/cg";
 
 const People = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
+  const profileBaseURL = import.meta.env.VITE_PROFILE_BASE_URL;
   const [users, setUsers] = useState([]);
   const [activeTab, setActiveTab] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,6 +30,10 @@ const People = () => {
   const currentUserId = parseInt(localStorage.getItem("id"));
   const [loading, setLoading] = useState(false);
 
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -39,6 +45,7 @@ const People = () => {
     dob: '',
     profileImage: '',
     role_id: null,
+    location_id: null,
   });
 
   useEffect(() => {
@@ -70,6 +77,7 @@ const People = () => {
     form.append("created_by", currentUserId);
     form.append("created_on", new Date());
     form.append("password", "defaultPassword123");
+    form.append("location_id", formData.location_id);
 
 
     if (selectedProfile.file) {
@@ -85,8 +93,14 @@ const People = () => {
       });
       console.log("User created:", response.data);
       setIsModalOpen(false);
+      setFeedbackMessage(response.data?.message || "User created successfully");
+      setFeedbackModalOpen(true);
+
     } catch (error) {
       console.error("Error creating user:", error);
+      setFeedbackMessage(error.response?.data?.message || "Error creating user");
+      setFeedbackModalOpen(true);
+
     }
   };
 
@@ -173,7 +187,7 @@ const People = () => {
       formData.append('firstName', selectedProfile.firstName);
       formData.append('lastName', selectedProfile.lastName);
       formData.append('email', selectedProfile.email);
-      formData.append('dob', date?.toISOString().split('T')[0] || selectedProfile.dob); // format DOB
+      formData.append('dob', editDate?.toISOString().split('T')[0] || selectedProfile.dob); // format DOB
       formData.append('mobileNumber', selectedProfile.mobileNumber);
       formData.append('payrate', selectedProfile.payrate);
 
@@ -190,10 +204,15 @@ const People = () => {
       });
 
       console.log('User updated:', response.data);
+      setFeedbackMessage(response.data?.message || "User updated successfully");
+      setFeedbackModalOpen(true);
       fetchUsers(); // refresh user list
-      setViewButtonModel(false); // close modal
+      setViewButtonModel(false); // close the edit modal
+
     } catch (error) {
       console.error("Error updating user:", error.response?.data || error.message);
+      setFeedbackMessage(error.response?.data?.message || "Error updating user");
+      setFeedbackModalOpen(true);
     } finally {
       setLoading(false);
     }
@@ -206,6 +225,27 @@ const People = () => {
       setEditDate(null);
     }
   }, [selectedProfile]);
+
+  const handleDelete = async () => {
+    if (!selectedProfile?.id) return;
+
+    const confirmDelete = window.confirm("Are you sure you want to delete this user?");
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(`${baseURL}/users/${selectedProfile.id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      alert("User deleted successfully.");
+      setViewButtonModel(false);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      alert("Failed to delete user.");
+    }
+  };
 
   return (
     <div className="flex flex-col gap-3">
@@ -273,7 +313,13 @@ const People = () => {
                 <div className="flex flex-row items-center min-w-0 md:flex-row gap-4">
                   <img
                     alt="Profile"
-                    src={profile.image}
+                    src={
+                      profile.profileImage
+                        ? (profile.profileImage.startsWith("http")
+                          ? profile.profileImage
+                          : `${profileBaseURL}/${profile.profileImage}`)
+                        : CgProfile
+                    }
                     className="h-20 w-20 rounded object-cover"
                   />
                   <div className="text-left md:text-left w-full">
@@ -288,7 +334,7 @@ const People = () => {
 
               <div className="mt-4 flex flex-row justify-between items-center gap-2">
                 <p className="paragraphBold">
-                  Location: {profile.location}
+                  Location: {profile.location_id ? profile.location : "Not assigned yet"}
                 </p>
                 <div className="flex gap-2">
                   <FaEye
@@ -569,7 +615,7 @@ const People = () => {
               </div>
               {selectedProfile?.image && (
                 <img
-                  src={selectedProfile.image}
+                  src={selectedProfile.profileImage}
                   alt="Preview"
                   className="mt-2 w-32 h-32 object-cover rounded-md"
                 />
@@ -584,6 +630,13 @@ const People = () => {
                 >
                   Cancel
                 </button>
+                <button
+                  type="button"
+                  className="buttonDanger"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </button>
                 <button type="submit" className="buttonTheme">
                   Update
                 </button>
@@ -593,7 +646,8 @@ const People = () => {
         </div>
       </Dialog>
 
-      {/* Add Note Modal */}
+
+
       <Dialog
         open={addNoteModal}
         onClose={() => setAddNoteModal(false)}
@@ -643,6 +697,41 @@ const People = () => {
           </Dialog.Panel>
         </div>
       </Dialog>
+
+
+      {/* message modal start */}
+      <Dialog
+        open={feedbackModalOpen}
+        onClose={() => setFeedbackModalOpen(false)}
+        className="relative z-50"
+      >
+        <div className="fixed inset-0 bg-black/50 transition-opacity duration-300" />
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel
+            className={`w-full max-w-sm transform overflow-hidden rounded-xl bg-white shadow-xl transition-all duration-300 ease-out 
+      scale-95 opacity-0 animate-fadeIn`}
+          >
+            <div className="flex flex-col items-center p-6 text-center">
+              <Dialog.Title className="text-lg font-semibold text-gray-800 mt-2">
+                {feedbackMessage}
+              </Dialog.Title>
+              <div className="mt-6">
+                <button
+                  onClick={() => setFeedbackModalOpen(false)}
+                  className="px-5 py-2 text-sm font-medium text-white bg-blue-600 borderRadius5 hover:bg-blue-700 transition-all"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
+
+      {/* message modal emd */}
+
+
+
     </div>
   );
 };
