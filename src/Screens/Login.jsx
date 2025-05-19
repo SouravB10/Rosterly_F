@@ -156,6 +156,7 @@ export default function Login() {
         localStorage.setItem("firstName", data.user.firstName);
         localStorage.setItem("lastName", data.user.lastName);
         localStorage.setItem("role_id", data.user.role_id);
+        localStorage.setItem("createdBy", data.user.created_by);
         localStorage.setItem("id", data.user.id);
         localStorage.setItem("profileImage", data.user.profileImage);
 

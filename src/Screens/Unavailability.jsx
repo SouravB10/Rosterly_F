@@ -1,20 +1,85 @@
 import { Dialog } from "@headlessui/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaPlusSquare } from "react-icons/fa";
 import { FaPencilAlt } from "react-icons/fa";
+import axios from "axios";
 
 const Unavailability = () => {
+  const baseURL = import.meta.env.VITE_BASE_URL;
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   const [isShiftOpen, setIsShiftOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState("");
+  const [selectToNotify, setSelectToNotify] = useState([]);
+  const token = localStorage.getItem("token");
+  const id = localStorage.getItem("id");
+
 
   const days = [
-    "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+    "Monday",
+    "Tuesday",
   ];
+  // fetching the notifying manager
+  const fetchNotifyingManager = async () => {
+    try {
+      const created_by = localStorage.getItem("createdBy");
+      const response = await axios.get(`${baseURL}/users/${created_by}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // setSelectToNotify(response.data.data);
 
+      setSelectToNotify([
+        {
+          firstName: response.data.data.firstName,
+          lastName: response.data.data.lastName,
+        },
+      ]);
+    } catch (error) {
+      console.error("Error fetching notifying manager:", error);
+    }
+  };
+  
+  // save the unavailability
+  const saveUnavailability = async () => {
+    try {
+      const response = await axios.post(
+        `${baseURL}/unavailability`,
+        {
+          userId: id,
+          unavailType: 1,
+          day: selectedDay,
+          fromDate: fromDate,
+          toDate: toDate,
+          startTime: startTime,
+          endTime: endTime,
+          notifyTo: selectToNotify,
+          
+          start: start,
+          finish: finish,
+          breakTime: breakTime,
+          description: "Unavailability",
+          day: selectedDay,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Unavailability saved:", response.data);
+    } catch (error) {
+      console.error("Error saving unavailability:", error);
+    }
+  }
   const generateTimeOptions = () => {
     let times = [];
     let hour = 0;
@@ -58,7 +123,9 @@ const Unavailability = () => {
             <div className="flex flex-col gap-4 mt-2">
               <div className="flex flex-wrap md:flex-nowrap gap-6">
                 <div className="flex items-center gap-4 flex-1 min-w-[280px]">
-                  <label className="paragraphBold whitespace-nowrap">From Date & Time:</label>
+                  <label className="paragraphBold whitespace-nowrap">
+                    From Date & Time:
+                  </label>
                   <DatePicker
                     className="mixedInput custom-focus z-9999999"
                     selected={fromDate}
@@ -69,8 +136,14 @@ const Unavailability = () => {
                     dateFormat="dd/MM/yyyy h:mm aa"
                     customInput={
                       <div className="rounded-lg px-4 py-3 flex justify-between items-center cursor-pointer w-full bg-white-100 ">
-                        <span className="black-100 font12">{fromDate.toLocaleString("en-GB")}</span>
-                        <svg className="w-4 h-4 texttheme" fill="currentColor" viewBox="0 0 20 20">
+                        <span className="black-100 font12">
+                          {fromDate.toLocaleString("en-GB")}
+                        </span>
+                        <svg
+                          className="w-4 h-4 texttheme"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
                           <path
                             fillRule="evenodd"
                             d="M5.293 7.707a1 1 0 011.414 0L10 11.586l3.293-3.879a1 1 0 011.414 1.414l-4 4.586a1 1 0 01-1.414 0l-4-4.586a1 1 0 010-1.414z"
@@ -83,7 +156,9 @@ const Unavailability = () => {
                 </div>
 
                 <div className="flex items-center gap-4 flex-1 min-w-[280px]">
-                  <label className="paragraphBold whitespace-nowrap">To Date & Time:</label>
+                  <label className="paragraphBold whitespace-nowrap">
+                    To Date & Time:
+                  </label>
                   <DatePicker
                     className="mixedInput custom-focus"
                     selected={toDate}
@@ -94,8 +169,14 @@ const Unavailability = () => {
                     dateFormat="dd/MM/yyyy h:mm aa"
                     customInput={
                       <div className="rounded-lg px-4 py-3 flex justify-between items-center cursor-pointer w-full bg-white-100 ">
-                        <span className="black-100 font12">{toDate.toLocaleString("en-GB")}</span>
-                        <svg className="w-4 h-4 texttheme" fill="currentColor" viewBox="0 0 20 20">
+                        <span className="black-100 font12">
+                          {toDate.toLocaleString("en-GB")}
+                        </span>
+                        <svg
+                          className="w-4 h-4 texttheme"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
                           <path
                             fillRule="evenodd"
                             d="M5.293 7.707a1 1 0 011.414 0L10 11.586l3.293-3.879a1 1 0 011.414 1.414l-4 4.586a1 1 0 01-1.414 0l-4-4.586a1 1 0 010-1.414z"
@@ -109,17 +190,29 @@ const Unavailability = () => {
               </div>
 
               <div>
-                <label className="paragraphBold block mb-2">Select a manager to notify</label>
-                <select className="input w-full p-3 custom-focus">
+                <label className="paragraphBold block mb-2">
+                  Select a manager to notify
+                </label>
+                <select
+                  className="input w-full p-3 custom-focus"
+                  onChange={fetchNotifyingManager}
+                >
                   <option>-- Select --</option>
-                  <option>Vishal</option>
-                  <option>Sourav</option>
-                  <option>Naveen</option>
+                  {selectToNotify.map((manager, index) => (
+                    <option
+                      key={index}
+                      value={`${manager.firstName} ${manager.lastName}`}
+                    >
+                      {manager.firstName} {manager.lastName}
+                    </option>
+                  ))}
                 </select>
               </div>
 
               <div>
-                <label className="paragraphBold block mb-2">Please provide a brief reason</label>
+                <label className="paragraphBold block mb-2">
+                  Please provide a brief reason
+                </label>
                 <textarea
                   rows="3"
                   className="textarea w-full p-3 resize-none custom-focus"
@@ -143,9 +236,7 @@ const Unavailability = () => {
             <div className="py-2">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="paragraphBold">
-                    28/03/25 - 29/03/25
-                  </p>
+                  <p className="paragraphBold">28/03/25 - 29/03/25</p>
                   <p className="paragraphThin">(Function)</p>
                 </div>
                 <button className="black-100 hover:texttheme mt-1">
@@ -154,13 +245,10 @@ const Unavailability = () => {
               </div>
               <hr className="white-300" />
             </div>
-
             <div className="py-2 ">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="paragraphBold">
-                    04/04/25 - 05/04/25
-                  </p>
+                  <p className="paragraphBold">04/04/25 - 05/04/25</p>
                   <p className="paragraphThin">
                     16.00hrs of Without Pay Leave (Sample visit)
                   </p>
@@ -174,9 +262,7 @@ const Unavailability = () => {
             <div className="py-2 ">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="paragraphBold">
-                    04/04/25 - 05/04/25
-                  </p>
+                  <p className="paragraphBold">04/04/25 - 05/04/25</p>
                   <p className="paragraphThin">
                     16.00hrs of Without Pay Leave (Sample visit)
                   </p>
@@ -186,12 +272,11 @@ const Unavailability = () => {
                 </button>
               </div>
               <hr className="white-300" />
-            </div> <div className="py-2 ">
+            </div>{" "}
+            <div className="py-2 ">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="paragraphBold">
-                    04/04/25 - 05/04/25
-                  </p>
+                  <p className="paragraphBold">04/04/25 - 05/04/25</p>
                   <p className="paragraphThin">
                     16.00hrs of Without Pay Leave (Sample visit)
                   </p>
@@ -201,12 +286,11 @@ const Unavailability = () => {
                 </button>
               </div>
               <hr className="white-300" />
-            </div> <div className="py-2 ">
+            </div>{" "}
+            <div className="py-2 ">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="paragraphBold">
-                    04/04/25 - 05/04/25
-                  </p>
+                  <p className="paragraphBold">04/04/25 - 05/04/25</p>
                   <p className="paragraphThin">
                     16.00hrs of Without Pay Leave (Sample visit)
                   </p>
@@ -216,12 +300,11 @@ const Unavailability = () => {
                 </button>
               </div>
               <hr className="white-300" />
-            </div> <div className="py-2 ">
+            </div>{" "}
+            <div className="py-2 ">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="paragraphBold">
-                    04/04/25 - 05/04/25
-                  </p>
+                  <p className="paragraphBold">04/04/25 - 05/04/25</p>
                   <p className="paragraphThin">
                     16.00hrs of Without Pay Leave (Sample visit)
                   </p>
@@ -244,7 +327,13 @@ const Unavailability = () => {
               className="flex rounded-md justify-between p-5 my-3 bg-white-100 items-center"
             >
               <div className="flex items-center">
-                <p className={`paragraphBold ${day === "Saturday" || day === "Sunday" ? "text-black-600" : ""}`}>
+                <p
+                  className={`paragraphBold ${
+                    day === "Saturday" || day === "Sunday"
+                      ? "text-black-600"
+                      : ""
+                  }`}
+                >
                   {day}
                 </p>
               </div>
@@ -269,7 +358,9 @@ const Unavailability = () => {
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">Add Unavailability</Dialog.Title>
+              <Dialog.Title className="heading">
+                Add Unavailability
+              </Dialog.Title>
               <button
                 className="text-white text-2xl font-bold cursor"
                 onClick={() => setIsShiftOpen(false)}
@@ -278,7 +369,9 @@ const Unavailability = () => {
               </button>
             </div>
             <form className="card p-6 space-y-3">
-              <p className="paragraph text-gray-500">Enter the times that you will NOT be available.</p>
+              <p className="paragraph text-gray-500">
+                Enter the times that you will NOT be available.
+              </p>
 
               <div className="mt-3">
                 <div className="grid grid-cols-2 gap-4 mb-4">

@@ -727,7 +727,6 @@ const People = () => {
           </Dialog.Panel>
         </div>
       </Dialog>
-
       {/* message modal emd */}
 
 
