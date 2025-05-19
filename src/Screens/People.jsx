@@ -18,6 +18,7 @@ const People = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewButtonModel, setViewButtonModel] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState(null);
+  const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('all');
   const [selectedBranch, setSelectedBranch] = useState("default");
   const [searchTerm, setSearchTerm] = useState('');
@@ -29,10 +30,10 @@ const People = () => {
   const currentUserRole = parseInt(localStorage.getItem("role_id"));
   const currentUserId = parseInt(localStorage.getItem("id"));
   const [loading, setLoading] = useState(false);
-
+  const [errors, setErrors] = useState({});
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState('');
-
+  const [filteredProfiles, setFilteredProfiles] = useState([]);
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -63,8 +64,34 @@ const People = () => {
     }
   }, [createDate]);
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.firstName.trim()) newErrors.firstName = "First name is required.";
+    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required.";
+    if (!formData.email.trim()) newErrors.email = "Email is required.";
+    if (!formData.dob.trim()) newErrors.dob = "Date of birth is required.";
+    if (!formData.payrate.trim()) newErrors.payrate = "Pay rate is required.";
+
+    if (!formData.mobileNumber.trim()) {
+      newErrors.mobileNumber = "Mobile number is required.";
+    } else if (!/^\d{10}$/.test(formData.mobileNumber)) {
+      newErrors.mobileNumber = "Mobile number must be exactly 10 digits.";
+    }
+
+    if (!formData.role_id) newErrors.role_id = "Role is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     const form = new FormData();
     form.append("firstName", formData.firstName);
@@ -124,6 +151,7 @@ const People = () => {
 
   useEffect(() => {
     fetchUsers();
+    fetchLocations();
   }, []);
 
   useEffect(() => {
@@ -132,8 +160,37 @@ const People = () => {
     }
   }, [users]);
 
+  const fetchLocations = async () => {
+  try {
+    const response = await axios.get(`${baseURL}/locations`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    // console.log("Locations fetched:", response.data);
+    setLocations(response.data);
+  } catch (error) {
+    console.error("Error fetching locations:", error);
+  }
+};
 
-  const [filteredProfiles, setFilteredProfiles] = useState([]);
+  const handleOpenModal = () => {
+    resetForm();             // ✅ Clear form and errors
+    setIsModalOpen(true);    // ✅ Then show modal
+  };
+
+  const resetForm = () => {
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      dob: "",
+      payrate: "",
+      mobileNumber: "",
+      role_id: "",
+    });
+    setErrors({});
+  };
 
   const handleSearch = (e) => {
     const keyword = e.target.value.toLowerCase();
@@ -267,9 +324,12 @@ const People = () => {
             value={selectedLocation}
             onChange={(e) => setSelectedLocation(e.target.value)}
           >
-            <option value="all">--All Locations--</option>
-            <option value="Store 1">Store 1</option>
-            <option value="Store 2">Store 2</option>
+             <option value="all">--All Locations--</option>
+              {locations.map((loc) => (
+              <option key={loc.id} value={loc.location_name}>
+                {loc.location_name}
+              </option>
+            ))}
           </select>
 
           <button
@@ -385,10 +445,15 @@ const People = () => {
                 <div className="flex flex-col">
                   <label className="paragraphBold">First Name</label>
                   <input type="text" className="input" value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} />
+                  {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName}</p>}
+
                 </div>
                 <div className="flex flex-col">
                   <label className="paragraphBold">Last Name</label>
-                  <input type="text" className="input" value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} />
+                  <input type="text" className="input" value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  />
+                  {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName}</p>}
+
                 </div>
               </div>
               <div className="flex flex-col">
@@ -399,6 +464,8 @@ const People = () => {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
+                {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+
               </div>
               <div className="flex flex-col">
                 <label className="paragraphBold">Date of Birth</label>
@@ -413,15 +480,21 @@ const People = () => {
                   yearDropdownItemNumber={100} // optional: sets how many years to show
                   placeholderText="Select date"
                 />
+                {errors.dob && <p className="text-red-500 text-sm">{errors.dob}</p>}
+
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="paragraphBold">Payrate Percentage</label>
                   <input type="text" className="input" value={formData.payrate} onChange={(e) => setFormData({ ...formData, payrate: e.target.value })} />
+                  {errors.payrate && <p className="text-red-500 text-sm">{errors.payrate}</p>}
+
                 </div>
                 <div className="flex flex-col">
                   <label className="paragraphBold">Phone Number</label>
                   <input type="text" className="input" value={formData.mobileNumber} onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })} />
+                  {errors.mobileNumber && <p className="text-red-500 text-sm">{errors.mobileNumber}</p>}
+
                 </div>
               </div>
               {currentUserRole === 1 && (
@@ -438,6 +511,8 @@ const People = () => {
                     <option value="2">Manager</option>
                     <option value="3">Employee</option>
                   </select>
+                  {errors.role_id && <p className="text-red-500 text-sm">{errors.role_id}</p>}
+
                 </div>
               )}
               <div className="flex flex-col">
@@ -466,7 +541,10 @@ const People = () => {
                 <button
                   type="button"
                   className="buttonGrey"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => {
+                    resetForm();           // ✅ Clear form and errors
+                    setIsModalOpen(false); // ✅ Hide modal
+                  }}
                 >
                   Cancel
                 </button>

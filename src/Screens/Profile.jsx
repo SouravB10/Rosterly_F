@@ -5,6 +5,8 @@ import axios from "axios";
 const Profile = () => {
   const [user, setUser] = useState({ name: "", email: "", profileImage: "", mobileNumber: "" });
   const [selectedFile, setSelectedFile] = useState(null); // For profile image
+  const [errors, setErrors] = useState({});
+
   const baseURL = import.meta.env.VITE_BASE_URL;
   const profileURL = import.meta.env.VITE_PROFILE_BASE_URL;
   const token = localStorage.getItem("token");
@@ -45,6 +47,25 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let valid = true;
+    const newErrors = {};
+
+    // Trim input
+    const mobile = user.mobileNumber?.toString().trim();
+
+    // Validate Mobile Number
+    if (!mobile) {
+      newErrors.mobileNumber = "Mobile number is required.";
+      valid = false;
+    } else if (!/^\d{10,}$/.test(mobile)) {
+      newErrors.mobileNumber = "Mobile number must be at least 10 digits.";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    if (!valid) return;
+
 
     try {
       const formData = new FormData();
@@ -110,7 +131,7 @@ const Profile = () => {
                 type="text"
                 value={user.name}
                 onChange={(e) => setUser({ ...user, name: e.target.value })}
-                className="input w-full border border-gray-500"
+                className="input w-full border border-gray-500" readOnly
               />
             </div>
             <div>
@@ -121,7 +142,7 @@ const Profile = () => {
                 type="text"
                 value={user.email}
                 onChange={(e) => setUser({ ...user, email: e.target.value })}
-                className="input w-full border border-gray-500"
+                className="input w-full border border-gray-500" readOnly
               />
             </div>
 
@@ -136,9 +157,21 @@ const Profile = () => {
               <input
                 type="number"
                 value={user.mobileNumber}
-                onChange={(e) => setUser({ ...user, mobileNumber: e.target.value })}
-                className="input w-full border border-gray-500"
+                onChange={(e) => {
+                  const newValue = e.target.value;
+                  setUser({ ...user, mobileNumber: newValue });
+
+                  // Clear error while typing if length is enough
+                  if (newValue.trim().length >= 10) {
+                    setErrors((prev) => ({ ...prev, mobileNumber: "" }));
+                  }
+                }}
+                className={`input w-full border ${errors.mobileNumber ? "border-red-500" : "border-gray-500"
+                  }`}
               />
+              {errors.mobileNumber && (
+                <p className="text-red-500 text-sm mt-1">{errors.mobileNumber}</p>
+              )}
             </div>
 
             <div className="flex justify-end gap-2 mt-4">
