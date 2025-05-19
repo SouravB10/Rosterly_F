@@ -8,13 +8,20 @@ const Location = () => {
   const [selectLocation, setSelectLocation] = useState("");
   const [employees, setEmployees] = useState("");
   const [employeeName, setEmployeeName] = useState([]);
-  const [staff,setStaff] = useState([]);
+  const [staff, setStaff] = useState([]);
   const [activeTab, setActiveTab] = useState("general");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalClass, setModalClass] = useState(
+    "transform translate-y-10 opacity-0"
+  );
   const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
   const [checked, setChecked] = useState(false);
   const [locationName, setLocationName] = useState("");
+  const [locationId, setLocationId] = useState("");
   const [sales, setSales] = useState("");
+  const [salesId, setSalesId] = useState("");
   const [salesData, setSalesData] = useState({
     Monday: "",
     Tuesday: "",
@@ -134,7 +141,9 @@ const Location = () => {
       );
 
       const data = response.data.data || response.data;
+      const locId = data.id;
       console.log("Fetched Location:", data);
+      setLocationId(locId);
       setLocationName(data.location_name || "");
       setSales(data.sales?.toString() || "");
       setLatitude(data.latitude?.toString() || "");
@@ -151,6 +160,8 @@ const Location = () => {
         }
       );
       console.log("Sales data:", Salesresponse.data);
+      const salesId = Salesresponse.data.id;
+      setSalesId(salesId);
       setSalesData({
         Monday: Salesresponse.data.monday || 0,
         Tuesday: Salesresponse.data.tuesday || 0,
@@ -169,10 +180,10 @@ const Location = () => {
           },
         }
       );
+
       setStaff(Staffresponse.data.data);
       console.log("Staff data:", Staffresponse.data.data);
-
-
+      console.log("saleId:", salesId);
     } catch (error) {
       console.error("Failed to fetch location", error);
     }
@@ -300,6 +311,39 @@ const Location = () => {
       if (error.response?.data?.errors) {
         setErrors(error.response.data.errors);
       }
+    }
+  };
+
+  const updateSales = async () => {
+    if (!salesId) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.put(
+        `${baseURL}/locationSales/${salesId}`,
+        {
+          monday: salesData.Monday,
+          tuesday: salesData.Tuesday,
+          wednesday: salesData.Wednesday,
+          thursday: salesData.Thursday,
+          friday: salesData.Friday,
+          saturday: salesData.Saturday,
+          sunday: salesData.Sunday,
+          updated_by: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Sales updated successfully", response.data);
+      alert("Sales updated!");
+    } catch (error) {
+      console.error("Update error:", error);
     }
   };
 
@@ -469,7 +513,7 @@ const Location = () => {
                   <div className="flex justify-end">
                     <button
                       className="buttonTheme w-full md:w-auto"
-                      onClick={updateLocation}
+                      onClick={updateSales}
                       disabled={!selectLocation}
                     >
                       Update
@@ -744,6 +788,8 @@ const Location = () => {
           </Dialog.Panel>
         </div>
       </Dialog>
+
+      
     </div>
   );
 };
