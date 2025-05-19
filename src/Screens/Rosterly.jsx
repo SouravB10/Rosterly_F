@@ -151,7 +151,7 @@ const Rosterly = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-
+        
         // Log current location to console
         console.log("Latitude:", latitude);
         console.log("Longitude:", longitude);
