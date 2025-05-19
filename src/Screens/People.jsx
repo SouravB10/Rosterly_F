@@ -9,6 +9,7 @@ import DatePicker from "react-datepicker";
 import { set } from "date-fns";
 import axios from "axios";
 import { CgProfile } from "react-icons/cg";
+import { HiTrash } from "react-icons/hi2";
 
 const People = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -63,6 +64,20 @@ const People = () => {
       }));
     }
   }, [createDate]);
+
+  const resetForm = () => {
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      dob: "",
+      payrate: "",
+      mobileNumber: "",
+      role_id: "",
+      profileImage: "",
+    });
+    setErrors({});
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -122,7 +137,8 @@ const People = () => {
       setIsModalOpen(false);
       setFeedbackMessage(response.data?.message || "User created successfully");
       setFeedbackModalOpen(true);
-
+      fetchUsers(); // refresh user list
+      resetForm(); // clear form
     } catch (error) {
       console.error("Error creating user:", error);
       setFeedbackMessage(error.response?.data?.message || "Error creating user");
@@ -134,13 +150,18 @@ const People = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
+      const currentUserId = parseInt(localStorage.getItem("id"));
       const response = await axios.get(`${baseURL}/users`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      setUsers(response.data.data);
-      setFilteredProfiles(response.data.data);
+      const allUsers = response.data.data;
+      const filteredUsers = allUsers.filter(user => user.id !== currentUserId);
+      setUsers(filteredUsers);
+      setFilteredProfiles(filteredUsers);
+      console.log("Users fetched:", filteredUsers);
+
     } catch (error) {
       console.error("Error fetching users:", error.response?.data || error.message);
     }
@@ -161,35 +182,22 @@ const People = () => {
   }, [users]);
 
   const fetchLocations = async () => {
-  try {
-    const response = await axios.get(`${baseURL}/locations`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    // console.log("Locations fetched:", response.data);
-    setLocations(response.data);
-  } catch (error) {
-    console.error("Error fetching locations:", error);
-  }
-};
+    try {
+      const response = await axios.get(`${baseURL}/locations`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      // console.log("Locations fetched:", response.data);
+      setLocations(response.data);
+    } catch (error) {
+      console.error("Error fetching locations:", error);
+    }
+  };
 
   const handleOpenModal = () => {
     resetForm();             // ✅ Clear form and errors
     setIsModalOpen(true);    // ✅ Then show modal
-  };
-
-  const resetForm = () => {
-    setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      dob: "",
-      payrate: "",
-      mobileNumber: "",
-      role_id: "",
-    });
-    setErrors({});
   };
 
   const handleSearch = (e) => {
@@ -283,14 +291,16 @@ const People = () => {
     }
   }, [selectedProfile]);
 
-  const handleDelete = async () => {
-    if (!selectedProfile?.id) return;
+  const handleDelete = async (id) => {
+    // alert(`Delete functionality is not implemented yet. ID: ${id}`);
+    if (!id) return;
+    console.log("Deleting user with ID:", id);
 
     const confirmDelete = window.confirm("Are you sure you want to delete this user?");
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`${baseURL}/users/${selectedProfile.id}`, {
+      await axios.delete(`${baseURL}/users/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -324,8 +334,8 @@ const People = () => {
             value={selectedLocation}
             onChange={(e) => setSelectedLocation(e.target.value)}
           >
-             <option value="all">--All Locations--</option>
-              {locations.map((loc) => (
+            <option value="all">--All Locations--</option>
+            {locations.map((loc) => (
               <option key={loc.id} value={loc.location_name}>
                 {loc.location_name}
               </option>
@@ -356,7 +366,7 @@ const People = () => {
           <button
             className="buttonTheme flex-1 min-w-[120px]"
             title="Add Employee"
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleOpenModal}
           >
             + Employee
           </button>
@@ -371,17 +381,19 @@ const People = () => {
             <div className="mSideBar shadow-xl p-4 rounded-xl h-full flex flex-col justify-between">
               <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                 <div className="flex flex-row items-center min-w-0 md:flex-row gap-4">
-                  <img
-                    alt="Profile"
-                    src={
-                      profile.profileImage
-                        ? (profile.profileImage.startsWith("http")
+                  {profile.profileImage ? (
+                    <img
+                      alt="Profile"
+                      src={
+                        profile.profileImage.startsWith("http")
                           ? profile.profileImage
-                          : `${profileBaseURL}/${profile.profileImage}`)
-                        : CgProfile
-                    }
-                    className="h-20 w-20 rounded object-cover"
-                  />
+                          : `${profileBaseURL}/${profile.profileImage}`
+                      }
+                      className="h-20 w-20 rounded object-cover"
+                    />
+                  ) : (
+                    <CgProfile className="h-20 w-20 rounded bg-gray-200 p-2" />
+                  )}
                   <div className="text-left md:text-left w-full min-w-0 overflow-hidden">
                     <h3 className="paragraphBold md:subheadingBold break-words">
                       {profile.firstName} {profile.lastName}
@@ -413,6 +425,18 @@ const People = () => {
                       setAddNoteModal(true);
                     }}
                   />
+                  <HiTrash
+                    title="Delete Profile"
+                    className="text-white bg-red-400 cursor-pointer p-2 rounded-md size-8"
+                    onClick={() => handleDelete(profile.id)}
+                  />
+                  {/* <button
+                    type="button"
+                    className="buttonDanger"
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </button> */}
                 </div>
               </div>
 
@@ -529,9 +553,13 @@ const People = () => {
                   }}
                 />
               </div>
-              {selectedProfile?.image && (
+              {selectedProfile?.profileImage && (
                 <img
-                  src={selectedProfile.image}
+                  src={
+                    selectedProfile.profileImage.startsWith("http")
+                      ? selectedProfile.profileImage
+                      : `${profileBaseURL}/${selectedProfile.profileImage}`
+                  }
                   alt="Preview"
                   className="mt-2 w-32 h-32 object-cover rounded-md"
                 />
@@ -548,8 +576,8 @@ const People = () => {
                 >
                   Cancel
                 </button>
-                <button type="submit" className="buttonTheme">
-                  Add
+                <button type="submit" className="buttonTheme" disabled={loading}>
+                  {loading ? "Adding..." : "Add"}
                 </button>
               </div>
             </form>
@@ -691,9 +719,13 @@ const People = () => {
                   />
                 </div>
               </div>
-              {selectedProfile?.image && (
+              {selectedProfile?.profileImage && (
                 <img
-                  src={selectedProfile.profileImage}
+                  src={
+                    selectedProfile.profileImage.startsWith("http")
+                      ? selectedProfile.profileImage
+                      : `${profileBaseURL}/${selectedProfile.profileImage}`
+                  }
                   alt="Preview"
                   className="mt-2 w-32 h-32 object-cover rounded-md"
                 />
@@ -708,13 +740,7 @@ const People = () => {
                 >
                   Cancel
                 </button>
-                <button
-                  type="button"
-                  className="buttonDanger"
-                  onClick={handleDelete}
-                >
-                  Delete
-                </button>
+
                 <button type="submit" className="buttonTheme">
                   Update
                 </button>
