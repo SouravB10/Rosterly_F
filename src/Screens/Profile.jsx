@@ -111,15 +111,30 @@ const Profile = () => {
       <h3 className="heading text-indigo-900">Profile Information</h3>
 
       <div className="flex flex-col md:flex-row items-center gap-2 w-full mt-3">
-        <div className="w-full md:w-1/2 flex flex-col items-center ">
+       <div className="w-full md:w-1/2 flex flex-col items-center">
+        <div className="relative group">
           <img
             alt="User Profile"
             src={selectedFile ? URL.createObjectURL(selectedFile) : profileImageUrl}
             className="size-40 md:size-70 rounded object-cover"
           />
-          <input type="file" onChange={handleFileChange} className="mt-2" />
-          <h3 className="SunHeading mt-2">{user.name}</h3>
+
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black bg-opacity-50 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <label className="text-white cursor-pointer">
+              Choose File
+              <input
+                type="file"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            </label>
+          </div>
         </div>
+
+        <h3 className="SunHeading mt-2">{user.name}</h3>
+      </div>
+
 
         <div className="w-full">
           <form onSubmit={handleSubmit} className="grid gap-2" method="post">
