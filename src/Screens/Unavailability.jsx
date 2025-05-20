@@ -74,6 +74,7 @@ const Unavailability = () => {
   // save the unavailability
   const saveUnavailability = async (e) => {
     e.preventDefault();
+    // console.log(moment(fromDate).format("YYYY-MM-DD hh:mm a"));
     try {
       const response = await axios.post(
         `${baseURL}/unavailability/1`,
@@ -81,8 +82,8 @@ const Unavailability = () => {
           userId: id,
           unavailType: 1,
           day: selectedDay,
-          fromDT: moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
-          toDT: moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+          fromDT: moment(fromDate).format("YYYY-MM-DD hh:mm a"),
+          toDT: moment(toDate).format("YYYY-MM-DD hh:mm a"),
           notifyTo: notifyToId,
           unavailStatus: "pending",
           reason: reason, // if you added `reason` column
@@ -156,12 +157,12 @@ const Unavailability = () => {
   const saveRecurringUnavailability = async (e) => {
     e.preventDefault();
     console.log(start, finish, modalNotifyToId, modalDescription);
-
+    console.log(id, "ID");
     try {
       const response = await axios.post(
         `${baseURL}/unavailability/2`,
         {
-          userId: 34,
+          userId: id,
           day: selectedDay,
           fromDT: start,
           toDT: finish,
@@ -181,10 +182,10 @@ const Unavailability = () => {
       setFinish("");
       setModalNotifyToId("");
       setModalDescription("");
-      setIsShiftOpen(false); 
+      setIsShiftOpen(false);
       setFeedbackMessage(response.data?.message);
       setFeedbackModalOpen(true);
-      console.log(start, finish, 'Time');
+      console.log(start, finish, "Time");
     } catch (error) {
       console.error("Error saving recurring unavailability:", error);
       setFeedbackMessage(error.response.data?.message || "An error occurred");
@@ -205,7 +206,6 @@ const Unavailability = () => {
         );
         setUnavailability(response.data.data);
         console.log("Unavailability data:", response.data.data);
-
       } catch (error) {
         console.error("Error fetching unavailability:", error);
       }
@@ -215,18 +215,18 @@ const Unavailability = () => {
   }, []);
 
   const formatDate = (datetime) => {
-    return new Date(datetime).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
+    return new Date(datetime).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     });
   };
 
   const formatTime = (datetime) => {
-    return new Date(datetime).toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true
+    return new Date(datetime).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
     });
   };
 
@@ -248,13 +248,20 @@ const Unavailability = () => {
                       selected={fromDate}
                       onChange={(date) => setFromDate(date)}
                       showTimeSelect
-                      timeFormat="HH:mm"
+                      timeFormat="hh:mm aa"
                       timeIntervals={15}
-                      dateFormat="dd/MM/yyyy h:mm aa"
+                      dateFormat="dd/MM/yyyy hh:mm aa"
                       customInput={
                         <div className="rounded-lg px-4 py-3 flex justify-between items-center cursor-pointer w-full bg-white-100 ">
                           <span className="black-100 font12">
-                            {fromDate.toLocaleString("en-GB")}
+                            {fromDate.toLocaleString("en-US", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: true,
+                            })}
                           </span>
                           <svg
                             className="w-4 h-4 texttheme"
@@ -281,13 +288,20 @@ const Unavailability = () => {
                       selected={toDate}
                       onChange={(date) => setToDate(date)}
                       showTimeSelect
-                      timeFormat="HH:mm:ss"
+                      timeFormat="hh:mm aa"
                       timeIntervals={15}
                       dateFormat="dd/MM/yyyy h:mm aa"
                       customInput={
                         <div className="rounded-lg px-4 py-3 flex justify-between items-center cursor-pointer w-full bg-white-100 ">
                           <span className="black-100 font12">
-                            {toDate.toLocaleString("en-GB")}
+                            {toDate.toLocaleString("en-Us", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: true,
+                            })}
                           </span>
                           <svg
                             className="w-4 h-4 texttheme"
@@ -359,28 +373,40 @@ const Unavailability = () => {
               <div key={item.id} className="py-2">
                 <div className="flex items-start justify-between">
                   <div>
-                    {item.unavailType.toLowerCase() === 'days' ? (
+                    {item.unavailType.toLowerCase() === "days" ? (
                       <>
                         <p className="paragraphBold">
-                          {formatDate(item.fromDT)} ({formatTime(item.fromDT)}) - {formatDate(item.toDT)} ({formatTime(item.toDT)})
+                          {formatDate(item.fromDT)} ({formatTime(item.fromDT)})
+                          - {formatDate(item.toDT)} ({formatTime(item.toDT)})
                         </p>
 
                         {item.reason && (
-                          <p className="paragraphThin">{item.reason || "No reason provided"}</p>
+                          <p className="paragraphThin">
+                            {item.reason || "No reason provided"}
+                          </p>
                         )}
                       </>
-                    ) : item.unavailType.toLowerCase() === 'recudays' ? (
+                    ) : item.unavailType.toLowerCase() === "recudays" ? (
                       <>
                         <p className="paragraphBold">
-                          {item.day} ({item.fromDT?.slice(0, 5)} - {item.toDT?.slice(0, 5)})
+                          {item.day} ({item.fromDT?.slice(0, 5)} -{" "}
+                          {item.toDT?.slice(0, 5)})
                         </p>
                         {item.reason && (
-                          <p className="paragraphThin">{item.reason || "No reason provided"}</p>
+                          <p className="paragraphThin">
+                            {item.reason || "No reason provided"}
+                          </p>
                         )}
                       </>
                     ) : null}
-                    <p className={`paragraphThin mt-1 text-sm italic ${item.unavailStatus === 0 ? "text-red-500" : "text-green-600"}`}>
-                      {item.unavailStatus === 0 ? 'Pending' : 'Approved'}
+                    <p
+                      className={`paragraphThin mt-1 text-sm italic ${
+                        item.unavailStatus === 0
+                          ? "text-red-500"
+                          : "text-green-600"
+                      }`}
+                    >
+                      {item.unavailStatus === 0 ? "Pending" : "Approved"}
                     </p>
                   </div>
                   <button className="black-100 hover:texttheme mt-1">
@@ -395,6 +421,25 @@ const Unavailability = () => {
 
         <div className="card rounded-md p-5 w-full md:w-[40%]">
           <h1 className="text-center subHeading">Recurring Unavailability</h1>
+          {unavailability.map((item) => (
+            <div key={item.id} className="py-2">
+              {item.unavailType.toLowerCase() == "recudays" ? (
+                <>
+                        <p className="paragraphBold">
+                          {item.day} ({item.fromDT?.slice(0, 5)} -{" "}
+                          {item.toDT?.slice(0, 5)})
+                        </p>
+                        {item.reason && (
+                          <p className="paragraphThin">
+                            {item.reason || "No reason provided"}
+                          </p>
+                        )}
+                      </>
+              ) : (
+                "b"
+              )}
+            </div>
+          ))}
 
           {days.map((day, index) => (
             <div
