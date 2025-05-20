@@ -11,11 +11,11 @@ const Unavailability = () => {
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   const [isShiftOpen, setIsShiftOpen] = useState(false);
+  const [reason, setReason] = useState("");
   const [selectedDay, setSelectedDay] = useState("");
   const [selectToNotify, setSelectToNotify] = useState([]);
   const token = localStorage.getItem("token");
   const id = localStorage.getItem("id");
-
 
   const days = [
     "Wednesday",
@@ -47,9 +47,10 @@ const Unavailability = () => {
       console.error("Error fetching notifying manager:", error);
     }
   };
-  
+
   // save the unavailability
   const saveUnavailability = async () => {
+    console.log(fromDate);
     try {
       const response = await axios.post(
         `${baseURL}/unavailability`,
@@ -59,15 +60,8 @@ const Unavailability = () => {
           day: selectedDay,
           fromDate: fromDate,
           toDate: toDate,
-          startTime: startTime,
-          endTime: endTime,
           notifyTo: selectToNotify,
-          
-          start: start,
-          finish: finish,
-          breakTime: breakTime,
-          description: "Unavailability",
-          day: selectedDay,
+          unavailStatus: "pending",
         },
         {
           headers: {
@@ -79,7 +73,7 @@ const Unavailability = () => {
     } catch (error) {
       console.error("Error saving unavailability:", error);
     }
-  }
+  };
   const generateTimeOptions = () => {
     let times = [];
     let hour = 0;
@@ -119,116 +113,123 @@ const Unavailability = () => {
         <div className="flex flex-col gap-4 w-full md:w-[60%]">
           <div className="card">
             <h1 className="heading">Unavailable Days</h1>
+            <form>
+              <div className="flex flex-col gap-4 mt-2">
+                <div className="flex flex-wrap md:flex-nowrap gap-6">
+                  <div className="flex items-center gap-4 flex-1 min-w-[280px]">
+                    <label className="paragraphBold whitespace-nowrap">
+                      From Date & Time:
+                    </label>
+                    <DatePicker
+                      className="mixedInput custom-focus z-9999999"
+                      selected={fromDate}
+                      onChange={(date) => setFromDate(date)}
+                      showTimeSelect
+                      timeFormat="HH:mm"
+                      timeIntervals={15}
+                      dateFormat="dd/MM/yyyy h:mm aa"
+                      customInput={
+                        <div className="rounded-lg px-4 py-3 flex justify-between items-center cursor-pointer w-full bg-white-100 ">
+                          <span className="black-100 font12">
+                            {fromDate.toLocaleString("en-GB")}
+                          </span>
+                          <svg
+                            className="w-4 h-4 texttheme"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M5.293 7.707a1 1 0 011.414 0L10 11.586l3.293-3.879a1 1 0 011.414 1.414l-4 4.586a1 1 0 01-1.414 0l-4-4.586a1 1 0 010-1.414z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                      }
+                    />
+                  </div>
 
-            <div className="flex flex-col gap-4 mt-2">
-              <div className="flex flex-wrap md:flex-nowrap gap-6">
-                <div className="flex items-center gap-4 flex-1 min-w-[280px]">
-                  <label className="paragraphBold whitespace-nowrap">
-                    From Date & Time:
+                  <div className="flex items-center gap-4 flex-1 min-w-[280px]">
+                    <label className="paragraphBold whitespace-nowrap">
+                      To Date & Time:
+                    </label>
+                    <DatePicker
+                      className="mixedInput custom-focus"
+                      selected={toDate}
+                      onChange={(date) => setToDate(date)}
+                      showTimeSelect
+                      timeFormat="HH:mm"
+                      timeIntervals={15}
+                      dateFormat="dd/MM/yyyy h:mm aa"
+                      customInput={
+                        <div className="rounded-lg px-4 py-3 flex justify-between items-center cursor-pointer w-full bg-white-100 ">
+                          <span className="black-100 font12">
+                            {toDate.toLocaleString("en-GB")}
+                          </span>
+                          <svg
+                            className="w-4 h-4 texttheme"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M5.293 7.707a1 1 0 011.414 0L10 11.586l3.293-3.879a1 1 0 011.414 1.414l-4 4.586a1 1 0 01-1.414 0l-4-4.586a1 1 0 010-1.414z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="paragraphBold block mb-2">
+                    Select a manager to notify
                   </label>
-                  <DatePicker
-                    className="mixedInput custom-focus z-9999999"
-                    selected={fromDate}
-                    onChange={(date) => setFromDate(date)}
-                    showTimeSelect
-                    timeFormat="HH:mm"
-                    timeIntervals={15}
-                    dateFormat="dd/MM/yyyy h:mm aa"
-                    customInput={
-                      <div className="rounded-lg px-4 py-3 flex justify-between items-center cursor-pointer w-full bg-white-100 ">
-                        <span className="black-100 font12">
-                          {fromDate.toLocaleString("en-GB")}
-                        </span>
-                        <svg
-                          className="w-4 h-4 texttheme"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M5.293 7.707a1 1 0 011.414 0L10 11.586l3.293-3.879a1 1 0 011.414 1.414l-4 4.586a1 1 0 01-1.414 0l-4-4.586a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                    }
+                  <select
+                    className="input w-full p-3 custom-focus"
+                    onClick={fetchNotifyingManager}
+                  >
+                    <option>-- Select --</option>
+                    {selectToNotify.map((manager, id) => (
+                      <option
+                        key={id}
+                        value={`${manager.firstName} ${manager.lastName}`}
+                      >
+                        {manager.firstName} {manager.lastName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="paragraphBold block mb-2">
+                    Please provide a brief reason
+                  </label>
+                  <textarea
+                    rows="3"
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                    className="textarea w-full p-3 resize-none custom-focus"
+                    placeholder="Type your reason here..."
                   />
                 </div>
 
-                <div className="flex items-center gap-4 flex-1 min-w-[280px]">
-                  <label className="paragraphBold whitespace-nowrap">
-                    To Date & Time:
-                  </label>
-                  <DatePicker
-                    className="mixedInput custom-focus"
-                    selected={toDate}
-                    onChange={(date) => setToDate(date)}
-                    showTimeSelect
-                    timeFormat="HH:mm"
-                    timeIntervals={15}
-                    dateFormat="dd/MM/yyyy h:mm aa"
-                    customInput={
-                      <div className="rounded-lg px-4 py-3 flex justify-between items-center cursor-pointer w-full bg-white-100 ">
-                        <span className="black-100 font12">
-                          {toDate.toLocaleString("en-GB")}
-                        </span>
-                        <svg
-                          className="w-4 h-4 texttheme"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M5.293 7.707a1 1 0 011.414 0L10 11.586l3.293-3.879a1 1 0 011.414 1.414l-4 4.586a1 1 0 01-1.414 0l-4-4.586a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                    }
-                  />
+                <div className="flex justify-end gap-4 pt-2">
+                  {/* <button
+                    className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md"
+                    onClick={saveUnavailability}
+                  >
+                    Save
+                  </button> */}
+                  <button onClick={saveUnavailability}>Yo</button>
+                  <button className="buttonDanger button font12 font-semibold px-4 py-2 rounded-md">
+                    Reset
+                  </button>
                 </div>
               </div>
-
-              <div>
-                <label className="paragraphBold block mb-2">
-                  Select a manager to notify
-                </label>
-                <select
-                  className="input w-full p-3 custom-focus"
-                  onChange={fetchNotifyingManager}
-                >
-                  <option>-- Select --</option>
-                  {selectToNotify.map((manager, index) => (
-                    <option
-                      key={index}
-                      value={`${manager.firstName} ${manager.lastName}`}
-                    >
-                      {manager.firstName} {manager.lastName}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="paragraphBold block mb-2">
-                  Please provide a brief reason
-                </label>
-                <textarea
-                  rows="3"
-                  className="textarea w-full p-3 resize-none custom-focus"
-                  placeholder="Type your reason here..."
-                />
-              </div>
-
-              <div className="flex justify-end gap-4 pt-2">
-                <button className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md">
-                  Save
-                </button>
-                <button className="buttonDanger button font12 font-semibold px-4 py-2 rounded-md">
-                  Reset
-                </button>
-              </div>
-            </div>
+            </form>
           </div>
 
           <div className="card rounded-md p-5 md:row-span-8 overflow-auto ">
