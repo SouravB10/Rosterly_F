@@ -120,8 +120,8 @@ const Profile = () => {
           />
 
           {/* Overlay */}
-          <div className="absolute inset-0 bg-black bg-opacity-50 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <label className="text-white cursor-pointer">
+          <div className="absolute inset-0 bg-black-100 bg-opacity-500 rounded flex items-center justify-center opacity-0 group-hover:opacity-60 transition-opacity">
+            <label className="text-white heading cursor-pointer">
               Choose File
               <input
                 type="file"
@@ -132,7 +132,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <h3 className="SunHeading mt-2">{user.name}</h3>
+        <h3 className="subHeading mt-2">{user.name}</h3>
       </div>
 
 

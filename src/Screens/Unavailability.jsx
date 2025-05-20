@@ -5,6 +5,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { FaPlusSquare } from "react-icons/fa";
 import { FaPencilAlt } from "react-icons/fa";
 import axios from "axios";
+import { set } from "date-fns";
+import moment from "moment";
 
 const Unavailability = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -14,6 +16,7 @@ const Unavailability = () => {
   const [reason, setReason] = useState("");
   const [selectedDay, setSelectedDay] = useState("");
   const [selectToNotify, setSelectToNotify] = useState([]);
+  const [notifyToId, setNotifyToId] = useState("");
   const token = localStorage.getItem("token");
   const id = localStorage.getItem("id");
 
@@ -37,31 +40,47 @@ const Unavailability = () => {
       });
       // setSelectToNotify(response.data.data);
 
-      setSelectToNotify([
-        {
-          firstName: response.data.data.firstName,
-          lastName: response.data.data.lastName,
-        },
-      ]);
+      const userData = response?.data?.data;
+      if (userData) {
+        setSelectToNotify([
+          {
+            id: userData.id,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+          },
+        ]);
+      } else {
+        console.warn("No user data returned for createdBy ID.");
+      }
     } catch (error) {
       console.error("Error fetching notifying manager:", error);
     }
   };
 
+  const resetForm = () => {
+    setFromDate(new Date());
+    setToDate(new Date());
+    setReason("");
+    setNotifyToId("");
+    setSelectedDay("");
+    setSelectToNotify([]);
+  };
+
   // save the unavailability
-  const saveUnavailability = async () => {
-    console.log(fromDate);
+  const saveUnavailability = async (e) => {
+    e.preventDefault();
     try {
       const response = await axios.post(
-        `${baseURL}/unavailability`,
+        `${baseURL}/unavailability/1`,
         {
           userId: id,
           unavailType: 1,
           day: selectedDay,
-          fromDate: fromDate,
-          toDate: toDate,
-          notifyTo: selectToNotify,
+          fromDT: moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
+          toDT: moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+          notifyTo: notifyToId,
           unavailStatus: "pending",
+          reason: reason, // if you added `reason` column
         },
         {
           headers: {
@@ -70,10 +89,12 @@ const Unavailability = () => {
         }
       );
       console.log("Unavailability saved:", response.data);
+      resetForm();
     } catch (error) {
       console.error("Error saving unavailability:", error);
     }
   };
+
   const generateTimeOptions = () => {
     let times = [];
     let hour = 0;
@@ -99,13 +120,49 @@ const Unavailability = () => {
   const breakOptions = [15, 30, 45, 60];
   const [start, setStart] = useState(timeOptions[0]);
   const [finish, setFinish] = useState(timeOptions[0]);
-  const [breakTime, setBreakTime] = useState(breakOptions[0]);
-  const hoursPerDay = ["12.25", "0.00", "0.00", "0.00", "0.00", "0.00", "0.00"];
+  const [modalNotifyToId, setModalNotifyToId] = useState("");
+  const [modalDescription, setModalDescription] = useState("");
 
   const openModal = (day) => {
     setSelectedDay(day);
     setIsShiftOpen(true);
   };
+
+  const saveRecurringUnavailability = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        `${baseURL}/unavailability/2`,
+        {
+          userId: id,
+          unavailType: 2,
+          startTime: start,
+          day: selectedDay,
+          endTime: finish,
+          notifyTo: modalNotifyToId,
+          unavailStatus: "pending",
+          reason: modalDescription,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Recurring Unavailability saved:", response.data);
+      // Reset modal form state
+      setStart("");
+      setFinish("");
+      setModalNotifyToId("");
+      setModalDescription("");
+      setIsShiftOpen(false); // Close modal
+    } catch (error) {
+      console.error("Error saving recurring unavailability:", error);
+    }
+  };
+
 
   return (
     <>
@@ -113,7 +170,7 @@ const Unavailability = () => {
         <div className="flex flex-col gap-4 w-full md:w-[60%]">
           <div className="card">
             <h1 className="heading">Unavailable Days</h1>
-            <form>
+            <form onSubmit={saveUnavailability}>
               <div className="flex flex-col gap-4 mt-2">
                 <div className="flex flex-wrap md:flex-nowrap gap-6">
                   <div className="flex items-center gap-4 flex-1 min-w-[280px]">
@@ -189,15 +246,13 @@ const Unavailability = () => {
                   </label>
                   <select
                     className="input w-full p-3 custom-focus"
+                    onChange={(e) => setNotifyToId(e.target.value)}
                     onClick={fetchNotifyingManager}
                   >
                     <option>-- Select --</option>
-                    {selectToNotify.map((manager, id) => (
-                      <option
-                        key={id}
-                        value={`${manager.firstName} ${manager.lastName}`}
-                      >
-                        {manager.firstName} {manager.lastName}
+                    {selectToNotify.map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.firstName} {user.lastName}
                       </option>
                     ))}
                   </select>
@@ -217,14 +272,12 @@ const Unavailability = () => {
                 </div>
 
                 <div className="flex justify-end gap-4 pt-2">
-                  {/* <button
+                  <button
                     className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md"
-                    onClick={saveUnavailability}
                   >
                     Save
-                  </button> */}
-                  <button onClick={saveUnavailability}>Yo</button>
-                  <button className="buttonDanger button font12 font-semibold px-4 py-2 rounded-md">
+                  </button>
+                  <button onClick={resetForm} className="buttonDanger button font12 font-semibold px-4 py-2 rounded-md">
                     Reset
                   </button>
                 </div>
@@ -260,7 +313,7 @@ const Unavailability = () => {
               </div>
               <hr className="white-300" />
             </div>
-            <div className="py-2 ">
+            {/* <div className="py-2 ">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="paragraphBold">04/04/25 - 05/04/25</p>
@@ -315,7 +368,7 @@ const Unavailability = () => {
                 </button>
               </div>
               <hr className="white-300" />
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -329,11 +382,10 @@ const Unavailability = () => {
             >
               <div className="flex items-center">
                 <p
-                  className={`paragraphBold ${
-                    day === "Saturday" || day === "Sunday"
-                      ? "text-black-600"
-                      : ""
-                  }`}
+                  className={`paragraphBold ${day === "Saturday" || day === "Sunday"
+                    ? "text-black-600"
+                    : ""
+                    }`}
                 >
                   {day}
                 </p>
@@ -369,7 +421,7 @@ const Unavailability = () => {
                 ×
               </button>
             </div>
-            <form className="card p-6 space-y-3">
+            <form className="card p-6 space-y-3" onSubmit={saveRecurringUnavailability}>
               <p className="paragraph text-gray-500">
                 Enter the times that you will NOT be available.
               </p>
@@ -391,7 +443,6 @@ const Unavailability = () => {
                     </select>
                   </div>
 
-                  {/* Finish Time */}
                   <div className="flex flex-col">
                     <label className="paragraphBold">Finish</label>
                     <select
@@ -407,29 +458,33 @@ const Unavailability = () => {
                     </select>
                   </div>
 
-                  {/* Break Time */}
-                  {/* <div className="flex flex-col">
-                        <label className="paragraphBold">Break</label>
-                        <select
-                          className="input paragraph"
-                          value={breakTime}
-                          onChange={(e) => setBreakTime(e.target.value)}
-                        >
-                          {breakOptions.map((breakOption, index) => (
-                            <option key={index} value={breakOption}>
-                              {breakOption} min
-                            </option>
-                          ))}
-                        </select>
-                      </div> */}
+
+                </div>
+                <div>
+                  <label className="paragraphBold block mb-4">
+                    Select a manager to notify
+                  </label>
+                  <select
+                    className="input w-full p-3 custom-focus"
+                    onChange={(e) => setModalNotifyToId(e.target.value)}
+                    onClick={fetchNotifyingManager}
+                  >
+                    <option>-- Select --</option>
+                    {selectToNotify.map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.firstName} {user.lastName}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
-                {/* Description Input */}
                 <label className="paragraphBold">Description:</label>
                 <textarea
                   className=" textarea paragraph"
                   rows="3"
                   placeholder="Enter description..."
+                  value={modalDescription}
+                  onChange={(e) => setModalDescription(e.target.value)}
                 ></textarea>
               </div>
 
