@@ -17,6 +17,7 @@ const Unavailability = () => {
   const [selectedDay, setSelectedDay] = useState("");
   const [selectToNotify, setSelectToNotify] = useState([]);
   const [notifyToId, setNotifyToId] = useState("");
+  const [unavailability, setUnavailability] = useState([]);
   const token = localStorage.getItem("token");
   const id = localStorage.getItem("id");
 
@@ -116,10 +117,26 @@ const Unavailability = () => {
     return times;
   };
 
+  const convertTo24Hour = (timeStr) => {
+    const [time, modifier] = timeStr.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (modifier === "PM" && hours !== 12) {
+      hours += 12;
+    }
+    if (modifier === "AM" && hours === 12) {
+      hours = 0;
+    }
+
+    const paddedHours = hours.toString().padStart(2, "0");
+    const paddedMinutes = minutes.toString().padStart(2, "0");
+
+    return `${paddedHours}:${paddedMinutes}:00`; // match backend's H:i:s
+  };
+
   const timeOptions = generateTimeOptions();
-  const breakOptions = [15, 30, 45, 60];
-  const [start, setStart] = useState(timeOptions[0]);
-  const [finish, setFinish] = useState(timeOptions[0]);
+  const [start, setStart] = useState("");
+  const [finish, setFinish] = useState("");
   const [modalNotifyToId, setModalNotifyToId] = useState("");
   const [modalDescription, setModalDescription] = useState("");
 
@@ -137,9 +154,9 @@ const Unavailability = () => {
         {
           userId: id,
           unavailType: 2,
-          startTime: start,
+          startTime: convertTo24Hour(start),
+          endTime: convertTo24Hour(finish),
           day: selectedDay,
-          endTime: finish,
           notifyTo: modalNotifyToId,
           unavailStatus: "pending",
           reason: modalDescription,
@@ -163,6 +180,43 @@ const Unavailability = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchUnavailability = async () => {
+      try {
+        const response = await axios.get(
+          `${baseURL}/unavailability/login/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setUnavailability(response.data.data);
+        console.log("Unavailability data:", response.data.data);
+
+      } catch (error) {
+        console.error("Error fetching unavailability:", error);
+      }
+    };
+
+    fetchUnavailability();
+  }, []);
+
+  const formatDate = (datetime) => {
+    return new Date(datetime).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+  const formatTime = (datetime) => {
+    return new Date(datetime).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  };
 
   return (
     <>
@@ -215,7 +269,7 @@ const Unavailability = () => {
                       selected={toDate}
                       onChange={(date) => setToDate(date)}
                       showTimeSelect
-                      timeFormat="HH:mm"
+                      timeFormat="HH:mm:ss"
                       timeIntervals={15}
                       dateFormat="dd/MM/yyyy h:mm aa"
                       customInput={
@@ -285,90 +339,44 @@ const Unavailability = () => {
             </form>
           </div>
 
-          <div className="card rounded-md p-5 md:row-span-8 overflow-auto ">
+          <div className="card rounded-md p-5 md:row-span-8 overflow-auto">
             <h1 className="subHeading">Requested Days Off</h1>
-            <div className="py-2">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="paragraphBold">28/03/25 - 29/03/25</p>
-                  <p className="paragraphThin">(Function)</p>
+
+            {unavailability.map((item) => (
+              <div key={item.id} className="py-2">
+                <div className="flex items-start justify-between">
+                  <div>
+                    {item.unavailType.toLowerCase() === 'days' ? (
+                      <>
+                        <p className="paragraphBold">
+                          {formatDate(item.fromDT)} ({formatTime(item.fromDT)}) - {formatDate(item.toDT)} ({formatTime(item.toDT)})
+                        </p>
+
+                        {item.reason && (
+                          <p className="paragraphThin">{item.reason || "No reason provided"}</p>
+                        )}
+                      </>
+                    ) : item.unavailType.toLowerCase() === 'recudays' ? (
+                      <>
+                        <p className="paragraphBold">
+                          {item.day} ({item.fromDT?.slice(0, 5)} - {item.toDT?.slice(0, 5)})
+                        </p>
+                        {item.reason && (
+                          <p className="paragraphThin">{item.reason || "No reason provided"}</p>
+                        )}
+                      </>
+                    ) : null}
+                    <p className={`paragraphThin mt-1 text-sm italic ${item.unavailStatus === 0 ? "text-red-500" : "text-green-500"}`}>
+                      {item.unavailStatus === 0 ? 'Pending' : 'Approved'}
+                    </p>
+                  </div>
+                  <button className="black-100 hover:texttheme mt-1">
+                    <FaPencilAlt className="w-4 h-4" />
+                  </button>
                 </div>
-                <button className="black-100 hover:texttheme mt-1">
-                  <FaPencilAlt className="w-4 h-4" />
-                </button>
+                <hr className="white-300" />
               </div>
-              <hr className="white-300" />
-            </div>
-            <div className="py-2 ">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="paragraphBold">04/04/25 - 05/04/25</p>
-                  <p className="paragraphThin">
-                    16.00hrs of Without Pay Leave (Sample visit)
-                  </p>
-                </div>
-                <button className="black-100 hover:texttheme mt-1">
-                  <FaPencilAlt className="w-4 h-4" />
-                </button>
-              </div>
-              <hr className="white-300" />
-            </div>
-            {/* <div className="py-2 ">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="paragraphBold">04/04/25 - 05/04/25</p>
-                  <p className="paragraphThin">
-                    16.00hrs of Without Pay Leave (Sample visit)
-                  </p>
-                </div>
-                <button className="black-100 hover:texttheme mt-1">
-                  <FaPencilAlt className="w-4 h-4" />
-                </button>
-              </div>
-              <hr className="white-300" />
-            </div>{" "}
-            <div className="py-2 ">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="paragraphBold">04/04/25 - 05/04/25</p>
-                  <p className="paragraphThin">
-                    16.00hrs of Without Pay Leave (Sample visit)
-                  </p>
-                </div>
-                <button className="black-100 hover:texttheme mt-1">
-                  <FaPencilAlt className="w-4 h-4" />
-                </button>
-              </div>
-              <hr className="white-300" />
-            </div>{" "}
-            <div className="py-2 ">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="paragraphBold">04/04/25 - 05/04/25</p>
-                  <p className="paragraphThin">
-                    16.00hrs of Without Pay Leave (Sample visit)
-                  </p>
-                </div>
-                <button className="black-100 hover:texttheme mt-1">
-                  <FaPencilAlt className="w-4 h-4" />
-                </button>
-              </div>
-              <hr className="white-300" />
-            </div>{" "}
-            <div className="py-2 ">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="paragraphBold">04/04/25 - 05/04/25</p>
-                  <p className="paragraphThin">
-                    16.00hrs of Without Pay Leave (Sample visit)
-                  </p>
-                </div>
-                <button className="black-100 hover:texttheme mt-1">
-                  <FaPencilAlt className="w-4 h-4" />
-                </button>
-              </div>
-              <hr className="white-300" />
-            </div> */}
+            ))}
           </div>
         </div>
 
