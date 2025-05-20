@@ -177,14 +177,14 @@ const Unavailability = () => {
       );
 
       console.log("Recurring Unavailability saved:", response.data);
-      // Reset modal form state
       setStart("");
       setFinish("");
       setModalNotifyToId("");
       setModalDescription("");
-      setIsShiftOpen(false); // Close modal
+      setIsShiftOpen(false); 
       setFeedbackMessage(response.data?.message);
       setFeedbackModalOpen(true);
+      console.log(start, finish, 'Time');
     } catch (error) {
       console.error("Error saving recurring unavailability:", error);
       setFeedbackMessage(error.response.data?.message || "An error occurred");
