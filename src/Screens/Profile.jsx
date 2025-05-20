@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import DefaultProfileImage from "../assets/images/profile.png";
 import axios from "axios";
+import FeedbackModal from "../Component/FeedbackModal"; // ✅ Import here
 
 const Profile = () => {
   const [user, setUser] = useState({ name: "", email: "", profileImage: "", mobileNumber: "" });
-  const [selectedFile, setSelectedFile] = useState(null); // For profile image
+  const [selectedFile, setSelectedFile] = useState(null);
   const [errors, setErrors] = useState({});
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState(""); // ✅ Message for modal
 
   const baseURL = import.meta.env.VITE_BASE_URL;
   const profileURL = import.meta.env.VITE_PROFILE_BASE_URL;
@@ -14,7 +17,6 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      // const id = localStorage.getItem("id");
       try {
         const response = await axios.get(`${baseURL}/users/${id}`, {
           headers: {
@@ -28,9 +30,8 @@ const Profile = () => {
           name: `${userData.firstName} ${userData.lastName}`,
           email: userData.email,
           mobileNumber: userData.mobileNumber,
-          profileImage: userData.profileImage
+          profileImage: userData.profileImage,
         });
-        console.log("Profile data", response);
       } catch (error) {
         console.error("Error fetching profile", error);
       }
@@ -50,11 +51,8 @@ const Profile = () => {
 
     let valid = true;
     const newErrors = {};
-
-    // Trim input
     const mobile = user.mobileNumber?.toString().trim();
 
-    // Validate Mobile Number
     if (!mobile) {
       newErrors.mobileNumber = "Mobile number is required.";
       valid = false;
@@ -66,7 +64,6 @@ const Profile = () => {
     setErrors(newErrors);
     if (!valid) return;
 
-
     try {
       const formData = new FormData();
       formData.append("name", user.name);
@@ -74,7 +71,7 @@ const Profile = () => {
       formData.append("mobileNumber", user.mobileNumber);
 
       if (selectedFile) {
-        formData.append("profileImage", selectedFile); // Key must match Laravel controller field name
+        formData.append("profileImage", selectedFile);
       }
 
       const response = await axios.post(`${baseURL}/users/${id}`, formData, {
@@ -89,86 +86,68 @@ const Profile = () => {
         window.dispatchEvent(new Event("profileImageUpdated"));
       }
 
-      console.log("Profile updated:", response.data);
-      alert("Profile updated successfully!");
-
-      // Optional: re-fetch updated profile data
+      setFeedbackMessage(response.data?.message);
+      setFeedbackModalOpen(true);
     } catch (error) {
       console.error("Error updating profile", error);
-      alert("Failed to update profile.");
+       setFeedbackMessage(response.data?.error);
+      setFeedbackModalOpen(true);
     }
   };
 
-
-  // Construct full image URL or use default image
   const profileImageUrl = user.profileImage
-    ? `${profileURL}/${user.profileImage}` // Laravel path
+    ? `${profileURL}/${user.profileImage}`
     : DefaultProfileImage;
-
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-5 my-4">
       <h3 className="heading text-indigo-900">Profile Information</h3>
 
       <div className="flex flex-col md:flex-row items-center gap-2 w-full mt-3">
-       <div className="w-full md:w-1/2 flex flex-col items-center">
-        <div className="relative group">
-          <img
-            alt="User Profile"
-            src={selectedFile ? URL.createObjectURL(selectedFile) : profileImageUrl}
-            className="size-40 md:size-70 rounded object-cover"
-          />
-
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-black bg-opacity-50 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <label className="text-white cursor-pointer">
-              Choose File
-              <input
-                type="file"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-            </label>
+        <div className="w-full md:w-1/2 flex flex-col items-center">
+          <div className="relative group">
+            <img
+              alt="User Profile"
+              src={selectedFile ? URL.createObjectURL(selectedFile) : profileImageUrl}
+              className="size-40 md:size-70 rounded object-cover"
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-50 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <label className="text-white cursor-pointer">
+                Choose File
+                <input type="file" onChange={handleFileChange} className="hidden" />
+              </label>
+            </div>
           </div>
+
+          <h3 className="SunHeading mt-2">{user.name}</h3>
         </div>
-
-        <h3 className="SunHeading mt-2">{user.name}</h3>
-      </div>
-
 
         <div className="w-full">
           <form onSubmit={handleSubmit} className="grid gap-2" method="post">
             <div>
-              <label htmlFor="" className="paragraph">
-                Username
-              </label>
+              <label className="paragraph">Username</label>
               <input
                 type="text"
                 value={user.name}
                 onChange={(e) => setUser({ ...user, name: e.target.value })}
-                className="input w-full border border-gray-500" readOnly
+                className="input w-full border border-gray-500"
+                readOnly
               />
             </div>
+
             <div>
-              <label htmlFor="" className="paragraph">
-                Email
-              </label>
+              <label className="paragraph">Email</label>
               <input
                 type="text"
                 value={user.email}
                 onChange={(e) => setUser({ ...user, email: e.target.value })}
-                className="input w-full border border-gray-500" readOnly
+                className="input w-full border border-gray-500"
+                readOnly
               />
             </div>
 
-            {/* <div className="mt-5">
-              <h3 className="subHeading">Mobile Number</h3>
-            </div> */}
-
             <div>
-              <label htmlFor="" className="paragraph">
-                Mobile Number
-              </label>
+              <label className="paragraph">Mobile Number</label>
               <input
                 type="number"
                 value={user.mobileNumber}
@@ -176,13 +155,11 @@ const Profile = () => {
                   const newValue = e.target.value;
                   setUser({ ...user, mobileNumber: newValue });
 
-                  // Clear error while typing if length is enough
                   if (newValue.trim().length >= 10) {
                     setErrors((prev) => ({ ...prev, mobileNumber: "" }));
                   }
                 }}
-                className={`input w-full border ${errors.mobileNumber ? "border-red-500" : "border-gray-500"
-                  }`}
+                className={`input w-full border ${errors.mobileNumber ? "border-red-500" : "border-gray-500"}`}
               />
               {errors.mobileNumber && (
                 <p className="text-red-500 text-sm mt-1">{errors.mobileNumber}</p>
@@ -197,8 +174,14 @@ const Profile = () => {
           </form>
         </div>
       </div>
-    </div>
 
+      {/* ✅ Reusable Modal */}
+      <FeedbackModal
+        isOpen={feedbackModalOpen}
+        onClose={() => setFeedbackModalOpen(false)}
+        message={feedbackMessage}
+      />
+    </div>
   );
 };
 

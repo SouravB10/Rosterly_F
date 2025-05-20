@@ -10,6 +10,8 @@ import { set } from "date-fns";
 import axios from "axios";
 import { CgProfile } from "react-icons/cg";
 import { HiTrash } from "react-icons/hi2";
+import FeedbackModal from "../Component/FeedbackModal"; // ✅ Import here
+
 
 const People = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -33,7 +35,8 @@ const People = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
-  const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [feedbackMessage, setFeedbackMessage] = useState(""); // ✅ Message for modal
+
   const [filteredProfiles, setFilteredProfiles] = useState([]);
 
   const [formData, setFormData] = useState({
@@ -292,27 +295,33 @@ const People = () => {
   }, [selectedProfile]);
 
   const handleDelete = async (id) => {
-    // alert(`Delete functionality is not implemented yet. ID: ${id}`);
-    if (!id) return;
-    console.log("Deleting user with ID:", id);
+  if (!id) return;
 
-    const confirmDelete = window.confirm("Are you sure you want to delete this user?");
-    if (!confirmDelete) return;
+  try {
+    await axios.delete(`${baseURL}/users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
 
-    try {
-      await axios.delete(`${baseURL}/users/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      alert("User deleted successfully.");
-      setViewButtonModel(false);
+    setFeedbackMessage("User deleted successfully.");
+    setFeedbackModalOpen(true);
+    setViewButtonModel(false);
+
+    // Optional: Reload after modal closes
+    setTimeout(() => {
+      setFeedbackModalOpen(false);
       window.location.reload();
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      alert("Failed to delete user.");
-    }
-  };
+    }, 2000);
+
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    setFeedbackMessage("Failed to delete user.");
+    setFeedbackModalOpen(true);
+
+    setTimeout(() => setFeedbackModalOpen(false), 2000);
+  }
+};
 
   return (
     <div className="flex flex-col gap-3">
@@ -804,33 +813,13 @@ const People = () => {
 
 
       {/* message modal start */}
-      <Dialog
-        open={feedbackModalOpen}
+     
+      {/* ✅ Reusable Modal */}
+      <FeedbackModal
+        isOpen={feedbackModalOpen}
         onClose={() => setFeedbackModalOpen(false)}
-        className="relative z-50"
-      >
-        <div className="fixed inset-0 bg-black/50 transition-opacity duration-300" />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel
-            className={`w-full max-w-sm transform overflow-hidden rounded-xl bg-white shadow-xl transition-all duration-300 ease-out 
-      scale-95 opacity-0 animate-fadeIn`}
-          >
-            <div className="flex flex-col items-center p-6 text-center">
-              <Dialog.Title className="text-lg font-semibold text-gray-800 mt-2">
-                {feedbackMessage}
-              </Dialog.Title>
-              <div className="mt-6">
-                <button
-                  onClick={() => setFeedbackModalOpen(false)}
-                  className="px-5 py-2 text-sm font-medium text-white bg-blue-600 borderRadius5 hover:bg-blue-700 transition-all"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </Dialog.Panel>
-        </div>
-      </Dialog>
+        message={feedbackMessage}
+      />
       {/* message modal emd */}
 
 
