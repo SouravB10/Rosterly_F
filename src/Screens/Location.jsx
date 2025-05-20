@@ -2,6 +2,8 @@ import { Dialog } from "@headlessui/react";
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import axios from "axios";
+import FeedbackModal from "../Component/FeedbackModal"; // ✅ Import here
+ 
 
 const Location = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -19,6 +21,7 @@ const Location = () => {
   const [locationId, setLocationId] = useState("");
   const [sales, setSales] = useState("");
   const [salesId, setSalesId] = useState("");
+  
   const [salesData, setSalesData] = useState({
     Monday: "",
     Tuesday: "",
@@ -235,12 +238,21 @@ const Location = () => {
         setLongitude("");
         setAddress("");
         setErrors({});
+         // Close modal if applicable
         setIsModalOpen(false);
+
+        // Show success feedback
+        setFeedbackMessage(response.data?.message || "Location added successfully.");
+        setFeedbackModalOpen(true);
       } catch (error) {
         console.error("API Error:", error);
         if (error.response && error.response.data.errors) {
           setErrors(error.response.data.errors);
         }
+        setFeedbackMessage(
+      error.response?.data?.message || "Failed to add location. Please try again."
+    );
+    setFeedbackModalOpen(true);
       }
     }
   };
@@ -285,7 +297,9 @@ const Location = () => {
       );
 
       console.log("Location updated successfully", response.data);
-      alert("Location updated!");
+       // Show success feedback
+      setFeedbackMessage(response.data?.message || "Location updated successfully.");
+      setFeedbackModalOpen(true);
 
       const updatedLocations = await axios.get(`${baseURL}/locations`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -788,35 +802,12 @@ const Location = () => {
         </div>
       </Dialog>
       {/* Employee Model Ends */}
-      {/* message modal start */}
-      <Dialog
-        open={feedbackModalOpen}
+      {/* ✅ Reusable Modal */}
+      <FeedbackModal
+        isOpen={feedbackModalOpen}
         onClose={() => setFeedbackModalOpen(false)}
-        className="relative z-50"
-      >
-        <div className="fixed inset-0 bg-black/50 transition-opacity duration-300" />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel
-            className={`w-full max-w-sm transform overflow-hidden rounded-xl bg-white shadow-xl transition-all duration-300 ease-out 
-            scale-95 opacity-0 animate-fadeIn`}
-          >
-            <div className="flex flex-col items-center p-6 text-center">
-              <Dialog.Title className="text-lg font-semibold text-gray-800 mt-2">
-                {feedbackMessage}
-              </Dialog.Title>
-              <div className="mt-6">
-                <button
-                  onClick={() => setFeedbackModalOpen(false)}
-                  className="px-5 py-2 text-sm font-medium text-white bg-blue-600 borderRadius5 hover:bg-blue-700 transition-all"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </Dialog.Panel>
-        </div>
-      </Dialog>
-      {/* message modal emd */}
+        message={feedbackMessage}
+      />
     </div>
   );
 };

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 // import { Eye, EyeOff } from 'lucide-react'; // Use Lucide or FontAwesome or any icon lib
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import FeedbackModal from "../Component/FeedbackModal"; // ✅ Import here
+
 
 const ChangePassword = () => {
     const [currentPassword, setCurrentPassword] = useState('');
@@ -9,7 +11,8 @@ const ChangePassword = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordMessage, setPasswordMessage] = useState('');
     const [passwordValid, setPasswordValid] = useState(false);
-
+    const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+    const [feedbackMessage, setFeedbackMessage] = useState(""); // ✅ Message for modal
     const [showCurrent, setShowCurrent] = useState(false);
     const [showNew, setShowNew] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
@@ -41,42 +44,44 @@ const ChangePassword = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+  e.preventDefault();
 
-        if (!passwordValid) return;
+  if (!passwordValid) return;
 
-        if (newPassword !== confirmPassword) {
-            setPasswordMessage("New password and confirm password do not match.");
-            return;
-        }
+  if (newPassword !== confirmPassword) {
+    setPasswordMessage("New password and confirm password do not match.");
+    return;
+  }
 
-        try {
-            await axios.post(
-                `${baseURL}/changePassword`,
-                {
-                    login_id: id,
-                    current_password: currentPassword,
-                    new_password: newPassword,
-                    confirm_password: confirmPassword
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+  try {
+    const response = await axios.post(
+      `${baseURL}/changePassword`,
+      {
+        login_id: id,
+        current_password: currentPassword,
+        new_password: newPassword,
+        confirm_password: confirmPassword
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-            alert('Password changed successfully!');
-            setCurrentPassword('');
-            setNewPassword('');
-            setConfirmPassword('');
-            setPasswordValid(false);
-        } catch (error) {
-            const msg = error.response?.data?.message || "Failed to change password.";
-            setPasswordMessage(msg);
-            setPasswordValid(false);
-        }
-    };
+    setFeedbackMessage(response.data?.message || "Password changed successfully.");
+    setFeedbackModalOpen(true);
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+    setPasswordValid(false);
+  } catch (error) {
+    const msg = error.response?.data?.message || "Failed to change password.";
+    setFeedbackMessage(msg);
+    setFeedbackModalOpen(true);
+  }
+};
+
 
     const renderPasswordField = (label, value, setValue, show, setShow, onChange, showValidation = false) => (
         <div className="relative">
@@ -146,7 +151,13 @@ const ChangePassword = () => {
                     </div>
                 </div>
             </div>
+             <FeedbackModal
+        isOpen={feedbackModalOpen}
+        onClose={() => setFeedbackModalOpen(false)}
+        message={feedbackMessage}
+      />
         </div>
+        
     );
 };
 
