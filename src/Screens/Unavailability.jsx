@@ -7,6 +7,7 @@ import { FaPencilAlt } from "react-icons/fa";
 import axios from "axios";
 import { set } from "date-fns";
 import moment from "moment";
+import FeedbackModal from "../Component/FeedbackModal";
 
 const Unavailability = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -18,6 +19,9 @@ const Unavailability = () => {
   const [selectToNotify, setSelectToNotify] = useState([]);
   const [notifyToId, setNotifyToId] = useState("");
   const [unavailability, setUnavailability] = useState([]);
+  const [errors, setErrors] = useState({});
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState("");
   const token = localStorage.getItem("token");
   const id = localStorage.getItem("id");
 
@@ -91,8 +95,12 @@ const Unavailability = () => {
       );
       console.log("Unavailability saved:", response.data);
       resetForm();
+      setFeedbackMessage(response.data?.message);
+      setFeedbackModalOpen(true);
     } catch (error) {
       console.error("Error saving unavailability:", error);
+      setFeedbackMessage(error.response.data?.message || "An error occurred");
+      setFeedbackModalOpen(true);
     }
   };
 
@@ -175,8 +183,12 @@ const Unavailability = () => {
       setModalNotifyToId("");
       setModalDescription("");
       setIsShiftOpen(false); // Close modal
+      setFeedbackMessage(response.data?.message);
+      setFeedbackModalOpen(true);
     } catch (error) {
       console.error("Error saving recurring unavailability:", error);
+      setFeedbackMessage(error.response.data?.message || "An error occurred");
+      setFeedbackModalOpen(true);
     }
   };
 
@@ -366,7 +378,7 @@ const Unavailability = () => {
                         )}
                       </>
                     ) : null}
-                    <p className={`paragraphThin mt-1 text-sm italic ${item.unavailStatus === 0 ? "text-red-500" : "text-green-500"}`}>
+                    <p className={`paragraphThin mt-1 text-sm italic ${item.unavailStatus === 0 ? "text-red-500" : "text-green-600"}`}>
                       {item.unavailStatus === 0 ? 'Pending' : 'Approved'}
                     </p>
                   </div>
@@ -512,6 +524,11 @@ const Unavailability = () => {
           </Dialog.Panel>
         </div>
       </Dialog>
+      <FeedbackModal
+        isOpen={feedbackModalOpen}
+        onClose={() => setFeedbackModalOpen(false)}
+        message={feedbackMessage}
+      />
     </>
   );
 };
