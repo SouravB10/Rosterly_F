@@ -10,6 +10,8 @@ import { set } from "date-fns";
 import axios from "axios";
 import { CgProfile } from "react-icons/cg";
 import { HiTrash } from "react-icons/hi2";
+import FeedbackModal from "../Component/FeedbackModal"; // ✅ Import here
+
 
 const People = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -33,7 +35,8 @@ const People = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
-  const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [feedbackMessage, setFeedbackMessage] = useState(""); // ✅ Message for modal
+  const [selectedStatus, setSelectedStatus] = useState("");
   const [filteredProfiles, setFilteredProfiles] = useState([]);
 
   const [formData, setFormData] = useState({
@@ -232,16 +235,57 @@ const People = () => {
     setFilteredProfiles(filtered);
   };
 
-
-
   const handleFilter = () => {
-    const filtered = users.filter((profile) => {
-      const location = profile.location?.toLowerCase() || '';
-      return selectedLocation === 'all' || location === selectedLocation.toLowerCase();
-    });
+  const filtered = users.filter(user => {
+    return selectedStatus === ""
+      ? true // show all if no status selected
+      : String(user.status) === selectedStatus; // match active/inactive
+  });
 
-    setFilteredProfiles(filtered);
-  };
+  setFilteredProfiles(filtered);
+};
+
+
+const handleToggleStatus = async (id, currentStatus) => {
+  const newStatus = currentStatus === 1 ? 0 : 1;
+
+  try {
+    const response = await axios.post(
+      `${baseURL}/users/user-profile/${id}/status`,
+      {
+        status: newStatus,
+        updated_by: currentUserId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      console.log('Status updated successfully:', response.data);
+
+      // ✅ Update both users and filteredProfiles
+      setUsers(prev =>
+        prev.map(profile =>
+          profile.id === id ? { ...profile, status: newStatus } : profile
+        )
+      );
+      setFilteredProfiles(prev =>
+        prev.map(profile =>
+          profile.id === id ? { ...profile, status: newStatus } : profile
+        )
+      );
+    } else {
+      console.error('Unexpected response:', response);
+    }
+  } catch (error) {
+    console.error('Failed to update status:', error.response?.data || error.message);
+  }
+};
+
+
 
   const updateUser = async (e) => {
     e.preventDefault();
@@ -292,12 +336,7 @@ const People = () => {
   }, [selectedProfile]);
 
   const handleDelete = async (id) => {
-    // alert(`Delete functionality is not implemented yet. ID: ${id}`);
     if (!id) return;
-    console.log("Deleting user with ID:", id);
-
-    const confirmDelete = window.confirm("Are you sure you want to delete this user?");
-    if (!confirmDelete) return;
 
     try {
       await axios.delete(`${baseURL}/users/${id}`, {
@@ -305,12 +344,23 @@ const People = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      alert("User deleted successfully.");
+
+      setFeedbackMessage("User deleted successfully.");
+      setFeedbackModalOpen(true);
       setViewButtonModel(false);
-      window.location.reload();
+
+      // Optional: Reload after modal closes
+      setTimeout(() => {
+        setFeedbackModalOpen(false);
+        window.location.reload();
+      }, 2000);
+
     } catch (error) {
       console.error("Error deleting user:", error);
-      alert("Failed to delete user.");
+      setFeedbackMessage("Failed to delete user.");
+      setFeedbackModalOpen(true);
+
+      setTimeout(() => setFeedbackModalOpen(false), 2000);
     }
   };
 
@@ -322,13 +372,17 @@ const People = () => {
           <select
             name="selectedStatus"
             className="input flex-1 min-w-[140px]"
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
           >
-            <option value="default">--Select Status--</option>
-            <option value="Location 1">Active</option>
-            <option value="Location 2">Inactive</option>
+            <option value="">--Select Status--</option>
+            <option value="1">Active</option>
+            <option value="0">Inactive</option>
           </select>
 
-          <select
+
+
+          {/* <select
             name="selectedLocation"
             className="input flex-1 min-w-[140px]"
             value={selectedLocation}
@@ -340,7 +394,7 @@ const People = () => {
                 {loc.location_name}
               </option>
             ))}
-          </select>
+          </select> */}
 
           <button
             className="buttonSuccess flex-1 min-w-[120px]"
@@ -379,8 +433,9 @@ const People = () => {
         {Array.isArray(filteredProfiles) && filteredProfiles.map((profile) => (
           <div key={profile.id} className="w-full">
             <div className="mSideBar shadow-xl p-4 rounded-xl h-full flex flex-col justify-between">
+              {/* Top Section: Image + Info */}
               <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-                <div className="flex flex-row items-center min-w-0 md:flex-row gap-4">
+                <div className="flex items-center gap-4 min-w-0">
                   {profile.profileImage ? (
                     <img
                       alt="Profile"
@@ -389,12 +444,12 @@ const People = () => {
                           ? profile.profileImage
                           : `${profileBaseURL}/${profile.profileImage}`
                       }
-                      className="h-20 w-20 rounded object-cover"
+                      className="h-20 w-20 rounded-full object-cover"
                     />
                   ) : (
-                    <CgProfile className="h-20 w-20 rounded bg-gray-200 p-2" />
+                    <CgProfile className="h-20 w-20 rounded-full bg-gray-200 p-2" />
                   )}
-                  <div className="text-left md:text-left w-full min-w-0 overflow-hidden">
+                  <div className="text-left w-full min-w-0 overflow-hidden">
                     <h3 className="paragraphBold md:subheadingBold break-words">
                       {profile.firstName} {profile.lastName}
                     </h3>
@@ -404,14 +459,28 @@ const People = () => {
                 </div>
               </div>
 
-              <div className="mt-4 flex flex-row justify-between items-center gap-2">
-                <p className="paragraphBold">
-                  {/* Location: {profile.location_id ? profile.location : "N/A"} */}
-                </p>
+              {/* Bottom Section: Actions + Toggle */}
+              <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+                {/* Status Toggle */}
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    checked={profile.status === 1}
+                    onChange={() => handleToggleStatus(profile.id, profile.status)}
+                  />
+                  <div className="relative w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-green-500 transition duration-300">
+                    <div className="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-5"></div>
+                  </div>
+                  <span className="text-sm select-none">
+                    {profile.status === 1 ? "Active" : "Inactive"}
+                  </span>
+                </label>
+                {/* Actions */}
                 <div className="flex gap-2">
                   <FaEye
                     title="View Profile"
-                    className="text-indigo-950 bg-amber-300 cursor-pointer p-2 rounded-md size-8"
+                    className="text-indigo-950 bg-amber-300 cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
                     onClick={() => {
                       setSelectedProfile(profile);
                       setViewButtonModel(true);
@@ -419,7 +488,7 @@ const People = () => {
                   />
                   <FaEdit
                     title="Add Note"
-                    className="text-indigo-950 bg-gray-200 cursor-pointer p-2 rounded-md size-8"
+                    className="text-indigo-950 bg-gray-200 cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
                     onClick={() => {
                       setSelectedProfile(profile);
                       setAddNoteModal(true);
@@ -427,21 +496,16 @@ const People = () => {
                   />
                   <HiTrash
                     title="Delete Profile"
-                    className="text-white bg-red-400 cursor-pointer p-2 rounded-md size-8"
+                    className="text-white bg-red-400 cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
                     onClick={() => handleDelete(profile.id)}
                   />
-                  {/* <button
-                    type="button"
-                    className="buttonDanger"
-                    onClick={handleDelete}
-                  >
-                    Delete
-                  </button> */}
                 </div>
-              </div>
 
+
+              </div>
             </div>
           </div>
+
         ))}
       </div>
 
@@ -804,33 +868,13 @@ const People = () => {
 
 
       {/* message modal start */}
-      <Dialog
-        open={feedbackModalOpen}
+
+      {/* ✅ Reusable Modal */}
+      <FeedbackModal
+        isOpen={feedbackModalOpen}
         onClose={() => setFeedbackModalOpen(false)}
-        className="relative z-50"
-      >
-        <div className="fixed inset-0 bg-black/50 transition-opacity duration-300" />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel
-            className={`w-full max-w-sm transform overflow-hidden rounded-xl bg-white shadow-xl transition-all duration-300 ease-out 
-      scale-95 opacity-0 animate-fadeIn`}
-          >
-            <div className="flex flex-col items-center p-6 text-center">
-              <Dialog.Title className="text-lg font-semibold text-gray-800 mt-2">
-                {feedbackMessage}
-              </Dialog.Title>
-              <div className="mt-6">
-                <button
-                  onClick={() => setFeedbackModalOpen(false)}
-                  className="px-5 py-2 text-sm font-medium text-white bg-blue-600 borderRadius5 hover:bg-blue-700 transition-all"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </Dialog.Panel>
-        </div>
-      </Dialog>
+        message={feedbackMessage}
+      />
       {/* message modal emd */}
 
 
