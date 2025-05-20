@@ -130,19 +130,19 @@ const Unavailability = () => {
 
   const saveRecurringUnavailability = async (e) => {
     e.preventDefault();
+    console.log(start, finish, modalNotifyToId, modalDescription);
 
     try {
       const response = await axios.post(
         `${baseURL}/unavailability/2`,
         {
-          userId: id,
-          unavailType: 2,
-          startTime: start,
+          userId: 34,
           day: selectedDay,
-          endTime: finish,
+          fromDT: start,
+          toDT: finish,
+          reason: modalDescription,
           notifyTo: modalNotifyToId,
           unavailStatus: "pending",
-          reason: modalDescription,
         },
         {
           headers: {
@@ -162,7 +162,6 @@ const Unavailability = () => {
       console.error("Error saving recurring unavailability:", error);
     }
   };
-
 
   return (
     <>
@@ -272,12 +271,13 @@ const Unavailability = () => {
                 </div>
 
                 <div className="flex justify-end gap-4 pt-2">
-                  <button
-                    className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md"
-                  >
+                  <button className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md">
                     Save
                   </button>
-                  <button onClick={resetForm} className="buttonDanger button font12 font-semibold px-4 py-2 rounded-md">
+                  <button
+                    onClick={resetForm}
+                    className="buttonDanger button font12 font-semibold px-4 py-2 rounded-md"
+                  >
                     Reset
                   </button>
                 </div>
@@ -382,10 +382,11 @@ const Unavailability = () => {
             >
               <div className="flex items-center">
                 <p
-                  className={`paragraphBold ${day === "Saturday" || day === "Sunday"
-                    ? "text-black-600"
-                    : ""
-                    }`}
+                  className={`paragraphBold ${
+                    day === "Saturday" || day === "Sunday"
+                      ? "text-black-600"
+                      : ""
+                  }`}
                 >
                   {day}
                 </p>
@@ -421,7 +422,10 @@ const Unavailability = () => {
                 ×
               </button>
             </div>
-            <form className="card p-6 space-y-3" onSubmit={saveRecurringUnavailability}>
+            <form
+              className="card p-6 space-y-3"
+              onSubmit={saveRecurringUnavailability}
+            >
               <p className="paragraph text-gray-500">
                 Enter the times that you will NOT be available.
               </p>
@@ -457,8 +461,6 @@ const Unavailability = () => {
                       ))}
                     </select>
                   </div>
-
-
                 </div>
                 <div>
                   <label className="paragraphBold block mb-4">
