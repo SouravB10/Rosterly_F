@@ -107,7 +107,6 @@ const Location = () => {
       const allIds = employeeName.map((emp) => emp.id.toString());
       setEmployees(allIds);
     } else {
-      // Deselect all
       setEmployees([]);
     }
   };
@@ -614,7 +613,7 @@ const Location = () => {
             </div>
             <form className="mt-1 p-4 space-y-3" onSubmit={handleSubmit}>
               <div>
-              
+
               </div>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col">
