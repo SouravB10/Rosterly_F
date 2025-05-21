@@ -92,6 +92,9 @@ const People = () => {
     if (!formData.email.trim()) newErrors.email = "Email is required.";
     if (!formData.dob.trim()) newErrors.dob = "Date of birth is required.";
     if (!formData.payrate.trim()) newErrors.payrate = "Pay rate is required.";
+    if (currentUserRole === 1 && !formData.role_id) {
+      newErrors.role_id = "Role is required.";
+    }
 
     if (!formData.mobileNumber.trim()) {
       newErrors.mobileNumber = "Mobile number is required.";
@@ -106,32 +109,98 @@ const People = () => {
   };
 
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (currentUserRole === 2) {
+  //     setFormData((prev) => ({ ...prev, role_id: 3 }));
+  //   }
+
+  //   if (!validateForm()) {
+  //     return;
+  //   }
+
+  //   const form = new FormData();
+  //   form.append("firstName", formData.firstName);
+  //   form.append("lastName", formData.lastName);
+  //   form.append("email", formData.email);
+  //   form.append("dob", formData.dob);
+  //   form.append("payrate", formData.payrate);
+  //   form.append("mobileNumber", formData.mobileNumber);
+  //   form.append("role_id", formData.role_id || 3);
+  //   form.append("created_by", currentUserId);
+  //   form.append("created_on", new Date().toISOString());
+  //   form.append("password", "defaultPassword123");
+  //   form.append("location_id", formData.location_id);
+
+
+  //   if (selectedProfile.file) {
+  //     form.append("profileImage", selectedProfile.file);
+  //   }
+
+  //   try {
+  //     const response = await axios.post(`${baseURL}/users`, form, {
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     });
+  //     console.log("User created:", response.data);
+  //     console.log("Submitting form for role:", currentUserRole);
+  //     setIsModalOpen(false);
+  //     setFeedbackMessage(response.data?.message || "User created successfully");
+  //     setFeedbackModalOpen(true);
+  //     resetForm(); // clear form
+  //     setTimeout(() => {
+  //       window.location.reload();
+  //     }, 2000);
+  //   } catch (error) {
+  //     console.error("Error creating user:", error);
+  //     setFeedbackMessage(error.response?.data?.message || "Error creating user");
+  //     setFeedbackModalOpen(true);
+
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // if (currentUserRole === 2 && !formData.role_id) {
-    //   setFormData((prev) => ({ ...prev, role_id: 3 }));
-    // }
+    // Assign the correct role ID based on the current user role
+    const assignedRoleId = currentUserRole === 2 ? 3 : formData.role_id;
 
-    if (!validateForm()) {
-      return;
+    // Use this updated role ID in the validation phase
+    const updatedFormData = { ...formData, role_id: assignedRoleId };
+
+    // Validate using updated data
+    const newErrors = {};
+    if (!updatedFormData.firstName?.trim()) newErrors.firstName = "First name is required.";
+    if (!updatedFormData.lastName?.trim()) newErrors.lastName = "Last name is required.";
+    if (!updatedFormData.email?.trim()) newErrors.email = "Email is required.";
+    if (!updatedFormData.dob?.trim()) newErrors.dob = "Date of birth is required.";
+    if (!updatedFormData.payrate?.trim()) newErrors.payrate = "Pay rate is required.";
+    if (!updatedFormData.mobileNumber?.trim()) {
+      newErrors.mobileNumber = "Mobile number is required.";
+    } else if (!/^\d{10}$/.test(updatedFormData.mobileNumber)) {
+      newErrors.mobileNumber = "Mobile number must be exactly 10 digits.";
     }
+    if (!updatedFormData.role_id) newErrors.role_id = "Role is required.";
 
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+
+    // Create form data
     const form = new FormData();
-    form.append("firstName", formData.firstName);
-    form.append("lastName", formData.lastName);
-    form.append("email", formData.email);
-    form.append("dob", formData.dob);
-    form.append("payrate", formData.payrate);
-    form.append("mobileNumber", formData.mobileNumber);
-    if (formData.role_id || currentUserRole === 2) {
-      form.append("role_id", formData.role_id || 3);
-    }
+    form.append("firstName", updatedFormData.firstName);
+    form.append("lastName", updatedFormData.lastName);
+    form.append("email", updatedFormData.email);
+    form.append("dob", updatedFormData.dob);
+    form.append("payrate", updatedFormData.payrate);
+    form.append("mobileNumber", updatedFormData.mobileNumber);
+    form.append("role_id", updatedFormData.role_id);
     form.append("created_by", currentUserId);
     form.append("created_on", new Date().toISOString());
     form.append("password", "defaultPassword123");
-    form.append("location_id", formData.location_id);
-
+    form.append("location_id", updatedFormData.location_id);
 
     if (selectedProfile.file) {
       form.append("profileImage", selectedProfile.file);
@@ -144,6 +213,7 @@ const People = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+
       console.log("User created:", response.data);
       setIsModalOpen(false);
       setFeedbackMessage(response.data?.message || "User created successfully");
@@ -156,9 +226,9 @@ const People = () => {
       console.error("Error creating user:", error);
       setFeedbackMessage(error.response?.data?.message || "Error creating user");
       setFeedbackModalOpen(true);
-
     }
   };
+
 
   const fetchUsers = async () => {
     setLoading(true);
