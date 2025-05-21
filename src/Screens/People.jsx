@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { FaSearch, FaEye, FaEdit } from "react-icons/fa";
-import ProfileImage from "../assets/images/profile.png";
-import Sourav from "../assets/images/IMG_20230225_033746_011.jpg";
-import deadPool from "../assets/images/Screenshot 2025-04-21 111413.png";
-import BlackWidow from "../assets/images/Screenshot 2025-04-21 111629.png"
 import DatePicker from "react-datepicker";
 import { set } from "date-fns";
 import axios from "axios";
 import { CgProfile } from "react-icons/cg";
 import { HiTrash } from "react-icons/hi2";
+import { LuNotebookPen } from "react-icons/lu";
 import FeedbackModal from "../Component/FeedbackModal";
 import { FaToggleOff, FaToggleOn } from "react-icons/fa6";
 
@@ -48,18 +45,11 @@ const People = () => {
     mobileNumber: '',
     payrate: '',
     password: '',
-    location_Id: '', // If needed
     dob: '',
     profileImage: '',
-    role_id: null,
-    location_id: null,
+    role_id: '',
+    location_id: '',
   });
-
-  // useEffect(() => {
-  //   if (currentUserRole === 2) {
-  //     setFormData((prev) => ({ ...prev, role_id: 3 }));
-  //   }
-  // }, []);
 
   useEffect(() => {
     if (createDate) {
@@ -83,84 +73,6 @@ const People = () => {
     });
     setErrors({});
   };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.firstName.trim()) newErrors.firstName = "First name is required.";
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required.";
-    if (!formData.email.trim()) newErrors.email = "Email is required.";
-    if (!formData.dob.trim()) newErrors.dob = "Date of birth is required.";
-    if (!formData.payrate.trim()) newErrors.payrate = "Pay rate is required.";
-    if (currentUserRole === 1 && !formData.role_id) {
-      newErrors.role_id = "Role is required.";
-    }
-
-    if (!formData.mobileNumber.trim()) {
-      newErrors.mobileNumber = "Mobile number is required.";
-    } else if (!/^\d{10}$/.test(formData.mobileNumber)) {
-      newErrors.mobileNumber = "Mobile number must be exactly 10 digits.";
-    }
-
-    if (!formData.role_id) newErrors.role_id = "Role is required.";
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (currentUserRole === 2) {
-  //     setFormData((prev) => ({ ...prev, role_id: 3 }));
-  //   }
-
-  //   if (!validateForm()) {
-  //     return;
-  //   }
-
-  //   const form = new FormData();
-  //   form.append("firstName", formData.firstName);
-  //   form.append("lastName", formData.lastName);
-  //   form.append("email", formData.email);
-  //   form.append("dob", formData.dob);
-  //   form.append("payrate", formData.payrate);
-  //   form.append("mobileNumber", formData.mobileNumber);
-  //   form.append("role_id", formData.role_id || 3);
-  //   form.append("created_by", currentUserId);
-  //   form.append("created_on", new Date().toISOString());
-  //   form.append("password", "defaultPassword123");
-  //   form.append("location_id", formData.location_id);
-
-
-  //   if (selectedProfile.file) {
-  //     form.append("profileImage", selectedProfile.file);
-  //   }
-
-  //   try {
-  //     const response = await axios.post(`${baseURL}/users`, form, {
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //         "Content-Type": "multipart/form-data",
-  //       },
-  //     });
-  //     console.log("User created:", response.data);
-  //     console.log("Submitting form for role:", currentUserRole);
-  //     setIsModalOpen(false);
-  //     setFeedbackMessage(response.data?.message || "User created successfully");
-  //     setFeedbackModalOpen(true);
-  //     resetForm(); // clear form
-  //     setTimeout(() => {
-  //       window.location.reload();
-  //     }, 2000);
-  //   } catch (error) {
-  //     console.error("Error creating user:", error);
-  //     setFeedbackMessage(error.response?.data?.message || "Error creating user");
-  //     setFeedbackModalOpen(true);
-
-  //   }
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -234,13 +146,21 @@ const People = () => {
     setLoading(true);
     try {
       const currentUserId = parseInt(localStorage.getItem("id"));
+      const currentUserRole = parseInt(localStorage.getItem("role_id"));
       const response = await axios.get(`${baseURL}/users`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      const allUsers = response.data.data;
-      const filteredUsers = allUsers.filter(user => user.id !== currentUserId);
+
+      let allUsers = response.data.data;
+
+      let filteredUsers = allUsers.filter(user => user.id !== currentUserId);
+
+      if (currentUserRole === 2) {
+        filteredUsers = filteredUsers.filter(user => user.role_id !== 1);
+      }
+
       setUsers(filteredUsers);
       setFilteredProfiles(filteredUsers);
       console.log("Users fetched:", filteredUsers);
@@ -279,6 +199,7 @@ const People = () => {
   };
 
   const handleOpenModal = () => {
+    setSelectedProfile({ image: '', file: null, profileImage: '' });
     resetForm();             // ✅ Clear form and errors
     setIsModalOpen(true);    // ✅ Then show modal
   };
@@ -415,34 +336,6 @@ const People = () => {
     }
   }, [selectedProfile]);
 
-  // const handleDelete = async (id) => {
-  //   if (!id) return;
-
-  //   try {
-  //     await axios.delete(`${baseURL}/users/${id}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //       },
-  //     });
-
-  //     setFeedbackMessage("User deleted successfully.");
-  //     setFeedbackModalOpen(true);
-  //     setViewButtonModel(false);
-
-  //     // Optional: Reload after modal closes
-  //     setTimeout(() => {
-  //       setFeedbackModalOpen(false);
-  //       window.location.reload();
-  //     }, 2000);
-
-  //   } catch (error) {
-  //     console.error("Error deleting user:", error);
-  //     setFeedbackMessage("Failed to delete user.");
-  //     setFeedbackModalOpen(true);
-
-  //     setTimeout(() => setFeedbackModalOpen(false), 2000);
-  //   }
-  // };
 
   const handleDeleteClick = (id) => {
     setConfirmDeleteId(id);
@@ -477,7 +370,7 @@ const People = () => {
 
 
   return (
-    <div className="flex flex-col gap-3 hide-scrollbar">
+    <div className="flex flex-col gap-3 ">
       <div className="sticky top-0 bg-[#f1f1f1] py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         {/* Left side: Filters */}
         <div className="flex flex-wrap gap-3 w-full md:w-auto">
@@ -572,12 +465,13 @@ const People = () => {
               </div>
 
               {/* Bottom Section: Actions + Toggle */}
-              <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+              <div className="mt-4 flex flex-row flex-wrap md:justify-between items-center gap-4">
                 {/* Status Toggle */}
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-2 cursor-pointer" title="Toggle Status">
                   <input
                     type="checkbox"
                     className="sr-only"
+                    hidden
                     checked={profile.status === 1}
                     onChange={() => handleToggleStatus(profile.id, profile.status)}
                   />
@@ -594,8 +488,9 @@ const People = () => {
                     {profile.status === 1 ? "Active" : "Inactive"}
                   </span>
                 </label>
+
                 {/* Actions */}
-                <div className="flex">
+                <div className="flex ml-auto">
                   <FaEye
                     title="View Profile"
                     className="text-indigo-950 cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
@@ -604,7 +499,7 @@ const People = () => {
                       setViewButtonModel(true);
                     }}
                   />
-                  <FaEdit
+                  <LuNotebookPen
                     title="Add Note"
                     className="text-black cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
                     onClick={() => {
@@ -636,7 +531,7 @@ const People = () => {
       >
         <div className="fixed inset-0 bg-gray-700/70"></div>
         <div className="fixed inset-0 flex items-center justify-center">
-          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-sm sm:max-w-md w-full">
+          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-sm sm:max-w-md w-full overflow-y-auto max-h-[90vh]">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
               <Dialog.Title className="heading">Add Employee</Dialog.Title>
               <button
