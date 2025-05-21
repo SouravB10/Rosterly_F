@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { FaSearch, FaEye, FaEdit } from "react-icons/fa";
-import ProfileImage from "../assets/images/profile.png";
-import Sourav from "../assets/images/IMG_20230225_033746_011.jpg";
-import deadPool from "../assets/images/Screenshot 2025-04-21 111413.png";
-import BlackWidow from "../assets/images/Screenshot 2025-04-21 111629.png"
 import DatePicker from "react-datepicker";
 import { set } from "date-fns";
 import axios from "axios";
@@ -55,12 +51,6 @@ const People = () => {
     location_id: null,
   });
 
-  // useEffect(() => {
-  //   if (currentUserRole === 2) {
-  //     setFormData((prev) => ({ ...prev, role_id: 3 }));
-  //   }
-  // }, []);
-
   useEffect(() => {
     if (createDate) {
       setFormData((prev) => ({
@@ -83,85 +73,7 @@ const People = () => {
     });
     setErrors({});
   };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.firstName.trim()) newErrors.firstName = "First name is required.";
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required.";
-    if (!formData.email.trim()) newErrors.email = "Email is required.";
-    if (!formData.dob.trim()) newErrors.dob = "Date of birth is required.";
-    if (!formData.payrate.trim()) newErrors.payrate = "Pay rate is required.";
-    if (currentUserRole === 1 && !formData.role_id) {
-      newErrors.role_id = "Role is required.";
-    }
-
-    if (!formData.mobileNumber.trim()) {
-      newErrors.mobileNumber = "Mobile number is required.";
-    } else if (!/^\d{10}$/.test(formData.mobileNumber)) {
-      newErrors.mobileNumber = "Mobile number must be exactly 10 digits.";
-    }
-
-    if (!formData.role_id) newErrors.role_id = "Role is required.";
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (currentUserRole === 2) {
-  //     setFormData((prev) => ({ ...prev, role_id: 3 }));
-  //   }
-
-  //   if (!validateForm()) {
-  //     return;
-  //   }
-
-  //   const form = new FormData();
-  //   form.append("firstName", formData.firstName);
-  //   form.append("lastName", formData.lastName);
-  //   form.append("email", formData.email);
-  //   form.append("dob", formData.dob);
-  //   form.append("payrate", formData.payrate);
-  //   form.append("mobileNumber", formData.mobileNumber);
-  //   form.append("role_id", formData.role_id || 3);
-  //   form.append("created_by", currentUserId);
-  //   form.append("created_on", new Date().toISOString());
-  //   form.append("password", "defaultPassword123");
-  //   form.append("location_id", formData.location_id);
-
-
-  //   if (selectedProfile.file) {
-  //     form.append("profileImage", selectedProfile.file);
-  //   }
-
-  //   try {
-  //     const response = await axios.post(`${baseURL}/users`, form, {
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //         "Content-Type": "multipart/form-data",
-  //       },
-  //     });
-  //     console.log("User created:", response.data);
-  //     console.log("Submitting form for role:", currentUserRole);
-  //     setIsModalOpen(false);
-  //     setFeedbackMessage(response.data?.message || "User created successfully");
-  //     setFeedbackModalOpen(true);
-  //     resetForm(); // clear form
-  //     setTimeout(() => {
-  //       window.location.reload();
-  //     }, 2000);
-  //   } catch (error) {
-  //     console.error("Error creating user:", error);
-  //     setFeedbackMessage(error.response?.data?.message || "Error creating user");
-  //     setFeedbackModalOpen(true);
-
-  //   }
-  // };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -415,34 +327,6 @@ const People = () => {
     }
   }, [selectedProfile]);
 
-  // const handleDelete = async (id) => {
-  //   if (!id) return;
-
-  //   try {
-  //     await axios.delete(`${baseURL}/users/${id}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //       },
-  //     });
-
-  //     setFeedbackMessage("User deleted successfully.");
-  //     setFeedbackModalOpen(true);
-  //     setViewButtonModel(false);
-
-  //     // Optional: Reload after modal closes
-  //     setTimeout(() => {
-  //       setFeedbackModalOpen(false);
-  //       window.location.reload();
-  //     }, 2000);
-
-  //   } catch (error) {
-  //     console.error("Error deleting user:", error);
-  //     setFeedbackMessage("Failed to delete user.");
-  //     setFeedbackModalOpen(true);
-
-  //     setTimeout(() => setFeedbackModalOpen(false), 2000);
-  //   }
-  // };
 
   const handleDeleteClick = (id) => {
     setConfirmDeleteId(id);
@@ -477,7 +361,7 @@ const People = () => {
 
 
   return (
-    <div className="flex flex-col gap-3 hide-scrollbar">
+    <div className="flex flex-col gap-3 overflow-x-hidden min-h-screen">
       <div className="sticky top-0 bg-[#f1f1f1] py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         {/* Left side: Filters */}
         <div className="flex flex-wrap gap-3 w-full md:w-auto">
@@ -636,7 +520,7 @@ const People = () => {
       >
         <div className="fixed inset-0 bg-gray-700/70"></div>
         <div className="fixed inset-0 flex items-center justify-center">
-          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-sm sm:max-w-md w-full">
+          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-sm sm:max-w-md w-full overflow-y-auto max-h-[90vh]">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
               <Dialog.Title className="heading">Add Employee</Dialog.Title>
               <button
