@@ -1,0 +1,14 @@
+VITE_APP_VERSION = v3.0.0
+GENERATE_SOURCEMAP = false
+
+## Public URL
+# PUBLIC_URL = https://codedthemes.com/demos/admin-templates/datta-able/react/free/
+# VITE_APP_BASE_NAME= demos/admin-templates/datta-able/react/free
+
+## Google Map Key
+
+VITE_BASE_URL = https://www.addonedt.com/rosterlyapi/api
+VITE_PROFILE_BASE_URL = https://addonedt.com/rosterlyapi/storage/app/public/
+VITE_LOCAL_URL = http://127.0.0.1:8000/api
+
+VITE_APP_GOOGLE_MAPS_API_KEY=AIzaSyCh1uP1zYBbCd7ethzaC8-3r6UL6COS8s8
