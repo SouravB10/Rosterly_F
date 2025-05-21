@@ -44,11 +44,10 @@ const People = () => {
     mobileNumber: '',
     payrate: '',
     password: '',
-    location_Id: '', // If needed
     dob: '',
     profileImage: '',
-    role_id: null,
-    location_id: null,
+    role_id: '',
+    location_id: '',
   });
 
   useEffect(() => {
@@ -73,7 +72,7 @@ const People = () => {
     });
     setErrors({});
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -146,13 +145,21 @@ const People = () => {
     setLoading(true);
     try {
       const currentUserId = parseInt(localStorage.getItem("id"));
+      const currentUserRole = parseInt(localStorage.getItem("role_id"));
       const response = await axios.get(`${baseURL}/users`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      const allUsers = response.data.data;
-      const filteredUsers = allUsers.filter(user => user.id !== currentUserId);
+
+      let allUsers = response.data.data;
+
+      let filteredUsers = allUsers.filter(user => user.id !== currentUserId);
+
+      if (currentUserRole === 2) {
+        filteredUsers = filteredUsers.filter(user => user.role_id !== 1);
+      }
+
       setUsers(filteredUsers);
       setFilteredProfiles(filteredUsers);
       console.log("Users fetched:", filteredUsers);
@@ -191,6 +198,7 @@ const People = () => {
   };
 
   const handleOpenModal = () => {
+    setSelectedProfile({ image: '', file: null, profileImage: '' });
     resetForm();             // ✅ Clear form and errors
     setIsModalOpen(true);    // ✅ Then show modal
   };
