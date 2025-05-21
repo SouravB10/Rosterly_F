@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import axios from "axios";
 import FeedbackModal from "../Component/FeedbackModal"; // ✅ Import here
- 
+import GoogleMapSelector from "../Component/GoogleMap";
+
 
 const Location = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -21,7 +22,7 @@ const Location = () => {
   const [locationId, setLocationId] = useState("");
   const [sales, setSales] = useState("");
   const [salesId, setSalesId] = useState("");
-  
+
   const [salesData, setSalesData] = useState({
     Monday: "",
     Tuesday: "",
@@ -238,7 +239,7 @@ const Location = () => {
         setLongitude("");
         setAddress("");
         setErrors({});
-         // Close modal if applicable
+        // Close modal if applicable
         setIsModalOpen(false);
 
         // Show success feedback
@@ -250,9 +251,9 @@ const Location = () => {
           setErrors(error.response.data.errors);
         }
         setFeedbackMessage(
-      error.response?.data?.message || "Failed to add location. Please try again."
-    );
-    setFeedbackModalOpen(true);
+          error.response?.data?.message || "Failed to add location. Please try again."
+        );
+        setFeedbackModalOpen(true);
       }
     }
   };
@@ -297,7 +298,7 @@ const Location = () => {
       );
 
       console.log("Location updated successfully", response.data);
-       // Show success feedback
+      // Show success feedback
       setFeedbackMessage(response.data?.message || "Location updated successfully.");
       setFeedbackModalOpen(true);
 
@@ -613,11 +614,7 @@ const Location = () => {
             </div>
             <form className="mt-1 p-4 space-y-3" onSubmit={handleSubmit}>
               <div>
-                <p className="paragraph text-gray-500">
-                  'Location Name' is what you normally refer to the roster
-                  location as. For example, if it was a Subway store in Brisbane
-                  CBD you might refer to it as Brisbane CBD.
-                </p>
+              
               </div>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col">
@@ -649,7 +646,12 @@ const Location = () => {
                     <span className="text-sm text-red-600">{errors.sales}</span>
                   )}
                 </div>
-
+                <GoogleMapSelector
+                  onLocationSelect={({ lat, lng }) => {
+                    setLatitude(lat.toFixed(6));
+                    setLongitude(lng.toFixed(6));
+                  }}
+                />
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="flex flex-col w-full md:w-1/2">
                     <label className="paragraphBold">Latitude</label>

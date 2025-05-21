@@ -370,7 +370,7 @@ const People = () => {
 
 
   return (
-    <div className="flex flex-col gap-3 overflow-x-hidden min-h-screen">
+    <div className="flex flex-col gap-3 ">
       <div className="sticky top-0 bg-[#f1f1f1] py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         {/* Left side: Filters */}
         <div className="flex flex-wrap gap-3 w-full md:w-auto">
@@ -467,25 +467,23 @@ const People = () => {
               {/* Bottom Section: Actions + Toggle */}
               <div className="mt-4 flex flex-row flex-wrap md:justify-between items-center gap-4">
                 {/* Status Toggle */}
-                <label className="flex items-center gap-1 cursor-pointer">
+                <label className="flex items-center gap-2 cursor-pointer" title="Toggle Status">
                   <input
                     type="checkbox"
-                    // className="sr-only"
+                    className="sr-only"
                     hidden
                     checked={profile.status === 1}
                     onChange={() => handleToggleStatus(profile.id, profile.status)}
                   />
-                  <div className="relative w-6 h-6" title="Toggle Status"
-                  >
+                  {profile.status === 1 ? (
                     <FaToggleOn
-                      className={`absolute top-0 left-0 w-5 h-6 transition-all duration-300 ${profile.status === 1 ? 'opacity-100 translate-x-0 text-green-700' : 'opacity-0 -translate-x-2'
-                        }`}
+                      className="text-green-700 w-6 h-6 transition duration-300"
                     />
+                  ) : (
                     <FaToggleOff
-                      className={`absolute top-0 left-0 w-5 h-6 transition-all duration-300 ${profile.status !== 1 ? 'opacity-100 translate-x-0 text-gray-400' : 'opacity-0 translate-x-2'
-                        }`}
+                      className="text-gray-400 w-6 h-6 transition duration-300"
                     />
-                  </div>
+                  )}
                   <span className="text-sm select-none">
                     {profile.status === 1 ? "Active" : "Inactive"}
                   </span>
