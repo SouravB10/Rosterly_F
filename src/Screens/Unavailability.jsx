@@ -98,6 +98,9 @@ const Unavailability = () => {
       resetForm();
       setFeedbackMessage(response.data?.message);
       setFeedbackModalOpen(true);
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     } catch (error) {
       console.error("Error saving unavailability:", error);
       setFeedbackMessage(error.response.data?.message || "An error occurred");
@@ -186,6 +189,9 @@ const Unavailability = () => {
       setFeedbackMessage(response.data?.message);
       setFeedbackModalOpen(true);
       console.log(start, finish, "Time");
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     } catch (error) {
       console.error("Error saving recurring unavailability:", error);
       setFeedbackMessage(error.response.data?.message || "An error occurred");
@@ -214,6 +220,14 @@ const Unavailability = () => {
     fetchUnavailability();
   }, []);
 
+  const daysOff = unavailability.filter(
+    (item) => item.unavailType.toLowerCase() === "days"
+  );
+
+  const recurringUnavailability = unavailability.filter(
+    (item) => item.unavailType.toLowerCase() === "recudays"
+  );
+
   const formatDate = (datetime) => {
     return new Date(datetime).toLocaleDateString("en-US", {
       month: "short",
@@ -232,13 +246,13 @@ const Unavailability = () => {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row gap-4 h-full py-2 my-4">
-        <div className="flex flex-col gap-4 w-full md:w-[60%]">
-          <div className="card">
+      <div className="flex flex-col lg:flex-row gap-4  py-2 my-4">
+        <div className="flex flex-col gap-4 w-full lg:w-[60%]">
+          <div className="card w-full">
             <h1 className="heading">Unavailable Days</h1>
             <form onSubmit={saveUnavailability}>
               <div className="flex flex-col gap-4 mt-2">
-                <div className="flex flex-wrap md:flex-nowrap gap-6">
+                <div className="flex flex-col md:flex-row gap-6">
                   <div className="flex items-center gap-4 flex-1 min-w-[280px]">
                     <label className="paragraphBold whitespace-nowrap">
                       From Date & Time:
@@ -366,45 +380,27 @@ const Unavailability = () => {
             </form>
           </div>
 
-          <div className="card rounded-md p-5 md:row-span-8 overflow-auto">
+          <div className="card rounded-md p-5 overflow-auto">
             <h1 className="subHeading">Requested Days Off</h1>
 
-            {unavailability.map((item) => (
+            {daysOff.map((item) => (
               <div key={item.id} className="py-2">
                 <div className="flex items-start justify-between">
                   <div>
-                    {item.unavailType.toLowerCase() === "days" ? (
-                      <>
-                        <p className="paragraphBold">
-                          {formatDate(item.fromDT)} ({formatTime(item.fromDT)})
-                          - {formatDate(item.toDT)} ({formatTime(item.toDT)})
-                        </p>
+                    <p className="paragraphBold">
+                      {formatDate(item.fromDT)} ({formatTime(item.fromDT)}) -{" "}
+                      {formatDate(item.toDT)} ({formatTime(item.toDT)})
+                    </p>
 
-                        {item.reason && (
-                          <p className="paragraphThin">
-                            {item.reason || "No reason provided"}
-                          </p>
-                        )}
-                      </>
-                    ) : item.unavailType.toLowerCase() === "recudays" ? (
-                      <>
-                        <p className="paragraphBold">
-                          {item.day} ({item.fromDT?.slice(0, 5)} -{" "}
-                          {item.toDT?.slice(0, 5)})
-                        </p>
-                        {item.reason && (
-                          <p className="paragraphThin">
-                            {item.reason || "No reason provided"}
-                          </p>
-                        )}
-                      </>
-                    ) : null}
+                    {item.reason && (
+                      <p className="paragraphThin">
+                        {item.reason || "No reason provided"}
+                      </p>
+                    )}
+
                     <p
-                      className={`paragraphThin mt-1 text-sm italic ${
-                        item.unavailStatus === 0
-                          ? "text-red-500"
-                          : "text-green-600"
-                      }`}
+                      className={`paragraphThin mt-1 text-sm italic ${item.unavailStatus === 0 ? "text-red-500" : "text-green-600"
+                        }`}
                     >
                       {item.unavailStatus === 0 ? "Pending" : "Approved"}
                     </p>
@@ -419,53 +415,65 @@ const Unavailability = () => {
           </div>
         </div>
 
-        <div className="card rounded-md p-5 w-full md:w-[40%]">
+        <div className="card rounded-md p-5 w-full lg:w-[40%]">
           <h1 className="text-center subHeading">Recurring Unavailability</h1>
-          {unavailability.map((item) => (
-            <div key={item.id} className="py-2">
-              {item.unavailType.toLowerCase() == "recudays" ? (
-                <>
-                        <p className="paragraphBold">
-                          {item.day} ({item.fromDT?.slice(0, 5)} -{" "}
-                          {item.toDT?.slice(0, 5)})
-                        </p>
+
+          {days.map((day, index) => {
+            const matchingUnavailability = recurringUnavailability.filter(
+              (item) => item.day === day
+            );
+
+            return (
+              <div
+                key={index}
+                className="flex rounded-md justify-between p-5 my-3 bg-white-100 items-center"
+              >
+                <div className="flex flex-col">
+                  <p
+                    className={`paragraphBold ${day === "Saturday" || day === "Sunday" ? "text-black-600" : ""
+                      }`}
+                  >
+                    {day}
+                  </p>
+
+                  {/* Show unavailability for this day */}
+                  {matchingUnavailability.length > 0 &&
+                    matchingUnavailability.map((item) => (
+                      <>
+                        <div key={item.id} className="flex ">
+                          <p className="paragraph text-sm ">
+                            {item.fromDT} - {item.toDT}
+                          </p> (<p
+                            className={`paragraphThin text-sm italic ${item.unavailStatus === 0
+                              ? "text-red-500"
+                              : "text-green-600"
+                              }`}
+                          >
+                            {item.unavailStatus === 0 ? "Pending" : "Approved"}
+                          </p>)
+
+
+                        </div>
                         {item.reason && (
-                          <p className="paragraphThin">
+                          <p className="paragraphThin text-sm ">
                             {item.reason || "No reason provided"}
                           </p>
                         )}
                       </>
-              ) : (
-                "b"
-              )}
-            </div>
-          ))}
+                    ))}
+                </div>
 
-          {days.map((day, index) => (
-            <div
-              key={index}
-              className="flex rounded-md justify-between p-5 my-3 bg-white-100 items-center"
-            >
-              <div className="flex items-center">
-                <p
-                  className={`paragraphBold ${
-                    day === "Saturday" || day === "Sunday"
-                      ? "text-black-600"
-                      : ""
-                  }`}
+                <div
+                  className="mt-2 sm:mt-0 sm:ml-4 cursor-pointer"
+                  title="Add Unavailability"
+                  onClick={() => openModal(day)}
                 >
-                  {day}
-                </p>
+                  <FaPlusSquare />
+                </div>
               </div>
-              <div
-                className="mx-3 cursor-pointer"
-                title="Add Unavailability"
-                onClick={() => openModal(day)}
-              >
-                <FaPlusSquare />
-              </div>
-            </div>
-          ))}
+            );
+          })}
+
         </div>
       </div>
 

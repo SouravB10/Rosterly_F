@@ -286,6 +286,10 @@ body {
     4px 4px 6px #ddd6d6; */
 }
 
+.textRed{
+  color: #e42d2d;
+}
+
 .buttonGrey {
   background-color: #9C9C9C;
   border-radius: 5px;

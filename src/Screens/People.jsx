@@ -10,8 +10,8 @@ import { set } from "date-fns";
 import axios from "axios";
 import { CgProfile } from "react-icons/cg";
 import { HiTrash } from "react-icons/hi2";
-import FeedbackModal from "../Component/FeedbackModal"; // ✅ Import here
-
+import FeedbackModal from "../Component/FeedbackModal";
+import { FaToggleOff, FaToggleOn } from "react-icons/fa6";
 
 const People = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -36,6 +36,8 @@ const People = () => {
   const [errors, setErrors] = useState({});
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState(""); // ✅ Message for modal
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null); // Track which ID to delete
+  const [showConfirmButtons, setShowConfirmButtons] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [filteredProfiles, setFilteredProfiles] = useState([]);
 
@@ -53,11 +55,11 @@ const People = () => {
     location_id: null,
   });
 
-  useEffect(() => {
-    if (currentUserRole === 2) {
-      setFormData((prev) => ({ ...prev, role_id: 3 }));
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (currentUserRole === 2) {
+  //     setFormData((prev) => ({ ...prev, role_id: 3 }));
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (createDate) {
@@ -107,6 +109,10 @@ const People = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // if (currentUserRole === 2 && !formData.role_id) {
+    //   setFormData((prev) => ({ ...prev, role_id: 3 }));
+    // }
+
     if (!validateForm()) {
       return;
     }
@@ -118,9 +124,11 @@ const People = () => {
     form.append("dob", formData.dob);
     form.append("payrate", formData.payrate);
     form.append("mobileNumber", formData.mobileNumber);
-    form.append("role_id", formData.role_id || 3);
+    if (formData.role_id || currentUserRole === 2) {
+      form.append("role_id", formData.role_id || 3);
+    }
     form.append("created_by", currentUserId);
-    form.append("created_on", new Date());
+    form.append("created_on", new Date().toISOString());
     form.append("password", "defaultPassword123");
     form.append("location_id", formData.location_id);
 
@@ -140,8 +148,10 @@ const People = () => {
       setIsModalOpen(false);
       setFeedbackMessage(response.data?.message || "User created successfully");
       setFeedbackModalOpen(true);
-      fetchUsers(); // refresh user list
       resetForm(); // clear form
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error) {
       console.error("Error creating user:", error);
       setFeedbackMessage(error.response?.data?.message || "Error creating user");
@@ -236,54 +246,54 @@ const People = () => {
   };
 
   const handleFilter = () => {
-  const filtered = users.filter(user => {
-    return selectedStatus === ""
-      ? true // show all if no status selected
-      : String(user.status) === selectedStatus; // match active/inactive
-  });
+    const filtered = users.filter(user => {
+      return selectedStatus === ""
+        ? true // show all if no status selected
+        : String(user.status) === selectedStatus; // match active/inactive
+    });
 
-  setFilteredProfiles(filtered);
-};
+    setFilteredProfiles(filtered);
+  };
 
 
-const handleToggleStatus = async (id, currentStatus) => {
-  const newStatus = currentStatus === 1 ? 0 : 1;
+  const handleToggleStatus = async (id, currentStatus) => {
+    const newStatus = currentStatus === 1 ? 0 : 1;
 
-  try {
-    const response = await axios.post(
-      `${baseURL}/users/user-profile/${id}/status`,
-      {
-        status: newStatus,
-        updated_by: currentUserId,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+    try {
+      const response = await axios.post(
+        `${baseURL}/users/user-profile/${id}/status`,
+        {
+          status: newStatus,
+          updated_by: currentUserId,
         },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log('Status updated successfully:', response.data);
+
+        // ✅ Update both users and filteredProfiles
+        setUsers(prev =>
+          prev.map(profile =>
+            profile.id === id ? { ...profile, status: newStatus } : profile
+          )
+        );
+        setFilteredProfiles(prev =>
+          prev.map(profile =>
+            profile.id === id ? { ...profile, status: newStatus } : profile
+          )
+        );
+      } else {
+        console.error('Unexpected response:', response);
       }
-    );
-
-    if (response.status === 200) {
-      console.log('Status updated successfully:', response.data);
-
-      // ✅ Update both users and filteredProfiles
-      setUsers(prev =>
-        prev.map(profile =>
-          profile.id === id ? { ...profile, status: newStatus } : profile
-        )
-      );
-      setFilteredProfiles(prev =>
-        prev.map(profile =>
-          profile.id === id ? { ...profile, status: newStatus } : profile
-        )
-      );
-    } else {
-      console.error('Unexpected response:', response);
+    } catch (error) {
+      console.error('Failed to update status:', error.response?.data || error.message);
     }
-  } catch (error) {
-    console.error('Failed to update status:', error.response?.data || error.message);
-  }
-};
+  };
 
 
 
@@ -335,37 +345,69 @@ const handleToggleStatus = async (id, currentStatus) => {
     }
   }, [selectedProfile]);
 
-  const handleDelete = async (id) => {
-    if (!id) return;
+  // const handleDelete = async (id) => {
+  //   if (!id) return;
+
+  //   try {
+  //     await axios.delete(`${baseURL}/users/${id}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //       },
+  //     });
+
+  //     setFeedbackMessage("User deleted successfully.");
+  //     setFeedbackModalOpen(true);
+  //     setViewButtonModel(false);
+
+  //     // Optional: Reload after modal closes
+  //     setTimeout(() => {
+  //       setFeedbackModalOpen(false);
+  //       window.location.reload();
+  //     }, 2000);
+
+  //   } catch (error) {
+  //     console.error("Error deleting user:", error);
+  //     setFeedbackMessage("Failed to delete user.");
+  //     setFeedbackModalOpen(true);
+
+  //     setTimeout(() => setFeedbackModalOpen(false), 2000);
+  //   }
+  // };
+
+  const handleDeleteClick = (id) => {
+    setConfirmDeleteId(id);
+    setFeedbackMessage("Are you sure you want to delete?");
+    setShowConfirmButtons(true);
+    setFeedbackModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!confirmDeleteId) return;
 
     try {
-      await axios.delete(`${baseURL}/users/${id}`, {
+      await axios.delete(`${baseURL}/users/${confirmDeleteId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
       setFeedbackMessage("User deleted successfully.");
-      setFeedbackModalOpen(true);
-      setViewButtonModel(false);
-
-      // Optional: Reload after modal closes
+      setShowConfirmButtons(false);
       setTimeout(() => {
         setFeedbackModalOpen(false);
         window.location.reload();
       }, 2000);
-
     } catch (error) {
       console.error("Error deleting user:", error);
       setFeedbackMessage("Failed to delete user.");
-      setFeedbackModalOpen(true);
-
+      setShowConfirmButtons(false);
       setTimeout(() => setFeedbackModalOpen(false), 2000);
     }
   };
 
+
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 hide-scrollbar">
       <div className="sticky top-0 bg-[#f1f1f1] py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         {/* Left side: Filters */}
         <div className="flex flex-wrap gap-3 w-full md:w-auto">
@@ -462,25 +504,31 @@ const handleToggleStatus = async (id, currentStatus) => {
               {/* Bottom Section: Actions + Toggle */}
               <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                 {/* Status Toggle */}
-                <label className="flex items-center gap-2">
+                <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
-                    className="sr-only peer"
+                    className="sr-only"
                     checked={profile.status === 1}
                     onChange={() => handleToggleStatus(profile.id, profile.status)}
                   />
-                  <div className="relative w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-green-500 transition duration-300">
-                    <div className="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-5"></div>
-                  </div>
+                  {profile.status === 1 ? (
+                    <FaToggleOn
+                      className="text-green-700 w-6 h-6 transition duration-300"
+                    />
+                  ) : (
+                    <FaToggleOff
+                      className="text-gray-400 w-6 h-6 transition duration-300"
+                    />
+                  )}
                   <span className="text-sm select-none">
                     {profile.status === 1 ? "Active" : "Inactive"}
                   </span>
                 </label>
                 {/* Actions */}
-                <div className="flex gap-2">
+                <div className="flex">
                   <FaEye
                     title="View Profile"
-                    className="text-indigo-950 bg-amber-300 cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
+                    className="text-indigo-950 cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
                     onClick={() => {
                       setSelectedProfile(profile);
                       setViewButtonModel(true);
@@ -488,7 +536,7 @@ const handleToggleStatus = async (id, currentStatus) => {
                   />
                   <FaEdit
                     title="Add Note"
-                    className="text-indigo-950 bg-gray-200 cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
+                    className="text-black cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
                     onClick={() => {
                       setSelectedProfile(profile);
                       setAddNoteModal(true);
@@ -496,8 +544,8 @@ const handleToggleStatus = async (id, currentStatus) => {
                   />
                   <HiTrash
                     title="Delete Profile"
-                    className="text-white bg-red-400 cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
-                    onClick={() => handleDelete(profile.id)}
+                    className="textRed cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
+                    onClick={() => handleDeleteClick(profile.id)}
                   />
                 </div>
 
@@ -874,6 +922,8 @@ const handleToggleStatus = async (id, currentStatus) => {
         isOpen={feedbackModalOpen}
         onClose={() => setFeedbackModalOpen(false)}
         message={feedbackMessage}
+        onConfirm={confirmDelete}
+        showConfirmButtons={showConfirmButtons}
       />
       {/* message modal emd */}
 
