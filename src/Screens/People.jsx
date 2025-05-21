@@ -6,6 +6,7 @@ import { set } from "date-fns";
 import axios from "axios";
 import { CgProfile } from "react-icons/cg";
 import { HiTrash } from "react-icons/hi2";
+import { LuNotebookPen } from "react-icons/lu";
 import FeedbackModal from "../Component/FeedbackModal";
 import { FaToggleOff, FaToggleOn } from "react-icons/fa6";
 
@@ -464,30 +465,34 @@ const People = () => {
               </div>
 
               {/* Bottom Section: Actions + Toggle */}
-              <div className="mt-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+              <div className="mt-4 flex flex-row flex-wrap md:justify-between items-center gap-4">
                 {/* Status Toggle */}
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-1 cursor-pointer">
                   <input
                     type="checkbox"
-                    className="sr-only"
+                    // className="sr-only"
+                    hidden
                     checked={profile.status === 1}
                     onChange={() => handleToggleStatus(profile.id, profile.status)}
                   />
-                  {profile.status === 1 ? (
+                  <div className="relative w-6 h-6" title="Toggle Status"
+                  >
                     <FaToggleOn
-                      className="text-green-700 w-6 h-6 transition duration-300"
+                      className={`absolute top-0 left-0 w-5 h-6 transition-all duration-300 ${profile.status === 1 ? 'opacity-100 translate-x-0 text-green-700' : 'opacity-0 -translate-x-2'
+                        }`}
                     />
-                  ) : (
                     <FaToggleOff
-                      className="text-gray-400 w-6 h-6 transition duration-300"
+                      className={`absolute top-0 left-0 w-5 h-6 transition-all duration-300 ${profile.status !== 1 ? 'opacity-100 translate-x-0 text-gray-400' : 'opacity-0 translate-x-2'
+                        }`}
                     />
-                  )}
+                  </div>
                   <span className="text-sm select-none">
                     {profile.status === 1 ? "Active" : "Inactive"}
                   </span>
                 </label>
+
                 {/* Actions */}
-                <div className="flex">
+                <div className="flex ml-auto">
                   <FaEye
                     title="View Profile"
                     className="text-indigo-950 cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
@@ -496,7 +501,7 @@ const People = () => {
                       setViewButtonModel(true);
                     }}
                   />
-                  <FaEdit
+                  <LuNotebookPen
                     title="Add Note"
                     className="text-black cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
                     onClick={() => {
