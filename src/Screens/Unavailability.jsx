@@ -7,6 +7,7 @@ import { FaPencilAlt } from "react-icons/fa";
 import axios from "axios";
 import { set } from "date-fns";
 import moment from "moment";
+import FeedbackModal from "../Component/FeedbackModal";
 
 const Unavailability = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -17,6 +18,10 @@ const Unavailability = () => {
   const [selectedDay, setSelectedDay] = useState("");
   const [selectToNotify, setSelectToNotify] = useState([]);
   const [notifyToId, setNotifyToId] = useState("");
+  const [unavailability, setUnavailability] = useState([]);
+  const [errors, setErrors] = useState({});
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState("");
   const token = localStorage.getItem("token");
   const id = localStorage.getItem("id");
 
@@ -69,6 +74,7 @@ const Unavailability = () => {
   // save the unavailability
   const saveUnavailability = async (e) => {
     e.preventDefault();
+    // console.log(moment(fromDate).format("YYYY-MM-DD hh:mm a"));
     try {
       const response = await axios.post(
         `${baseURL}/unavailability/1`,
@@ -76,8 +82,8 @@ const Unavailability = () => {
           userId: id,
           unavailType: 1,
           day: selectedDay,
-          fromDT: moment(fromDate).format("YYYY-MM-DD HH:mm:ss"),
-          toDT: moment(toDate).format("YYYY-MM-DD HH:mm:ss"),
+          fromDT: moment(fromDate).format("YYYY-MM-DD hh:mm a"),
+          toDT: moment(toDate).format("YYYY-MM-DD hh:mm a"),
           notifyTo: notifyToId,
           unavailStatus: "pending",
           reason: reason, // if you added `reason` column
@@ -90,8 +96,12 @@ const Unavailability = () => {
       );
       console.log("Unavailability saved:", response.data);
       resetForm();
+      setFeedbackMessage(response.data?.message);
+      setFeedbackModalOpen(true);
     } catch (error) {
       console.error("Error saving unavailability:", error);
+      setFeedbackMessage(error.response.data?.message || "An error occurred");
+      setFeedbackModalOpen(true);
     }
   };
 
@@ -116,10 +126,26 @@ const Unavailability = () => {
     return times;
   };
 
+  const convertTo24Hour = (timeStr) => {
+    const [time, modifier] = timeStr.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (modifier === "PM" && hours !== 12) {
+      hours += 12;
+    }
+    if (modifier === "AM" && hours === 12) {
+      hours = 0;
+    }
+
+    const paddedHours = hours.toString().padStart(2, "0");
+    const paddedMinutes = minutes.toString().padStart(2, "0");
+
+    return `${paddedHours}:${paddedMinutes}:00`; // match backend's H:i:s
+  };
+
   const timeOptions = generateTimeOptions();
-  const breakOptions = [15, 30, 45, 60];
-  const [start, setStart] = useState(timeOptions[0]);
-  const [finish, setFinish] = useState(timeOptions[0]);
+  const [start, setStart] = useState("");
+  const [finish, setFinish] = useState("");
   const [modalNotifyToId, setModalNotifyToId] = useState("");
   const [modalDescription, setModalDescription] = useState("");
 
@@ -130,19 +156,19 @@ const Unavailability = () => {
 
   const saveRecurringUnavailability = async (e) => {
     e.preventDefault();
-
+    console.log(start, finish, modalNotifyToId, modalDescription);
+    console.log(id, "ID");
     try {
       const response = await axios.post(
         `${baseURL}/unavailability/2`,
         {
           userId: id,
-          unavailType: 2,
-          startTime: start,
           day: selectedDay,
-          endTime: finish,
+          fromDT: start,
+          toDT: finish,
+          reason: modalDescription,
           notifyTo: modalNotifyToId,
           unavailStatus: "pending",
-          reason: modalDescription,
         },
         {
           headers: {
@@ -152,17 +178,57 @@ const Unavailability = () => {
       );
 
       console.log("Recurring Unavailability saved:", response.data);
-      // Reset modal form state
       setStart("");
       setFinish("");
       setModalNotifyToId("");
       setModalDescription("");
-      setIsShiftOpen(false); // Close modal
+      setIsShiftOpen(false);
+      setFeedbackMessage(response.data?.message);
+      setFeedbackModalOpen(true);
+      console.log(start, finish, "Time");
     } catch (error) {
       console.error("Error saving recurring unavailability:", error);
+      setFeedbackMessage(error.response.data?.message || "An error occurred");
+      setFeedbackModalOpen(true);
     }
   };
 
+  useEffect(() => {
+    const fetchUnavailability = async () => {
+      try {
+        const response = await axios.get(
+          `${baseURL}/unavailability/login/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setUnavailability(response.data.data);
+        console.log("Unavailability data:", response.data.data);
+      } catch (error) {
+        console.error("Error fetching unavailability:", error);
+      }
+    };
+
+    fetchUnavailability();
+  }, []);
+
+  const formatDate = (datetime) => {
+    return new Date(datetime).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
+  const formatTime = (datetime) => {
+    return new Date(datetime).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
 
   return (
     <>
@@ -182,13 +248,20 @@ const Unavailability = () => {
                       selected={fromDate}
                       onChange={(date) => setFromDate(date)}
                       showTimeSelect
-                      timeFormat="HH:mm"
+                      timeFormat="hh:mm aa"
                       timeIntervals={15}
-                      dateFormat="dd/MM/yyyy h:mm aa"
+                      dateFormat="dd/MM/yyyy hh:mm aa"
                       customInput={
                         <div className="rounded-lg px-4 py-3 flex justify-between items-center cursor-pointer w-full bg-white-100 ">
                           <span className="black-100 font12">
-                            {fromDate.toLocaleString("en-GB")}
+                            {fromDate.toLocaleString("en-US", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: true,
+                            })}
                           </span>
                           <svg
                             className="w-4 h-4 texttheme"
@@ -215,13 +288,20 @@ const Unavailability = () => {
                       selected={toDate}
                       onChange={(date) => setToDate(date)}
                       showTimeSelect
-                      timeFormat="HH:mm"
+                      timeFormat="hh:mm aa"
                       timeIntervals={15}
                       dateFormat="dd/MM/yyyy h:mm aa"
                       customInput={
                         <div className="rounded-lg px-4 py-3 flex justify-between items-center cursor-pointer w-full bg-white-100 ">
                           <span className="black-100 font12">
-                            {toDate.toLocaleString("en-GB")}
+                            {toDate.toLocaleString("en-Us", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: true,
+                            })}
                           </span>
                           <svg
                             className="w-4 h-4 texttheme"
@@ -272,12 +352,13 @@ const Unavailability = () => {
                 </div>
 
                 <div className="flex justify-end gap-4 pt-2">
-                  <button
-                    className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md"
-                  >
+                  <button className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md">
                     Save
                   </button>
-                  <button onClick={resetForm} className="buttonDanger button font12 font-semibold px-4 py-2 rounded-md">
+                  <button
+                    onClick={resetForm}
+                    className="buttonDanger button font12 font-semibold px-4 py-2 rounded-md"
+                  >
                     Reset
                   </button>
                 </div>
@@ -285,95 +366,80 @@ const Unavailability = () => {
             </form>
           </div>
 
-          <div className="card rounded-md p-5 md:row-span-8 overflow-auto ">
+          <div className="card rounded-md p-5 md:row-span-8 overflow-auto">
             <h1 className="subHeading">Requested Days Off</h1>
-            <div className="py-2">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="paragraphBold">28/03/25 - 29/03/25</p>
-                  <p className="paragraphThin">(Function)</p>
+
+            {unavailability.map((item) => (
+              <div key={item.id} className="py-2">
+                <div className="flex items-start justify-between">
+                  <div>
+                    {item.unavailType.toLowerCase() === "days" ? (
+                      <>
+                        <p className="paragraphBold">
+                          {formatDate(item.fromDT)} ({formatTime(item.fromDT)})
+                          - {formatDate(item.toDT)} ({formatTime(item.toDT)})
+                        </p>
+
+                        {item.reason && (
+                          <p className="paragraphThin">
+                            {item.reason || "No reason provided"}
+                          </p>
+                        )}
+                      </>
+                    ) : item.unavailType.toLowerCase() === "recudays" ? (
+                      <>
+                        <p className="paragraphBold">
+                          {item.day} ({item.fromDT?.slice(0, 5)} -{" "}
+                          {item.toDT?.slice(0, 5)})
+                        </p>
+                        {item.reason && (
+                          <p className="paragraphThin">
+                            {item.reason || "No reason provided"}
+                          </p>
+                        )}
+                      </>
+                    ) : null}
+                    <p
+                      className={`paragraphThin mt-1 text-sm italic ${
+                        item.unavailStatus === 0
+                          ? "text-red-500"
+                          : "text-green-600"
+                      }`}
+                    >
+                      {item.unavailStatus === 0 ? "Pending" : "Approved"}
+                    </p>
+                  </div>
+                  <button className="black-100 hover:texttheme mt-1">
+                    <FaPencilAlt className="w-4 h-4" />
+                  </button>
                 </div>
-                <button className="black-100 hover:texttheme mt-1">
-                  <FaPencilAlt className="w-4 h-4" />
-                </button>
+                <hr className="white-300" />
               </div>
-              <hr className="white-300" />
-            </div>
-            <div className="py-2 ">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="paragraphBold">04/04/25 - 05/04/25</p>
-                  <p className="paragraphThin">
-                    16.00hrs of Without Pay Leave (Sample visit)
-                  </p>
-                </div>
-                <button className="black-100 hover:texttheme mt-1">
-                  <FaPencilAlt className="w-4 h-4" />
-                </button>
-              </div>
-              <hr className="white-300" />
-            </div>
-            {/* <div className="py-2 ">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="paragraphBold">04/04/25 - 05/04/25</p>
-                  <p className="paragraphThin">
-                    16.00hrs of Without Pay Leave (Sample visit)
-                  </p>
-                </div>
-                <button className="black-100 hover:texttheme mt-1">
-                  <FaPencilAlt className="w-4 h-4" />
-                </button>
-              </div>
-              <hr className="white-300" />
-            </div>{" "}
-            <div className="py-2 ">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="paragraphBold">04/04/25 - 05/04/25</p>
-                  <p className="paragraphThin">
-                    16.00hrs of Without Pay Leave (Sample visit)
-                  </p>
-                </div>
-                <button className="black-100 hover:texttheme mt-1">
-                  <FaPencilAlt className="w-4 h-4" />
-                </button>
-              </div>
-              <hr className="white-300" />
-            </div>{" "}
-            <div className="py-2 ">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="paragraphBold">04/04/25 - 05/04/25</p>
-                  <p className="paragraphThin">
-                    16.00hrs of Without Pay Leave (Sample visit)
-                  </p>
-                </div>
-                <button className="black-100 hover:texttheme mt-1">
-                  <FaPencilAlt className="w-4 h-4" />
-                </button>
-              </div>
-              <hr className="white-300" />
-            </div>{" "}
-            <div className="py-2 ">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="paragraphBold">04/04/25 - 05/04/25</p>
-                  <p className="paragraphThin">
-                    16.00hrs of Without Pay Leave (Sample visit)
-                  </p>
-                </div>
-                <button className="black-100 hover:texttheme mt-1">
-                  <FaPencilAlt className="w-4 h-4" />
-                </button>
-              </div>
-              <hr className="white-300" />
-            </div> */}
+            ))}
           </div>
         </div>
 
         <div className="card rounded-md p-5 w-full md:w-[40%]">
           <h1 className="text-center subHeading">Recurring Unavailability</h1>
+          {unavailability.map((item) => (
+            <div key={item.id} className="py-2">
+              {item.unavailType.toLowerCase() == "recudays" ? (
+                <>
+                        <p className="paragraphBold">
+                          {item.day} ({item.fromDT?.slice(0, 5)} -{" "}
+                          {item.toDT?.slice(0, 5)})
+                        </p>
+                        {item.reason && (
+                          <p className="paragraphThin">
+                            {item.reason || "No reason provided"}
+                          </p>
+                        )}
+                      </>
+              ) : (
+                "b"
+              )}
+            </div>
+          ))}
 
           {days.map((day, index) => (
             <div
@@ -382,10 +448,11 @@ const Unavailability = () => {
             >
               <div className="flex items-center">
                 <p
-                  className={`paragraphBold ${day === "Saturday" || day === "Sunday"
-                    ? "text-black-600"
-                    : ""
-                    }`}
+                  className={`paragraphBold ${
+                    day === "Saturday" || day === "Sunday"
+                      ? "text-black-600"
+                      : ""
+                  }`}
                 >
                   {day}
                 </p>
@@ -421,7 +488,10 @@ const Unavailability = () => {
                 ×
               </button>
             </div>
-            <form className="card p-6 space-y-3" onSubmit={saveRecurringUnavailability}>
+            <form
+              className="card p-6 space-y-3"
+              onSubmit={saveRecurringUnavailability}
+            >
               <p className="paragraph text-gray-500">
                 Enter the times that you will NOT be available.
               </p>
@@ -457,8 +527,6 @@ const Unavailability = () => {
                       ))}
                     </select>
                   </div>
-
-
                 </div>
                 <div>
                   <label className="paragraphBold block mb-4">
@@ -504,6 +572,11 @@ const Unavailability = () => {
           </Dialog.Panel>
         </div>
       </Dialog>
+      <FeedbackModal
+        isOpen={feedbackModalOpen}
+        onClose={() => setFeedbackModalOpen(false)}
+        message={feedbackMessage}
+      />
     </>
   );
 };

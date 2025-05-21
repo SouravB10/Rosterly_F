@@ -111,7 +111,7 @@ const Profile = () => {
               src={selectedFile ? URL.createObjectURL(selectedFile) : profileImageUrl}
               className="size-40 md:size-70 rounded object-cover"
             />
-            <div className="absolute inset-0 bg-black bg-opacity-50 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="absolute inset-0 bg-black-100 bg-opacity-50 rounded flex items-center justify-center opacity-0 group-hover:opacity-70 transition-opacity">
               <label className="text-white cursor-pointer">
                 Choose File
                 <input type="file" onChange={handleFileChange} className="hidden" />
@@ -119,7 +119,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <h3 className="SunHeading mt-2">{user.name}</h3>
+          <h3 className="subHeading mt-2">{user.name}</h3>
         </div>
 
         <div className="w-full">
