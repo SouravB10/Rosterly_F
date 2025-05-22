@@ -23,6 +23,10 @@ const Location = () => {
   const [sales, setSales] = useState("");
   const [salesId, setSalesId] = useState("");
 
+  const [locations, setLocations] = useState([]);
+  const [updatelocationName, setUpdatelocationName] = useState("");
+  const [updateaddress, setUpdateaddress] = useState("");
+
   const [salesData, setSalesData] = useState({
     Monday: "",
     Tuesday: "",
@@ -46,7 +50,6 @@ const Location = () => {
     console.log("user ID:", id);
   }, []);
 
-  const [locations, setLocations] = useState([]);
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -282,11 +285,11 @@ const Location = () => {
       const response = await axios.put(
         `${baseURL}/locations/${selectLocation}`,
         {
-          location_name: locationName,
+          location_name: updatelocationName,
           sales: parseFloat(sales),
           latitude: parseFloat(latitude),
           longitude: parseFloat(longitude),
-          address: address,
+          address: updateaddress,
         },
         {
           headers: {
@@ -447,8 +450,8 @@ const Location = () => {
                         type="text"
                         placeholder="Main Branch"
                         className="input border border-gray-300 w-full md:w-auto"
-                        value={locationName}
-                        onChange={(e) => setLocationName(e.target.value)}
+                        value={updatelocationName}
+                        onChange={(e) => setUpdatelocationName(e.target.value)}
                       />
                     </div>
                   </div>
@@ -469,8 +472,8 @@ const Location = () => {
                         type="text"
                         placeholder="Main Branch"
                         className="input border border-gray-300 w-full md:w-auto"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
+                        value={updateaddress}
+                        onChange={(e) => setUpdateaddress(e.target.value)}
                       />
                     </div>
                   </div>
