@@ -470,7 +470,7 @@ const Location = () => {
                         placeholder="Main Branch"
                         className="input border border-gray-300 w-full md:w-auto"
                         value={address}
-                        onChange={(e) => setLocationName(e.target.value)}
+                        onChange={(e) => setAddress(e.target.value)}
                       />
                     </div>
                   </div>
