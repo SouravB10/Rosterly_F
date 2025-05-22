@@ -20,6 +20,8 @@ const Location = () => {
   const [checked, setChecked] = useState(false);
   const [locationName, setLocationName] = useState("");
   const [locationId, setLocationId] = useState("");
+  const [addlocationName, setAddlocationName] = useState("");
+  const [addaddress, setAddaddress] = useState("");
   const [sales, setSales] = useState("");
   const [salesId, setSalesId] = useState("");
 
@@ -38,6 +40,8 @@ const Location = () => {
   });
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
+  const [addlatitude, setAddlatitude] = useState("");
+  const [addlongitude, setAddlongitude] = useState("");
   const [errors, setErrors] = useState({});
   const [address, setAddress] = useState("");
   const id = localStorage.getItem("id");
@@ -149,8 +153,8 @@ const Location = () => {
       setLocationId(locId);
       setLocationName(data.location_name || "");
       setSales(data.sales?.toString() || "");
-      setLatitude(data.latitude?.toString() || "");
-      setLongitude(data.longitude?.toString() || "");
+      // setLatitude(data.latitude?.toString() || "");
+      // setLongitude(data.longitude?.toString() || "");
       setAddress(data.address || "");
 
       // Sales data based on location ID
@@ -218,11 +222,11 @@ const Location = () => {
         const response = await axios.post(
           `${baseURL}/locations`,
           {
-            location_name: locationName,
+            location_name: addlocationName,
             sales: parseFloat(sales),
             latitude: parseFloat(latitude),
             longitude: parseFloat(longitude),
-            address: address,
+            address: addaddress,
             created_by: id,
           },
           {
@@ -235,11 +239,11 @@ const Location = () => {
 
         console.log("Location added successfully", response.data);
 
-        setLocationName("");
+        setAddlocationName("");
         setSales("");
         setLatitude("");
         setLongitude("");
-        setAddress("");
+        setAddaddress("");
         setErrors({});
         // Close modal if applicable
         setIsModalOpen(false);
@@ -261,11 +265,11 @@ const Location = () => {
   };
 
   const handleCloseModal = () => {
-    setLocationName("");
+    setAddlocationName("");
     setSales("");
     setLatitude("");
     setLongitude("");
-    setAddress("");
+    setAddaddress("");
     setErrors({});
     setIsModalOpen(false);
   };
@@ -285,11 +289,11 @@ const Location = () => {
       const response = await axios.put(
         `${baseURL}/locations/${selectLocation}`,
         {
-          location_name: updatelocationName,
+          location_name: locationName,
           sales: parseFloat(sales),
           latitude: parseFloat(latitude),
           longitude: parseFloat(longitude),
-          address: updateaddress,
+          address: address,
         },
         {
           headers: {
@@ -450,8 +454,8 @@ const Location = () => {
                         type="text"
                         placeholder="Main Branch"
                         className="input border border-gray-300 w-full md:w-auto"
-                        value={updatelocationName}
-                        onChange={(e) => setUpdatelocationName(e.target.value)}
+                        value={locationName}
+                        onChange={(e) => setLocationName(e.target.value)}
                       />
                     </div>
                   </div>
@@ -472,8 +476,8 @@ const Location = () => {
                         type="text"
                         placeholder="Main Branch"
                         className="input border border-gray-300 w-full md:w-auto"
-                        value={updateaddress}
-                        onChange={(e) => setUpdateaddress(e.target.value)}
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
                       />
                     </div>
                   </div>
@@ -623,10 +627,10 @@ const Location = () => {
                     <input
                       type="text"
                       className="input w-full"
-                      value={locationName}
-                      onChange={(e) => setLocationName(e.target.value)}
+                      value={addlocationName}
+                      onChange={(e) => setAddlocationName(e.target.value)}
                     />
-                    {errors.locationName && (
+                    {errors.addlocationName && (
                       <span className="text-sm text-red-600">{errors.locationName}</span>
                     )}
                   </div>
@@ -651,7 +655,7 @@ const Location = () => {
                         type="text"
                         className="input w-full"
                         value={latitude}
-                        onChange={(e) => setLatitude(e.target.value)}
+                        onChange={(e) => setlatitude(e.target.value)}
                       />
                       {errors.latitude && (
                         <span className="text-sm text-red-600">{errors.latitude}</span>
@@ -663,7 +667,7 @@ const Location = () => {
                         type="text"
                         className="input w-full"
                         value={longitude}
-                        onChange={(e) => setLongitude(e.target.value)}
+                        onChange={(e) => setlongitude(e.target.value)}
                       />
                       {errors.longitude && (
                         <span className="text-sm text-red-600">{errors.longitude}</span>
@@ -678,8 +682,8 @@ const Location = () => {
                     <textarea
                       className="input w-full"
                       rows={3}
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
+                      value={addaddress}
+                      onChange={(e) => setAddaddress(e.target.value)}
                     />
                   </div>
                 </div>
