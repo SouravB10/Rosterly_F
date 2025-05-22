@@ -2,27 +2,20 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
+import { Loader } from '@googlemaps/js-api-loader';
 
-const loadGoogleMapsScript = () => {
-  const apiKey = import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY;
+const loader = new Loader({
+  apiKey: import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY,
+  version: 'weekly',
+  libraries: ['places'],
+});
 
-  if (!apiKey) {
-    console.error('Google Maps API key not found in env variables.');
-    return;
-  }
-
-  const script = document.createElement('script');
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
-  script.async = true;
-  script.defer = true;
-
-  document.head.appendChild(script);
-};
-
-loadGoogleMapsScript();
-
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+loader.load().then(() => {
+  createRoot(document.getElementById('root')).render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+}).catch((e) => {
+  console.error('Google Maps API failed to load:', e);
+});
