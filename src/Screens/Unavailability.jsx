@@ -9,6 +9,7 @@ import { set } from "date-fns";
 import moment from "moment";
 import FeedbackModal from "../Component/FeedbackModal";
 import { FaEdit } from "react-icons/fa";
+import { HiTrash } from "react-icons/hi2";
 
 const Unavailability = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -164,6 +165,7 @@ const Unavailability = () => {
     e.preventDefault();
     const startTime = isAllDay ? null : start;
     const finishTime = isAllDay ? null : finish;
+    const recuDay = isAllDay ? `${selectedDay} (All Day)` : selectedDay;
     console.log(startTime, finishTime, modalNotifyToId, modalDescription);
     console.log(id, "ID");
     try {
@@ -171,7 +173,7 @@ const Unavailability = () => {
         `${baseURL}/unavailability/2`,
         {
           userId: id,
-          day: selectedDay,
+          day: recuDay,
           fromDT: startTime,
           toDT: finishTime,
           reason: modalDescription,
@@ -502,10 +504,12 @@ const Unavailability = () => {
                   }}
                 >
                   {matchingUnavailability.length === 0 ? (
-                    <FaPlusSquare />
+                    <FaPlusSquare className="text-indigo-900 text-xl" />
                   ) : matchingUnavailability[0].unavailStatus === 1 ? (
                     <FaEdit />
-                  ) : null}
+                  ) : (
+                    <HiTrash className="text-red-700 text-xl" />
+                  )}
                 </div>
               </div>
             );
