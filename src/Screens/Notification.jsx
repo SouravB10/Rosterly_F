@@ -19,6 +19,7 @@ const NotificationPage = () => {
 
         const fetchedNotifications = response.data?.data || [];
         setNotifications(fetchedNotifications);
+        console.log("Fetched notifications:", fetchedNotifications);
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
@@ -48,9 +49,10 @@ const NotificationPage = () => {
             >
               <div>
                 <p className="paragraphBold">
-                  {innerData.message || "User"} requested off from{" "}
-                  <strong>{innerData.fromDT}</strong> to{" "}
-                  <strong>{innerData.toDT}</strong>.
+                  {innerData.message || "User"} requested off 
+
+                  <strong>{innerData.fromDT==null?"":innerData.fromDT+' to '}</strong>
+                  <strong>{innerData.toDT==null?"":innerData.toDT}</strong>.
                 </p>
                 <p className="paragraphThin">({innerData.reason || 'No reason provided'})</p>
               </div>

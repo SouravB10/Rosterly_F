@@ -691,8 +691,9 @@ const Location = () => {
                 {/* Right Column - Map */}
                 <div className="w-full md:w-1/2 flex flex-col">
                   <label className="paragraphBold mb-2">Select Location on Map</label>
-                  <div className="flex-1 h-64 border rounded-md overflow-hidden">
+                  <div className="flex-1 h-74 border rounded-md overflow-hidden">
                     <GoogleMapSelector
+                      address={address}
                       onLocationSelect={({ lat, lng }) => {
                         setLatitude(lat.toFixed(6));
                         setLongitude(lng.toFixed(6));
