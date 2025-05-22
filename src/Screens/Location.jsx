@@ -600,8 +600,8 @@ const Location = () => {
         className="relative z-50 rounded-lg"
       >
         <div className="fixed inset-0 bg-gray-700/70"></div>
-        <div className="fixed inset-0 flex items-center justify-center">
-          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-opacity-50">
+          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-4xl w-full mx-4">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
               <Dialog.Title className="heading">Add Location</Dialog.Title>
               <button
@@ -611,92 +611,91 @@ const Location = () => {
                 ×
               </button>
             </div>
-            <form className="mt-1 p-4 space-y-3" onSubmit={handleSubmit}>
-              <div>
-
-              </div>
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col">
-                  <label className="paragraphBold">Location Name</label>
-                  <input
-                    type="text"
-                    className="input"
-                    value={locationName}
-                    onChange={(e) => setLocationName(e.target.value)}
-                  />
-                  {errors.locationName && (
-                    <span className="text-sm text-red-600">
-                      {errors.locationName}
-                    </span>
-                  )}
-                </div>
-
-                <div className="flex flex-col">
-                  <label className="paragraphBold">
-                    Average Daily Sales ($)
-                  </label>
-                  <input
-                    type="text"
-                    className="input"
-                    value={sales}
-                    onChange={(e) => setSales(e.target.value)}
-                  />
-                  {errors.sales && (
-                    <span className="text-sm text-red-600">{errors.sales}</span>
-                  )}
-                </div>
-                <GoogleMapSelector
-                  onLocationSelect={({ lat, lng }) => {
-                    setLatitude(lat.toFixed(6));
-                    setLongitude(lng.toFixed(6));
-                  }}
-                />
-                <div className="flex flex-col md:flex-row gap-4">
-                  <div className="flex flex-col w-full md:w-1/2">
-                    <label className="paragraphBold">Latitude</label>
+            <form className="p-6" onSubmit={handleSubmit}>
+              <div className="flex flex-col md:flex-row gap-6">
+                {/* Left Column - Form */}
+                <div className="flex-1 space-y-4">
+                  <div>
+                    <label className="paragraphBold block mb-1">Location Name</label>
                     <input
                       type="text"
-                      className="input"
-                      value={latitude}
-                      onChange={(e) => setLatitude(e.target.value)}
+                      className="input w-full"
+                      value={locationName}
+                      onChange={(e) => setLocationName(e.target.value)}
                     />
-                    {errors.latitude && (
-                      <span className="text-sm text-red-600">
-                        {errors.latitude}
-                      </span>
+                    {errors.locationName && (
+                      <span className="text-sm text-red-600">{errors.locationName}</span>
                     )}
                   </div>
 
-                  <div className="flex flex-col w-full md:w-1/2">
-                    <label className="paragraphBold">Longitude</label>
+                  <div>
+                    <label className="paragraphBold block mb-1">Average Daily Sales ($)</label>
                     <input
                       type="text"
-                      className="input"
-                      value={longitude}
-                      onChange={(e) => setLongitude(e.target.value)}
+                      className="input w-full"
+                      value={sales}
+                      onChange={(e) => setSales(e.target.value)}
                     />
-                    {errors.longitude && (
-                      <span className="text-sm text-red-600">
-                        {errors.longitude}
-                      </span>
+                    {errors.sales && (
+                      <span className="text-sm text-red-600">{errors.sales}</span>
                     )}
+                  </div>
+
+                  <div className="flex flex-col md:flex-row gap-4">
+                    <div className="w-full">
+                      <label className="paragraphBold block mb-1">Latitude</label>
+                      <input
+                        type="text"
+                        className="input w-full"
+                        value={latitude}
+                        onChange={(e) => setLatitude(e.target.value)}
+                      />
+                      {errors.latitude && (
+                        <span className="text-sm text-red-600">{errors.latitude}</span>
+                      )}
+                    </div>
+                    <div className="w-full">
+                      <label className="paragraphBold block mb-1">Longitude</label>
+                      <input
+                        type="text"
+                        className="input w-full"
+                        value={longitude}
+                        onChange={(e) => setLongitude(e.target.value)}
+                      />
+                      {errors.longitude && (
+                        <span className="text-sm text-red-600">{errors.longitude}</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="paragraphBold block mb-1">
+                      Address <span className="smallFont text-gray-500">(optional)</span>
+                    </label>
+                    <textarea
+                      className="input w-full"
+                      rows={3}
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                    />
                   </div>
                 </div>
 
-                <div className="flex flex-col">
-                  <label className="paragraphBold">
-                    Address <span className="smallFont">(optional)</span>{" "}
-                  </label>
-                  <textarea
-                    type="text"
-                    className="input"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                  />
+                {/* Right Column - Map */}
+                <div className="w-full md:w-1/2 flex flex-col">
+                  <label className="paragraphBold mb-2">Select Location on Map</label>
+                  <div className="flex-1 h-64 border rounded-md overflow-hidden">
+                    <GoogleMapSelector
+                      onLocationSelect={({ lat, lng }) => {
+                        setLatitude(lat.toFixed(6));
+                        setLongitude(lng.toFixed(6));
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 mt-4">
+              <div className="flex justify-end gap-3 mt-6">
                 <button
                   type="button"
                   className="buttonGrey"
@@ -704,7 +703,10 @@ const Location = () => {
                 >
                   Cancel
                 </button>
-                <button type="submit" className="buttonTheme">
+                <button
+                  type="submit"
+                  className="buttonTheme"
+                >
                   Add
                 </button>
               </div>
