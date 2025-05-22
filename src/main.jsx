@@ -7,7 +7,7 @@ import { Loader } from '@googlemaps/js-api-loader';
 const loader = new Loader({
   apiKey: import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY,
   version: 'weekly',
-  libraries: ['places'],
+  libraries: ['places', 'marker'],
 });
 
 loader.load().then(() => {
