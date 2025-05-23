@@ -79,6 +79,38 @@ const Unavailability = () => {
   const saveUnavailability = async (e) => {
     e.preventDefault();
     // console.log(moment(fromDate).format("YYYY-MM-DD hh:mm a"));
+    let validationErrors = {};
+
+     // Check if fromDate is in the past or earlier than current time
+    if (fromDate < new Date()) {
+      validationErrors.fromDate = "From Date & Time cannot be in the past.";
+    }
+
+  if (!fromDate) {
+    validationErrors.fromDate = "From Date & Time is required.";
+  }
+
+  if (!toDate) {
+    validationErrors.toDate = "To Date & Time is required.";
+  }
+
+  if (fromDate && toDate && fromDate >= toDate) {
+    validationErrors.dateRange = "To Date & Time must be after From Date & Time.";
+  }
+
+  if (!notifyToId) {
+    validationErrors.notifyToId = "Please select a manager to notify.";
+  }
+
+  if (!reason.trim()) {
+    validationErrors.reason = "Please provide a reason.";
+  }
+
+  setErrors(validationErrors);
+
+  if (Object.keys(validationErrors).length > 0) {
+    return; // Prevent submit if any errors
+  }
     try {
       const response = await axios.post(
         `${baseURL}/unavailability/1`,
@@ -272,8 +304,9 @@ const Unavailability = () => {
             <form onSubmit={saveUnavailability}>
               <div className="flex flex-col gap-4 mt-2">
                 <div className="flex flex-col md:flex-row gap-6">
-                  <div className="flex items-center gap-4 flex-1 min-w-[280px]">
-                    <label className="paragraphBold whitespace-nowrap">
+                  <div className="">
+                    <div className="flex items-center gap-4 flex-1 min-w-[280px]">
+                      <label className="paragraphBold whitespace-nowrap">
                       From Date & Time:
                     </label>
                     <DatePicker
@@ -310,10 +343,14 @@ const Unavailability = () => {
                         </div>
                       }
                     />
+                     
+                    </div>
+                     {errors.fromDate && <p className="text-red-500 text-sm">{errors.fromDate}</p>}
                   </div>
 
-                  <div className="flex items-center gap-4 flex-1 min-w-[280px]">
-                    <label className="paragraphBold whitespace-nowrap">
+                  <div className="">
+                    <div className="flex items-center gap-4 flex-1 min-w-[280px]">
+                      <label className="paragraphBold whitespace-nowrap">
                       To Date & Time:
                     </label>
                     <DatePicker
@@ -350,6 +387,9 @@ const Unavailability = () => {
                         </div>
                       }
                     />
+                    </div>
+                    {errors.toDate && <p className="text-red-500 text-sm">{errors.toDate}</p>}
+                    {errors.dateRange && <p className="text-red-500 text-sm mt-1">{errors.dateRange}</p>}
                   </div>
                 </div>
 
@@ -369,6 +409,8 @@ const Unavailability = () => {
                       </option>
                     ))}
                   </select>
+                  {errors.notifyToId && <p className="text-red-500 text-sm">{errors.notifyToId}</p>}
+
                 </div>
 
                 <div>
@@ -382,6 +424,8 @@ const Unavailability = () => {
                     className="textarea w-full p-3 resize-none custom-focus"
                     placeholder="Type your reason here..."
                   />
+                   {errors.reason && <p className="text-red-500 text-sm">{errors.reason}</p>}
+
                 </div>
 
                 <div className="flex justify-end gap-4 pt-2">

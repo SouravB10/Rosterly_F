@@ -142,36 +142,84 @@ const People = () => {
   };
 
 
+  // const fetchUsers = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const currentUserId = parseInt(localStorage.getItem("id"));
+  //     const currentUserRole = parseInt(localStorage.getItem("role_id"));
+  //     const response = await axios.get(`${baseURL}/users`, {
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //       },
+  //     });
+
+  //     let allUsers = response.data.data;
+
+  //     let filteredUsers = allUsers.filter(user => user.id !== currentUserId);
+
+  //     if (currentUserRole === 2) {
+  //       filteredUsers = filteredUsers.filter(user => user.role_id !== 1);
+  //     }
+
+  //     setUsers(filteredUsers);
+  //     setFilteredProfiles(filteredUsers);
+  //     console.log("Users fetched:", filteredUsers);
+
+  //   } catch (error) {
+  //     console.error("Error fetching users:", error.response?.data || error.message);
+  //   }
+  //   finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const fetchUsers = async () => {
-    setLoading(true);
-    try {
-      const currentUserId = parseInt(localStorage.getItem("id"));
-      const currentUserRole = parseInt(localStorage.getItem("role_id"));
-      const response = await axios.get(`${baseURL}/users`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+  setLoading(true);
+  try {
+    const currentUserId = Number(localStorage.getItem("id"));
+    const currentUserRole = Number(localStorage.getItem("role_id"));
 
-      let allUsers = response.data.data;
+    const endpoint =
+      currentUserId === 1
+        ? `${baseURL}/users`
+        : `${baseURL}/users/login/${currentUserId}`;
 
-      let filteredUsers = allUsers.filter(user => user.id !== currentUserId);
+    const response = await axios.get(endpoint, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
 
-      if (currentUserRole === 2) {
-        filteredUsers = filteredUsers.filter(user => user.role_id !== 1);
+    let allUsers = response.data.data;
+    console.log("Raw users from API:", allUsers);
+
+    let filteredUsers = allUsers.filter(user => {
+      const userId = Number(user.id);
+      const userRole = Number(user.role_id);
+
+      if (userId === currentUserId) {
+        console.log(`Removing self with id: ${userId}`);
+        return false;
       }
+      if (currentUserRole === 2 && userRole === 1) {
+        console.log(`Removing admin user with id: ${userId} for manager role`);
+        return false;
+      }
+      return true;
+    });
 
-      setUsers(filteredUsers);
-      setFilteredProfiles(filteredUsers);
-      console.log("Users fetched:", filteredUsers);
+    console.log("Filtered users:", filteredUsers);
 
-    } catch (error) {
-      console.error("Error fetching users:", error.response?.data || error.message);
-    }
-    finally {
-      setLoading(false);
-    }
-  };
+    setUsers(filteredUsers);
+    setFilteredProfiles(filteredUsers);
+
+  } catch (error) {
+    console.error("Error fetching users:", error.response?.data || error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
     fetchUsers();
