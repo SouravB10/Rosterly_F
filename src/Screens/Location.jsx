@@ -214,6 +214,23 @@ const Location = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const validateUpdateForm = () => {
+    const newErrors = {};
+
+    if (!locationName.trim())
+      newErrors.locationName = "Location name is required.";
+    // if (!sales.trim() || isNaN(sales))
+    //   newErrors.sales = "Enter a valid number for sales.";
+    if (!latitude.trim() || isNaN(latitude))
+      newErrors.latitude = "Enter a valid latitude.";
+    if (!longitude.trim() || isNaN(longitude))
+      newErrors.longitude = "Enter a valid longitude.";
+    if (!address.trim()) newErrors.address = "Address is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
@@ -294,7 +311,7 @@ const Location = () => {
 
     if (!selectLocation) return;
 
-    // if (!validateForm()) return;
+    if (!validateUpdateForm()) return;
 
     try {
       const token = localStorage.getItem("token");
@@ -441,16 +458,11 @@ const Location = () => {
                       <div className="w-full">
                         <h4 className="subHeading">Location Name</h4>
                         <p className="paragraphThin">
-                          What you normally refer to the roster location as. For
-                          example, Brisbane CBD.
+                          What you normally refer to the roster location as. (For
+                          example, Brisbane CBD.)
                         </p>
                       </div>
-                      <div className="w-full flex justify-end">
-                        {/* <input
-                        type="text"
-                        placeholder="Main Branch"
-                        className="input border border-gray-300 w-full md:w-auto"
-                      /> */}
+                      <div className="w-full flex flex-col items-end">
                         <input
                           type="text"
                           placeholder="Main Branch"
@@ -458,21 +470,23 @@ const Location = () => {
                           value={locationName}
                           onChange={(e) => setLocationName(e.target.value)}
                         />
+                        {errors.locationName && (
+                          <span className="text-sm text-red-600">
+                            {errors.locationName}
+                          </span>
+                        )}
                       </div>
+
                     </div>
+
                     <div className=" flex flex-col md:flex-row justify-between gap-4">
                       <div className="w-full">
                         <h4 className="subHeading">Address</h4>
                         <p className="paragraphThin">
-                          The address of the location. This is optional.
+                          The address of the location.
                         </p>
                       </div>
-                      <div className="w-full flex justify-end">
-                        {/* <input
-                        type="text"
-                        placeholder="Main Branch"
-                        className="input border border-gray-300 w-full md:w-auto"
-                      /> */}
+                      <div className="w-full flex flex-col items-end">                      
                         <input
                           type="text"
                           placeholder="Main Branch"
@@ -480,6 +494,11 @@ const Location = () => {
                           value={address}
                           onChange={(e) => setAddress(e.target.value)}
                         />
+                        {errors.address && (
+                          <span className="text-sm text-red-600">
+                            {errors.address}
+                          </span>
+                        )}
                       </div>
                     </div>
 
@@ -488,7 +507,7 @@ const Location = () => {
                         <h4 className="subHeading">Latitude</h4>
                         <p className="paragraphThin">Latitude coordinate of the location.</p>
                       </div>
-                      <div className="w-full flex justify-end">
+                      <div className="w-full flex flex-col items-end">                      
                         <input
                           type="text"
                           placeholder="Latitude"
@@ -496,6 +515,11 @@ const Location = () => {
                           value={latitude}
                           onChange={(e) => setLatitude(e.target.value)}
                         />
+                        {errors.latitude && (
+                          <span className="text-sm text-red-600">
+                            {errors.latitude}
+                          </span>
+                        )}
                       </div>
                     </div>
 
@@ -504,7 +528,7 @@ const Location = () => {
                         <h4 className="subHeading">Longitude</h4>
                         <p className="paragraphThin">Longitude coordinate of the location.</p>
                       </div>
-                      <div className="w-full flex justify-end">
+                      <div className="w-full flex flex-col items-end">                      
                         <input
                           type="text"
                           placeholder="Longitude"
@@ -512,6 +536,11 @@ const Location = () => {
                           value={longitude}
                           onChange={(e) => setLongitude(e.target.value)}
                         />
+                        {errors.longitude && (
+                          <span className="text-sm text-red-600">
+                            {errors.longitude}
+                          </span>
+                        )}
                       </div>
                     </div>
 
