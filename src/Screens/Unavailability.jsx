@@ -432,12 +432,12 @@ const Unavailability = () => {
                   <button className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md">
                     Save
                   </button>
-                  <button
+                  {/* <button
                     onClick={resetForm}
                     className="buttonDanger button font12 font-semibold px-4 py-2 rounded-md"
                   >
                     Reset
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </form>
