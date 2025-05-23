@@ -321,7 +321,7 @@ const Rosterly = () => {
                 </div>
               ))}
 
-              <div className="mt-2 col-span-1 sm:col-span-2 mx-auto">
+              <div className="mt-2 w-full col-span-1 sm:col-span-2 mx-auto">
                 <div className="p-4 bg-gray-100 border rounded-lg h-full flex flex-col justify-between">
                   <div>
                     <h2 className="text-indigo-900 heading">Give Your <strong>Unavailability</strong></h2>

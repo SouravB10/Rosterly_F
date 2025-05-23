@@ -19,11 +19,12 @@ const Location = () => {
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [checked, setChecked] = useState(false);
   const [locationName, setLocationName] = useState("");
+   const [addlocationName, setAddlocationName] = useState("");
+     const [addaddress, setAddaddress] = useState("");
   const [locationId, setLocationId] = useState("");
-  const [addlocationName, setAddlocationName] = useState("");
-  const [addaddress, setAddaddress] = useState("");
   const [sales, setSales] = useState("");
   const [salesId, setSalesId] = useState("");
+  const [addsales, setAddsales] = useState("");
 
   const [locations, setLocations] = useState([]);
   const [updatelocationName, setUpdatelocationName] = useState("");
@@ -40,7 +41,7 @@ const Location = () => {
   });
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
-  const [addlatitude, setAddlatitude] = useState("");
+    const [addlatitude, setAddlatitude] = useState("");
   const [addlongitude, setAddlongitude] = useState("");
   const [errors, setErrors] = useState({});
   const [address, setAddress] = useState("");
@@ -199,15 +200,15 @@ const Location = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!locationName.trim())
-      newErrors.locationName = "Location name is required.";
-    if (!sales.trim() || isNaN(sales))
-      newErrors.sales = "Enter a valid number for sales.";
-    if (!latitude.trim() || isNaN(latitude))
-      newErrors.latitude = "Enter a valid latitude.";
-    if (!longitude.trim() || isNaN(longitude))
-      newErrors.longitude = "Enter a valid longitude.";
-    // if (!address.trim()) newErrors.address = "Address is required.";
+    if (!addlocationName.trim())
+      newErrors.addlocationName = "Location name is required.";
+    if (!addsales.trim() || isNaN(addsales))
+      newErrors.addsales = "Enter a valid number for sales.";
+    if (!addlatitude.trim() || isNaN(addlatitude))
+      newErrors.addlatitude = "Enter a valid latitude.";
+    if (!addlongitude.trim() || isNaN(addlongitude))
+      newErrors.addlongitude = "Enter a valid longitude.";
+    if (!addaddress.trim()) newErrors.addaddress = "Address is required.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -223,9 +224,9 @@ const Location = () => {
           `${baseURL}/locations`,
           {
             location_name: addlocationName,
-            sales: parseFloat(sales),
-            latitude: parseFloat(latitude),
-            longitude: parseFloat(longitude),
+            sales: parseFloat(addsales),
+            latitude: parseFloat(addlatitude),
+            longitude: parseFloat(addlongitude),
             address: addaddress,
             created_by: id,
           },
@@ -251,6 +252,9 @@ const Location = () => {
         // Show success feedback
         setFeedbackMessage(response.data?.message || "Location added successfully.");
         setFeedbackModalOpen(true);
+        setTimeout(() => {
+          window.location.reload()
+        }, 2000);
       } catch (error) {
         console.error("API Error:", error);
         if (error.response && error.response.data.errors) {
@@ -266,9 +270,9 @@ const Location = () => {
 
   const handleCloseModal = () => {
     setAddlocationName("");
-    setSales("");
-    setLatitude("");
-    setLongitude("");
+    setAddsales("");
+    setAddlatitude("");
+    setAddlongitude("");
     setAddaddress("");
     setErrors({});
     setIsModalOpen(false);
@@ -631,7 +635,7 @@ const Location = () => {
                       onChange={(e) => setAddlocationName(e.target.value)}
                     />
                     {errors.addlocationName && (
-                      <span className="text-sm text-red-600">{errors.locationName}</span>
+                      <span className="text-sm text-red-600">{errors.addlocationName}</span>
                     )}
                   </div>
 
@@ -640,11 +644,11 @@ const Location = () => {
                     <input
                       type="text"
                       className="input w-full"
-                      value={sales}
-                      onChange={(e) => setSales(e.target.value)}
+                      value={addsales}
+                      onChange={(e) => setAddsales(e.target.value)}
                     />
-                    {errors.sales && (
-                      <span className="text-sm text-red-600">{errors.sales}</span>
+                    {errors.addsales && (
+                      <span className="text-sm text-red-600">{errors.addsales}</span>
                     )}
                   </div>
 
@@ -654,11 +658,11 @@ const Location = () => {
                       <input
                         type="text"
                         className="input w-full"
-                        value={latitude}
-                        onChange={(e) => setlatitude(e.target.value)}
+                        value={addlatitude}
+                        onChange={(e) => setAddlatitude(e.target.value)}
                       />
-                      {errors.latitude && (
-                        <span className="text-sm text-red-600">{errors.latitude}</span>
+                      {errors.addlatitude && (
+                        <span className="text-sm text-red-600">{errors.addlatitude}</span>
                       )}
                     </div>
                     <div className="w-full">
@@ -666,25 +670,28 @@ const Location = () => {
                       <input
                         type="text"
                         className="input w-full"
-                        value={longitude}
-                        onChange={(e) => setlongitude(e.target.value)}
+                        value={addlongitude}
+                        onChange={(e) => setAddlongitude(e.target.value)}
                       />
-                      {errors.longitude && (
-                        <span className="text-sm text-red-600">{errors.longitude}</span>
+                      {errors.addlongitude && (
+                        <span className="text-sm text-red-600">{errors.addlongitude}</span>
                       )}
                     </div>
                   </div>
 
                   <div>
                     <label className="paragraphBold block mb-1">
-                      Address <span className="smallFont text-gray-500">(optional)</span>
+                      Address 
                     </label>
                     <textarea
                       className="input w-full"
-                      rows={3}
+                      rows={7}
                       value={addaddress}
                       onChange={(e) => setAddaddress(e.target.value)}
                     />
+                     {errors.addaddress && (
+                        <span className="text-sm text-red-600">{errors.addaddress}</span>
+                      )}
                   </div>
                 </div>
 
@@ -693,10 +700,10 @@ const Location = () => {
                   <label className="paragraphBold mb-2">Select Location on Map</label>
                   <div className="flex-1 h-74 border rounded-md overflow-hidden">
                     <GoogleMapSelector
-                      address={address}
+                      address={addaddress}
                       onLocationSelect={({ lat, lng }) => {
-                        setLatitude(lat.toFixed(6));
-                        setLongitude(lng.toFixed(6));
+                        setAddlatitude(lat.toFixed(6));
+                        setAddlongitude(lng.toFixed(6));
                       }}
                     />
                   </div>
