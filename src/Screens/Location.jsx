@@ -153,8 +153,8 @@ const Location = () => {
       setLocationId(locId);
       setLocationName(data.location_name || "");
       setSales(data.sales?.toString() || "");
-      // setLatitude(data.latitude?.toString() || "");
-      // setLongitude(data.longitude?.toString() || "");
+      setLatitude(data.latitude?.toString() || "");
+      setLongitude(data.longitude?.toString() || "");
       setAddress(data.address || "");
 
       // Sales data based on location ID
@@ -418,28 +418,12 @@ const Location = () => {
               )}
             </div>
 
-            <div className="subHeading flex  md:flex-row gap-6 mb-6">
-              {["general", "Sales", "Employees"].map((tab) => (
-                <label key={tab} className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="tabOption"
-                    value={tab}
-                    checked={activeTab === tab}
-                    onChange={() => setActiveTab(tab)}
-                    className="form-radio text-purple-600"
-                  />
-                  <span className="text-sm font-semibold text-slate-900 capitalize">
-                    {tab}
-                  </span>
-                </label>
-              ))}
-            </div>
+           
 
             <div className="space-y-6">
               {activeTab === "general" && (
-                <div className="space-y-4">
-                  <div className="card flex flex-col md:flex-row justify-between gap-4">
+                <div className="card space-y-4">
+                  <div className=" flex flex-col md:flex-row justify-between gap-4">
                     <div className="w-full">
                       <h4 className="subHeading">Location Name</h4>
                       <p className="paragraphThin">
@@ -462,7 +446,7 @@ const Location = () => {
                       />
                     </div>
                   </div>
-                  <div className="card flex flex-col md:flex-row justify-between gap-4">
+                  <div className=" flex flex-col md:flex-row justify-between gap-4">
                     <div className="w-full">
                       <h4 className="subHeading">Address</h4>
                       <p className="paragraphThin">
@@ -484,6 +468,38 @@ const Location = () => {
                       />
                     </div>
                   </div>
+
+                  <div className=" flex flex-col md:flex-row justify-between gap-4">
+    <div className="w-full">
+      <h4 className="subHeading">Latitude</h4>
+      <p className="paragraphThin">Latitude coordinate of the location.</p>
+    </div>
+    <div className="w-full flex justify-end">
+      <input
+        type="text"
+        placeholder="Latitude"
+        className="input border border-gray-300 w-full md:w-auto"
+        value={latitude}
+        onChange={(e) => setLatitude(e.target.value)}
+      />
+    </div>
+  </div>
+
+  <div className=" flex flex-col md:flex-row justify-between gap-4">
+    <div className="w-full">
+      <h4 className="subHeading">Longitude</h4>
+      <p className="paragraphThin">Longitude coordinate of the location.</p>
+    </div>
+    <div className="w-full flex justify-end">
+      <input
+        type="text"
+        placeholder="Longitude"
+        className="input border border-gray-300 w-full md:w-auto"
+        value={longitude}
+        onChange={(e) => setLongitude(e.target.value)}
+      />
+    </div>
+  </div>
 
                   <div className="flex justify-end">
                     <button
