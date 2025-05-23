@@ -81,6 +81,11 @@ const Unavailability = () => {
     // console.log(moment(fromDate).format("YYYY-MM-DD hh:mm a"));
     let validationErrors = {};
 
+     // Check if fromDate is in the past or earlier than current time
+    if (fromDate < new Date()) {
+      validationErrors.fromDate = "From Date & Time cannot be in the past.";
+    }
+
   if (!fromDate) {
     validationErrors.fromDate = "From Date & Time is required.";
   }
@@ -338,8 +343,9 @@ const Unavailability = () => {
                         </div>
                       }
                     />
-                     {errors.fromDate && <p className="text-red-500 text-sm">{errors.fromDate}</p>}
+                     
                     </div>
+                     {errors.fromDate && <p className="text-red-500 text-sm">{errors.fromDate}</p>}
                   </div>
 
                   <div className="">
