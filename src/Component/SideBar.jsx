@@ -105,7 +105,14 @@ const Sidebar = ({ open, setOpen, isMobile }) => {
                                     title={item.title}
                                     className={`paragraphBold flex items-center gap-2 p-3 rounded-xl transition-all duration-300 hover:bg-yellow-200 hover:shadow-md hover:text-gray-700 cursor-pointer
                                         ${isActive ? 'buttonSuccessActive text-black shadow-md' : 'text-black'}`}
-                                    onClick={() => (item.submenu ? toggleMenu(item.id) : null)}
+                                    // onClick={() => (item.submenu ? toggleMenu(item.id) : null)}
+                                    onClick={() => {
+                                        if (item.submenu) {
+                                            toggleMenu(item.id);
+                                        } else if (isMobile) {
+                                            setOpen(false);
+                                        }
+                                    }}
                                 >
                                     <div className="flex justify-center">
                                         <span className="text-2xl">{item.icon}</span>

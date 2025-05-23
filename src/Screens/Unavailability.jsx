@@ -8,12 +8,15 @@ import axios from "axios";
 import { set } from "date-fns";
 import moment from "moment";
 import FeedbackModal from "../Component/FeedbackModal";
+import { FaEdit } from "react-icons/fa";
+import { HiTrash } from "react-icons/hi2";
 
 const Unavailability = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   const [isShiftOpen, setIsShiftOpen] = useState(false);
+  const [editShiftOpen, setEditShiftOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [selectedDay, setSelectedDay] = useState("");
   const [selectToNotify, setSelectToNotify] = useState([]);
@@ -22,6 +25,7 @@ const Unavailability = () => {
   const [errors, setErrors] = useState({});
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [isAllDay, setIsAllDay] = useState(false);
   const token = localStorage.getItem("token");
   const id = localStorage.getItem("id");
 
@@ -159,16 +163,19 @@ const Unavailability = () => {
 
   const saveRecurringUnavailability = async (e) => {
     e.preventDefault();
-    console.log(start, finish, modalNotifyToId, modalDescription);
+    const startTime = isAllDay ? null : start;
+    const finishTime = isAllDay ? null : finish;
+    const recuDay = isAllDay ? `${selectedDay} (All Day)` : selectedDay;
+    console.log(startTime, finishTime, modalNotifyToId, modalDescription);
     console.log(id, "ID");
     try {
       const response = await axios.post(
         `${baseURL}/unavailability/2`,
         {
           userId: id,
-          day: selectedDay,
-          fromDT: start,
-          toDT: finish,
+          day: recuDay,
+          fromDT: startTime,
+          toDT: finishTime,
           reason: modalDescription,
           notifyTo: modalNotifyToId,
           unavailStatus: "pending",
@@ -186,6 +193,7 @@ const Unavailability = () => {
       setModalNotifyToId("");
       setModalDescription("");
       setIsShiftOpen(false);
+      setIsAllDay(false);
       setFeedbackMessage(response.data?.message);
       setFeedbackModalOpen(true);
       console.log(start, finish, "Time");
@@ -243,6 +251,17 @@ const Unavailability = () => {
       hour12: true,
     });
   };
+
+  const handleCloseModal = () => {
+    setIsShiftOpen(false);
+    setEditShiftOpen(false);
+    setSelectedDay("");
+    setIsAllDay(false);
+    setStart("");
+    setFinish("");
+    setModalNotifyToId("");
+    setModalDescription("");
+  }
 
   return (
     <>
@@ -439,17 +458,19 @@ const Unavailability = () => {
                   {/* Show unavailability for this day */}
                   {matchingUnavailability.length > 0 &&
                     matchingUnavailability.map((item) => (
-                      <>
-                        <div key={item.id} className="flex ">
+                      <div key={item.id}>
+                        <div className="flex ">
                           <p className="paragraph text-sm ">
                             {item.fromDT} - {item.toDT}
-                          </p> (<p
+                          </p>{" "}
+                          (<p
                             className={`paragraphThin text-sm italic ${item.unavailStatus === 0
-                              ? "text-red-500"
-                              : "text-green-600"
+                              ? "text-red-500" : item.unavailStatus === 2
+                                ? "text-orange-600"
+                                : "text-green-600"
                               }`}
                           >
-                            {item.unavailStatus === 0 ? "Pending" : "Approved"}
+                            {item.unavailStatus === 0 ? "Pending" : item.unavailStatus === 1 ? "Approved" : "Denied"}
                           </p>)
 
 
@@ -459,16 +480,36 @@ const Unavailability = () => {
                             {item.reason || "No reason provided"}
                           </p>
                         )}
-                      </>
+                      </div>
                     ))}
                 </div>
 
                 <div
                   className="mt-2 sm:mt-0 sm:ml-4 cursor-pointer"
-                  title="Add Unavailability"
-                  onClick={() => openModal(day)}
+                  title={
+                    matchingUnavailability.length === 0
+                      ? "Add Unavailability"
+                      : matchingUnavailability[0].unavailStatus === 1
+                        ? "Edit Unavailability"
+                        : ""
+                  }
+                  onClick={() => {
+                    if (matchingUnavailability.length === 0) {
+                      openModal(day); // Open Add modal
+                    } else if (matchingUnavailability[0].unavailStatus === 1) {
+                      setSelectedDay(day); // Set the selected day
+                      setEditShiftOpen(true); // Open Edit modal
+                    }
+                    // If unavailStatus is 0, do nothing (no icon shown anyway)
+                  }}
                 >
-                  <FaPlusSquare />
+                  {matchingUnavailability.length === 0 ? (
+                    <FaPlusSquare className="text-indigo-900 text-xl" />
+                  ) : matchingUnavailability[0].unavailStatus === 1 ? (
+                    <FaEdit />
+                  ) : (
+                    <HiTrash className="text-red-700 text-xl" />
+                  )}
                 </div>
               </div>
             );
@@ -487,11 +528,11 @@ const Unavailability = () => {
           <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
               <Dialog.Title className="heading">
-                Add Unavailability
+                Add Unavailability for {selectedDay}
               </Dialog.Title>
               <button
                 className="text-white text-2xl font-bold cursor"
-                onClick={() => setIsShiftOpen(false)}
+                onClick={handleCloseModal}
               >
                 ×
               </button>
@@ -499,6 +540,124 @@ const Unavailability = () => {
             <form
               className="card p-6 space-y-3"
               onSubmit={saveRecurringUnavailability}
+            >
+              <p className="paragraph text-gray-500">
+                Enter the times that you will NOT be available.
+              </p>
+
+              <div className="mt-3 space-y-3">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="allDay"
+                    checked={isAllDay}
+                    onChange={() => setIsAllDay(!isAllDay)}
+                    className="w-4 h-4"
+                  />
+                  <label htmlFor="allDay" className="paragraphBold">
+                    All Day
+                  </label>
+                </div>
+                {!isAllDay && (
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="flex flex-col">
+                      <label className="paragraphBold">Start</label>
+                      <select
+                        className="input paragraph"
+                        value={start}
+                        onChange={(e) => setStart(e.target.value)}
+                      >
+                        {timeOptions.map((time, index) => (
+                          <option key={index} value={time}>
+                            {time}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="flex flex-col">
+                      <label className="paragraphBold">Finish</label>
+                      <select
+                        className="input paragraph"
+                        value={finish}
+                        onChange={(e) => setFinish(e.target.value)}
+                      >
+                        {timeOptions.map((time, index) => (
+                          <option key={index} value={time}>
+                            {time}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                )}
+                <div>
+                  <label className="paragraphBold block mb-4">
+                    Select a manager to notify
+                  </label>
+                  <select
+                    className="input w-full p-3 custom-focus"
+                    onChange={(e) => setModalNotifyToId(e.target.value)}
+                    onClick={fetchNotifyingManager}
+                  >
+                    <option>-- Select --</option>
+                    {selectToNotify.map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.firstName} {user.lastName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <label className="paragraphBold">Description:</label>
+                <textarea
+                  className=" textarea paragraph"
+                  rows="3"
+                  placeholder="Enter description..."
+                  value={modalDescription}
+                  onChange={(e) => setModalDescription(e.target.value)}
+                ></textarea>
+              </div>
+
+              <div className="flex justify-end gap-2 mt-4">
+                <button
+                  type="button"
+                  className="buttonGrey"
+                  onClick={handleCloseModal}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="buttonSuccess">
+                  Save
+                </button>
+              </div>
+            </form>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
+
+      <Dialog
+        open={editShiftOpen}
+        onClose={() => setEditShiftOpen(false)}
+        className="relative z-50 rounded-lg"
+      >
+        <div className="fixed inset-0 bg-gray-700/70"></div>
+        <div className="fixed inset-0 flex items-center justify-center">
+          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
+            <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
+              <Dialog.Title className="heading">
+                Edit Unavailability
+              </Dialog.Title>
+              <button
+                className="text-white text-2xl font-bold cursor"
+                onClick={() => setEditShiftOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+            <form
+              className="card p-6 space-y-3"
+            // onSubmit={saveRecurringUnavailability}
             >
               <p className="paragraph text-gray-500">
                 Enter the times that you will NOT be available.
@@ -567,13 +726,19 @@ const Unavailability = () => {
               <div className="flex justify-end gap-2 mt-4">
                 <button
                   type="button"
+                  className="buttonDanger"
+                >
+                  Delete
+                </button>
+                <button
+                  type="button"
                   className="buttonGrey"
-                  onClick={() => setIsShiftOpen(false)}
+                  onClick={() => setEditShiftOpen(false)}
                 >
                   Cancel
                 </button>
                 <button type="submit" className="buttonSuccess">
-                  Save
+                  Update
                 </button>
               </div>
             </form>

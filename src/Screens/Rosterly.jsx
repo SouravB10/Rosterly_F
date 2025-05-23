@@ -151,7 +151,7 @@ const Rosterly = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        
+
         // Log current location to console
         console.log("Latitude:", latitude);
         console.log("Longitude:", longitude);
@@ -182,12 +182,12 @@ const Rosterly = () => {
 
   return (
     <>
-        <div className="text-indigo-950 mb-3 p-1">
-          <p className="text-sm sm:text-base font-bold">Welcome,</p>
-          <p className="text-lg sm:text-xl font-bold">
-            {getRoleId() === 1 ? `${userName} (Admin)` : userName}
-          </p>
-        </div>
+      <div className="text-indigo-950 mb-3 p-1">
+        <p className="text-sm sm:text-base font-bold">Welcome,</p>
+        <p className="text-lg sm:text-xl font-bold">
+          {getRoleId() === 1 ? `${userName} (Admin)` : userName}
+        </p>
+      </div>
       {getRoleId() === 1 ? (<Dashboard />
       ) : (
         <>
@@ -276,7 +276,7 @@ const Rosterly = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-[repeat(auto-fit,_minmax(220px,_1fr))] gap-4">
+            <div className="grid grid-cols-[repeat(auto-fit,_minmax(220px,_1fr))] gap-4 justify-center text-center sm:text-left">
               {[
                 { day: "Wed 09/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-1" },
                 { day: "Thu 10/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-2" },
@@ -287,7 +287,7 @@ const Rosterly = () => {
                 { day: "Mon 14/04", off: true },
                 { day: "Tue 15/04", off: true }
               ].map((shift, i) => (
-                <div key={i} className="mt-2">
+                <div key={i} className="mt-2 mx-auto">
                   <div className={shift.total ? "cardA" : shift.unavailable ? "cardGrey" : shift.off ? "cardRed" : "cardYellow"}>
                     <p className="subHeading">{shift.day || (shift.total && "Weekly Total")}</p>
                     {shift.unavailable ? (
@@ -321,7 +321,7 @@ const Rosterly = () => {
                 </div>
               ))}
 
-              <div className="mt-2 col-span-1 sm:col-span-2">
+              <div className="mt-2 col-span-1 sm:col-span-2 mx-auto">
                 <div className="p-4 bg-gray-100 border rounded-lg h-full flex flex-col justify-between">
                   <div>
                     <h2 className="text-indigo-900 heading">Give Your <strong>Unavailability</strong></h2>
