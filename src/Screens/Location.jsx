@@ -4,6 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import axios from "axios";
 import FeedbackModal from "../Component/FeedbackModal"; // ✅ Import here
 import GoogleMapSelector from "../Component/GoogleMap";
+import { set } from "date-fns";
 
 const Location = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -18,8 +19,8 @@ const Location = () => {
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [checked, setChecked] = useState(false);
   const [locationName, setLocationName] = useState("");
-   const [addlocationName, setAddlocationName] = useState("");
-     const [addaddress, setAddaddress] = useState("");
+  const [addlocationName, setAddlocationName] = useState("");
+  const [addaddress, setAddaddress] = useState("");
   const [locationId, setLocationId] = useState("");
   const [sales, setSales] = useState("");
   const [salesId, setSalesId] = useState("");
@@ -40,7 +41,7 @@ const Location = () => {
   });
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
-    const [addlatitude, setAddlatitude] = useState("");
+  const [addlatitude, setAddlatitude] = useState("");
   const [addlongitude, setAddlongitude] = useState("");
   const [errors, setErrors] = useState({});
   const [address, setAddress] = useState("");
@@ -281,10 +282,19 @@ const Location = () => {
     setSelectLocation(e.target.value);
   };
 
-  const updateLocation = async () => {
+  const updateLocation = async (e) => {
+    e.preventDefault();
+    console.log("Updating location with ID:", selectLocation);
+    console.log("Location Name:", locationName);
+    console.log("Sales:", sales);
+    console.log("Latitude:", parseFloat(latitude));
+    console.log("Longitude:", parseFloat(longitude));
+    console.log("Address:", address);
+    console.log("Location ID:", locationId);
+
     if (!selectLocation) return;
 
-    if (!validateForm()) return;
+    // if (!validateForm()) return;
 
     try {
       const token = localStorage.getItem("token");
@@ -293,7 +303,7 @@ const Location = () => {
         `${baseURL}/locations/${selectLocation}`,
         {
           location_name: locationName,
-          sales: parseFloat(sales),
+          // sales: parseFloat(sales),
           latitude: parseFloat(latitude),
           longitude: parseFloat(longitude),
           address: address,
@@ -310,6 +320,9 @@ const Location = () => {
       // Show success feedback
       setFeedbackMessage(response.data?.message || "Location updated successfully.");
       setFeedbackModalOpen(true);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
 
       const updatedLocations = await axios.get(`${baseURL}/locations`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -418,99 +431,100 @@ const Location = () => {
               )}
             </div>
 
-           
+
 
             <div className="space-y-6">
               {activeTab === "general" && (
-                <div className="card space-y-4">
-                  <div className=" flex flex-col md:flex-row justify-between gap-4">
-                    <div className="w-full">
-                      <h4 className="subHeading">Location Name</h4>
-                      <p className="paragraphThin">
-                        What you normally refer to the roster location as. For
-                        example, Brisbane CBD.
-                      </p>
-                    </div>
-                    <div className="w-full flex justify-end">
-                      {/* <input
+                <form onSubmit={updateLocation}>
+                  <div className="card space-y-4">
+                    <div className=" flex flex-col md:flex-row justify-between gap-4">
+                      <div className="w-full">
+                        <h4 className="subHeading">Location Name</h4>
+                        <p className="paragraphThin">
+                          What you normally refer to the roster location as. For
+                          example, Brisbane CBD.
+                        </p>
+                      </div>
+                      <div className="w-full flex justify-end">
+                        {/* <input
                         type="text"
                         placeholder="Main Branch"
                         className="input border border-gray-300 w-full md:w-auto"
                       /> */}
-                      <input
-                        type="text"
-                        placeholder="Main Branch"
-                        className="input border border-gray-300 w-full md:w-auto"
-                        value={locationName}
-                        onChange={(e) => setLocationName(e.target.value)}
-                      />
+                        <input
+                          type="text"
+                          placeholder="Main Branch"
+                          className="input border border-gray-300 w-full md:w-auto"
+                          value={locationName}
+                          onChange={(e) => setLocationName(e.target.value)}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className=" flex flex-col md:flex-row justify-between gap-4">
-                    <div className="w-full">
-                      <h4 className="subHeading">Address</h4>
-                      <p className="paragraphThin">
-                        The address of the location. This is optional.
-                      </p>
-                    </div>
-                    <div className="w-full flex justify-end">
-                      {/* <input
+                    <div className=" flex flex-col md:flex-row justify-between gap-4">
+                      <div className="w-full">
+                        <h4 className="subHeading">Address</h4>
+                        <p className="paragraphThin">
+                          The address of the location. This is optional.
+                        </p>
+                      </div>
+                      <div className="w-full flex justify-end">
+                        {/* <input
                         type="text"
                         placeholder="Main Branch"
                         className="input border border-gray-300 w-full md:w-auto"
                       /> */}
-                      <input
-                        type="text"
-                        placeholder="Main Branch"
-                        className="input border border-gray-300 w-full md:w-auto"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                      />
+                        <input
+                          type="text"
+                          placeholder="Main Branch"
+                          className="input border border-gray-300 w-full md:w-auto"
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+                        />
+                      </div>
+                    </div>
+
+                    <div className=" flex flex-col md:flex-row justify-between gap-4">
+                      <div className="w-full">
+                        <h4 className="subHeading">Latitude</h4>
+                        <p className="paragraphThin">Latitude coordinate of the location.</p>
+                      </div>
+                      <div className="w-full flex justify-end">
+                        <input
+                          type="text"
+                          placeholder="Latitude"
+                          className="input border border-gray-300 w-full md:w-auto"
+                          value={latitude}
+                          onChange={(e) => setLatitude(e.target.value)}
+                        />
+                      </div>
+                    </div>
+
+                    <div className=" flex flex-col md:flex-row justify-between gap-4">
+                      <div className="w-full">
+                        <h4 className="subHeading">Longitude</h4>
+                        <p className="paragraphThin">Longitude coordinate of the location.</p>
+                      </div>
+                      <div className="w-full flex justify-end">
+                        <input
+                          type="text"
+                          placeholder="Longitude"
+                          className="input border border-gray-300 w-full md:w-auto"
+                          value={longitude}
+                          onChange={(e) => setLongitude(e.target.value)}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end">
+                      <button
+                        className="buttonTheme w-full md:w-auto"
+                        disabled={!selectLocation}
+                      >
+                        Update
+                      </button>
                     </div>
                   </div>
-
-                  <div className=" flex flex-col md:flex-row justify-between gap-4">
-    <div className="w-full">
-      <h4 className="subHeading">Latitude</h4>
-      <p className="paragraphThin">Latitude coordinate of the location.</p>
-    </div>
-    <div className="w-full flex justify-end">
-      <input
-        type="text"
-        placeholder="Latitude"
-        className="input border border-gray-300 w-full md:w-auto"
-        value={latitude}
-        onChange={(e) => setLatitude(e.target.value)}
-      />
-    </div>
-  </div>
-
-  <div className=" flex flex-col md:flex-row justify-between gap-4">
-    <div className="w-full">
-      <h4 className="subHeading">Longitude</h4>
-      <p className="paragraphThin">Longitude coordinate of the location.</p>
-    </div>
-    <div className="w-full flex justify-end">
-      <input
-        type="text"
-        placeholder="Longitude"
-        className="input border border-gray-300 w-full md:w-auto"
-        value={longitude}
-        onChange={(e) => setLongitude(e.target.value)}
-      />
-    </div>
-  </div>
-
-                  <div className="flex justify-end">
-                    <button
-                      className="buttonTheme w-full md:w-auto"
-                      onClick={updateLocation}
-                      disabled={!selectLocation}
-                    >
-                      Update
-                    </button>
-                  </div>
-                </div>
+                </form>
               )}
 
               {activeTab === "Sales" && (
@@ -696,7 +710,7 @@ const Location = () => {
 
                   <div>
                     <label className="paragraphBold block mb-1">
-                      Address 
+                      Address
                     </label>
                     <textarea
                       className="input w-full"
@@ -704,9 +718,9 @@ const Location = () => {
                       value={addaddress}
                       onChange={(e) => setAddaddress(e.target.value)}
                     />
-                     {errors.addaddress && (
-                        <span className="text-sm text-red-600">{errors.addaddress}</span>
-                      )}
+                    {errors.addaddress && (
+                      <span className="text-sm text-red-600">{errors.addaddress}</span>
+                    )}
                   </div>
                 </div>
 
