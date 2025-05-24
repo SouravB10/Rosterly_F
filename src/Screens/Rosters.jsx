@@ -27,18 +27,28 @@ const Rosters = () => {
   const loginId = localStorage.getItem("id");
 
   const getWeekRange = (week) => {
-    const startOfWeek = moment(week).startOf("isoWeek").format("DD MMM");
-    const endOfWeek = moment(week).endOf("isoWeek").format("DD MMM");
-    return `${startOfWeek} - ${endOfWeek}`;
+    const startOfWeek = moment(week).day(3); // 3 = Wednesday
+    const endOfWeek = startOfWeek.clone().add(6, "days");
+    return `${startOfWeek.format("DD MMM")} - ${endOfWeek.format("DD MMM")}`;
   };
 
   const handlePrevWeek = () => {
-    setCurrentWeek((prev) => moment(prev).subtract(1, "week"));
+    setCurrentWeek((prev) => moment(prev).subtract(7, "days")); // subtract full week
   };
 
   const handleNextWeek = () => {
-    setCurrentWeek((prev) => moment(prev).add(1, "week"));
+    setCurrentWeek((prev) => moment(prev).add(7, "days")); // add full week
   };
+
+  const getDaysForWeek = (week) => {
+    const start = moment(week).day(3); // Start from Wednesday
+    return Array.from({ length: 7 }, (_, i) =>
+      start.clone().add(i, "days").format("ddd, DD/MM")
+    );
+  };
+
+  const days = getDaysForWeek(currentWeek);
+
 
   const handleLocation = (e) => {
     const newLocationId = e.target.value;
@@ -85,15 +95,15 @@ const Rosters = () => {
     fetchLocations();
   }, []);
 
-  const days = [
-    "Mon 07/04",
-    "Tue 08/04",
-    "Wed 09/04",
-    "Thu 10/04",
-    "Fri 11/04",
-    "Sat 12/04",
-    "Sun 13/04",
-  ];
+  // const days = [
+  //   "Mon 07/04",
+  //   "Tue 08/04",
+  //   "Wed 09/04",
+  //   "Thu 10/04",
+  //   "Fri 11/04",
+  //   "Sat 12/04",
+  //   "Sun 13/04",
+  // ];
 
   const data = [
     {
@@ -167,13 +177,13 @@ const Rosters = () => {
     const sourceList = Array.from(
       (shiftsByEmployeeDay[sourceEmpId] &&
         shiftsByEmployeeDay[sourceEmpId][sourceDay]) ||
-        []
+      []
     );
 
     const destList = Array.from(
       (shiftsByEmployeeDay[destEmpId] &&
         shiftsByEmployeeDay[destEmpId][destDay]) ||
-        []
+      []
     );
 
     const [moved] = sourceList.splice(source.index, 1);
