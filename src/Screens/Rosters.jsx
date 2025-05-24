@@ -351,7 +351,7 @@ const Rosters = () => {
       <DragDropContext onDragEnd={onDragEnd}>
         <div>
           <table className="min-w-full border border-gray-300 text-sm">
-            <thead className="bg-gray-100">
+            <thead className="bg-gray-100 bgTable rounded ">
               <tr>
                 <th className="w-48 p-2 text-left border border-gray-300">
                   Employee
@@ -371,7 +371,7 @@ const Rosters = () => {
               {locatedEmployees.map((emp) => (
                 <tr key={emp.id} className="border border-gray-300">
                   {/* Employee Info */}
-                  <td className="p-2 border bg-gray-50">
+                  <td className="p-2 bg-white">
                     <div className="font-semibold">{emp.firstName}{" "}{emp.lastName}</div>
                     <div className="text-xs text-gray-500">
                       {emp.hours} hrs {emp.cost ? `· ${emp.cost}` : ""}
@@ -386,11 +386,11 @@ const Rosters = () => {
                     >
                       {(provided) => (
                         <td
-                          className="p-2 min-w-[120px] align-top border border-gray-300"
+                          className="p-2 border border-gray-300"
                           ref={provided.innerRef}
                           {...provided.droppableProps}
                         >
-                          <div className="space-y-2 min-h-[80px]">
+                          <div className="space-y-2 ">
                             {(shiftsByEmployeeDay[emp.id]?.[day] || []).map(
                               (shift, index) => (
                                 <Draggable
@@ -400,7 +400,7 @@ const Rosters = () => {
                                 >
                                   {(provided) => (
                                     <div
-                                      className="bg-green-500 text-white p-2 text-sm rounded flex justify-between items-center cursor-move"
+                                      className="bgTable paragraph text-white p-2 rounded flex justify-between items-center cursor-move"
                                       ref={provided.innerRef}
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
@@ -408,8 +408,9 @@ const Rosters = () => {
                                       <span>{shift.time}</span>
                                       {/* {shift.description && <span className="text-xs italic ml-2">{shift.description}</span>} */}
                                       <button
-                                        className="text-xs ml-2 bg-white text-green-600 px-1 rounded"
+                                        className="text-xs bg-white text-green-700 px-1 rounded"
                                         onClick={() => handleCopy(shift)}
+                                        title="Copy Shift"
                                       >
                                         +
                                       </button>
@@ -432,14 +433,18 @@ const Rosters = () => {
                           )}
 
                           {/* Add Shift Button */}
-                          <div className="mt-2 text-center">
-                            <button
-                              onClick={() => onShiftAdd(emp.id, day)}
-                              className="text-gray-500 hover:text-blue-600"
-                            >
-                              <FaPlus size={16} />
-                            </button>
-                          </div>
+                          {!shiftsByEmployeeDay[emp.id]?.[day]?.length && (
+                            <div className="text-center">
+                              <button
+                                onClick={() => onShiftAdd(emp.id, day)}
+                                className="text-gray-500 hover:text-green-700"
+                                title="Add Shift"
+                              >
+                                <FaPlus size={12} />
+                              </button>
+                            </div>
+                          )}
+
                         </td>
                       )}
                     </Droppable>

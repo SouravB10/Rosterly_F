@@ -447,7 +447,23 @@ const Location = () => {
                 </button>
               )}
             </div>
-
+            <div className="subHeading flex  md:flex-row gap-6 mb-6">
+              {["general", "Sales", "Employees"].map((tab) => (
+                <label key={tab} className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="tabOption"
+                    value={tab}
+                    checked={activeTab === tab}
+                    onChange={() => setActiveTab(tab)}
+                    className="form-radio text-purple-600"
+                  />
+                  <span className="text-sm font-semibold text-slate-900 capitalize">
+                    {tab}
+                  </span>
+                </label>
+              ))}
+            </div>
 
 
             <div className="space-y-6">
@@ -486,7 +502,7 @@ const Location = () => {
                           The address of the location.
                         </p>
                       </div>
-                      <div className="w-full flex flex-col items-end">                      
+                      <div className="w-full flex flex-col items-end">
                         <input
                           type="text"
                           placeholder="Main Branch"
@@ -507,7 +523,7 @@ const Location = () => {
                         <h4 className="subHeading">Latitude</h4>
                         <p className="paragraphThin">Latitude coordinate of the location.</p>
                       </div>
-                      <div className="w-full flex flex-col items-end">                      
+                      <div className="w-full flex flex-col items-end">
                         <input
                           type="text"
                           placeholder="Latitude"
@@ -528,7 +544,7 @@ const Location = () => {
                         <h4 className="subHeading">Longitude</h4>
                         <p className="paragraphThin">Longitude coordinate of the location.</p>
                       </div>
-                      <div className="w-full flex flex-col items-end">                      
+                      <div className="w-full flex flex-col items-end">
                         <input
                           type="text"
                           placeholder="Longitude"
