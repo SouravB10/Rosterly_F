@@ -187,7 +187,7 @@ const People = () => {
       const currentUserRole = Number(localStorage.getItem("role_id"));
 
       const endpoint =
-        currentUserId === 1
+        currentUserRole === 1
           ? `${baseURL}/users`
           : `${baseURL}/users/login/${currentUserId}`;
 
@@ -419,27 +419,32 @@ const People = () => {
   };
 
   const confirmDelete = async () => {
+    setLoading(true);
+
     if (!confirmDeleteId) return;
 
     try {
-      const response = await axios.delete(`${baseURL}/users/${confirmDeleteId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        data: {
-          deletedby: currentUserId, // You must pass this value from your app's auth context
-        },
-      });
+      const response = await axios.delete(
+        `${baseURL}/users/${confirmDeleteId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          data: {
+            deletedby: currentUserId, // You must pass this value from your app's auth context
+          },
+        }
+      );
 
       console.log("User deleted:", response.data); // Add this for confirmation
 
       setFeedbackMessage("User deleted successfully.");
       setShowConfirmButtons(false);
       fetchUsers(); // Refresh the user list
-      // setTimeout(() => {
-      //   setFeedbackModalOpen(false);
-      //   window.location.reload();
-      // }, 2000);
+      setTimeout(() => {
+        setFeedbackModalOpen(false);
+        setLoading(false);
+      }, 2000);
     } catch (error) {
       console.error("Error deleting user:", error);
       setFeedbackMessage("Failed to delete user.");

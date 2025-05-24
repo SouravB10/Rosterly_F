@@ -8,6 +8,7 @@ import { FaAngleRight } from "react-icons/fa";
 import { Dialog } from "@headlessui/react";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { set } from "date-fns";
 
 const Rosters = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -21,7 +22,9 @@ const Rosters = () => {
   const [shiftsByEmployeeDay, setShiftsByEmployeeDay] = useState({});
   const [currentEmpId, setCurrentEmpId] = useState(null);
   const [currentDay, setCurrentDay] = useState(null);
-  const [description, setDescription] = useState('');
+  const [locatedEmployees, setLocatedEmployees] = useState([]);
+  const [description, setDescription] = useState("");
+  const loginId = localStorage.getItem("id");
 
   const getWeekRange = (week) => {
     const startOfWeek = moment(week).startOf("isoWeek").format("DD MMM");
@@ -38,8 +41,29 @@ const Rosters = () => {
   };
 
   const handleLocation = (e) => {
-    setSelectedLocation(e.target.value);
-    console.log("Selected Location:", e.target.value);
+    const newLocationId = e.target.value;
+    setSelectedLocation(newLocationId);
+
+    const fetchEmployees = async (id) => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.get(`${baseURL}/locations/${id}/users`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        // locatedEmployees = response.data;
+        setLocatedEmployees(response.data.data);
+        console.log("Employees fetched:", response.data);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+      }
+    };
+
+    // Call with the new location id directly
+    fetchEmployees(newLocationId);
+
+    console.log("Selected Location:", newLocationId);
   };
 
   useEffect(() => {
@@ -83,10 +107,10 @@ const Rosters = () => {
   const [shifts, setShifts] = useState(data);
 
   const employees = [
-    { id: 'unassigned', name: "Unassigned shifts", hours: "8.25", cost: null },
-    { id: 'harish', name: "Harish Dobila", hours: "5.00", cost: "$10.00" },
-    { id: 'sourav', name: "Sourav Behuria", hours: "4.00", cost: "$9.00" },
-    { id: 'vishal', name: "Vishal Kattera", hours: "8.00", cost: "$20.00" },
+    { id: "unassigned", name: "Unassigned shifts", hours: "8.25", cost: null },
+    { id: "harish", name: "Harish Dobila", hours: "5.00", cost: "$10.00" },
+    { id: "sourav", name: "Sourav Behuria", hours: "4.00", cost: "$9.00" },
+    { id: "vishal", name: "Vishal Kattera", hours: "8.00", cost: "$20.00" },
   ];
 
   const onShiftAdd = (empId, day) => {
@@ -131,18 +155,25 @@ const Rosters = () => {
     const { source, destination } = result;
     if (!destination) return;
 
-    const [sourceEmpId, sourceDay] = source.droppableId.split('-');
-    const [destEmpId, destDay] = destination.droppableId.split('-');
+    const [sourceEmpId, sourceDay] = source.droppableId.split("-");
+    const [destEmpId, destDay] = destination.droppableId.split("-");
 
-    if (source.droppableId === destination.droppableId && source.index === destination.index) {
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
       return;
     }
     const sourceList = Array.from(
-      (shiftsByEmployeeDay[sourceEmpId] && shiftsByEmployeeDay[sourceEmpId][sourceDay]) || []
+      (shiftsByEmployeeDay[sourceEmpId] &&
+        shiftsByEmployeeDay[sourceEmpId][sourceDay]) ||
+        []
     );
 
     const destList = Array.from(
-      (shiftsByEmployeeDay[destEmpId] && shiftsByEmployeeDay[destEmpId][destDay]) || []
+      (shiftsByEmployeeDay[destEmpId] &&
+        shiftsByEmployeeDay[destEmpId][destDay]) ||
+        []
     );
 
     const [moved] = sourceList.splice(source.index, 1);
@@ -161,7 +192,6 @@ const Rosters = () => {
       },
     }));
   };
-
 
   const handleCopy = (shift) => {
     setCopiedShift(shift);
@@ -202,12 +232,11 @@ const Rosters = () => {
 
     // Reset form and close modal
     setIsShiftOpen(false);
-    setStart('');
-    setFinish('');
-    setBreakTime('');
-    setDescription('');
+    setStart("");
+    setFinish("");
+    setBreakTime("");
+    setDescription("");
   };
-
 
   return (
     <>
@@ -250,7 +279,6 @@ const Rosters = () => {
               <span className="absolute top-full mt-1 hidden group-hover:flex bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
                 Statistics
               </span>
-
             </div>
 
             <div className="group relative flex items-center justify-center cursor-pointer bg-white rounded-lg text-sm text-gray-900 w-10 px-2">
@@ -311,13 +339,18 @@ const Rosters = () => {
       )}
 
       <DragDropContext onDragEnd={onDragEnd}>
-        <div >
+        <div>
           <table className="min-w-full border border-gray-300 text-sm">
             <thead className="bg-gray-100">
               <tr>
-                <th className="w-48 p-2 text-left border border-gray-300">Employee</th>
+                <th className="w-48 p-2 text-left border border-gray-300">
+                  Employee
+                </th>
                 {days.map((day) => (
-                  <th key={day} className="p-2 text-center border border-gray-300">
+                  <th
+                    key={day}
+                    className="p-2 text-center border border-gray-300"
+                  >
                     {day}
                   </th>
                 ))}
@@ -325,19 +358,22 @@ const Rosters = () => {
             </thead>
 
             <tbody>
-              {employees.map((emp) => (
+              {locatedEmployees.map((emp) => (
                 <tr key={emp.id} className="border border-gray-300">
                   {/* Employee Info */}
                   <td className="p-2 border bg-gray-50">
-                    <div className="font-semibold">{emp.name}</div>
+                    <div className="font-semibold">{emp.firstName}{" "}{emp.lastName}</div>
                     <div className="text-xs text-gray-500">
-                      {emp.hours} hrs {emp.cost ? `· ${emp.cost}` : ''}
+                      {emp.hours} hrs {emp.cost ? `· ${emp.cost}` : ""}
                     </div>
                   </td>
 
                   {/* Days Column with DragDrop */}
                   {days.map((day) => (
-                    <Droppable key={`${emp.id}-${day}`} droppableId={`${emp.id}-${day}`}>
+                    <Droppable
+                      key={`${emp.id}-${day}`}
+                      droppableId={`${emp.id}-${day}`}
+                    >
                       {(provided) => (
                         <td
                           className="p-2 min-w-[120px] align-top border border-gray-300"
@@ -345,27 +381,33 @@ const Rosters = () => {
                           {...provided.droppableProps}
                         >
                           <div className="space-y-2 min-h-[80px]">
-                            {(shiftsByEmployeeDay[emp.id]?.[day] || []).map((shift, index) => (
-                              <Draggable key={shift.id} draggableId={shift.id} index={index}>
-                                {(provided) => (
-                                  <div
-                                    className="bg-green-500 text-white p-2 text-sm rounded flex justify-between items-center cursor-move"
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                  >
-                                    <span>{shift.time}</span>
-                                    {/* {shift.description && <span className="text-xs italic ml-2">{shift.description}</span>} */}
-                                    <button
-                                      className="text-xs ml-2 bg-white text-green-600 px-1 rounded"
-                                      onClick={() => handleCopy(shift)}
+                            {(shiftsByEmployeeDay[emp.id]?.[day] || []).map(
+                              (shift, index) => (
+                                <Draggable
+                                  key={shift.id}
+                                  draggableId={shift.id}
+                                  index={index}
+                                >
+                                  {(provided) => (
+                                    <div
+                                      className="bg-green-500 text-white p-2 text-sm rounded flex justify-between items-center cursor-move"
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
                                     >
-                                      +
-                                    </button>
-                                  </div>
-                                )}
-                              </Draggable>
-                            ))}
+                                      <span>{shift.time}</span>
+                                      {/* {shift.description && <span className="text-xs italic ml-2">{shift.description}</span>} */}
+                                      <button
+                                        className="text-xs ml-2 bg-white text-green-600 px-1 rounded"
+                                        onClick={() => handleCopy(shift)}
+                                      >
+                                        +
+                                      </button>
+                                    </div>
+                                  )}
+                                </Draggable>
+                              )
+                            )}
                             {provided.placeholder}
                           </div>
 
