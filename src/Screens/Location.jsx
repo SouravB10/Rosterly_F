@@ -4,7 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import axios from "axios";
 import FeedbackModal from "../Component/FeedbackModal"; // ✅ Import here
 import GoogleMapSelector from "../Component/GoogleMap";
-
+import { set } from "date-fns";
 
 const Location = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -19,9 +19,12 @@ const Location = () => {
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [checked, setChecked] = useState(false);
   const [locationName, setLocationName] = useState("");
+  const [addlocationName, setAddlocationName] = useState("");
+  const [addaddress, setAddaddress] = useState("");
   const [locationId, setLocationId] = useState("");
   const [sales, setSales] = useState("");
   const [salesId, setSalesId] = useState("");
+  const [addsales, setAddsales] = useState("");
 
   const [locations, setLocations] = useState([]);
   const [updatelocationName, setUpdatelocationName] = useState("");
@@ -38,6 +41,8 @@ const Location = () => {
   });
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
+  const [addlatitude, setAddlatitude] = useState("");
+  const [addlongitude, setAddlongitude] = useState("");
   const [errors, setErrors] = useState({});
   const [address, setAddress] = useState("");
   const id = localStorage.getItem("id");
@@ -195,15 +200,32 @@ const Location = () => {
   const validateForm = () => {
     const newErrors = {};
 
+    if (!addlocationName.trim())
+      newErrors.addlocationName = "Location name is required.";
+    if (!addsales.trim() || isNaN(addsales))
+      newErrors.addsales = "Enter a valid number for sales.";
+    if (!addlatitude.trim() || isNaN(addlatitude))
+      newErrors.addlatitude = "Enter a valid latitude.";
+    if (!addlongitude.trim() || isNaN(addlongitude))
+      newErrors.addlongitude = "Enter a valid longitude.";
+    if (!addaddress.trim()) newErrors.addaddress = "Address is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const validateUpdateForm = () => {
+    const newErrors = {};
+
     if (!locationName.trim())
       newErrors.locationName = "Location name is required.";
-    if (!sales.trim() || isNaN(sales))
-      newErrors.sales = "Enter a valid number for sales.";
+    // if (!sales.trim() || isNaN(sales))
+    //   newErrors.sales = "Enter a valid number for sales.";
     if (!latitude.trim() || isNaN(latitude))
       newErrors.latitude = "Enter a valid latitude.";
     if (!longitude.trim() || isNaN(longitude))
       newErrors.longitude = "Enter a valid longitude.";
-    // if (!address.trim()) newErrors.address = "Address is required.";
+    if (!address.trim()) newErrors.address = "Address is required.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -218,11 +240,11 @@ const Location = () => {
         const response = await axios.post(
           `${baseURL}/locations`,
           {
-            location_name: locationName,
-            sales: parseFloat(sales),
-            latitude: parseFloat(latitude),
-            longitude: parseFloat(longitude),
-            address: address,
+            location_name: addlocationName,
+            sales: parseFloat(addsales),
+            latitude: parseFloat(addlatitude),
+            longitude: parseFloat(addlongitude),
+            address: addaddress,
             created_by: id,
           },
           {
@@ -235,11 +257,11 @@ const Location = () => {
 
         console.log("Location added successfully", response.data);
 
-        setLocationName("");
+        setAddlocationName("");
         setSales("");
         setLatitude("");
         setLongitude("");
-        setAddress("");
+        setAddaddress("");
         setErrors({});
         // Close modal if applicable
         setIsModalOpen(false);
@@ -247,6 +269,9 @@ const Location = () => {
         // Show success feedback
         setFeedbackMessage(response.data?.message || "Location added successfully.");
         setFeedbackModalOpen(true);
+        setTimeout(() => {
+          window.location.reload()
+        }, 2000);
       } catch (error) {
         console.error("API Error:", error);
         if (error.response && error.response.data.errors) {
@@ -261,11 +286,11 @@ const Location = () => {
   };
 
   const handleCloseModal = () => {
-    setLocationName("");
-    setSales("");
-    setLatitude("");
-    setLongitude("");
-    setAddress("");
+    setAddlocationName("");
+    setAddsales("");
+    setAddlatitude("");
+    setAddlongitude("");
+    setAddaddress("");
     setErrors({});
     setIsModalOpen(false);
   };
@@ -274,10 +299,19 @@ const Location = () => {
     setSelectLocation(e.target.value);
   };
 
-  const updateLocation = async () => {
+  const updateLocation = async (e) => {
+    e.preventDefault();
+    console.log("Updating location with ID:", selectLocation);
+    console.log("Location Name:", locationName);
+    console.log("Sales:", sales);
+    console.log("Latitude:", parseFloat(latitude));
+    console.log("Longitude:", parseFloat(longitude));
+    console.log("Address:", address);
+    console.log("Location ID:", locationId);
+
     if (!selectLocation) return;
 
-    if (!validateForm()) return;
+    if (!validateUpdateForm()) return;
 
     try {
       const token = localStorage.getItem("token");
@@ -285,11 +319,11 @@ const Location = () => {
       const response = await axios.put(
         `${baseURL}/locations/${selectLocation}`,
         {
-          location_name: updatelocationName,
-          sales: parseFloat(sales),
+          location_name: locationName,
+          // sales: parseFloat(sales),
           latitude: parseFloat(latitude),
           longitude: parseFloat(longitude),
-          address: updateaddress,
+          address: address,
         },
         {
           headers: {
@@ -303,6 +337,9 @@ const Location = () => {
       // Show success feedback
       setFeedbackMessage(response.data?.message || "Location updated successfully.");
       setFeedbackModalOpen(true);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
 
       const updatedLocations = await axios.get(`${baseURL}/locations`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -411,83 +448,112 @@ const Location = () => {
               )}
             </div>
 
-            <div className="subHeading flex  md:flex-row gap-6 mb-6">
-              {["general", "Sales", "Employees"].map((tab) => (
-                <label key={tab} className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="tabOption"
-                    value={tab}
-                    checked={activeTab === tab}
-                    onChange={() => setActiveTab(tab)}
-                    className="form-radio text-purple-600"
-                  />
-                  <span className="text-sm font-semibold text-slate-900 capitalize">
-                    {tab}
-                  </span>
-                </label>
-              ))}
-            </div>
+
 
             <div className="space-y-6">
               {activeTab === "general" && (
-                <div className="space-y-4">
-                  <div className="card flex flex-col md:flex-row justify-between gap-4">
-                    <div className="w-full">
-                      <h4 className="subHeading">Location Name</h4>
-                      <p className="paragraphThin">
-                        What you normally refer to the roster location as. For
-                        example, Brisbane CBD.
-                      </p>
-                    </div>
-                    <div className="w-full flex justify-end">
-                      {/* <input
-                        type="text"
-                        placeholder="Main Branch"
-                        className="input border border-gray-300 w-full md:w-auto"
-                      /> */}
-                      <input
-                        type="text"
-                        placeholder="Main Branch"
-                        className="input border border-gray-300 w-full md:w-auto"
-                        value={updatelocationName}
-                        onChange={(e) => setUpdatelocationName(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <div className="card flex flex-col md:flex-row justify-between gap-4">
-                    <div className="w-full">
-                      <h4 className="subHeading">Address</h4>
-                      <p className="paragraphThin">
-                        The address of the location. This is optional.
-                      </p>
-                    </div>
-                    <div className="w-full flex justify-end">
-                      {/* <input
-                        type="text"
-                        placeholder="Main Branch"
-                        className="input border border-gray-300 w-full md:w-auto"
-                      /> */}
-                      <input
-                        type="text"
-                        placeholder="Main Branch"
-                        className="input border border-gray-300 w-full md:w-auto"
-                        value={updateaddress}
-                        onChange={(e) => setUpdateaddress(e.target.value)}
-                      />
-                    </div>
-                  </div>
+                <form onSubmit={updateLocation}>
+                  <div className="card space-y-4">
+                    <div className=" flex flex-col md:flex-row justify-between gap-4">
+                      <div className="w-full">
+                        <h4 className="subHeading">Location Name</h4>
+                        <p className="paragraphThin">
+                          What you normally refer to the roster location as. (For
+                          example, Brisbane CBD.)
+                        </p>
+                      </div>
+                      <div className="w-full flex flex-col items-end">
+                        <input
+                          type="text"
+                          placeholder="Main Branch"
+                          className="input border border-gray-300 w-full md:w-auto"
+                          value={locationName}
+                          onChange={(e) => setLocationName(e.target.value)}
+                        />
+                        {errors.locationName && (
+                          <span className="text-sm text-red-600">
+                            {errors.locationName}
+                          </span>
+                        )}
+                      </div>
 
-                  <div className="flex justify-end">
-                    <button
-                      className="buttonTheme w-full md:w-auto"
-                      onClick={updateLocation}
-                      disabled={!selectLocation}
-                    >
-                      Update
-                    </button>
+                    </div>
+
+                    <div className=" flex flex-col md:flex-row justify-between gap-4">
+                      <div className="w-full">
+                        <h4 className="subHeading">Address</h4>
+                        <p className="paragraphThin">
+                          The address of the location.
+                        </p>
+                      </div>
+                      <div className="w-full flex flex-col items-end">                      
+                        <input
+                          type="text"
+                          placeholder="Main Branch"
+                          className="input border border-gray-300 w-full md:w-auto"
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+                        />
+                        {errors.address && (
+                          <span className="text-sm text-red-600">
+                            {errors.address}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className=" flex flex-col md:flex-row justify-between gap-4">
+                      <div className="w-full">
+                        <h4 className="subHeading">Latitude</h4>
+                        <p className="paragraphThin">Latitude coordinate of the location.</p>
+                      </div>
+                      <div className="w-full flex flex-col items-end">                      
+                        <input
+                          type="text"
+                          placeholder="Latitude"
+                          className="input border border-gray-300 w-full md:w-auto"
+                          value={latitude}
+                          onChange={(e) => setLatitude(e.target.value)}
+                        />
+                        {errors.latitude && (
+                          <span className="text-sm text-red-600">
+                            {errors.latitude}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className=" flex flex-col md:flex-row justify-between gap-4">
+                      <div className="w-full">
+                        <h4 className="subHeading">Longitude</h4>
+                        <p className="paragraphThin">Longitude coordinate of the location.</p>
+                      </div>
+                      <div className="w-full flex flex-col items-end">                      
+                        <input
+                          type="text"
+                          placeholder="Longitude"
+                          className="input border border-gray-300 w-full md:w-auto"
+                          value={longitude}
+                          onChange={(e) => setLongitude(e.target.value)}
+                        />
+                        {errors.longitude && (
+                          <span className="text-sm text-red-600">
+                            {errors.longitude}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end">
+                      <button
+                        className="buttonTheme w-full md:w-auto"
+                        disabled={!selectLocation}
+                      >
+                        Update
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </form>
               )}
 
               {activeTab === "Sales" && (
@@ -623,11 +689,11 @@ const Location = () => {
                     <input
                       type="text"
                       className="input w-full"
-                      value={locationName}
-                      onChange={(e) => setLocationName(e.target.value)}
+                      value={addlocationName}
+                      onChange={(e) => setAddlocationName(e.target.value)}
                     />
-                    {errors.locationName && (
-                      <span className="text-sm text-red-600">{errors.locationName}</span>
+                    {errors.addlocationName && (
+                      <span className="text-sm text-red-600">{errors.addlocationName}</span>
                     )}
                   </div>
 
@@ -636,11 +702,11 @@ const Location = () => {
                     <input
                       type="text"
                       className="input w-full"
-                      value={sales}
-                      onChange={(e) => setSales(e.target.value)}
+                      value={addsales}
+                      onChange={(e) => setAddsales(e.target.value)}
                     />
-                    {errors.sales && (
-                      <span className="text-sm text-red-600">{errors.sales}</span>
+                    {errors.addsales && (
+                      <span className="text-sm text-red-600">{errors.addsales}</span>
                     )}
                   </div>
 
@@ -650,11 +716,11 @@ const Location = () => {
                       <input
                         type="text"
                         className="input w-full"
-                        value={latitude}
-                        onChange={(e) => setLatitude(e.target.value)}
+                        value={addlatitude}
+                        onChange={(e) => setAddlatitude(e.target.value)}
                       />
-                      {errors.latitude && (
-                        <span className="text-sm text-red-600">{errors.latitude}</span>
+                      {errors.addlatitude && (
+                        <span className="text-sm text-red-600">{errors.addlatitude}</span>
                       )}
                     </div>
                     <div className="w-full">
@@ -662,25 +728,28 @@ const Location = () => {
                       <input
                         type="text"
                         className="input w-full"
-                        value={longitude}
-                        onChange={(e) => setLongitude(e.target.value)}
+                        value={addlongitude}
+                        onChange={(e) => setAddlongitude(e.target.value)}
                       />
-                      {errors.longitude && (
-                        <span className="text-sm text-red-600">{errors.longitude}</span>
+                      {errors.addlongitude && (
+                        <span className="text-sm text-red-600">{errors.addlongitude}</span>
                       )}
                     </div>
                   </div>
 
                   <div>
                     <label className="paragraphBold block mb-1">
-                      Address <span className="smallFont text-gray-500">(optional)</span>
+                      Address
                     </label>
                     <textarea
                       className="input w-full"
                       rows={7}
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
+                      value={addaddress}
+                      onChange={(e) => setAddaddress(e.target.value)}
                     />
+                    {errors.addaddress && (
+                      <span className="text-sm text-red-600">{errors.addaddress}</span>
+                    )}
                   </div>
                 </div>
 
@@ -689,10 +758,10 @@ const Location = () => {
                   <label className="paragraphBold mb-2">Select Location on Map</label>
                   <div className="flex-1 h-74 border rounded-md overflow-hidden">
                     <GoogleMapSelector
-                      address={address}
+                      address={addaddress}
                       onLocationSelect={({ lat, lng }) => {
-                        setLatitude(lat.toFixed(6));
-                        setLongitude(lng.toFixed(6));
+                        setAddlatitude(lat.toFixed(6));
+                        setAddlongitude(lng.toFixed(6));
                       }}
                     />
                   </div>

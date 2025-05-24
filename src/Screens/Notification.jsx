@@ -49,10 +49,10 @@ const NotificationPage = () => {
             >
               <div>
                 <p className="paragraphBold">
-                  {innerData.message || "User"} requested off 
-
-                  <strong>{innerData.fromDT==null?' on '+innerData.day :innerData.fromDT+' to '}</strong>
-                  <strong>{innerData.toDT==null?"":innerData.toDT}</strong>.
+                  {innerData.message || "User"} requested off on{" "}
+                  <strong>{innerData.fromDT == null ? "" : innerData.fromDT + ' to '}</strong>
+                  <strong>{innerData.toDT == null ? "" : innerData.toDT + ' '}</strong>
+                  <strong>{innerData.day == null ? "" : innerData.day}</strong>.
                 </p>
                 <p className="paragraphThin">Reason: {innerData.reason || 'No reason provided'}</p>
               </div>

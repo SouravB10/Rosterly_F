@@ -79,6 +79,38 @@ const Unavailability = () => {
   const saveUnavailability = async (e) => {
     e.preventDefault();
     // console.log(moment(fromDate).format("YYYY-MM-DD hh:mm a"));
+    let validationErrors = {};
+
+    // Check if fromDate is in the past or earlier than current time
+    if (fromDate < new Date()) {
+      validationErrors.fromDate = "From Date & Time cannot be in the past.";
+    }
+
+    if (!fromDate) {
+      validationErrors.fromDate = "From Date & Time is required.";
+    }
+
+    if (!toDate) {
+      validationErrors.toDate = "To Date & Time is required.";
+    }
+
+    if (fromDate && toDate && fromDate >= toDate) {
+      validationErrors.dateRange = "To Date & Time must be after From Date & Time.";
+    }
+
+    if (!notifyToId) {
+      validationErrors.notifyToId = "Please select a manager to notify.";
+    }
+
+    if (!reason.trim()) {
+      validationErrors.reason = "Please provide a reason.";
+    }
+
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {
+      return; // Prevent submit if any errors
+    }
     try {
       const response = await axios.post(
         `${baseURL}/unavailability/1`,
@@ -272,84 +304,92 @@ const Unavailability = () => {
             <form onSubmit={saveUnavailability}>
               <div className="flex flex-col gap-4 mt-2">
                 <div className="flex flex-col md:flex-row gap-6">
-                  <div className="flex items-center gap-4 flex-1 min-w-[280px]">
-                    <label className="paragraphBold whitespace-nowrap">
-                      From Date & Time:
-                    </label>
-                    <DatePicker
-                      className="mixedInput custom-focus z-9999999"
-                      selected={fromDate}
-                      onChange={(date) => setFromDate(date)}
-                      showTimeSelect
-                      timeFormat="hh:mm aa"
-                      timeIntervals={15}
-                      dateFormat="dd/MM/yyyy hh:mm aa"
-                      customInput={
-                        <div className="rounded-lg px-4 py-3 flex justify-between items-center cursor-pointer w-full bg-white-100 ">
-                          <span className="black-100 font12">
-                            {fromDate.toLocaleString("en-US", {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              hour12: true,
-                            })}
-                          </span>
-                          <svg
-                            className="w-4 h-4 texttheme"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M5.293 7.707a1 1 0 011.414 0L10 11.586l3.293-3.879a1 1 0 011.414 1.414l-4 4.586a1 1 0 01-1.414 0l-4-4.586a1 1 0 010-1.414z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </div>
-                      }
-                    />
+                  <div className="">
+                    <div className="flex items-center gap-4 flex-1 min-w-[280px]">
+                      <label className="paragraphBold whitespace-nowrap">
+                        From Date & Time:
+                      </label>
+                      <DatePicker
+                        className="mixedInput custom-focus z-9999999"
+                        selected={fromDate}
+                        onChange={(date) => setFromDate(date)}
+                        showTimeSelect
+                        timeFormat="hh:mm aa"
+                        timeIntervals={15}
+                        dateFormat="dd/MM/yyyy hh:mm aa"
+                        customInput={
+                          <div className="rounded-lg px-4 py-3 flex justify-between items-center cursor-pointer w-full bg-white-100 ">
+                            <span className="black-100 font12">
+                              {fromDate.toLocaleString("en-US", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true,
+                              })}
+                            </span>
+                            <svg
+                              className="w-4 h-4 texttheme"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M5.293 7.707a1 1 0 011.414 0L10 11.586l3.293-3.879a1 1 0 011.414 1.414l-4 4.586a1 1 0 01-1.414 0l-4-4.586a1 1 0 010-1.414z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </div>
+                        }
+                      />
+
+                    </div>
+                    {errors.fromDate && <p className="text-red-500 text-sm">{errors.fromDate}</p>}
                   </div>
 
-                  <div className="flex items-center gap-4 flex-1 min-w-[280px]">
-                    <label className="paragraphBold whitespace-nowrap">
-                      To Date & Time:
-                    </label>
-                    <DatePicker
-                      className="mixedInput custom-focus"
-                      selected={toDate}
-                      onChange={(date) => setToDate(date)}
-                      showTimeSelect
-                      timeFormat="hh:mm aa"
-                      timeIntervals={15}
-                      dateFormat="dd/MM/yyyy h:mm aa"
-                      customInput={
-                        <div className="rounded-lg px-4 py-3 flex justify-between items-center cursor-pointer w-full bg-white-100 ">
-                          <span className="black-100 font12">
-                            {toDate.toLocaleString("en-Us", {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              hour12: true,
-                            })}
-                          </span>
-                          <svg
-                            className="w-4 h-4 texttheme"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M5.293 7.707a1 1 0 011.414 0L10 11.586l3.293-3.879a1 1 0 011.414 1.414l-4 4.586a1 1 0 01-1.414 0l-4-4.586a1 1 0 010-1.414z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </div>
-                      }
-                    />
+                  <div className="">
+                    <div className="flex items-center gap-4 flex-1 min-w-[280px]">
+                      <label className="paragraphBold whitespace-nowrap">
+                        To Date & Time:
+                      </label>
+                      <DatePicker
+                        className="mixedInput custom-focus"
+                        selected={toDate}
+                        onChange={(date) => setToDate(date)}
+                        showTimeSelect
+                        timeFormat="hh:mm aa"
+                        timeIntervals={15}
+                        dateFormat="dd/MM/yyyy h:mm aa"
+                        customInput={
+                          <div className="rounded-lg px-4 py-3 flex justify-between items-center cursor-pointer w-full bg-white-100 ">
+                            <span className="black-100 font12">
+                              {toDate.toLocaleString("en-Us", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true,
+                              })}
+                            </span>
+                            <svg
+                              className="w-4 h-4 texttheme"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M5.293 7.707a1 1 0 011.414 0L10 11.586l3.293-3.879a1 1 0 011.414 1.414l-4 4.586a1 1 0 01-1.414 0l-4-4.586a1 1 0 010-1.414z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </div>
+                        }
+                      />
+                    </div>
+                    {errors.toDate && <p className="text-red-500 text-sm">{errors.toDate}</p>}
+                    {errors.dateRange && <p className="text-red-500 text-sm mt-1">{errors.dateRange}</p>}
                   </div>
                 </div>
 
@@ -369,6 +409,8 @@ const Unavailability = () => {
                       </option>
                     ))}
                   </select>
+                  {errors.notifyToId && <p className="text-red-500 text-sm">{errors.notifyToId}</p>}
+
                 </div>
 
                 <div>
@@ -382,18 +424,20 @@ const Unavailability = () => {
                     className="textarea w-full p-3 resize-none custom-focus"
                     placeholder="Type your reason here..."
                   />
+                  {errors.reason && <p className="text-red-500 text-sm">{errors.reason}</p>}
+
                 </div>
 
                 <div className="flex justify-end gap-4 pt-2">
                   <button className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md">
                     Save
                   </button>
-                  <button
+                  {/* <button
                     onClick={resetForm}
                     className="buttonDanger button font12 font-semibold px-4 py-2 rounded-md"
                   >
                     Reset
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </form>
@@ -424,11 +468,11 @@ const Unavailability = () => {
                       {item.unavailStatus === 0 ? "Pending" : "Approved"}
                     </p>
                   </div>
-                  <button className="black-100 hover:texttheme mt-1">
+                  <button className="black-100 hover:texttheme mt-1 cursor-pointer">
                     <FaPencilAlt className="w-4 h-4" />
                   </button>
                 </div>
-                <hr className="white-300" />
+                <hr className="white-300" /> 
               </div>
             ))}
           </div>
@@ -439,7 +483,7 @@ const Unavailability = () => {
 
           {days.map((day, index) => {
             const matchingUnavailability = recurringUnavailability.filter(
-              (item) => item.day === day
+              (item) => item.day?.startsWith(day)
             );
 
             return (
@@ -461,7 +505,7 @@ const Unavailability = () => {
                       <div key={item.id}>
                         <div className="flex ">
                           <p className="paragraph text-sm ">
-                            {item.fromDT} - {item.toDT}
+                            {item.day}  {item.fromDT} - {item.toDT}
                           </p>{" "}
                           (<p
                             className={`paragraphThin text-sm italic ${item.unavailStatus === 0
