@@ -51,10 +51,10 @@ const NotificationPage = () => {
                 <p className="paragraphBold">
                   {innerData.message || "User"} requested off 
 
-                  <strong>{innerData.fromDT==null?"":innerData.fromDT+' to '}</strong>
+                  <strong>{innerData.fromDT==null?' on '+innerData.day :innerData.fromDT+' to '}</strong>
                   <strong>{innerData.toDT==null?"":innerData.toDT}</strong>.
                 </p>
-                <p className="paragraphThin">({innerData.reason || 'No reason provided'})</p>
+                <p className="paragraphThin">Reason: {innerData.reason || 'No reason provided'}</p>
               </div>
               <div className="flex gap-2 mt-2 sm:mt-0">
                 <button className="buttonDanger">Deny</button>
