@@ -6,13 +6,22 @@ import { SlCalender } from "react-icons/sl";
 import { FaAngleLeft, FaPlus } from "react-icons/fa";
 import { FaAngleRight } from "react-icons/fa";
 import { Dialog } from "@headlessui/react";
+import axios from "axios";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 const Rosters = () => {
+  const baseURL = import.meta.env.VITE_BASE_URL;
+  const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState("default");
   const [currentWeek, setCurrentWeek] = useState(moment());
   const [stats, setStats] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShiftOpen, setIsShiftOpen] = useState(false);
+  const [copiedShift, setCopiedShift] = useState(null);
+  const [shiftsByEmployeeDay, setShiftsByEmployeeDay] = useState({});
+  const [currentEmpId, setCurrentEmpId] = useState(null);
+  const [currentDay, setCurrentDay] = useState(null);
+  const [description, setDescription] = useState('');
 
   const getWeekRange = (week) => {
     const startOfWeek = moment(week).startOf("isoWeek").format("DD MMM");
@@ -33,6 +42,25 @@ const Rosters = () => {
     console.log("Selected Location:", e.target.value);
   };
 
+  useEffect(() => {
+    const fetchLocations = async () => {
+      const token = localStorage.getItem("token");
+
+      try {
+        const response = await axios.get(`${baseURL}/locations`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setLocations(response.data);
+      } catch (error) {
+        console.error("Error fetching locations:", error);
+      }
+    };
+
+    fetchLocations();
+  }, []);
+
   const days = [
     "Mon 07/04",
     "Tue 08/04",
@@ -52,12 +80,20 @@ const Rosters = () => {
     },
   ];
 
+  const [shifts, setShifts] = useState(data);
+
   const employees = [
-    { name: "Unassigned shifts", hours: "8.25", cost: null },
-    { name: "Harish Dobila", hours: "5.00", cost: "$10.00" },
-    { name: "Sourav Behuria", hours: "4.00", cost: "$9.00" },
-    { name: "Vishal Kattera", hours: "8.00", cost: "$20.00" },
+    { id: 'unassigned', name: "Unassigned shifts", hours: "8.25", cost: null },
+    { id: 'harish', name: "Harish Dobila", hours: "5.00", cost: "$10.00" },
+    { id: 'sourav', name: "Sourav Behuria", hours: "4.00", cost: "$9.00" },
+    { id: 'vishal', name: "Vishal Kattera", hours: "8.00", cost: "$20.00" },
   ];
+
+  const onShiftAdd = (empId, day) => {
+    setCurrentEmpId(empId);
+    setCurrentDay(day);
+    setIsShiftOpen(true);
+  };
 
   const handleStats = () => {
     setStats(!stats);
@@ -90,6 +126,89 @@ const Rosters = () => {
   const [finish, setFinish] = useState(timeOptions[0]);
   const [breakTime, setBreakTime] = useState(breakOptions[0]);
   const hoursPerDay = ["12.25", "0.00", "0.00", "0.00", "0.00", "0.00", "0.00"];
+
+  const onDragEnd = (result) => {
+    const { source, destination } = result;
+    if (!destination) return;
+
+    const [sourceEmpId, sourceDay] = source.droppableId.split('-');
+    const [destEmpId, destDay] = destination.droppableId.split('-');
+
+    if (source.droppableId === destination.droppableId && source.index === destination.index) {
+      return;
+    }
+    const sourceList = Array.from(
+      (shiftsByEmployeeDay[sourceEmpId] && shiftsByEmployeeDay[sourceEmpId][sourceDay]) || []
+    );
+
+    const destList = Array.from(
+      (shiftsByEmployeeDay[destEmpId] && shiftsByEmployeeDay[destEmpId][destDay]) || []
+    );
+
+    const [moved] = sourceList.splice(source.index, 1);
+    const newShift = { ...moved, id: `${destEmpId}-${destDay}-${Date.now()}` };
+    destList.splice(destination.index, 0, newShift);
+
+    setShiftsByEmployeeDay((prev) => ({
+      ...prev,
+      [sourceEmpId]: {
+        ...prev[sourceEmpId],
+        [sourceDay]: sourceList,
+      },
+      [destEmpId]: {
+        ...prev[destEmpId],
+        [destDay]: destList,
+      },
+    }));
+  };
+
+
+  const handleCopy = (shift) => {
+    setCopiedShift(shift);
+  };
+
+  const handlePaste = (empId, day) => {
+    if (!copiedShift) return;
+    const newShift = { ...copiedShift, id: `${empId}-${day}-${Date.now()}` };
+    setShiftsByEmployeeDay((prev) => ({
+      ...prev,
+      [empId]: {
+        ...prev[empId],
+        [day]: [...(prev[empId]?.[day] || []), newShift],
+      },
+    }));
+    setCopiedShift(null);
+  };
+
+  const handleShiftSave = (e) => {
+    e.preventDefault();
+
+    if (!currentEmpId || !currentDay || !start || !finish) return;
+
+    const newShift = {
+      id: `${currentEmpId}-${currentDay}-${Date.now()}`,
+      time: `${start} - ${finish}`,
+      breakTime,
+      description,
+    };
+
+    setShiftsByEmployeeDay((prev) => ({
+      ...prev,
+      [currentEmpId]: {
+        ...prev[currentEmpId],
+        [currentDay]: [...(prev[currentEmpId]?.[currentDay] || []), newShift],
+      },
+    }));
+
+    // Reset form and close modal
+    setIsShiftOpen(false);
+    setStart('');
+    setFinish('');
+    setBreakTime('');
+    setDescription('');
+  };
+
+
   return (
     <>
       <div className="flex flex-col md:flex-row justify-between items-center mb-2 gap-4 py-2">
@@ -100,9 +219,12 @@ const Rosters = () => {
             value={selectedLocation}
             onChange={handleLocation}
           >
-            <option value="default">--Select Location--</option>
-            <option value="Location 1">Store 1</option>
-            <option value="Location 2">Store 2</option>
+            <option value="">--Select Location--</option>
+            {locations.map((location) => (
+              <option key={location.id} value={location.id}>
+                {location.location_name}
+              </option>
+            ))}
           </select>
 
           <div className="flex items-center justify-center bg-white rounded-lg text-sm font-semibold text-gray-900 w-full md:w-75 px-2">
@@ -188,7 +310,96 @@ const Rosters = () => {
         </div>
       )}
 
-      <div className="mt-8 min-h-screen">
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div >
+          <table className="min-w-full border border-gray-300 text-sm">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="w-48 p-2 text-left border border-gray-300">Employee</th>
+                {days.map((day) => (
+                  <th key={day} className="p-2 text-center border border-gray-300">
+                    {day}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+
+            <tbody>
+              {employees.map((emp) => (
+                <tr key={emp.id} className="border border-gray-300">
+                  {/* Employee Info */}
+                  <td className="p-2 border bg-gray-50">
+                    <div className="font-semibold">{emp.name}</div>
+                    <div className="text-xs text-gray-500">
+                      {emp.hours} hrs {emp.cost ? `· ${emp.cost}` : ''}
+                    </div>
+                  </td>
+
+                  {/* Days Column with DragDrop */}
+                  {days.map((day) => (
+                    <Droppable key={`${emp.id}-${day}`} droppableId={`${emp.id}-${day}`}>
+                      {(provided) => (
+                        <td
+                          className="p-2 min-w-[120px] align-top border border-gray-300"
+                          ref={provided.innerRef}
+                          {...provided.droppableProps}
+                        >
+                          <div className="space-y-2 min-h-[80px]">
+                            {(shiftsByEmployeeDay[emp.id]?.[day] || []).map((shift, index) => (
+                              <Draggable key={shift.id} draggableId={shift.id} index={index}>
+                                {(provided) => (
+                                  <div
+                                    className="bg-green-500 text-white p-2 text-sm rounded flex justify-between items-center cursor-move"
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                  >
+                                    <span>{shift.time}</span>
+                                    {/* {shift.description && <span className="text-xs italic ml-2">{shift.description}</span>} */}
+                                    <button
+                                      className="text-xs ml-2 bg-white text-green-600 px-1 rounded"
+                                      onClick={() => handleCopy(shift)}
+                                    >
+                                      +
+                                    </button>
+                                  </div>
+                                )}
+                              </Draggable>
+                            ))}
+                            {provided.placeholder}
+                          </div>
+
+                          {/* Paste Button */}
+                          {copiedShift && (
+                            <button
+                              onClick={() => handlePaste(emp.id, day)}
+                              className="text-xs mt-2 text-blue-500 underline"
+                            >
+                              Paste
+                            </button>
+                          )}
+
+                          {/* Add Shift Button */}
+                          <div className="mt-2 text-center">
+                            <button
+                              onClick={() => onShiftAdd(emp.id, day)}
+                              className="text-gray-500 hover:text-blue-600"
+                            >
+                              <FaPlus size={16} />
+                            </button>
+                          </div>
+                        </td>
+                      )}
+                    </Droppable>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </DragDropContext>
+
+      {/* <div className="mt-8 min-h-screen">
         <div className="overflow-x-auto   ">
           <table className="min-w-full border border-gray-300 text-sm">
             <thead className="bgTable">
@@ -322,7 +533,6 @@ const Rosters = () => {
                 </tr>
               ))}
 
-              {/* Add Employee Button */}
               <tr className="border border-gray-300 h-15 bg-gray-100">
                 <td className="p-2 border border-gray-300">
                   <button
@@ -344,7 +554,7 @@ const Rosters = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      </div> */}
       <Dialog
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -415,7 +625,7 @@ const Rosters = () => {
                 ×
               </button>
             </div>
-            <form className="card p-6 space-y-3">
+            <form className="card p-6 space-y-3" onSubmit={handleShiftSave}>
               <div className="">
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   {/* Start Time */}
@@ -473,6 +683,8 @@ const Rosters = () => {
                   className=" textarea paragraph"
                   rows="3"
                   placeholder="Enter description..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                 ></textarea>
               </div>
 

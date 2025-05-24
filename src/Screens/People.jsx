@@ -174,51 +174,51 @@ const People = () => {
   // };
 
   const fetchUsers = async () => {
-  setLoading(true);
-  try {
-    const currentUserId = Number(localStorage.getItem("id"));
-    const currentUserRole = Number(localStorage.getItem("role_id"));
+    setLoading(true);
+    try {
+      const currentUserId = Number(localStorage.getItem("id"));
+      const currentUserRole = Number(localStorage.getItem("role_id"));
 
-    const endpoint =
-      currentUserId === 1
-        ? `${baseURL}/users`
-        : `${baseURL}/users/login/${currentUserId}`;
+      const endpoint =
+        currentUserId === 1
+          ? `${baseURL}/users`
+          : `${baseURL}/users/login/${currentUserId}`;
 
-    const response = await axios.get(endpoint, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+      const response = await axios.get(endpoint, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
-    let allUsers = response.data.data;
-    console.log("Raw users from API:", allUsers);
+      let allUsers = response.data.data;
+      console.log("Raw users from API:", allUsers);
 
-    let filteredUsers = allUsers.filter(user => {
-      const userId = Number(user.id);
-      const userRole = Number(user.role_id);
+      let filteredUsers = allUsers.filter(user => {
+        const userId = Number(user.id);
+        const userRole = Number(user.role_id);
 
-      if (userId === currentUserId) {
-        console.log(`Removing self with id: ${userId}`);
-        return false;
-      }
-      if (currentUserRole === 2 && userRole === 1) {
-        console.log(`Removing admin user with id: ${userId} for manager role`);
-        return false;
-      }
-      return true;
-    });
+        if (userId === currentUserId) {
+          console.log(`Removing self with id: ${userId}`);
+          return false;
+        }
+        if (currentUserRole === 2 && userRole === 1) {
+          console.log(`Removing admin user with id: ${userId} for manager role`);
+          return false;
+        }
+        return true;
+      });
 
-    console.log("Filtered users:", filteredUsers);
+      console.log("Filtered users:", filteredUsers);
 
-    setUsers(filteredUsers);
-    setFilteredProfiles(filteredUsers);
+      setUsers(filteredUsers);
+      setFilteredProfiles(filteredUsers);
 
-  } catch (error) {
-    console.error("Error fetching users:", error.response?.data || error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+    } catch (error) {
+      console.error("Error fetching users:", error.response?.data || error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   useEffect(() => {
@@ -396,18 +396,21 @@ const People = () => {
     if (!confirmDeleteId) return;
 
     try {
-      await axios.delete(`${baseURL}/users/${confirmDeleteId}`, {
+      const response = await axios.delete(`${baseURL}/users/${confirmDeleteId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
+      console.log("User deleted:", response.data); // Add this for confirmation
+
       setFeedbackMessage("User deleted successfully.");
       setShowConfirmButtons(false);
-      setTimeout(() => {
-        setFeedbackModalOpen(false);
-        window.location.reload();
-      }, 2000);
+      fetchUsers(); // Refresh the user list
+      // setTimeout(() => {
+      //   setFeedbackModalOpen(false);
+      //   window.location.reload();
+      // }, 2000);
     } catch (error) {
       console.error("Error deleting user:", error);
       setFeedbackMessage("Failed to delete user.");
