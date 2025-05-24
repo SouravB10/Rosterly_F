@@ -437,7 +437,7 @@ const Rosters = () => {
                             <div className="text-center">
                               <button
                                 onClick={() => onShiftAdd(emp.id, day)}
-                                className="text-gray-500 hover:text-green-700"
+                                className="text-gray-500 hover:text-green-700 cursor-pointer p-1"
                                 title="Add Shift"
                               >
                                 <FaPlus size={12} />
