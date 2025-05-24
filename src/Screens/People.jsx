@@ -426,6 +426,9 @@ const People = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
+        data: {
+          deletedby: currentUserId, // You must pass this value from your app's auth context
+        },
       });
 
       setFeedbackMessage("User deleted successfully.");
@@ -720,12 +723,9 @@ const People = () => {
                     }
                   />
                   {errors.mobileNumber && (
-                    <p className="text-red-500 text-sm">
-                      {errors.percentage}
-                    </p>
+                    <p className="text-red-500 text-sm">{errors.percentage}</p>
                   )}
                 </div>
-                
               </div>
               {currentUserRole === 1 && (
                 <div className="flex flex-col">
