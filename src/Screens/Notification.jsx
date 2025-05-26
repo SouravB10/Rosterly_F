@@ -40,7 +40,7 @@ const NotificationPage = () => {
       ) : (
         notifications.map((note) => {
           const { id, data } = note;
-          const innerData = data?.data || {};
+          const innerData = data;
 
           return (
             <div
