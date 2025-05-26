@@ -17,9 +17,9 @@ const NotificationPage = () => {
           },
         });
 
-        const fetchedNotifications = response.data?.data || [];
-        setNotifications(fetchedNotifications);
-        console.log("Fetched notifications:", fetchedNotifications);
+        const fetchedNotification = response.data?.notifications || [];
+        setNotifications(fetchedNotification);
+        console.log("Fetched notifications:", fetchedNotification);
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
