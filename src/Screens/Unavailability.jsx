@@ -161,9 +161,10 @@ const Unavailability = () => {
       resetForm();
       setFeedbackMessage(response.data?.message);
       setFeedbackModalOpen(true);
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      fetchUnavailability();
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 3000);
 
       // try {
       //   const isEditMode = !!unavailabilityId; // Check if editing
@@ -259,7 +260,8 @@ const Unavailability = () => {
       resetForm();
       setFeedbackMessage(response.data?.message);
       setFeedbackModalOpen(true);
-      setTimeout(() => window.location.reload(), 3000);
+      fetchUnavailability();
+      // setTimeout(() => window.location.reload(), 3000);
     } catch (error) {
       console.error("Error updating unavailability:", error);
       setFeedbackMessage(error.response?.data?.message || "An error occurred");
@@ -353,9 +355,10 @@ const Unavailability = () => {
       setFeedbackMessage(response.data?.message);
       setFeedbackModalOpen(true);
       console.log(start, finish, "Time");
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 3000);
+      fetchUnavailability();
     } catch (error) {
       console.error("Error saving recurring unavailability:", error);
       setFeedbackMessage(error.response.data?.message || "An error occurred");
@@ -363,24 +366,23 @@ const Unavailability = () => {
     }
   };
 
+  const fetchUnavailability = async () => {
+    try {
+      const response = await axios.get(
+        `${baseURL}/unavailability/login/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setUnavailability(response.data.data);
+      console.log("Unavailability data:", response.data.data);
+    } catch (error) {
+      console.error("Error fetching unavailability:", error);
+    }
+  };
   useEffect(() => {
-    const fetchUnavailability = async () => {
-      try {
-        const response = await axios.get(
-          `${baseURL}/unavailability/login/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setUnavailability(response.data.data);
-        console.log("Unavailability data:", response.data.data);
-      } catch (error) {
-        console.error("Error fetching unavailability:", error);
-      }
-    };
-
     fetchUnavailability();
   }, []);
 
