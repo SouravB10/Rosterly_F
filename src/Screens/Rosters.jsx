@@ -24,6 +24,10 @@ const Rosters = () => {
   const [currentDay, setCurrentDay] = useState(null);
   const [locatedEmployees, setLocatedEmployees] = useState([]);
   const [description, setDescription] = useState("");
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [publishedRosters, setPublishedRosters] = useState([]);
+  const [isPublished, setIsPublished] = useState(false);
+
   const loginId = localStorage.getItem("id");
 
   const getWeekRange = (week) => {
@@ -95,16 +99,6 @@ const Rosters = () => {
     fetchLocations();
   }, []);
 
-  // const days = [
-  //   "Mon 07/04",
-  //   "Tue 08/04",
-  //   "Wed 09/04",
-  //   "Thu 10/04",
-  //   "Fri 11/04",
-  //   "Sat 12/04",
-  //   "Sun 13/04",
-  // ];
-
   const data = [
     {
       time: "09:30 Am - 06:30 Pm",
@@ -112,15 +106,6 @@ const Rosters = () => {
       unavail: "Unavailable",
       icon: "+",
     },
-  ];
-
-  const [shifts, setShifts] = useState(data);
-
-  const employees = [
-    { id: "unassigned", name: "Unassigned shifts", hours: "8.25", cost: null },
-    { id: "harish", name: "Harish Dobila", hours: "5.00", cost: "$10.00" },
-    { id: "sourav", name: "Sourav Behuria", hours: "4.00", cost: "$9.00" },
-    { id: "vishal", name: "Vishal Kattera", hours: "8.00", cost: "$20.00" },
   ];
 
   const onShiftAdd = (empId, day) => {
@@ -223,7 +208,10 @@ const Rosters = () => {
   const handleShiftSave = (e) => {
     e.preventDefault();
 
-    if (!currentEmpId || !currentDay || !start || !finish) return;
+    if (!currentEmpId || !currentDay || !start || !finish) {
+      alert("Please fill all fields before saving the shift.");
+      return;
+    }
 
     const newShift = {
       id: `${currentEmpId}-${currentDay}-${Date.now()}`,
@@ -232,13 +220,19 @@ const Rosters = () => {
       description,
     };
 
-    setShiftsByEmployeeDay((prev) => ({
-      ...prev,
-      [currentEmpId]: {
-        ...prev[currentEmpId],
-        [currentDay]: [...(prev[currentEmpId]?.[currentDay] || []), newShift],
-      },
-    }));
+    setShiftsByEmployeeDay((prev) => {
+      const currentEmpData = prev[currentEmpId] || {};
+      const currentDayShifts = currentEmpData[currentDay] || [];
+
+
+      return {
+        ...prev,
+        [currentEmpId]: {
+          ...currentEmpData,
+          [currentDay]: [...currentDayShifts, newShift],
+        },
+      };
+    });
 
     // Reset form and close modal
     setIsShiftOpen(false);
@@ -247,6 +241,142 @@ const Rosters = () => {
     setBreakTime("");
     setDescription("");
   };
+
+  const handlePublish = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!selectedLocation) {
+      alert("Please select a location before publishing the roster.");
+      return;
+    }
+
+    // Check if already published
+    const alreadyPublished = publishedRosters.some(
+      (r) => r.location_id === selectedLocation && r.days === days
+    );
+
+    if (alreadyPublished) {
+      alert("This roster has already been published for the selected week and location.");
+      return;
+    }
+
+    const formattedShifts = [];
+
+    Object.entries(shiftsByEmployeeDay).forEach(([empId, daysObj]) => {
+      Object.entries(daysObj).forEach(([day, shifts]) => {
+        shifts.forEach((shift) => {
+          formattedShifts.push({
+            user_id: empId,
+            date: moment(day, "ddd, DD/MM").format("YYYY-MM-DD"),
+            startTime: shift.time.split(" - ")[0],
+            endTime: shift.time.split(" - ")[1],
+            breakTime: shift.breakTime,
+            description: shift.description,
+            hrsRate: shift.hrsRate || "0.00",
+            percentRate: shift.percentRate || "0.00",
+            totalPay: shift.totalPay || "0.00",
+            status: "active",
+            location_id: selectedLocation,
+          });
+        });
+      });
+    });
+
+    if (formattedShifts.length === 0) {
+      alert("No shifts to publish.");
+      return;
+    }
+
+    setIsPublishing(true);
+    try {
+      const response = await axios.post(
+        `${baseURL}/rosterStore/${loginId}`,
+        {
+          location_id: selectedLocation,
+          rosters: formattedShifts,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert("Roster published successfully!");
+      console.log("Publish response:", response.data);
+
+      // Add to published list
+      setPublishedRosters((prev) => [
+        ...prev,
+        { location_id: selectedLocation, days },
+      ]);
+      fetchRoster();
+    } catch (error) {
+      console.error("Error publishing roster:", error);
+      alert("Failed to publish roster. Please try again.");
+    } finally {
+      setIsPublishing(false);
+    }
+  };
+
+  const fetchRoster = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/rosterfetch/${loginId}`);
+      const rosterData = response.data.data;
+
+      const organizedShifts = {};
+
+      rosterData.forEach((shift) => {
+        const empId = shift.user_id;
+        const day = moment(shift.date).format("ddd, DD/MM");
+
+        const formattedShift = {
+          id: shift.id.toString(),
+          time: `${shift.startTime} - ${shift.endTime}`,
+          breakTime: shift.breakTime,
+          totalPay: shift.totalPay,
+          hrsRate: shift.hrsRate,
+          percentRate: shift.percentRate,
+          description: shift.description,
+          location_id: shift.location_id,
+        };
+
+        if (!organizedShifts[empId]) {
+          organizedShifts[empId] = {};
+        }
+
+        if (!organizedShifts[empId][day]) {
+          organizedShifts[empId][day] = [];
+        }
+
+        organizedShifts[empId][day].push(formattedShift);
+      });
+
+      setShiftsByEmployeeDay(organizedShifts);
+    } catch (error) {
+      console.error("Failed to fetch roster:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedLocation && currentWeek) {
+      fetchRoster();
+    }
+  }, [selectedLocation, currentWeek]);
+
+  const handleTogglePublish = () => {
+    if (isPublished) {
+      // Unpublishing
+      setIsPublished(false);
+      // Optional: Call unpublish API here
+    } else {
+      // Publishing
+      setIsPublished(true);
+      handlePublish();
+    }
+  };
+
+
 
   return (
     <>
@@ -300,7 +430,14 @@ const Rosters = () => {
           </div>
         </div>
 
-        <button className="buttonSuccess ">Publish</button>
+        <button
+          className={`${isPublished ? "buttonDanger" : "buttonSuccess"}`}
+          onClick={handleTogglePublish}
+          disabled={isPublishing}
+        >
+          {isPublishing ? "Publishing..." : isPublished ? "Unpublish" : "Publish"}
+        </button>
+
       </div>
       {stats && (
         <div className="w-full flex flex-col md:flex-row items-center justify-start gap-4 mt-6">
@@ -353,7 +490,7 @@ const Rosters = () => {
           <table className="min-w-full border border-gray-300 text-sm">
             <thead className="bg-gray-100 bgTable rounded ">
               <tr>
-                <th className="w-48 p-2 text-left border border-gray-300">
+                <th className="w-48 p-2 text-white bgTable1 text-left border border-gray-300">
                   Employee
                 </th>
                 {days.map((day) => (
@@ -397,6 +534,7 @@ const Rosters = () => {
                                   key={shift.id}
                                   draggableId={shift.id}
                                   index={index}
+                                  isDragDisabled={isPublished}
                                 >
                                   {(provided) => (
                                     <div
@@ -433,7 +571,7 @@ const Rosters = () => {
                           )}
 
                           {/* Add Shift Button */}
-                          {!shiftsByEmployeeDay[emp.id]?.[day]?.length && (
+                          {!(shiftsByEmployeeDay[emp.id]?.[day]?.length > 0) && !(isPublished) && (
                             <div className="text-center">
                               <button
                                 onClick={() => onShiftAdd(emp.id, day)}
@@ -456,162 +594,6 @@ const Rosters = () => {
         </div>
       </DragDropContext>
 
-      {/* <div className="mt-8 min-h-screen">
-        <div className="overflow-x-auto   ">
-          <table className="min-w-full border border-gray-300 text-sm">
-            <thead className="bgTable">
-              <tr className=" border border-gray-300">
-                <th className="w-48 p-2 text-left border border-gray-300 subHeading"></th>
-                {days.map((day, idx) => (
-                  <th
-                    key={idx}
-                    className="p-2 text-center text-gray-800 font-bold border border-gray-300"
-                  >
-                    {day}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-
-            <tbody>
-              {employees.map((emp, idx) => (
-                <tr key={idx} className="border border-gray-300">
-                  <td className="p-2 border border-gray-300 bg-gray-50">
-                    <div className="paragraphBold">{emp.name}</div>
-                    <div className="smallText">
-                      {emp.hours} hrs {emp.cost ? `· ${emp.cost}` : ""}
-                    </div>
-                  </td>
-
-                  {data.map((d, colIdx) => (
-                    <td
-                      key={colIdx}
-                      className="text-center h-20 align-center p-2 border border-gray-300"
-                    >
-                      <div className="bgSucces text-white p-2 paragraph rounded">
-                        {d.time}
-                        <br />
-                        <span className="text-xs">0.50 Hrs (15 Min)</span>{" "}
-                        <br />
-                        <span className="text-xs">Lunch</span>
-                      </div>
-                    </td>
-                  ))}
-                  {data.map((d, colIdx) => (
-                    <td
-                      key={colIdx}
-                      className="text-center h-20 align-center p-2 border border-gray-300 "
-                    >
-                      <button
-                        className="text-gray-400 hover:text-blue-500 font-bold"
-                        onClick={() => setIsShiftOpen(true)}
-                      >
-                        <FaPlus
-                          className=" hover:text-violet-950 cursor bg-rosterGreen text-white rounded-md p-1"
-                          size={20}
-                        />
-                      </button>
-                    </td>
-                  ))}
-                  {data.map((d, colIdx) => (
-                    <td
-                      key={colIdx}
-                      className="text-center h-20 bg-gray-100 align-center p-2 border border-gray-300"
-                    >
-                      <button className="text-gray-500 paragraph hover:text-blue-500 ">
-                        {d.unavail}
-                      </button>
-                    </td>
-                  ))}
-                  {data.map((d, colIdx) => (
-                    <td
-                      key={colIdx}
-                      className="text-center h-20 align-center p-2 border border-gray-300"
-                    >
-                      <button
-                        className="text-gray-400 hover:text-blue-500 font-bold"
-                        onClick={() => setIsShiftOpen(true)}
-                      >
-                        <FaPlus
-                          className=" hover:text-violet-950 cursor bg-rosterGreen text-white rounded-md p-1"
-                          size={20}
-                        />
-                      </button>
-                    </td>
-                  ))}
-                  {data.map((d, colIdx) => (
-                    <td
-                      key={colIdx}
-                      className="text-center h-20 align-center p-2 border border-gray-300"
-                    >
-                      <button
-                        className="text-gray-400 hover:text-blue-500 font-bold"
-                        onClick={() => setIsShiftOpen(true)}
-                      >
-                        <FaPlus
-                          className=" hover:text-violet-950 cursor bg-rosterGreen text-white rounded-md p-1"
-                          size={20}
-                        />
-                      </button>
-                    </td>
-                  ))}
-                  {data.map((d, colIdx) => (
-                    <td
-                      key={colIdx}
-                      className="text-center h-20 align-center p-2 border border-gray-300"
-                    >
-                      <button
-                        className="text-gray-400 hover:text-blue-500 font-bold"
-                        onClick={() => setIsShiftOpen(true)}
-                      >
-                        <FaPlus
-                          className=" hover:text-violet-950 cursor bg-rosterGreen text-white rounded-md p-1"
-                          size={20}
-                        />
-                      </button>
-                    </td>
-                  ))}
-                  {data.map((d, colIdx) => (
-                    <td
-                      key={colIdx}
-                      className="text-center h-20 align-center p-2 border border-gray-300"
-                    >
-                      <button
-                        className="text-gray-400 hover:text-blue-500 font-bold"
-                        onClick={() => setIsShiftOpen(true)}
-                      >
-                        <FaPlus
-                          className=" hover:text-violet-950 cursor bg-rosterGreen text-white rounded-md p-1"
-                          size={20}
-                        />
-                      </button>
-                    </td>
-                  ))}
-                </tr>
-              ))}
-
-              <tr className="border border-gray-300 h-15 bg-gray-100">
-                <td className="p-2 border border-gray-300">
-                  <button
-                    className="buttonSuccess"
-                    onClick={() => setIsModalOpen(true)}
-                  >
-                    + Employee
-                  </button>
-                </td>
-                {days.map((_, idx) => (
-                  <td
-                    key={idx}
-                    className="p-2 text-center paragraphBold border border-gray-300"
-                  >
-                    {hoursPerDay[idx]} hrs
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div> */}
       <Dialog
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
