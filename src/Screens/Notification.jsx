@@ -17,9 +17,9 @@ const NotificationPage = () => {
           },
         });
 
-        const fetchedNotifications = response.data?.data || [];
-        setNotifications(fetchedNotifications);
-        console.log("Fetched notifications:", fetchedNotifications);
+        const fetchedNotification = response.data?.notifications || [];
+        setNotifications(fetchedNotification);
+        console.log("Fetched notifications:", fetchedNotification);
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
@@ -40,7 +40,7 @@ const NotificationPage = () => {
       ) : (
         notifications.map((note) => {
           const { id, data } = note;
-          const innerData = data?.data || {};
+          const innerData = data;
 
           return (
             <div
@@ -56,10 +56,11 @@ const NotificationPage = () => {
                 </p>
                 <p className="paragraphThin">Reason: {innerData.reason || 'No reason provided'}</p>
               </div>
-              <div className="flex gap-2 mt-2 sm:mt-0">
+              {innerData.status == 1 ? null : (<div className="flex gap-2 mt-2 sm:mt-0">
                 <button className="buttonDanger">Deny</button>
                 <button className="buttonSuccess">Approve</button>
-              </div>
+              </div>)}
+
             </div>
           );
         })

@@ -21,6 +21,7 @@ const Unavailability = () => {
   const [selectedDay, setSelectedDay] = useState("");
   const [selectToNotify, setSelectToNotify] = useState([]);
   const [notifyToId, setNotifyToId] = useState("");
+  const [managers, setManagers] = useState([]);
   const [unavailability, setUnavailability] = useState([]);
   const [errors, setErrors] = useState({});
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
@@ -28,6 +29,10 @@ const Unavailability = () => {
   const [isAllDay, setIsAllDay] = useState(false);
   const token = localStorage.getItem("token");
   const id = localStorage.getItem("id");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [unavailabilityId, setUnavailabilityId] = useState(null);
+
 
   const days = [
     "Wednesday",
@@ -66,6 +71,25 @@ const Unavailability = () => {
     }
   };
 
+
+  useEffect(() => {
+    axios.get(`${baseURL}/get-managers`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then((res) => {
+        setManagers(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching managers", err);
+      });
+  }, []);
+
+
+  useEffect(() => {
+    fetchNotifyingManager();
+  }, []);
+
+
   const resetForm = () => {
     setFromDate(new Date());
     setToDate(new Date());
@@ -73,6 +97,9 @@ const Unavailability = () => {
     setNotifyToId("");
     setSelectedDay("");
     setSelectToNotify([]);
+    setIsEditing(false);
+    setEditId(null);
+    setErrors({});
   };
 
   // save the unavailability
@@ -134,15 +161,114 @@ const Unavailability = () => {
       resetForm();
       setFeedbackMessage(response.data?.message);
       setFeedbackModalOpen(true);
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      fetchUnavailability();
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 3000);
+
+      // try {
+      //   const isEditMode = !!unavailabilityId; // Check if editing
+      //   const url = `${baseURL}/unavailability/${isEditMode ? unavailabilityId : "1"}`;
+      //   const method = isEditMode ? axios.put : axios.post;
+
+      //   const response = await method(
+      //     url,
+      //     {
+      //       userId: id,
+      //       unavailType: 1,
+      //       day: selectedDay,
+      //       fromDT: moment(fromDate).format("YYYY-MM-DD hh:mm a"),
+      //       toDT: moment(toDate).format("YYYY-MM-DD hh:mm a"),
+      //       notifyTo: notifyToId,
+      //       unavailStatus: "pending",
+      //       reason: reason,
+      //     },
+      //     {
+      //       headers: {
+      //         Authorization: `Bearer ${token}`,
+      //       },
+      //     }
+      //   );
+
+      //   console.log("Unavailability saved:", response.data);
+      //   resetForm();
+      //   setFeedbackMessage(response.data?.message);
+      //   setFeedbackModalOpen(true);
+      //   setTimeout(() => {
+      //     window.location.reload();
+      //   }, 3000);
+
     } catch (error) {
       console.error("Error saving unavailability:", error);
       setFeedbackMessage(error.response.data?.message || "An error occurred");
       setFeedbackModalOpen(true);
     }
   };
+
+  const updateUnavailability = async (e) => {
+    e.preventDefault();
+
+    const validationErrors = {};
+
+    if (!fromDate) {
+      validationErrors.fromDate = "From Date & Time is required.";
+    } else if (fromDate < new Date()) {
+      validationErrors.fromDate = "From Date & Time cannot be in the past.";
+    }
+
+    if (!toDate) {
+      validationErrors.toDate = "To Date & Time is required.";
+    }
+
+    if (fromDate && toDate && fromDate >= toDate) {
+      validationErrors.dateRange = "To Date & Time must be after From Date & Time.";
+    }
+
+    if (!notifyToId) {
+      validationErrors.notifyToId = "Please select a manager to notify.";
+    }
+
+    if (!reason.trim()) {
+      validationErrors.reason = "Please provide a reason.";
+    }
+
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) return;
+
+    try {
+      const response = await axios.put(
+        `${baseURL}/unavailability/${unavailabilityId}`,
+        {
+          userId: id,
+          unavailType: 1,
+          day: selectedDay,
+          fromDT: moment(fromDate).format("YYYY-MM-DD hh:mm a"),
+          toDT: moment(toDate).format("YYYY-MM-DD hh:mm a"),
+          notifyTo: notifyToId,
+          unavailStatus: "pending",
+          reason,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Unavailability updated:", response.data);
+      resetForm();
+      setFeedbackMessage(response.data?.message);
+      setFeedbackModalOpen(true);
+      fetchUnavailability();
+      // setTimeout(() => window.location.reload(), 3000);
+    } catch (error) {
+      console.error("Error updating unavailability:", error);
+      setFeedbackMessage(error.response?.data?.message || "An error occurred");
+      setFeedbackModalOpen(true);
+    }
+  };
+
 
   const generateTimeOptions = () => {
     let times = [];
@@ -229,9 +355,10 @@ const Unavailability = () => {
       setFeedbackMessage(response.data?.message);
       setFeedbackModalOpen(true);
       console.log(start, finish, "Time");
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 3000);
+      fetchUnavailability();
     } catch (error) {
       console.error("Error saving recurring unavailability:", error);
       setFeedbackMessage(error.response.data?.message || "An error occurred");
@@ -239,24 +366,23 @@ const Unavailability = () => {
     }
   };
 
+  const fetchUnavailability = async () => {
+    try {
+      const response = await axios.get(
+        `${baseURL}/unavailability/login/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setUnavailability(response.data.data);
+      console.log("Unavailability data:", response.data.data);
+    } catch (error) {
+      console.error("Error fetching unavailability:", error);
+    }
+  };
   useEffect(() => {
-    const fetchUnavailability = async () => {
-      try {
-        const response = await axios.get(
-          `${baseURL}/unavailability/login/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setUnavailability(response.data.data);
-        console.log("Unavailability data:", response.data.data);
-      } catch (error) {
-        console.error("Error fetching unavailability:", error);
-      }
-    };
-
     fetchUnavailability();
   }, []);
 
@@ -294,6 +420,16 @@ const Unavailability = () => {
     setModalNotifyToId("");
     setModalDescription("");
   }
+  const handleEdit = (item) => {
+    setIsEditing(true);
+    setUnavailabilityId(item.id);
+    setEditId(item.id);
+    setFromDate(new Date(item.fromDT));
+    setToDate(new Date(item.toDT));
+    setReason(item.reason || "");
+    setNotifyToId(item.notifyTo);
+  };
+
 
   return (
     <>
@@ -397,18 +533,37 @@ const Unavailability = () => {
                   <label className="paragraphBold block mb-2">
                     Select a manager to notify
                   </label>
-                  <select
+                  {/* <select
                     className="input w-full p-3 custom-focus"
                     onChange={(e) => setNotifyToId(e.target.value)}
                     onClick={fetchNotifyingManager}
                   >
-                    <option>-- Select --</option>
+                    <option value="">-- Select --</option>
+                    {selectToNotify.map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.firstName} {user.lastName}
+                      </option>
+                    ))}
+                  </select> */}
+
+                  <select
+                    className="input w-full p-3 custom-focus"
+                    // onChange={(e) => setNotifyToId(e.target.value)}
+                    onChange={(e) => setNotifyToId(Number(e.target.value))}
+                    onClick={fetchNotifyingManager}
+                    value={notifyToId}
+                  >
+                    <option value="">-- Select --</option>
                     {selectToNotify.map((user) => (
                       <option key={user.id} value={user.id}>
                         {user.firstName} {user.lastName}
                       </option>
                     ))}
                   </select>
+
+
+
+
                   {errors.notifyToId && <p className="text-red-500 text-sm">{errors.notifyToId}</p>}
 
                 </div>
@@ -429,9 +584,49 @@ const Unavailability = () => {
                 </div>
 
                 <div className="flex justify-end gap-4 pt-2">
-                  <button className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md">
+                  {/* <button className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md">
                     Save
+                  </button> */}
+
+
+
+                  {/* <button className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md">
+                    {isEditing ? "Update" : "Save"}
                   </button>
+                  {isEditing && (
+                    <button
+                      onClick={resetForm}
+                      type="button"
+                      className="buttonDanger button font12 font-semibold px-4 py-2 rounded-md"
+                    >
+                      Cancel
+                    </button>
+                  )} */}
+                  {!isEditing ? (
+                    <button
+                      onClick={saveUnavailability}
+                      className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md"
+                    >
+                      Save
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        onClick={updateUnavailability}
+                        className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md"
+                      >
+                        Update
+                      </button>
+                      <button
+                        onClick={resetForm}
+                        type="button"
+                        className="buttonDanger button font12 font-semibold px-4 py-2 rounded-md"
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  )}
+
                   {/* <button
                     onClick={resetForm}
                     className="buttonDanger button font12 font-semibold px-4 py-2 rounded-md"
@@ -468,11 +663,19 @@ const Unavailability = () => {
                       {item.unavailStatus === 0 ? "Pending" : "Approved"}
                     </p>
                   </div>
-                  <button className="black-100 hover:texttheme mt-1 cursor-pointer">
+                  {/* <button className="black-100 hover:texttheme mt-1 cursor-pointer">
+                    <FaPencilAlt className="w-4 h-4" />
+                  </button> */}
+                  <button
+                    className="black-100 hover:texttheme mt-1 cursor-pointer"
+                    onClick={() => handleEdit(item)}
+                  >
                     <FaPencilAlt className="w-4 h-4" />
                   </button>
+
+
                 </div>
-                <hr className="white-300" /> 
+                <hr className="white-300" />
               </div>
             ))}
           </div>
