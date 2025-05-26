@@ -137,9 +137,10 @@ const People = () => {
       setFeedbackMessage(response.data?.message || "User created successfully");
       setFeedbackModalOpen(true);
       resetForm(); // clear form
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 2000);
+      fetchUsers(); 
     } catch (error) {
       console.error("Error creating user:", error);
       setFeedbackMessage(
