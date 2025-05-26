@@ -355,9 +355,10 @@ const Unavailability = () => {
       setFeedbackMessage(response.data?.message);
       setFeedbackModalOpen(true);
       console.log(start, finish, "Time");
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 3000);
+      fetchUnavailability();
     } catch (error) {
       console.error("Error saving recurring unavailability:", error);
       setFeedbackMessage(error.response.data?.message || "An error occurred");

@@ -440,7 +440,7 @@ const Location = () => {
               {activeTab === "Employees" && (
                 <button
                   className="buttonTheme w-full md:w-auto"
-                  title="Add Location"
+                  title="Add Employee to Location"
                   onClick={() => setIsEmployeeModalOpen(true)}
                 >
                   + Employee
