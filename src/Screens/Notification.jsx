@@ -56,10 +56,11 @@ const NotificationPage = () => {
                 </p>
                 <p className="paragraphThin">Reason: {innerData.reason || 'No reason provided'}</p>
               </div>
-              <div className="flex gap-2 mt-2 sm:mt-0">
+              {innerData.status == 1 ? null : (<div className="flex gap-2 mt-2 sm:mt-0">
                 <button className="buttonDanger">Deny</button>
                 <button className="buttonSuccess">Approve</button>
-              </div>
+              </div>)}
+
             </div>
           );
         })
