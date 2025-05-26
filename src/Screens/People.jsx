@@ -311,7 +311,7 @@ const People = () => {
 
     try {
       const response = await axios.post(
-        `${baseURL}/users/user-profile/${id}/status`,
+        `${baseURL}/users/profile/${id}/status`,
         {
           status: newStatus,
           updated_by: currentUserId,

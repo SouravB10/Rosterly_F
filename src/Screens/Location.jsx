@@ -123,14 +123,73 @@ const Location = () => {
   const allSelected =
     employeeName.length > 0 && employees.length === employeeName.length;
 
-  const handleEmployeeSubmit = (e) => {
-    e.preventDefault();
-    if (validate()) {
-      // proceed with form submission
-      console.log({ locationName, employees });
-      alert("Form submitted!");
+  // const handleEmployeeSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (validate()) {
+  //     // proceed with form submission
+  //     console.log({ locationName, employees });
+  //     alert("Form submitted!");
+  //   }
+  // };
+
+const handleEmployeeSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!locationId) {
+    alert("Please select a valid location.");
+    return;
+  }
+
+  if (employees.length === 0) {
+    alert("Please select at least one employee.");
+    return;
+  }
+
+  try {
+    // Get token from storage or state
+    const token = localStorage.getItem("token"); // Replace with your actual token logic
+
+    const res = await axios.post(
+      `${baseURL}/locations/assignlocations`,
+      {
+        location_id: locationId,
+        employee_ids: employees.map((id) => parseInt(id)), // Convert to integers
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log("API Response:", res.data);
+
+    if (res.data.status) {
+      alert(res.data.message);
+      setIsEmployeeModalOpen(false);
+      setEmployees([]);
+      setAllSelected(false);
+      setLocationName("");
+    } else {
+      alert(res.data.message || "Something went wrong.");
     }
-  };
+  } catch (error) {
+    console.error("API Error:", error);
+
+    // Show detailed error if available
+    if (error.response) {
+      alert(error.response.data.message || "Server responded with an error.");
+    } else if (error.request) {
+      alert("No response from the server. Check your network.");
+    } else {
+      alert("Request setup error: " + error.message);
+    }
+  }
+};
+
+
 
   // Location Handling Start here
   const getLocation = async () => {
