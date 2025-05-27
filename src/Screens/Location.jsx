@@ -1009,5 +1009,5 @@ const handleAllchecked = () => {
     </div>
   );
 };
-
+};
 export default Location;
