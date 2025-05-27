@@ -140,7 +140,7 @@ const People = () => {
       // setTimeout(() => {
       //   window.location.reload();
       // }, 2000);
-      fetchUsers(); 
+      fetchUsers();
     } catch (error) {
       console.error("Error creating user:", error);
       setFeedbackMessage(
@@ -419,6 +419,15 @@ const People = () => {
     setShowConfirmButtons(true);
     setFeedbackModalOpen(true);
   };
+
+  const handleCloseModal = () => {
+    setFeedbackModalOpen(false);
+    setTimeout(() => {
+      setFeedbackMessage('');
+      setShowConfirmButtons(false);
+    }, 300);
+  };
+
 
   const confirmDelete = async () => {
     setLoading(true);
@@ -1047,7 +1056,8 @@ const People = () => {
       {/* ✅ Reusable Modal */}
       <FeedbackModal
         isOpen={feedbackModalOpen}
-        onClose={() => setFeedbackModalOpen(false)}
+        onClose={handleCloseModal}
+        // onClose={() => setFeedbackModalOpen(false)}
         message={feedbackMessage}
         onConfirm={confirmDelete}
         showConfirmButtons={showConfirmButtons}
