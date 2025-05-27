@@ -248,7 +248,7 @@ const People = () => {
       applySearchFilter(searchTerm, users);
     }
   }, [users]);
-  
+
   const fetchLocations = async () => {
     try {
       const response = await axios.get(`${baseURL}/locations`, {
@@ -285,7 +285,7 @@ const People = () => {
       const lastName = profile.lastName?.toLowerCase() || "";
       const email = profile.email?.toLowerCase() || "";
       const mobile = profile.mobileNumber?.toString().toLowerCase() || "";
-      const location = profile.location?.toLowerCase() || "";
+      // const location = profile.location?.toLowerCase() || "";
       const payrate = profile.payrate?.toString() || "";
       const payratePercent = profile.payratePercent?.toString() || "";
       const dob = profile.dob || "";
@@ -295,7 +295,7 @@ const People = () => {
         lastName.includes(keyword) ||
         email.includes(keyword) ||
         mobile.includes(keyword) ||
-        location.includes(keyword) ||
+        // location.includes(keyword) ||
         payrate.includes(keyword) ||
         payratePercent.includes(keyword) ||
         dob.includes(keyword);
