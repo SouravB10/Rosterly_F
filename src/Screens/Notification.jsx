@@ -34,6 +34,9 @@ const NotificationPage = () => {
     };
 
     fetchNotifications();
+    const interval = setInterval(fetchNotifications, 10000); // every 10 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
   const handleActions = (id, actionType) => {
