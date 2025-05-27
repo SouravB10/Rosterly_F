@@ -109,7 +109,7 @@ const Unavailability = () => {
     let validationErrors = {};
 
     // Check if fromDate is in the past or earlier than current time
-    if (fromDate < new Date()) {
+    if (fromDate <= new Date()) {
       validationErrors.fromDate = "From Date & Time cannot be in the past.";
     }
 
