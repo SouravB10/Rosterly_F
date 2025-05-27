@@ -11,6 +11,7 @@ const NotificationPage = () => {
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [showConfirmButtons, setShowConfirmButtons] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [removingId, setRemovingId] = useState(null);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -38,8 +39,7 @@ const NotificationPage = () => {
   const handleActions = (id, actionType) => {
     setNotificationId(id);
     setFeedbackMessage(
-      `Are you sure you want to ${
-        actionType == 1 ? "approve" : "deny"
+      `Are you sure you want to ${actionType == 1 ? "approve" : "deny"
       } this request?`
     );
     setShowConfirmButtons(true);
@@ -67,19 +67,20 @@ const NotificationPage = () => {
           },
         }
       );
-     
+
       if (response.status === 200) {
-        console.log("Notification action successful:", response.data);  
-        setFeedbackMessage(
-          `Notification ${actionType === 1 ? "approved" : "denied"} successfully.`
-        );
         setShowConfirmButtons(false);
-        // setFeedbackMessage("Success.");
-        // setShowConfirmButtons(false);
-        // setNotifications((prev) =>
-        //   prev.filter((note) => note.id !== notificationId)
-        // );
+        setFeedbackModalOpen(false);
+        setRemovingId(notificationId);
+
+        setTimeout(() => {
+          setNotifications((prev) =>
+            prev.filter((note) => note.id !== notificationId)
+          );
+          setRemovingId(null);
+        }, 300);
       }
+
     } catch (error) {
       console.error("Error handling notification:", error);
     }
@@ -100,10 +101,16 @@ const NotificationPage = () => {
           const innerData = data;
 
           return (
+            // <div
+            //   key={id}
+            //   className="bg-white shadow-sm border border-gray-200 rounded-lg p-4 mb-4 flex justify-between items-start"
+            // >
             <div
               key={id}
-              className="bg-white shadow-sm border border-gray-200 rounded-lg p-4 mb-4 flex justify-between items-start"
+              className={`bg-white shadow-sm border border-gray-200 rounded-lg p-4 mb-4 flex justify-between items-start transition-all duration-300 ease-in-out ${removingId === id ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+                }`}
             >
+
               <div>
                 <p className="paragraphBold">
                   {innerData.message || "User"}{" "}
@@ -122,7 +129,7 @@ const NotificationPage = () => {
                     <span>Reason: {innerData.reason}</span>
                   ) : null}
                   {/* Reason: {innerData.reason || "No reason provided"} */}
-                  
+
                 </p>
               </div>
               {innerData.status != null ? null : (
