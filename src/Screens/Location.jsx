@@ -259,22 +259,24 @@ const Location = () => {
         Sunday: Salesresponse.data.sunday || 0,
       });
 
-          const Staffresponse = await axios.get(
-            `${baseURL}/locations/${data.id}/users`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-
-          setStaff(Staffresponse.data.data);
-          console.log("Staff data:", Staffresponse.data.data);
-          console.log("saleId:", salesId);
-        } catch (error) {
-          console.error("Failed to fetch location", error);
+      const sfresponse = await axios.get(
+        `${baseURL}/locations/${data.id}/users`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      };
+      );
+
+      // setStaff(Staffresponse.data.data);
+      const Staffresponse = sfresponse.data.data || sfresponse.data;
+
+      console.log("Raw sfresponse:", Staffresponse.map((sf)=>({firstName: sf.fullName})));
+      console.log("sfresponse.data:", sfresponse.data.data);
+    } catch (error) {
+      console.error("Failed to fetch location", error);
+    }
+  };
   //     const Staffresponse = await axios.get(
   //       `${baseURL}/locations/employeesByLocation/${data.id}`,
   //       {
