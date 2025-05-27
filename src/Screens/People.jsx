@@ -32,11 +32,12 @@ const People = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
-  const [feedbackMessage, setFeedbackMessage] = useState(""); // ✅ Message for modal
+  const [feedbackMessage, setFeedbackMessage] = useState(""); 
   const [confirmDeleteId, setConfirmDeleteId] = useState(null); // Track which ID to delete
   const [showConfirmButtons, setShowConfirmButtons] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState("");
   const [filteredProfiles, setFilteredProfiles] = useState([]);
+  const [filteredByStatus, setFilteredByStatus] = useState([]); // status-filtered data
+  const [selectedStatus, setSelectedStatus] = useState("all");
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -44,7 +45,7 @@ const People = () => {
     email: "",
     mobileNumber: "",
     payrate: "",
-    percentage: "",
+    payratePercent: "",
     password: "",
     dob: "",
     profileImage: "",
@@ -68,6 +69,7 @@ const People = () => {
       email: "",
       dob: "",
       payrate: "",
+      payratePercent: "",
       mobileNumber: "",
       role_id: "",
       profileImage: "",
@@ -95,6 +97,8 @@ const People = () => {
       newErrors.dob = "Date of birth is required.";
     if (!updatedFormData.payrate?.trim())
       newErrors.payrate = "Pay rate is required.";
+    if (!updatedFormData.payratePercent?.trim())
+      newErrors.payratePercent = "Pay rate percentage is required.";
     if (!updatedFormData.mobileNumber?.trim()) {
       newErrors.mobileNumber = "Mobile number is required.";
     } else if (!/^\d{10}$/.test(updatedFormData.mobileNumber)) {
@@ -112,7 +116,7 @@ const People = () => {
     form.append("email", updatedFormData.email);
     form.append("dob", updatedFormData.dob);
     form.append("payrate", updatedFormData.payrate);
-    form.append("payratePercent", updatedFormData.percentage);
+    form.append("payratePercent", updatedFormData.payratePercent?.trim() || "0");
     form.append("mobileNumber", updatedFormData.mobileNumber);
     form.append("role_id", updatedFormData.role_id);
     form.append("created_by", currentUserId);
@@ -240,7 +244,8 @@ const People = () => {
 
   useEffect(() => {
     if (users.length > 0) {
-      setFilteredProfiles(users);
+      setFilteredByStatus(users);
+      applySearchFilter(searchTerm, users);
     }
   }, [users]);
 
@@ -264,16 +269,23 @@ const People = () => {
     setIsModalOpen(true); // ✅ Then show modal
   };
 
+  useEffect(() => {
+    applySearchFilter(searchTerm, filteredByStatus);
+  }, [searchTerm, filteredByStatus]);
+
   const handleSearch = (e) => {
     const keyword = e.target.value.toLowerCase();
     setSearchTerm(keyword);
+    applySearchFilter(keyword, filteredByStatus);
+  };
 
-    const filtered = users.filter((profile) => {
+  const applySearchFilter = (keyword, dataToFilter) => {
+    const filtered = dataToFilter.filter((profile) => {
       const firstName = profile.firstName?.toLowerCase() || "";
       const lastName = profile.lastName?.toLowerCase() || "";
       const email = profile.email?.toLowerCase() || "";
       const mobile = profile.mobileNumber?.toString().toLowerCase() || "";
-      const location = profile.location?.toLowerCase() || "";
+      // const location = profile.location?.toLowerCase() || "";
       const payrate = profile.payrate?.toString() || "";
       const payratePercent = profile.payratePercent?.toString() || "";
       const dob = profile.dob || "";
@@ -283,30 +295,61 @@ const People = () => {
         lastName.includes(keyword) ||
         email.includes(keyword) ||
         mobile.includes(keyword) ||
-        location.includes(keyword) ||
+        // location.includes(keyword) ||
         payrate.includes(keyword) ||
         payratePercent.includes(keyword) ||
         dob.includes(keyword);
 
-      const matchesLocation =
-        selectedLocation === "all" ||
-        location === selectedLocation.toLowerCase();
-
-      return matchesKeyword && matchesLocation;
+      return matchesKeyword;
     });
 
     setFilteredProfiles(filtered);
   };
 
-  const handleFilter = () => {
-    const filtered = users.filter((user) => {
-      return selectedStatus === ""
-        ? true // show all if no status selected
-        : String(user.status) === selectedStatus; // match active/inactive
-    });
 
-    setFilteredProfiles(filtered);
-  };
+  // const handleSearch = (e) => {
+  //   const keyword = e.target.value.toLowerCase();
+  //   setSearchTerm(keyword);
+
+  //   const filtered = users.filter((profile) => {
+  //     const firstName = profile.firstName?.toLowerCase() || "";
+  //     const lastName = profile.lastName?.toLowerCase() || "";
+  //     const email = profile.email?.toLowerCase() || "";
+  //     const mobile = profile.mobileNumber?.toString().toLowerCase() || "";
+  //     const location = profile.location?.toLowerCase() || "";
+  //     const payrate = profile.payrate?.toString() || "";
+  //     const payratePercent = profile.payratePercent?.toString() || "";
+  //     const dob = profile.dob || "";
+
+  //     const matchesKeyword =
+  //       firstName.includes(keyword) ||
+  //       lastName.includes(keyword) ||
+  //       email.includes(keyword) ||
+  //       mobile.includes(keyword) ||
+  //       location.includes(keyword) ||
+  //       payrate.includes(keyword) ||
+  //       payratePercent.includes(keyword) ||
+  //       dob.includes(keyword);
+
+  //     const matchesLocation =
+  //       selectedLocation === "all" ||
+  //       location === selectedLocation.toLowerCase();
+
+  //     return matchesKeyword && matchesLocation;
+  //   });
+
+  //   setFilteredProfiles(filtered);
+  // };
+
+  // const handleFilter = () => {
+  //   const filtered = users.filter((user) => {
+  //     return selectedStatus === ""
+  //       ? true // show all if no status selected
+  //       : String(user.status) === selectedStatus; // match active/inactive
+  //   });
+
+  //   setFilteredProfiles(filtered);
+  // };
 
   const handleToggleStatus = async (id, currentStatus) => {
     const newStatus = currentStatus === 1 ? 0 : 1;
@@ -464,6 +507,8 @@ const People = () => {
     }
   };
 
+
+
   return (
     <div className="flex flex-col gap-3 ">
       <div className="sticky top-0 bg-[#f1f1f1] py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -473,12 +518,27 @@ const People = () => {
             name="selectedStatus"
             className="input flex-1 min-w-[140px]"
             value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSelectedStatus(value);
+
+              const statusFiltered = users.filter((user) => {
+                return value === "all"
+                  ? true
+                  : String(user.status) === value;
+              });
+
+              setFilteredByStatus(statusFiltered);
+              // Also apply current search term to filtered result
+              applySearchFilter(searchTerm, statusFiltered);
+            }}
           >
-            <option value="">--Select Status--</option>
+            <option value="all">All Employees</option>
             <option value="1">Active</option>
             <option value="0">Inactive</option>
           </select>
+
+
 
           {/* <select
             name="selectedLocation"
@@ -494,12 +554,12 @@ const People = () => {
             ))}
           </select> */}
 
-          <button
+          {/* <button
             className="buttonSuccess flex-1 min-w-[120px]"
             onClick={handleFilter}
           >
             Filter Data
-          </button>
+          </button> */}
         </div>
 
         {/* Right side: Search + Add */}
@@ -530,7 +590,7 @@ const People = () => {
         {Array.isArray(filteredProfiles) &&
           filteredProfiles.map((profile) => (
             <div key={profile.id} className="w-full">
-              <div className="mSideBar shadow-xl p-4 rounded-xl h-full flex flex-col justify-between">
+              <div className={`shadow-xl p-4 rounded-xl h-full flex flex-col justify-between ${profile.status === 1 ? "mSideBar" : "mSideBarInactive"}`}>
                 {/* Top Section: Image + Info */}
                 <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                   <div className="flex items-center gap-4 min-w-0">
@@ -686,7 +746,10 @@ const People = () => {
                   <DatePicker
                     className="input w-50"
                     selected={createDate}
-                    onChange={(date) => setCreateDate(date)}
+                    onChange={(date) => {
+                      setCreateDate(date);
+                      setFormData({ ...formData, dob: date?.toISOString().split("T")[0] });
+                    }}
                     showYearDropdown
                     showMonthDropdown
                     dateFormat="dd/MM/yyyy" // or "yyyy-MM-dd" if you prefer
@@ -736,13 +799,13 @@ const People = () => {
                   <input
                     type="text"
                     className="input"
-                    value={formData.percentage}
+                    value={formData.payratePercent}
                     onChange={(e) =>
-                      setFormData({ ...formData, percentage: e.target.value })
+                      setFormData({ ...formData, payratePercent: e.target.value })
                     }
                   />
-                  {errors.mobileNumber && (
-                    <p className="text-red-500 text-sm">{errors.percentage}</p>
+                  {errors.payratePercent && (
+                    <p className="text-red-500 text-sm">{errors.payratePercent}</p>
                   )}
                 </div>
               </div>

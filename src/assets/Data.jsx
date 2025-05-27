@@ -66,6 +66,12 @@ export const navItems = [
         path: '/systemsettings',
         roles:[1]
     },
+    {
+        id: 8,
+        title: 'Notifications',
+         path: '/notification',
+         roles:[1,2,3]
+    }
     // {
     //     id: 8,
     //     title: 'Profile',
