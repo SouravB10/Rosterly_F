@@ -22,13 +22,13 @@ const stats = [
   {
     title: "Pending Approvals",
     value: 8,
-    bg: "bg-yellow",
+    bg: "bg-yellow-200",
     icon: <MdOutlinePendingActions className="text-3xl text-black-100" />,
   },
   {
     title: "Managers",
     value: 5,
-    bg: "bg-white-300",
+    bg: "bg-red-100",
     icon: <FaUserTie className="text-3xl text-black-100" />,
   },
   {
@@ -40,7 +40,7 @@ const stats = [
   {
     title: "Employees",
     value: 105,
-    bg: "bg-rosterRed",
+    bg: "bg-red-300",
     icon: <BsPeopleFill className="text-3xl text-black-100" />,
   },
 ];

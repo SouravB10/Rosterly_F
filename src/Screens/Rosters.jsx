@@ -353,6 +353,8 @@ const Rosters = () => {
       });
 
       setShiftsByEmployeeDay(organizedShifts);
+      console.log("rosterdta", rosterData)
+
     } catch (error) {
       console.error("Failed to fetch roster:", error);
     }

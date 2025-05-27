@@ -6,10 +6,12 @@ const NotificationPage = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
   const [notifications, setNotifications] = useState([]);
   const [notificationId, setNotificationId] = useState(null);
+  const [actionType, setActionType] = useState(null);
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [showConfirmButtons, setShowConfirmButtons] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [removingId, setRemovingId] = useState(null);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -34,23 +36,28 @@ const NotificationPage = () => {
     fetchNotifications();
   }, []);
 
-  const handleNotificationAction = async (id, actionType) => {
-    // setConfirmDeleteId(id);
-
-    console.log("Notification ID:", id);
-    console.log("Action:", actionType);
+  const handleActions = (id, actionType) => {
+    setNotificationId(id);
     setFeedbackMessage(
-      `Are you sure you want to ${
-        actionType == 1 ? "approve" : "deny"
+      `Are you sure you want to ${actionType == 1 ? "approve" : "deny"
       } this request?`
     );
     setShowConfirmButtons(true);
     setFeedbackModalOpen(true);
+    setActionType(actionType);
+  };
+
+  const handleNotificationAction = async () => {
+    // setConfirmDeleteId(id);
+    if (!notificationId && !actionType) return;
+    console.log("Notification ID:", notificationId);
+    console.log("Action:", actionType);
+
     try {
       const response = await axios.post(
         `${baseURL}/notifications`,
         {
-          notification_id: id,
+          notification_id: notificationId,
           action: actionType,
         },
         {
@@ -60,15 +67,20 @@ const NotificationPage = () => {
           },
         }
       );
-      setFeedbackMessage(`Are you sure you want to ${
-        actionType == 1 ? "approve" : "deny"
-      } this request?`);
-      setShowConfirmButtons(false);
+
       if (response.status === 200) {
-        setNotifications((prev) =>
-          prev.filter((note) => note.id !== notificationId)
-        );
+        setShowConfirmButtons(false);
+        setFeedbackModalOpen(false);
+        setRemovingId(notificationId);
+
+        setTimeout(() => {
+          setNotifications((prev) =>
+            prev.filter((note) => note.id !== notificationId)
+          );
+          setRemovingId(null);
+        }, 300);
       }
+
     } catch (error) {
       console.error("Error handling notification:", error);
     }
@@ -89,18 +101,24 @@ const NotificationPage = () => {
           const innerData = data;
 
           return (
+            // <div
+            //   key={id}
+            //   className="bg-white shadow-sm border border-gray-200 rounded-lg p-4 mb-4 flex justify-between items-start"
+            // >
             <div
               key={id}
-              className="bg-white shadow-sm border border-gray-200 rounded-lg p-4 mb-4 flex justify-between items-start"
+              className={`bg-white shadow-sm border border-gray-200 rounded-lg p-4 mb-4 flex justify-between items-start transition-all duration-300 ease-in-out ${removingId === id ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+                }`}
             >
+
               <div>
                 <p className="paragraphBold">
                   {innerData.message || "User"}{" "}
                   {innerData.fromDT ? (
                     <strong className="notClass">{innerData.fromDT}</strong>
-                  ) : null}{" "}
+                  ) : null}
                   {innerData.toDT ? (
-                    <strong className="notClass">{innerData.toDT}</strong>
+                    <strong className="notClass">to {innerData.toDT}</strong>
                   ) : null}{" "}
                   {innerData.day ? (
                     <strong className="notClass">{innerData.day}</strong>
@@ -111,19 +129,20 @@ const NotificationPage = () => {
                     <span>Reason: {innerData.reason}</span>
                   ) : null}
                   {/* Reason: {innerData.reason || "No reason provided"} */}
+
                 </p>
               </div>
-              {innerData.status == 1 || 2 ? null : (
+              {innerData.status != null ? null : (
                 <div className="flex gap-2 mt-2 sm:mt-0">
                   <button
                     className="buttonSuccess"
-                    onClick={() => handleNotificationAction(id, 1)}
+                    onClick={() => handleActions(id, 1)}
                   >
                     Approve
                   </button>
                   <button
                     className="buttonDanger"
-                    onClick={() => handleNotificationAction(id, 2)}
+                    onClick={() => handleActions(id, 2)}
                   >
                     Deny
                   </button>
@@ -137,7 +156,7 @@ const NotificationPage = () => {
         isOpen={feedbackModalOpen}
         onClose={() => setFeedbackModalOpen(false)}
         message={feedbackMessage}
-        // onConfirm={confirmDelete}
+        onConfirm={handleNotificationAction}
         showConfirmButtons={showConfirmButtons}
       />
     </div>

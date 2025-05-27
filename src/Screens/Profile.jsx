@@ -9,6 +9,9 @@ const Profile = () => {
   const [errors, setErrors] = useState({});
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState(""); // ✅ Message for modal
+  const [originalMobileNumber, setOriginalMobileNumber] = useState(user.mobileNumber);
+  const [isMobileUpdated, setIsMobileUpdated] = useState(false);
+  const [isImageUpdated, setIsImageUpdated] = useState(false);
 
   const baseURL = import.meta.env.VITE_BASE_URL;
   const profileURL = import.meta.env.VITE_PROFILE_BASE_URL;
@@ -43,7 +46,11 @@ const Profile = () => {
   }, [baseURL, token]);
 
   const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setIsImageUpdated(true);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -88,9 +95,12 @@ const Profile = () => {
 
       setFeedbackMessage(response.data?.message);
       setFeedbackModalOpen(true);
+      setOriginalMobileNumber(user.mobileNumber);
+      setIsMobileUpdated(false);
+      setIsImageUpdated(false);
     } catch (error) {
       console.error("Error updating profile", error);
-       setFeedbackMessage(response.data?.error);
+      setFeedbackMessage(response.data?.error);
       setFeedbackModalOpen(true);
     }
   };
@@ -158,6 +168,7 @@ const Profile = () => {
                   if (newValue.trim().length >= 10) {
                     setErrors((prev) => ({ ...prev, mobileNumber: "" }));
                   }
+                  setIsMobileUpdated(newValue !== originalMobileNumber);
                 }}
                 className={`input w-full border ${errors.mobileNumber ? "border-red-500" : "border-gray-500"}`}
               />
@@ -166,11 +177,13 @@ const Profile = () => {
               )}
             </div>
 
-            <div className="flex justify-end gap-2 mt-4">
-              <button type="submit" className="buttonSuccess w-40">
-                Save
-              </button>
-            </div>
+            {(isMobileUpdated || isImageUpdated) && (
+              <div className="flex justify-end gap-2 mt-4">
+                <button type="submit" className="buttonSuccess w-40">
+                  Save
+                </button>
+              </div>
+            )}
           </form>
         </div>
       </div>
