@@ -353,6 +353,8 @@ const Rosters = () => {
       });
 
       setShiftsByEmployeeDay(organizedShifts);
+      console.log("rosterdta", rosterData)
+
     } catch (error) {
       console.error("Failed to fetch roster:", error);
     }
@@ -503,7 +505,15 @@ const Rosters = () => {
                 ))}
               </tr>
             </thead>
-
+            {locatedEmployees.length === 0 && (
+              <tbody>
+                <tr>
+                  <td colSpan={days.length + 1} className="p-2 text-center">
+                    Select a location to view employees.
+                  </td>
+                </tr>
+              </tbody>
+            )}
             <tbody>
               {locatedEmployees.map((emp) => (
                 <tr key={emp.id} className="border border-gray-300">
