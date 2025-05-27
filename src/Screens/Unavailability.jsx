@@ -548,8 +548,8 @@ const Unavailability = () => {
 
                   <select
                     className="input w-full p-3 custom-focus"
-                    // onChange={(e) => setNotifyToId(e.target.value)}
-                    onChange={(e) => setNotifyToId(Number(e.target.value))}
+                    onChange={(e) => setNotifyToId(e.target.value)}
+                    // onChange={(e) => setNotifyToId(Number(e.target.value))}
                     onClick={fetchNotifyingManager}
                     value={notifyToId}
                   >
@@ -657,22 +657,23 @@ const Unavailability = () => {
                     )}
 
                     <p
-                      className={`paragraphThin mt-1 text-sm italic ${item.unavailStatus === 0 ? "text-red-500" : "text-green-600"
+                      className={`paragraphThin mt-1 text-sm italic ${item.unavailStatus === 0 ? "text-red-500" : item.unavailStatus === 1 ? "text-green-600" : "text-orange-600"
                         }`}
                     >
-                      {item.unavailStatus === 0 ? "Pending" : "Approved"}
+                      {item.unavailStatus === 0 ? "Pending" : item.unavailStatus === 1 ? "Approved" : "Denied"}
                     </p>
                   </div>
                   {/* <button className="black-100 hover:texttheme mt-1 cursor-pointer">
                     <FaPencilAlt className="w-4 h-4" />
                   </button> */}
-                  <button
-                    className="black-100 hover:texttheme mt-1 cursor-pointer"
-                    onClick={() => handleEdit(item)}
-                  >
-                    <FaPencilAlt className="w-4 h-4" />
-                  </button>
-
+                  {item.unavailStatus === 1 ? null : (
+                    <button
+                      className="black-100 hover:texttheme mt-1 cursor-pointer"
+                      onClick={() => handleEdit(item)}
+                    >
+                      <FaPencilAlt className="w-4 h-4" />
+                    </button>
+                  )}
 
                 </div>
                 <hr className="white-300" />
@@ -738,7 +739,7 @@ const Unavailability = () => {
                       ? "Add Unavailability"
                       : matchingUnavailability[0].unavailStatus === 1
                         ? "Edit Unavailability"
-                        : ""
+                        : "Delete Unavailability"
                   }
                   onClick={() => {
                     if (matchingUnavailability.length === 0) {
@@ -752,9 +753,9 @@ const Unavailability = () => {
                 >
                   {matchingUnavailability.length === 0 ? (
                     <FaPlusSquare className="text-indigo-900 text-xl" />
-                  ) : matchingUnavailability[0].unavailStatus === 1 ? (
+                  ) : (matchingUnavailability[0].unavailStatus) === 0 || (matchingUnavailability[0].unavailStatus) === 1 ? (
                     <FaEdit />
-                  ) : (
+                  )  : (
                     <HiTrash className="text-red-700 text-xl" />
                   )}
                 </div>
