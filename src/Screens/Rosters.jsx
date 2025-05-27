@@ -99,14 +99,6 @@ const Rosters = () => {
     fetchLocations();
   }, []);
 
-  const data = [
-    {
-      time: "09:30 Am - 06:30 Pm",
-      hrs: "8.25hrs(45m)",
-      unavail: "Unavailable",
-      icon: "+",
-    },
-  ];
 
   const onShiftAdd = (empId, day) => {
     setCurrentEmpId(empId);
@@ -310,6 +302,8 @@ const Rosters = () => {
         ...prev,
         { location_id: selectedLocation, days },
       ]);
+      console.log("days", days); 
+
       fetchRoster();
     } catch (error) {
       console.error("Error publishing roster:", error);
