@@ -35,8 +35,9 @@ const People = () => {
   const [feedbackMessage, setFeedbackMessage] = useState(""); // ✅ Message for modal
   const [confirmDeleteId, setConfirmDeleteId] = useState(null); // Track which ID to delete
   const [showConfirmButtons, setShowConfirmButtons] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState("");
   const [filteredProfiles, setFilteredProfiles] = useState([]);
+  const [filteredByStatus, setFilteredByStatus] = useState([]); // status-filtered data
+  const [selectedStatus, setSelectedStatus] = useState("all");
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -301,15 +302,15 @@ const People = () => {
     setFilteredProfiles(filtered);
   };
 
-  const handleFilter = () => {
-    const filtered = users.filter((user) => {
-      return selectedStatus === ""
-        ? true // show all if no status selected
-        : String(user.status) === selectedStatus; // match active/inactive
-    });
+  // const handleFilter = () => {
+  //   const filtered = users.filter((user) => {
+  //     return selectedStatus === ""
+  //       ? true // show all if no status selected
+  //       : String(user.status) === selectedStatus; // match active/inactive
+  //   });
 
-    setFilteredProfiles(filtered);
-  };
+  //   setFilteredProfiles(filtered);
+  // };
 
   const handleToggleStatus = async (id, currentStatus) => {
     const newStatus = currentStatus === 1 ? 0 : 1;
@@ -478,9 +479,10 @@ const People = () => {
               });
 
               setFilteredProfiles(filtered);
+              // applysea
             }}
           >
-            <option value="all">All</option>
+            <option value="all">All Employees</option>
             <option value="1">Active</option>
             <option value="0">Inactive</option>
           </select>
