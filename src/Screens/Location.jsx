@@ -99,97 +99,109 @@ const Location = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e) => {
-    setChecked(e.target.checked);
-    if (e.target.checked) {
-      setEmployees((prev) => [...prev, e.target.value]);
-    } else {
-      setEmployees((prev) => prev.filter((emp) => emp !== e.target.value));
-    }
-  };
+//  Handle one checkbox
+const handleChange = (e) => {
+  const id = e.target.value;
+  if (e.target.checked) {
+    setEmployees([...employees, id]);
+  } else {
+    setEmployees(employees.filter((empId) => empId !== id));
+  }
+};
 
-  const handleAllchecked = (e) => {
-    const checked = e.target.checked;
-    if (checked) {
-      // Select all employee IDs
-      const allIds = employeeName.map((emp) => emp.id.toString());
-      setEmployees(allIds);
-    } else {
-      setEmployees([]);
-    }
-  };
+ // Handle select all
+const handleAllchecked = () => {
+  if (allSelected) {
+    setEmployees([]);
+  } else {
+    const allIds = employeeName.map((emp) => emp.id.toString());
+    setEmployees(allIds);
+  }
+  setAllSelected(!allSelected);
+};  
 
   // Check if all are selected
   const allSelected =
     employeeName.length > 0 && employees.length === employeeName.length;
 
-  // const handleEmployeeSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (validate()) {
-  //     // proceed with form submission
-  //     console.log({ locationName, employees });
-  //     alert("Form submitted!");
-  //   }
-  // };
-
-const handleEmployeeSubmit = async (e) => {
-  e.preventDefault();
-
-  if (!locationId) {
-    alert("Please select a valid location.");
-    return;
-  }
-
-  if (employees.length === 0) {
-    alert("Please select at least one employee.");
-    return;
-  }
-
-  try {
-    // Get token from storage or state
-    const token = localStorage.getItem("token"); // Replace with your actual token logic
-
-    const res = await axios.post(
-      `${baseURL}/locations/assignlocations`,
-      {
-        location_id: locationId,
-        employee_ids: employees.map((id) => parseInt(id)), // Convert to integers
-      },
-      {
+  const fetchEmployees = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`${baseURL}/locations/employeesByLocation/${locationId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
         },
+      });
+      setStaff(res.data.data); // Assuming `setStaff` is your state updater
+    } catch (error) {
+      console.error("Error fetching employees:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+
+  const handleEmployeeSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!locationId) {
+      setFeedbackMessage("Please select a valid location.");
+      setFeedbackModalOpen(true);
+      return;
+    }
+
+    if (employees.length === 0) {
+      setFeedbackMessage("Please select at least one employee.");
+      setFeedbackModalOpen(true);
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.post(
+        `${baseURL}/locations/assignlocations`,
+        {
+          location_id: locationId,
+          employee_ids: employees.map((id) => Number(id)),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("API Response:", res.data);
+
+      if (res.data.status) {
+        setFeedbackMessage(res.data?.message || "Employees assigned successfully.");
+        setEmployees([]);
+        setLocationName("");
+        fetchEmployees();
+        setIsEmployeeModalOpen(false)
+
+
+      } else {
+        setFeedbackMessage(res.data.message || "Something went wrong.");
       }
-    );
+    } catch (error) {
+      console.error("API Error:", error);
 
-    console.log("API Response:", res.data);
-
-    if (res.data.status) {
-      alert(res.data.message);
-      setIsEmployeeModalOpen(false);
-      setEmployees([]);
-      setAllSelected(false);
-      setLocationName("");
-    } else {
-      alert(res.data.message || "Something went wrong.");
+      if (error.response) {
+        setFeedbackMessage(error.response.data.message || "Server responded with an error.");
+      } else if (error.request) {
+        setFeedbackMessage("No response from the server. Please check your network.");
+      } else {
+        setFeedbackMessage("Request setup error: " + error.message);
+      }
     }
-  } catch (error) {
-    console.error("API Error:", error);
 
-    // Show detailed error if available
-    if (error.response) {
-      alert(error.response.data.message || "Server responded with an error.");
-    } else if (error.request) {
-      alert("No response from the server. Check your network.");
-    } else {
-      alert("Request setup error: " + error.message);
-    }
-  }
-};
-
-
+    setFeedbackModalOpen(true);
+  };
 
   // Location Handling Start here
   const getLocation = async () => {
@@ -239,8 +251,24 @@ const handleEmployeeSubmit = async (e) => {
         Sunday: Salesresponse.data.sunday || 0,
       });
 
+      //     const Staffresponse = await axios.get(
+      //       `${baseURL}/locations/${data.id}/role/3`,
+      //       {
+      //         headers: {
+      //           Authorization: `Bearer ${token}`,
+      //         },
+      //       }
+      //     );
+
+      //     setStaff(Staffresponse.data.data);
+      //     console.log("Staff data:", Staffresponse.data.data);
+      //     console.log("saleId:", salesId);
+      //   } catch (error) {
+      //     console.error("Failed to fetch location", error);
+      //   }
+      // };
       const Staffresponse = await axios.get(
-        `${baseURL}/locations/${data.id}/role/3`,
+        `${baseURL}/locations/employeesByLocation/${data.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -248,7 +276,7 @@ const handleEmployeeSubmit = async (e) => {
         }
       );
 
-      setStaff(Staffresponse.data.data);
+      setStaff(Staffresponse.data.employees);
       console.log("Staff data:", Staffresponse.data.data);
       console.log("saleId:", salesId);
     } catch (error) {
@@ -256,6 +284,7 @@ const handleEmployeeSubmit = async (e) => {
     }
   };
 
+  
   const validateForm = () => {
     const newErrors = {};
 
@@ -693,45 +722,52 @@ const handleEmployeeSubmit = async (e) => {
                       </p>
                     </div>
 
-                    {/* Search Bar */}
-                    <div className="bg-white rounded-lg border border-gray-300 w-full md:w-auto">
-                      <div className="flex flex-row items-center px-3">
-                        <FaSearch className="text-indigo-950" />
-                        <input
-                          type="text"
-                          placeholder="Search..."
-                          className="input w-full"
-                        />
+                    {/* Right Side: Button + Search bar grouped */}
+                    <div className="flex items-center gap-3 w-full md:w-auto">
+                      <button
+                        className="buttonTheme"
+                      >
+                        + Employee
+                      </button>
+
+                      <div className="bg-white rounded-lg border border-gray-300 w-full md:w-auto">
+                        <div className="flex flex-row items-center px-3">
+                          <FaSearch className="text-indigo-950" />
+                          <input
+                            type="text"
+                            placeholder="Search..."
+                            className="input w-full"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Scrollable List */}
                   <div className="bg-white rounded-md shadow-inner p-4 max-h-[250px] overflow-y-auto space-y-3">
-                    {staff.map((sf) => (
-                      <div
-                        key={sf.id}
-                        className="flex flex-col md:flex-row items-center justify-between px-3 py-2 border-b border-gray-100 hover:bg-gray-50 rounded-md transition gap-2"
-                      >
-                        <div className="flex items-center gap-3 w-full md:w-auto">
-                          <button className="bg-red-500 text-white w-6 h-6 flex items-center justify-center text-xs font-bold hover:bg-red-600">
-                            ×
-                          </button>
+                    {Array.isArray(staff) && staff.length > 0 ? (
+                      staff.map((sf) => (
+                        <div
+                          key={sf.id}
+                          className="flex flex-col md:flex-row items-center justify-between px-3 py-2 border-b border-gray-100 hover:bg-gray-50 rounded-md transition gap-2"
+                        >
+                          <div className="flex items-center gap-3 w-full md:w-auto">
+                            <button className="bg-red-500 text-white w-6 h-6 flex items-center justify-center text-xs font-bold hover:bg-red-600">
+                              ×
+                            </button>
 
-                          <span className="text-sm font-medium text-gray-800">
-                            {sf.firstName} {sf.lastName}
-                          </span>
+                            <span className="text-sm font-medium text-gray-800">
+                              {sf.firstName} {sf.lastName}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))
+                    ) : (
+                      <p className="text-gray-500">No staff found for this location.</p>
+                    )}
                   </div>
                 </div>
               )}
-              {/* {activeTab === "Status" && (
-                          <p className="text-slate-500 font-light">
-                            Status tab content here.
-                          </p>
-                          )} */}
             </div>
           </div>
         </div>
@@ -867,94 +903,99 @@ const handleEmployeeSubmit = async (e) => {
       </Dialog>
       {/* Location Model Ends */}
       {/* Employee Model Starts*/}
-      <Dialog
-        open={isEmployeeModalOpen}
-        onClose={() => setIsEmployeeModalOpen(false)}
-        className="relative z-50 rounded-lg"
+     <Dialog
+  open={isEmployeeModalOpen}
+  onClose={() => setIsEmployeeModalOpen(false)}
+  className="relative z-50 rounded-lg"
+>
+  <div className="fixed inset-0 bg-gray-700/70"></div>
+  <div className="fixed inset-0 flex items-center justify-center">
+    <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
+      <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
+        <Dialog.Title className="heading">Add Employee</Dialog.Title>
+        <button
+          className="text-white font-bold text-2xl"
+          onClick={() => setIsEmployeeModalOpen(false)}
+        >
+          ×
+        </button>
+      </div>
+
+      <form
+        className="mt-1 p-4 space-y-3"
+        onSubmit={handleEmployeeSubmit}
       >
-        <div className="fixed inset-0 bg-gray-700/70"></div>
-        <div className="fixed inset-0 flex items-center justify-center">
-          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
-            <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">Add Employee</Dialog.Title>
-              <button
-                className="text-white font-bold text-2xl"
-                onClick={() => setIsEmployeeModalOpen(false)}
-              >
-                ×
-              </button>
-            </div>
-            <form
-              className="mt-1 p-4 space-y-3"
-              onSubmit={handleEmployeeSubmit}
-            >
-              <div className="flex flex-col">
-                <label className="paragraphBold">Location Name</label>
-                <input
-                  type="text"
-                  className="input"
-                  value={locationName}
-                  onChange={(e) => setLocationName(e.target.value)}
-                  required
-                />
-                {errors.locationName && (
-                  <span className="text-sm text-red-600">
-                    {errors.locationName}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex flex-col">
-                <div className="flex justify-between aitems-center mb-2">
-                  <label className="paragraphBold">Employees List</label>
-                  <div className="paragraphBold aitems-center flex gap-2">
-                    <input
-                      type="checkbox"
-                      onChange={handleAllchecked}
-                      checked={allSelected}
-                    />
-                    Select All
-                  </div>
-                </div>
-
-                <div className="employee-checkboxes border p-2 rounded max-h-80 overflow-auto">
-                  {employeeName.map((emp) => (
-                    <div
-                      className="flex items-center bg-white-100 rounded p-2 gap-3 mb-2"
-                      key={emp.id}
-                    >
-                      <input
-                        type="checkbox"
-                        value={emp.id.toString()}
-                        onChange={handleChange}
-                        checked={employees.includes(emp.id.toString())}
-                      />
-                      <img
-                        src={emp.profileImage}
-                        alt={`${emp.firstName} ${emp.lastName}`}
-                        className="h-10 w-10 rounded-4xl"
-                      />
-                      <p className="paragraph">
-                        {emp.firstName} {emp.lastName}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* <div>
-                  Selected Employee IDs:{" "}
-                  {Array.isArray(employees) ? employees.join(", ") : "None"}
-                </div> */}
-              </div>
-              <div className="flex justify-end gap-2 mt-4">
-                <button type="submit" className="buttonTheme">
-                  Submit
-                </button>
-              </div>
-            </form>
-          </Dialog.Panel>
+        {/* Location Name Field */}
+        <div className="flex flex-col">
+          <label className="paragraphBold">Location Name</label>
+          <input
+            type="text"
+            className="input"
+            value={locationName}
+            onChange={(e) => setLocationName(e.target.value)}
+            required
+          />
+          {errors.locationName && (
+            <span className="text-sm text-red-600">
+              {errors.locationName}
+            </span>
+          )}
         </div>
-      </Dialog>
+
+        {/* Employee Selection */}
+        <div className="flex flex-col">
+          <div className="flex justify-between items-center mb-2">
+            <label className="paragraphBold">Employees List</label>
+            <div className="paragraphBold flex items-center gap-2">
+              <input
+                type="checkbox"
+                onChange={handleAllchecked}
+                checked={allSelected}
+              />
+              Select All
+            </div>
+          </div>
+
+          <div className="employee-checkboxes border p-2 rounded max-h-80 overflow-auto">
+            {employeeName.length > 0 ? (
+              employeeName.map((emp) => (
+                <div
+                  className="flex items-center bg-white rounded p-2 gap-3 mb-2"
+                  key={emp.id}
+                >
+                  <input
+                    type="checkbox"
+                    value={emp.id.toString()}
+                    onChange={handleChange}
+                    checked={employees.includes(emp.id.toString())}
+                  />
+                  <img
+                    src={emp.profileImage}
+                    alt={`${emp.firstName} ${emp.lastName}`}
+                    className="h-10 w-10 rounded-full"
+                  />
+                  <p className="paragraph">
+                    {emp.firstName} {emp.lastName}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">No employees available</p>
+            )}
+          </div>
+        </div>
+
+        {/* Submit Button */}
+        <div className="flex justify-end gap-2 mt-4">
+          <button type="submit" className="buttonTheme">
+            Submit
+          </button>
+        </div>
+      </form>
+    </Dialog.Panel>
+  </div>
+</Dialog>
+
       {/* Employee Model Ends */}
       {/* ✅ Reusable Modal */}
       <FeedbackModal
