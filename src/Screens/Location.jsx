@@ -99,26 +99,26 @@ const Location = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-//  Handle one checkbox
-const handleChange = (e) => {
-  const id = e.target.value;
-  if (e.target.checked) {
-    setEmployees([...employees, id]);
-  } else {
-    setEmployees(employees.filter((empId) => empId !== id));
-  }
-};
+  //  Handle one checkbox
+  const handleChange = (e) => {
+    const id = e.target.value;
+    if (e.target.checked) {
+      setEmployees([...employees, id]);
+    } else {
+      setEmployees(employees.filter((empId) => empId !== id));
+    }
+  };
 
- // Handle select all
-const handleAllchecked = () => {
-  if (allSelected) {
-    setEmployees([]);
-  } else {
-    const allIds = employeeName.map((emp) => emp.id.toString());
-    setEmployees(allIds);
-  }
-  setAllSelected(!allSelected);
-};  
+  // Handle select all
+  const handleAllchecked = () => {
+    if (allSelected) {
+      setEmployees([]);
+    } else {
+      const allIds = employeeName.map((emp) => emp.id.toString());
+      setEmployees(allIds);
+    }
+    setAllSelected(!allSelected);
+  };
 
   // Check if all are selected
   const allSelected =
@@ -133,6 +133,7 @@ const handleAllchecked = () => {
         },
       });
       setStaff(res.data.data); // Assuming `setStaff` is your state updater
+      console.log("Fetched Employees:", res.data.data);
     } catch (error) {
       console.error("Error fetching employees:", error);
     }
@@ -285,7 +286,7 @@ const handleAllchecked = () => {
     }
   };
 
-  
+
   const validateForm = () => {
     const newErrors = {};
 
@@ -782,7 +783,8 @@ const handleAllchecked = () => {
       >
         <div className="fixed inset-0 bg-gray-700/70"></div>
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-opacity-50">
-          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-4xl w-full mx-4">
+          {/* <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-4xl w-full mx-4"> */}
+          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
               <Dialog.Title className="heading">Add Location</Dialog.Title>
               <button
@@ -871,7 +873,9 @@ const handleAllchecked = () => {
                 {/* Right Column - Map */}
                 <div className="w-full md:w-1/2 flex flex-col">
                   <label className="paragraphBold mb-2">Select Location on Map</label>
-                  <div className="flex-1 h-74 border rounded-md overflow-hidden">
+                  {/* <div className="flex-1 h-74 border rounded-md overflow-hidden"> */}
+                  <div className="h-64 md:h-72 border rounded-md overflow-hidden">
+
                     <GoogleMapSelector
                       address={addaddress}
                       onLocationSelect={({ lat, lng }) => {
@@ -886,14 +890,16 @@ const handleAllchecked = () => {
               <div className="flex justify-end gap-3 mt-6">
                 <button
                   type="button"
-                  className="buttonGrey"
+                  // className="buttonGrey"
+                  className="buttonGrey w-full sm:w-auto"
                   onClick={handleCloseModal}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="buttonTheme"
+                  // className="buttonTheme"
+                  className="buttonTheme w-full sm:w-auto"
                 >
                   Add
                 </button>
@@ -904,98 +910,98 @@ const handleAllchecked = () => {
       </Dialog>
       {/* Location Model Ends */}
       {/* Employee Model Starts*/}
-     <Dialog
-  open={isEmployeeModalOpen}
-  onClose={() => setIsEmployeeModalOpen(false)}
-  className="relative z-50 rounded-lg"
->
-  <div className="fixed inset-0 bg-gray-700/70"></div>
-  <div className="fixed inset-0 flex items-center justify-center">
-    <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
-      <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-        <Dialog.Title className="heading">Add Employee</Dialog.Title>
-        <button
-          className="text-white font-bold text-2xl"
-          onClick={() => setIsEmployeeModalOpen(false)}
-        >
-          ×
-        </button>
-      </div>
-
-      <form
-        className="mt-1 p-4 space-y-3"
-        onSubmit={handleEmployeeSubmit}
+      <Dialog
+        open={isEmployeeModalOpen}
+        onClose={() => setIsEmployeeModalOpen(false)}
+        className="relative z-50 rounded-lg"
       >
-        {/* Location Name Field */}
-        <div className="flex flex-col">
-          <label className="paragraphBold">Location Name</label>
-          <input
-            type="text"
-            className="input"
-            value={locationName}
-            onChange={(e) => setLocationName(e.target.value)}
-            required
-          />
-          {errors.locationName && (
-            <span className="text-sm text-red-600">
-              {errors.locationName}
-            </span>
-          )}
-        </div>
-
-        {/* Employee Selection */}
-        <div className="flex flex-col">
-          <div className="flex justify-between items-center mb-2">
-            <label className="paragraphBold">Employees List</label>
-            <div className="paragraphBold flex items-center gap-2">
-              <input
-                type="checkbox"
-                onChange={handleAllchecked}
-                checked={allSelected}
-              />
-              Select All
+        <div className="fixed inset-0 bg-gray-700/70"></div>
+        <div className="fixed inset-0 flex items-center justify-center">
+          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
+            <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
+              <Dialog.Title className="heading">Add Employee</Dialog.Title>
+              <button
+                className="text-white font-bold text-2xl"
+                onClick={() => setIsEmployeeModalOpen(false)}
+              >
+                ×
+              </button>
             </div>
-          </div>
 
-          <div className="employee-checkboxes border p-2 rounded max-h-80 overflow-auto">
-            {employeeName.length > 0 ? (
-              employeeName.map((emp) => (
-                <div
-                  className="flex items-center bg-white rounded p-2 gap-3 mb-2"
-                  key={emp.id}
-                >
-                  <input
-                    type="checkbox"
-                    value={emp.id.toString()}
-                    onChange={handleChange}
-                    checked={employees.includes(emp.id.toString())}
-                  />
-                  <img
-                    src={emp.profileImage}
-                    alt={`${emp.firstName} ${emp.lastName}`}
-                    className="h-10 w-10 rounded-full"
-                  />
-                  <p className="paragraph">
-                    {emp.firstName} {emp.lastName}
-                  </p>
+            <form
+              className="mt-1 p-4 space-y-3"
+              onSubmit={handleEmployeeSubmit}
+            >
+              {/* Location Name Field */}
+              <div className="flex flex-col">
+                <label className="paragraphBold">Location Name</label>
+                <input
+                  type="text"
+                  className="input"
+                  value={locationName}
+                  onChange={(e) => setLocationName(e.target.value)}
+                  required
+                />
+                {errors.locationName && (
+                  <span className="text-sm text-red-600">
+                    {errors.locationName}
+                  </span>
+                )}
+              </div>
+
+              {/* Employee Selection */}
+              <div className="flex flex-col">
+                <div className="flex justify-between items-center mb-2">
+                  <label className="paragraphBold">Employees List</label>
+                  <div className="paragraphBold flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      onChange={handleAllchecked}
+                      checked={allSelected}
+                    />
+                    Select All
+                  </div>
                 </div>
-              ))
-            ) : (
-              <p className="text-gray-500">No employees available</p>
-            )}
-          </div>
-        </div>
 
-        {/* Submit Button */}
-        <div className="flex justify-end gap-2 mt-4">
-          <button type="submit" className="buttonTheme">
-            Submit
-          </button>
+                <div className="employee-checkboxes border p-2 rounded max-h-80 overflow-auto">
+                  {employeeName.length > 0 ? (
+                    employeeName.map((emp) => (
+                      <div
+                        className="flex items-center bg-white rounded p-2 gap-3 mb-2"
+                        key={emp.id}
+                      >
+                        <input
+                          type="checkbox"
+                          value={emp.id.toString()}
+                          onChange={handleChange}
+                          checked={employees.includes(emp.id.toString())}
+                        />
+                        <img
+                          src={emp.profileImage}
+                          alt={`${emp.firstName} ${emp.lastName}`}
+                          className="h-10 w-10 rounded-full"
+                        />
+                        <p className="paragraph">
+                          {emp.firstName} {emp.lastName}
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-500">No employees available</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <div className="flex justify-end gap-2 mt-4">
+                <button type="submit" className="buttonTheme">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </Dialog.Panel>
         </div>
-      </form>
-    </Dialog.Panel>
-  </div>
-</Dialog>
+      </Dialog>
 
       {/* Employee Model Ends */}
       {/* ✅ Reusable Modal */}
