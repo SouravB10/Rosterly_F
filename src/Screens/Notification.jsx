@@ -6,6 +6,7 @@ const NotificationPage = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
   const [notifications, setNotifications] = useState([]);
   const [notificationId, setNotificationId] = useState(null);
+  const [actionType, setActionType] = useState(null);
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [showConfirmButtons, setShowConfirmButtons] = useState(false);
@@ -34,11 +35,8 @@ const NotificationPage = () => {
     fetchNotifications();
   }, []);
 
-  const handleNotificationAction = async (id, actionType) => {
-    // setConfirmDeleteId(id);
-
-    console.log("Notification ID:", id);
-    console.log("Action:", actionType);
+  const handleActions = (id, actionType) => {
+    setNotificationId(id);
     setFeedbackMessage(
       `Are you sure you want to ${
         actionType == 1 ? "approve" : "deny"
@@ -46,11 +44,20 @@ const NotificationPage = () => {
     );
     setShowConfirmButtons(true);
     setFeedbackModalOpen(true);
+    setActionType(actionType);
+  };
+
+  const handleNotificationAction = async () => {
+    // setConfirmDeleteId(id);
+    if (!notificationId && !actionType) return;
+    console.log("Notification ID:", notificationId);
+    console.log("Action:", actionType);
+
     try {
       const response = await axios.post(
         `${baseURL}/notifications`,
         {
-          notification_id: id,
+          notification_id: notificationId,
           action: actionType,
         },
         {
@@ -60,14 +67,18 @@ const NotificationPage = () => {
           },
         }
       );
-      setFeedbackMessage(`Are you sure you want to ${
-        actionType == 1 ? "approve" : "deny"
-      } this request?`);
-      setShowConfirmButtons(false);
+     
       if (response.status === 200) {
-        setNotifications((prev) =>
-          prev.filter((note) => note.id !== notificationId)
+        console.log("Notification action successful:", response.data);  
+        setFeedbackMessage(
+          `Notification ${actionType === 1 ? "approved" : "denied"} successfully.`
         );
+        setShowConfirmButtons(false);
+        // setFeedbackMessage("Success.");
+        // setShowConfirmButtons(false);
+        // setNotifications((prev) =>
+        //   prev.filter((note) => note.id !== notificationId)
+        // );
       }
     } catch (error) {
       console.error("Error handling notification:", error);
@@ -98,9 +109,9 @@ const NotificationPage = () => {
                   {innerData.message || "User"}{" "}
                   {innerData.fromDT ? (
                     <strong className="notClass">{innerData.fromDT}</strong>
-                  ) : null}{" "}
+                  ) : null}
                   {innerData.toDT ? (
-                    <strong className="notClass">{innerData.toDT}</strong>
+                    <strong className="notClass">to {innerData.toDT}</strong>
                   ) : null}{" "}
                   {innerData.day ? (
                     <strong className="notClass">{innerData.day}</strong>
@@ -111,19 +122,20 @@ const NotificationPage = () => {
                     <span>Reason: {innerData.reason}</span>
                   ) : null}
                   {/* Reason: {innerData.reason || "No reason provided"} */}
+                  
                 </p>
               </div>
-              {innerData.status == 1 || 2 ? null : (
+              {innerData.status != null ? null : (
                 <div className="flex gap-2 mt-2 sm:mt-0">
                   <button
                     className="buttonSuccess"
-                    onClick={() => handleNotificationAction(id, 1)}
+                    onClick={() => handleActions(id, 1)}
                   >
                     Approve
                   </button>
                   <button
                     className="buttonDanger"
-                    onClick={() => handleNotificationAction(id, 2)}
+                    onClick={() => handleActions(id, 2)}
                   >
                     Deny
                   </button>
@@ -137,7 +149,7 @@ const NotificationPage = () => {
         isOpen={feedbackModalOpen}
         onClose={() => setFeedbackModalOpen(false)}
         message={feedbackMessage}
-        // onConfirm={confirmDelete}
+        onConfirm={handleNotificationAction}
         showConfirmButtons={showConfirmButtons}
       />
     </div>
