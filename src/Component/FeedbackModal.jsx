@@ -30,9 +30,9 @@ const FeedbackModal = ({ isOpen, onClose, message, onConfirm, showConfirmButtons
               ) : (
                 <button
                   onClick={onClose}
-                  className="buttonDanger"
+                  className="buttonSuccess"
                 >
-                  Close
+                  OK
                 </button>
               )}
             </div>
