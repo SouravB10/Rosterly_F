@@ -369,7 +369,7 @@ export default function Login() {
               </button>
             </div>
           </form>
-          <div className="mt-2 text-center">
+          {/* <div className="mt-2 text-center">
             <Link
               to="/register"
               className="text-center paragraph text-gray-600"
@@ -379,7 +379,7 @@ export default function Login() {
                 Create an account
               </span>
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
 
