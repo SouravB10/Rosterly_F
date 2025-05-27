@@ -700,29 +700,19 @@ const Location = () => {
               <div className="flex flex-col md:flex-row gap-6">
                 {/* Left Column - Form */}
                 <div className="flex-1 space-y-4">
+                  <p className="paragraphThin text-gray-500">Type your address to locate it on the map.</p>
                   <div>
-                    <label className="paragraphBold block mb-1">Location Name</label>
-                    <input
-                      type="text"
+                    <label className="paragraphBold block mb-1">
+                      Address
+                    </label>
+                    <textarea
                       className="input w-full"
-                      value={addlocationName}
-                      onChange={(e) => setAddlocationName(e.target.value)}
+                      rows={7}
+                      value={addaddress}
+                      onChange={(e) => setAddaddress(e.target.value)}
                     />
-                    {errors.addlocationName && (
-                      <span className="text-sm text-red-600">{errors.addlocationName}</span>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="paragraphBold block mb-1">Average Daily Sales ($)</label>
-                    <input
-                      type="text"
-                      className="input w-full"
-                      value={addsales}
-                      onChange={(e) => setAddsales(e.target.value)}
-                    />
-                    {errors.addsales && (
-                      <span className="text-sm text-red-600">{errors.addsales}</span>
+                    {errors.addaddress && (
+                      <span className="text-sm text-red-600">{errors.addaddress}</span>
                     )}
                   </div>
 
@@ -753,20 +743,33 @@ const Location = () => {
                     </div>
                   </div>
 
+
                   <div>
-                    <label className="paragraphBold block mb-1">
-                      Address
-                    </label>
-                    <textarea
+                    <label className="paragraphBold block mb-1">Location Name</label>
+                    <input
+                      type="text"
                       className="input w-full"
-                      rows={7}
-                      value={addaddress}
-                      onChange={(e) => setAddaddress(e.target.value)}
+                      value={addlocationName}
+                      onChange={(e) => setAddlocationName(e.target.value)}
                     />
-                    {errors.addaddress && (
-                      <span className="text-sm text-red-600">{errors.addaddress}</span>
+                    {errors.addlocationName && (
+                      <span className="text-sm text-red-600">{errors.addlocationName}</span>
                     )}
                   </div>
+
+                  <div>
+                    <label className="paragraphBold block mb-1">Average Daily Sales ($)</label>
+                    <input
+                      type="text"
+                      className="input w-full"
+                      value={addsales}
+                      onChange={(e) => setAddsales(e.target.value)}
+                    />
+                    {errors.addsales && (
+                      <span className="text-sm text-red-600">{errors.addsales}</span>
+                    )}
+                  </div>
+
                 </div>
 
                 {/* Right Column - Map */}

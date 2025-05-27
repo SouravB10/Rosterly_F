@@ -487,7 +487,7 @@ const Rosters = () => {
 
       <DragDropContext onDragEnd={onDragEnd}>
         <div>
-          <table className="min-w-full border border-gray-300 text-sm">
+          <table className="min-w-full border border-gray-300 text-sm mb-6 mt-2">
             <thead className="bg-gray-100 bgTable rounded ">
               <tr>
                 <th className="w-48 p-2 text-white bgTable1 text-left border border-gray-300">
@@ -546,7 +546,7 @@ const Rosters = () => {
                                       <span>{shift.time}</span>
                                       {/* {shift.description && <span className="text-xs italic ml-2">{shift.description}</span>} */}
                                       <button
-                                        className="text-xs bg-white text-green-700 px-1 rounded"
+                                        className="text-xs bg-white text-green-700 px-1 rounded cursor-pointer"
                                         onClick={() => handleCopy(shift)}
                                         title="Copy Shift"
                                       >
@@ -561,7 +561,7 @@ const Rosters = () => {
                           </div>
 
                           {/* Paste Button */}
-                          {copiedShift && (
+                          {copiedShift && !(shiftsByEmployeeDay[emp.id]?.[day]?.length > 0) && !(isPublished) && (
                             <button
                               onClick={() => handlePaste(emp.id, day)}
                               className="text-xs mt-2 text-blue-500 underline"
