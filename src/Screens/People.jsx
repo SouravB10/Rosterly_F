@@ -44,7 +44,7 @@ const People = () => {
     email: "",
     mobileNumber: "",
     payrate: "",
-    percentage: "",
+    payratePercent: "",
     password: "",
     dob: "",
     profileImage: "",
@@ -68,6 +68,7 @@ const People = () => {
       email: "",
       dob: "",
       payrate: "",
+      payratePercent: "",
       mobileNumber: "",
       role_id: "",
       profileImage: "",
@@ -95,6 +96,8 @@ const People = () => {
       newErrors.dob = "Date of birth is required.";
     if (!updatedFormData.payrate?.trim())
       newErrors.payrate = "Pay rate is required.";
+    if (!updatedFormData.payratePercent?.trim())
+      newErrors.payratePercent = "Pay rate percentage is required.";
     if (!updatedFormData.mobileNumber?.trim()) {
       newErrors.mobileNumber = "Mobile number is required.";
     } else if (!/^\d{10}$/.test(updatedFormData.mobileNumber)) {
@@ -112,7 +115,7 @@ const People = () => {
     form.append("email", updatedFormData.email);
     form.append("dob", updatedFormData.dob);
     form.append("payrate", updatedFormData.payrate);
-    form.append("payratePercent", updatedFormData.percentage);
+    form.append("payratePercent", updatedFormData.payratePercent?.trim() || "0");
     form.append("mobileNumber", updatedFormData.mobileNumber);
     form.append("role_id", updatedFormData.role_id);
     form.append("created_by", currentUserId);
@@ -140,7 +143,7 @@ const People = () => {
       // setTimeout(() => {
       //   window.location.reload();
       // }, 2000);
-      fetchUsers(); 
+      fetchUsers();
     } catch (error) {
       console.error("Error creating user:", error);
       setFeedbackMessage(
@@ -464,12 +467,24 @@ const People = () => {
             name="selectedStatus"
             className="input flex-1 min-w-[140px]"
             value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSelectedStatus(value);
+
+              const filtered = users.filter((user) => {
+                return value === "all"
+                  ? true // show all users
+                  : String(user.status) === value; // match active/inactive
+              });
+
+              setFilteredProfiles(filtered);
+            }}
           >
-            <option value="">--Select Status--</option>
+            <option value="all">All</option>
             <option value="1">Active</option>
             <option value="0">Inactive</option>
           </select>
+
 
           {/* <select
             name="selectedLocation"
@@ -485,12 +500,12 @@ const People = () => {
             ))}
           </select> */}
 
-          <button
+          {/* <button
             className="buttonSuccess flex-1 min-w-[120px]"
             onClick={handleFilter}
           >
             Filter Data
-          </button>
+          </button> */}
         </div>
 
         {/* Right side: Search + Add */}
@@ -677,7 +692,10 @@ const People = () => {
                   <DatePicker
                     className="input w-50"
                     selected={createDate}
-                    onChange={(date) => setCreateDate(date)}
+                    onChange={(date) => {
+                      setCreateDate(date);
+                      setFormData({ ...formData, dob: date?.toISOString().split("T")[0] });
+                    }}
                     showYearDropdown
                     showMonthDropdown
                     dateFormat="dd/MM/yyyy" // or "yyyy-MM-dd" if you prefer
@@ -727,13 +745,13 @@ const People = () => {
                   <input
                     type="text"
                     className="input"
-                    value={formData.percentage}
+                    value={formData.payratePercent}
                     onChange={(e) =>
-                      setFormData({ ...formData, percentage: e.target.value })
+                      setFormData({ ...formData, payratePercent: e.target.value })
                     }
                   />
-                  {errors.mobileNumber && (
-                    <p className="text-red-500 text-sm">{errors.percentage}</p>
+                  {errors.payratePercent && (
+                    <p className="text-red-500 text-sm">{errors.payratePercent}</p>
                   )}
                 </div>
               </div>
