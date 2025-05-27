@@ -244,10 +244,11 @@ const People = () => {
 
   useEffect(() => {
     if (users.length > 0) {
-      setFilteredProfiles(users);
+      setFilteredByStatus(users);
+      applySearchFilter(searchTerm, users);
     }
   }, [users]);
-
+  
   const fetchLocations = async () => {
     try {
       const response = await axios.get(`${baseURL}/locations`, {
@@ -268,11 +269,18 @@ const People = () => {
     setIsModalOpen(true); // ✅ Then show modal
   };
 
+  useEffect(() => {
+    applySearchFilter(searchTerm, filteredByStatus);
+  }, [searchTerm, filteredByStatus]);
+
   const handleSearch = (e) => {
     const keyword = e.target.value.toLowerCase();
     setSearchTerm(keyword);
+    applySearchFilter(keyword, filteredByStatus);
+  };
 
-    const filtered = users.filter((profile) => {
+  const applySearchFilter = (keyword, dataToFilter) => {
+    const filtered = dataToFilter.filter((profile) => {
       const firstName = profile.firstName?.toLowerCase() || "";
       const lastName = profile.lastName?.toLowerCase() || "";
       const email = profile.email?.toLowerCase() || "";
@@ -292,15 +300,46 @@ const People = () => {
         payratePercent.includes(keyword) ||
         dob.includes(keyword);
 
-      const matchesLocation =
-        selectedLocation === "all" ||
-        location === selectedLocation.toLowerCase();
-
-      return matchesKeyword && matchesLocation;
+      return matchesKeyword;
     });
 
     setFilteredProfiles(filtered);
   };
+
+
+  // const handleSearch = (e) => {
+  //   const keyword = e.target.value.toLowerCase();
+  //   setSearchTerm(keyword);
+
+  //   const filtered = users.filter((profile) => {
+  //     const firstName = profile.firstName?.toLowerCase() || "";
+  //     const lastName = profile.lastName?.toLowerCase() || "";
+  //     const email = profile.email?.toLowerCase() || "";
+  //     const mobile = profile.mobileNumber?.toString().toLowerCase() || "";
+  //     const location = profile.location?.toLowerCase() || "";
+  //     const payrate = profile.payrate?.toString() || "";
+  //     const payratePercent = profile.payratePercent?.toString() || "";
+  //     const dob = profile.dob || "";
+
+  //     const matchesKeyword =
+  //       firstName.includes(keyword) ||
+  //       lastName.includes(keyword) ||
+  //       email.includes(keyword) ||
+  //       mobile.includes(keyword) ||
+  //       location.includes(keyword) ||
+  //       payrate.includes(keyword) ||
+  //       payratePercent.includes(keyword) ||
+  //       dob.includes(keyword);
+
+  //     const matchesLocation =
+  //       selectedLocation === "all" ||
+  //       location === selectedLocation.toLowerCase();
+
+  //     return matchesKeyword && matchesLocation;
+  //   });
+
+  //   setFilteredProfiles(filtered);
+  // };
 
   // const handleFilter = () => {
   //   const filtered = users.filter((user) => {
@@ -459,6 +498,8 @@ const People = () => {
     }
   };
 
+
+
   return (
     <div className="flex flex-col gap-3 ">
       <div className="sticky top-0 bg-[#f1f1f1] py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -472,20 +513,22 @@ const People = () => {
               const value = e.target.value;
               setSelectedStatus(value);
 
-              const filtered = users.filter((user) => {
+              const statusFiltered = users.filter((user) => {
                 return value === "all"
-                  ? true // show all users
-                  : String(user.status) === value; // match active/inactive
+                  ? true
+                  : String(user.status) === value;
               });
 
-              setFilteredProfiles(filtered);
-              // applysea
+              setFilteredByStatus(statusFiltered);
+              // Also apply current search term to filtered result
+              applySearchFilter(searchTerm, statusFiltered);
             }}
           >
             <option value="all">All Employees</option>
             <option value="1">Active</option>
             <option value="0">Inactive</option>
           </select>
+
 
 
           {/* <select
@@ -538,7 +581,7 @@ const People = () => {
         {Array.isArray(filteredProfiles) &&
           filteredProfiles.map((profile) => (
             <div key={profile.id} className="w-full">
-              <div className="mSideBar shadow-xl p-4 rounded-xl h-full flex flex-col justify-between">
+              <div className={`shadow-xl p-4 rounded-xl h-full flex flex-col justify-between ${profile.status === 1 ? "mSideBar" : "mSideBarInactive"}`}>
                 {/* Top Section: Image + Info */}
                 <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                   <div className="flex items-center gap-4 min-w-0">

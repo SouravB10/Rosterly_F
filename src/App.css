@@ -109,6 +109,10 @@ body {
 .mSideBar {
   background-color: #dcf2e6;
 }
+.mSideBarInactive {
+  background-color: #dadada;
+  border: #afafaf 1px solid;
+}
 
 
 
