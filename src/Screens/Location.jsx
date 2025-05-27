@@ -144,6 +144,8 @@ const handleAllchecked = () => {
 
   const handleEmployeeSubmit = async (e) => {
     e.preventDefault();
+  const handleEmployeeSubmit = async (e) => {
+    e.preventDefault();
 
     if (!locationId) {
       setFeedbackMessage("Please select a valid location.");
@@ -175,6 +177,7 @@ const handleAllchecked = () => {
         }
       );
 
+      console.log("API Response:", res.data);
       console.log("API Response:", res.data);
 
       if (res.data.status) {

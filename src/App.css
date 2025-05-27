@@ -109,6 +109,10 @@ body {
 .mSideBar {
   background-color: #dcf2e6;
 }
+.mSideBarInactive {
+  background-color: #dadada;
+  border: #afafaf 1px solid;
+}
 
 
 
@@ -675,5 +679,8 @@ body {
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out forwards;
 }
-
+.notClass{
+  background-color:#dcf2e6;
+  padding:3px;
+}
 /* modal animation  */

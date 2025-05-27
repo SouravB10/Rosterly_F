@@ -503,7 +503,15 @@ const Rosters = () => {
                 ))}
               </tr>
             </thead>
-
+            {locatedEmployees.length === 0 && (
+              <tbody>
+                <tr>
+                  <td colSpan={days.length + 1} className="p-2 text-center">
+                    Select a location to view employees.
+                  </td>
+                </tr>
+              </tbody>
+            )}
             <tbody>
               {locatedEmployees.map((emp) => (
                 <tr key={emp.id} className="border border-gray-300">
@@ -511,7 +519,7 @@ const Rosters = () => {
                   <td className="p-2 bg-white">
                     <div className="font-semibold">{emp.firstName}{" "}{emp.lastName}</div>
                     <div className="text-xs text-gray-500">
-                      {emp.hours} hrs {emp.cost ? `· ${emp.cost}` : ""}
+                      {/* {emp.hours} hrs {emp.cost ? `· ${emp.cost}` : ""} */}
                     </div>
                   </td>
 
@@ -543,8 +551,11 @@ const Rosters = () => {
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
                                     >
-                                      <span>{shift.time}</span>
-                                      {/* {shift.description && <span className="text-xs italic ml-2">{shift.description}</span>} */}
+                                      <div className="flex flex-col items-center justify-end w-full">
+                                        <span>{shift.time}</span>
+                                        {/* {shift.description && <span className="paragraphThin italic ml-2">{shift.description}</span>} */}
+
+                                      </div>
                                       <button
                                         className="text-xs bg-white text-green-700 px-1 rounded cursor-pointer"
                                         onClick={() => handleCopy(shift)}
