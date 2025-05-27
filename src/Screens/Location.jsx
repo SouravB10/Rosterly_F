@@ -144,8 +144,6 @@ const handleAllchecked = () => {
 
   const handleEmployeeSubmit = async (e) => {
     e.preventDefault();
-  const handleEmployeeSubmit = async (e) => {
-    e.preventDefault();
 
     if (!locationId) {
       setFeedbackMessage("Please select a valid location.");
@@ -1009,5 +1007,5 @@ const handleAllchecked = () => {
     </div>
   );
 };
-};
+
 export default Location;
