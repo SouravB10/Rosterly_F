@@ -277,7 +277,7 @@ const Location = () => {
       // setStaff(Staffresponse.data.data);
       const Staffresponse = sfresponse.data.data || sfresponse.data;
       setLocationEmployees(Staffresponse);
-      console.log("Raw sfresponse:", Staffresponse.map((sf) => ({ firstName: sf.fullName })));
+      console.log("Raw sfresponse:", Staffresponse.map((sf) => ({ firstName: sf.user.firstName })));
       console.log("sfresponse.data:", sfresponse.data.data);
     } catch (error) {
       console.error("Failed to fetch location", error);
@@ -777,7 +777,7 @@ const Location = () => {
                             </button>
 
                             <span className="text-sm font-medium text-gray-800">
-                              {sf.fullName} 
+                              {sf.user.firstName} {sf.user.lastName}
                             </span>
                           </div>
                         </div>

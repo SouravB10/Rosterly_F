@@ -68,7 +68,7 @@ const Rosters = () => {
         });
         // locatedEmployees = response.data;
         setLocatedEmployees(response.data.data);
-        console.log("Employees fetched:", response.data.data);
+        console.log("Employees fetched:", response.data);
       } catch (error) {
         console.error("Error fetching employees:", error);
       }
