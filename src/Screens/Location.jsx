@@ -57,8 +57,6 @@ const Location = () => {
     Authorization: `Bearer ${token}`,
   };
 
-  
-
   useEffect(() => {
     console.log("user ID:", id);
   }, []);
@@ -68,7 +66,7 @@ const Location = () => {
       try {
         const response = await axios.get(`${baseURL}/locations`, { headers });
         console.log("Locations:", response.data);
-        console.log("Location",locationId);
+        console.log("Location", locationId);
         setLocations(response.data.data || response.data);
       } catch (error) {
         console.error("Failed to fetch locations", error);
@@ -96,8 +94,8 @@ const Location = () => {
 
     fetchLocations();
     // fetchSales();
-    if (id && locationId){
-       fetchEmployees();
+    if (id && locationId) {
+      fetchEmployees();
     }
   }, [id, locationId]);
 
@@ -765,7 +763,7 @@ const Location = () => {
                       </label>
                       <input
                         type="text"
-                        value={salesData[day] || 0}
+                        value={salesData[day] === null ? 0 : salesData[day]}
                         onChange={(e) =>
                           setSalesData((prev) => ({
                             ...prev,
@@ -824,7 +822,7 @@ const Location = () => {
                   </div>
 
                   {/* Scrollable List */}
-                  <div className="bg-white rounded-md shadow-inner p-4 max-h-[250px] overflow-y-auto space-y-3">
+                  <div className="bg-white rounded-md shadow-inner p-4 max-h-[600px] overflow-y-auto space-y-3">
                     {Array.isArray(locationEmployees) &&
                     locationEmployees.length > 0 ? (
                       locationEmployees.map((sf, index) => (

@@ -3,7 +3,7 @@ import moment from "moment";
 import { FaFilePdf } from "react-icons/fa";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { SlCalender } from "react-icons/sl";
-import { FaAngleLeft, FaPlus } from "react-icons/fa";
+import { FaAngleLeft, FaPlus, FaRegCopy  } from "react-icons/fa";
 import { FaAngleRight } from "react-icons/fa";
 import { Dialog } from "@headlessui/react";
 import axios from "axios";
@@ -552,13 +552,15 @@ const Rosters = () => {
                                         {/* {shift.description && <span className="paragraphThin italic ml-2">{shift.description}</span>} */}
 
                                       </div>
-                                      <button
+                                      {/* <button
                                         className="text-xs bg-white text-green-700 px-1 rounded cursor-pointer"
                                         onClick={() => handleCopy(shift)}
                                         title="Copy Shift"
-                                      >
-                                        +
-                                      </button>
+                                      > */}
+                                        <FaRegCopy  className="text-xl bg-white text-green-700 px-1 rounded cursor-pointer"
+                                        onClick={() => handleCopy(shift)}
+                                        title="Copy Shift"/>
+                                      {/* </button> */}
                                     </div>
                                   )}
                                 </Draggable>
