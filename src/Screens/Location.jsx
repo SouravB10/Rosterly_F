@@ -12,6 +12,7 @@ const Location = () => {
   const [employees, setEmployees] = useState("");
   const [employeeName, setEmployeeName] = useState([]);
   const [staff, setStaff] = useState([]);
+  const [locationEmployees, setLocationEmployees] = useState([]);
   const [activeTab, setActiveTab] = useState("general");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
@@ -76,6 +77,7 @@ const Location = () => {
           },
         });
         setEmployeeName(employeeList.data.data);
+        console.log("Employee List:", employeeList.data.data);
       } catch (error) {
         console.error("Failed to fetch employees", error);
       }
@@ -103,6 +105,8 @@ const Location = () => {
     const id = e.target.value;
     if (e.target.checked) {
       setEmployees([...employees, id]);
+      console.log("Selected Employee ID:", id);
+      
     } else {
       setEmployees(employees.filter((empId) => empId !== id));
     }
@@ -113,10 +117,11 @@ const Location = () => {
     if (allSelected) {
       setEmployees([]);
     } else {
-      const allIds = employeeName.map((emp) => emp.id.toString());
+     const allIds = employeeName.map((emp) => emp.id.toString());
       setEmployees(allIds);
+      console.log("All IDs selected:", allIds);x
     }
-    setAllSelected(!allSelected);
+    // setAllSelected(!allSelected);
   };
 
   // Check if all are selected
@@ -164,10 +169,10 @@ const Location = () => {
       const token = localStorage.getItem("token");
 
       const res = await axios.post(
-        `${baseURL}/locations/assignlocations`,
+        `${baseURL}/locations/${locationId}/users`,
         {
           location_id: locationId,
-          employee_ids: employees.map((id) => Number(id)),
+          user_ids: employees.map((id) => Number(id)),
         },
         {
           headers: {
@@ -189,6 +194,7 @@ const Location = () => {
         setLocationName("");
         fetchEmployees();
         setIsEmployeeModalOpen(false);
+
       } else {
         setFeedbackMessage(res.data.message || "Something went wrong.");
       }
@@ -270,8 +276,8 @@ const Location = () => {
 
       // setStaff(Staffresponse.data.data);
       const Staffresponse = sfresponse.data.data || sfresponse.data;
-
-      console.log("Raw sfresponse:", Staffresponse.map((sf)=>({firstName: sf.fullName})));
+      setLocationEmployees(Staffresponse);
+      console.log("Raw sfresponse:", Staffresponse.map((sf) => ({ firstName: sf.fullName })));
       console.log("sfresponse.data:", sfresponse.data.data);
     } catch (error) {
       console.error("Failed to fetch location", error);
@@ -378,7 +384,7 @@ const Location = () => {
         }
         setFeedbackMessage(
           error.response?.data?.message ||
-            "Failed to add location. Please try again."
+          "Failed to add location. Please try again."
         );
         setFeedbackModalOpen(true);
       }
@@ -439,9 +445,9 @@ const Location = () => {
         response.data?.message || "Location updated successfully."
       );
       setFeedbackModalOpen(true);
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 2000);
 
       const updatedLocations = await axios.get(`${baseURL}/locations`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -759,10 +765,10 @@ const Location = () => {
 
                   {/* Scrollable List */}
                   <div className="bg-white rounded-md shadow-inner p-4 max-h-[250px] overflow-y-auto space-y-3">
-                    {Array.isArray(staff) && staff.length > 0 ? (
-                      staff.map((sf) => (
+                    {Array.isArray(locationEmployees) && locationEmployees.length > 0 ? (
+                      locationEmployees.map((sf, index) => (
                         <div
-                          key={sf.id}
+                          key={sf.id||`staff-${index}`}
                           className="flex flex-col md:flex-row items-center justify-between px-3 py-2 border-b border-gray-100 hover:bg-gray-50 rounded-md transition gap-2"
                         >
                           <div className="flex items-center gap-3 w-full md:w-auto">
@@ -771,7 +777,7 @@ const Location = () => {
                             </button>
 
                             <span className="text-sm font-medium text-gray-800">
-                              {sf.firstName} {sf.lastName}
+                              {sf.fullName} 
                             </span>
                           </div>
                         </div>
