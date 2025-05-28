@@ -23,7 +23,19 @@ const NotificationPage = () => {
           },
         });
 
+// here to
+        // const fetchedNotification = response.data?.notifications || [];
         const fetchedNotification = response.data?.notifications || [];
+
+        const sortedNotifications = [...fetchedNotification].sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+
+        setNotificationId(sortedNotifications.map((notID) => notID.id));
+        setNotifications(sortedNotifications);
+// here 
+
+
         const fetchId = fetchedNotification.map((notID) => notID.id);
         setNotificationId(fetchId);
         setNotifications(fetchedNotification);
