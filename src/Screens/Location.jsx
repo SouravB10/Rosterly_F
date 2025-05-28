@@ -748,7 +748,7 @@ const Location = () => {
 
                     {/* Right Side: Button + Search bar grouped */}
                     <div className="flex items-center gap-3 w-full md:w-auto">
-                      <button className="buttonTheme">+ Employee</button>
+                      {/* <button className="buttonTheme">+ Employee</button> */}
 
                       <div className="bg-white rounded-lg border border-gray-300 w-full md:w-auto">
                         <div className="flex flex-row items-center px-3">

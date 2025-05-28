@@ -513,7 +513,7 @@ const Rosters = () => {
                 <tr key={emp.id} className="border border-gray-300">
                   {/* Employee Info */}
                   <td className="p-2 bg-white">
-                    <div className="font-semibold">{emp.fullName}</div>
+                    <div className="font-semibold">{emp.user.firstName}{" "}{emp.user.lastName}</div>
                     <div className="text-xs text-gray-500">
                       {/* {emp.hours} hrs {emp.cost ? `· ${emp.cost}` : ""} */}
                     </div>
