@@ -111,7 +111,7 @@ const Rosters = () => {
   };
 
   const generateTimeOptions = () => {
-    let times = [];
+    let times = ["--"];
     let hour = 0;
     let minute = 0;
 
@@ -132,7 +132,7 @@ const Rosters = () => {
   };
 
   const timeOptions = generateTimeOptions();
-  const breakOptions = [0, 15, 30, 45, 60];
+  const breakOptions = [null, 0, 15, 30, 45, 60];
   const [start, setStart] = useState(timeOptions[0]);
   const [finish, setFinish] = useState(timeOptions[0]);
   const [breakTime, setBreakTime] = useState(breakOptions[0]);
