@@ -68,7 +68,7 @@ const Rosters = () => {
         });
         // locatedEmployees = response.data;
         setLocatedEmployees(response.data.data);
-        console.log("Employees fetched:", response.data);
+        console.log("Employees fetched:", response.data.data);
       } catch (error) {
         console.error("Error fetching employees:", error);
       }
@@ -513,7 +513,7 @@ const Rosters = () => {
                 <tr key={emp.id} className="border border-gray-300">
                   {/* Employee Info */}
                   <td className="p-2 bg-white">
-                    <div className="font-semibold">{emp.firstName}{" "}{emp.lastName}</div>
+                    <div className="font-semibold">{emp.fullName}</div>
                     <div className="text-xs text-gray-500">
                       {/* {emp.hours} hrs {emp.cost ? `· ${emp.cost}` : ""} */}
                     </div>
