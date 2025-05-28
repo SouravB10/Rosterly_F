@@ -33,7 +33,7 @@ const People = () => {
   const [errors, setErrors] = useState({});
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState(""); 
-  const [confirmDeleteId, setConfirmDeleteId] = useState(null); // Track which ID to delete
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [showConfirmButtons, setShowConfirmButtons] = useState(false);
   const [filteredProfiles, setFilteredProfiles] = useState([]);
   const [filteredByStatus, setFilteredByStatus] = useState([]); // status-filtered data

@@ -1,6 +1,7 @@
 import { Dialog } from "@headlessui/react";
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import { CgCloseO } from "react-icons/cg";
 import axios from "axios";
 import FeedbackModal from "../Component/FeedbackModal"; // ✅ Import here
 import GoogleMapSelector from "../Component/GoogleMap";
@@ -18,6 +19,10 @@ const Location = () => {
   const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [showConfirmButtons, setShowConfirmButtons] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const [checked, setChecked] = useState(false);
   const [locationName, setLocationName] = useState("");
   const [addlocationName, setAddlocationName] = useState("");
@@ -52,6 +57,8 @@ const Location = () => {
     Authorization: `Bearer ${token}`,
   };
 
+  
+
   useEffect(() => {
     console.log("user ID:", id);
   }, []);
@@ -61,6 +68,7 @@ const Location = () => {
       try {
         const response = await axios.get(`${baseURL}/locations`, { headers });
         console.log("Locations:", response.data);
+        console.log("Location",locationId);
         setLocations(response.data.data || response.data);
       } catch (error) {
         console.error("Failed to fetch locations", error);
@@ -71,11 +79,14 @@ const Location = () => {
     const fetchEmployees = async () => {
       try {
         const token = localStorage.getItem("token");
-        const employeeList = await axios.get(`${baseURL}/users/login/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const employeeList = await axios.get(
+          `${baseURL}/users/login/${id}/${locationId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setEmployeeName(employeeList.data.data);
         console.log("Employee List:", employeeList.data.data);
       } catch (error) {
@@ -85,8 +96,10 @@ const Location = () => {
 
     fetchLocations();
     // fetchSales();
-    if (id) fetchEmployees();
-  }, [id]);
+    if (id && locationId){
+       fetchEmployees();
+    }
+  }, [id, locationId]);
 
   const validate = () => {
     const newErrors = {};
@@ -106,7 +119,6 @@ const Location = () => {
     if (e.target.checked) {
       setEmployees([...employees, id]);
       console.log("Selected Employee ID:", id);
-
     } else {
       setEmployees(employees.filter((empId) => empId !== id));
     }
@@ -124,31 +136,75 @@ const Location = () => {
     // setAllSelected(!allSelected);
   };
 
+  const handleDltLoc = async (e, empId) => {
+    e.preventDefault();
+    setConfirmDeleteId(empId);
+    setFeedbackMessage("Are you sure you want to delete?");
+    setShowConfirmButtons(true);
+    setFeedbackModalOpen(true);
+
+    // You can add your API call or state update logic here
+  };
+
+  const confirmDelete = async () => {
+    setLoading(true);
+
+    if (!confirmDeleteId) return;
+
+    try {
+      const response = await axios.delete(
+        `${baseURL}/locations/${locationId}/users`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          data: {
+            user_ids: [confirmDeleteId], // You must pass this value from your app's auth context
+          },
+        }
+      );
+
+      console.log("User deleted:", response.data); // Add this for confirmation
+
+      setFeedbackMessage("User deleted successfully.");
+      setShowConfirmButtons(false);
+      setTimeout(() => {
+        setFeedbackModalOpen(false);
+        setLoading(false);
+      }, 2000);
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      setFeedbackMessage("Failed to delete user.");
+      setShowConfirmButtons(false);
+      setTimeout(() => setFeedbackModalOpen(false), 2000);
+    }
+  };
+
   // Check if all are selected
   const allSelected =
     employeeName.length > 0 && employees.length === employeeName.length;
 
-  const fetchEmployees = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(
-        `${baseURL}/locations/employeesByLocation/${locationId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setStaff(res.data.data); // Assuming `setStaff` is your state updater
-      console.log("Fetched Employees:", res.data.data);
-    } catch (error) {
-      console.error("Error fetching employees:", error);
-    }
-  };
+  // const fetchEmployees = async () => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     const res = await axios.get(
+  //       `${baseURL}/locations/employeesByLocation/${locationId}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     setStaff(res.data.data); // Assuming `setStaff` is your state updater
+  //     console.log("Fetched Employees:", res.data.data);
+  //   } catch (error) {
+  //     console.error("Error fetching employees:", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchEmployees();
-  }, []);
+  // useEffect(() => {
+  //   fetchEmployees();
+  // }, []);
 
   const handleEmployeeSubmit = async (e) => {
     e.preventDefault();
@@ -194,7 +250,6 @@ const Location = () => {
         setLocationName("");
         await fetchEmployees();
         setIsEmployeeModalOpen(false);
-
       } else {
         setFeedbackMessage(res.data.message || "Something went wrong.");
       }
@@ -234,9 +289,10 @@ const Location = () => {
       );
 
       const data = response.data.data || response.data;
-      const locId = data.id;
+      const locId = Number(data.id);
       console.log("Fetched Location:", data);
       setLocationId(locId);
+      console.log("Location ID:", locId);
       setLocationName(data.location_name || "");
       setSales(data.sales?.toString() || "");
       setLatitude(data.latitude?.toString() || "");
@@ -253,8 +309,8 @@ const Location = () => {
         }
       );
       console.log("Sales data:", Salesresponse.data);
-      const salesId = Salesresponse.data.id;
-      setSalesId(salesId);
+      const locationSalesId = Salesresponse.data.id;
+      setSalesId(locationSalesId);
       setSalesData({
         Monday: Salesresponse.data.monday || 0,
         Tuesday: Salesresponse.data.tuesday || 0,
@@ -277,7 +333,10 @@ const Location = () => {
       // setStaff(Staffresponse.data.data);
       const Staffresponse = sfresponse.data.data || sfresponse.data;
       setLocationEmployees(Staffresponse);
-      console.log("Raw sfresponse:", Staffresponse.map((sf) => ({ firstName: sf.user.firstName })));
+      console.log(
+        "Raw sfresponse:",
+        Staffresponse.map((sf) => ({ firstName: sf.user.firstName }))
+      );
       console.log("sfresponse.data:", sfresponse.data.data);
     } catch (error) {
       console.error("Failed to fetch location", error);
@@ -384,7 +443,7 @@ const Location = () => {
         }
         setFeedbackMessage(
           error.response?.data?.message ||
-          "Failed to add location. Please try again."
+            "Failed to add location. Please try again."
         );
         setFeedbackModalOpen(true);
       }
@@ -420,6 +479,7 @@ const Location = () => {
     if (!validateUpdateForm()) return;
 
     try {
+      console.log("Updating location with ID:", selectLocation);
       const token = localStorage.getItem("token");
 
       const response = await axios.put(
@@ -474,13 +534,13 @@ const Location = () => {
   };
 
   const updateSales = async () => {
-    if (!salesId) return;
+    if (!locationId) return;
 
     try {
       const token = localStorage.getItem("token");
-
+      console.log("Updating sales with ID:", locationId);
       const response = await axios.put(
-        `${baseURL}/locationSales/${salesId}`,
+        `${baseURL}/locationSales/${locationId}`,
         {
           monday: salesData.Monday,
           tuesday: salesData.Tuesday,
@@ -765,16 +825,18 @@ const Location = () => {
 
                   {/* Scrollable List */}
                   <div className="bg-white rounded-md shadow-inner p-4 max-h-[250px] overflow-y-auto space-y-3">
-                    {Array.isArray(locationEmployees) && locationEmployees.length > 0 ? (
+                    {Array.isArray(locationEmployees) &&
+                    locationEmployees.length > 0 ? (
                       locationEmployees.map((sf, index) => (
                         <div
                           key={sf.id || `staff-${index}`}
                           className="flex flex-col md:flex-row items-center justify-between px-3 py-2 border-b border-gray-100 hover:bg-gray-50 rounded-md transition gap-2"
                         >
                           <div className="flex items-center gap-3 w-full md:w-auto">
-                            <button className="bg-red-500 text-white w-6 h-6 flex items-center justify-center text-xs font-bold hover:bg-red-600">
-                              ×
-                            </button>
+                            <CgCloseO
+                              className="text-red-500"
+                              onClick={(e) => handleDltLoc(e, sf.user.id)}
+                            />
 
                             <span className="text-sm font-medium text-gray-800">
                               {sf.user.firstName} {sf.user.lastName}
@@ -1045,6 +1107,8 @@ const Location = () => {
       <FeedbackModal
         isOpen={feedbackModalOpen}
         onClose={() => setFeedbackModalOpen(false)}
+        onConfirm={confirmDelete}
+        showConfirmButtons={showConfirmButtons}
         message={feedbackMessage}
       />
     </div>
