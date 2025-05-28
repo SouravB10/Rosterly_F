@@ -106,7 +106,7 @@ const Location = () => {
     if (e.target.checked) {
       setEmployees([...employees, id]);
       console.log("Selected Employee ID:", id);
-      
+
     } else {
       setEmployees(employees.filter((empId) => empId !== id));
     }
@@ -117,9 +117,9 @@ const Location = () => {
     if (allSelected) {
       setEmployees([]);
     } else {
-     const allIds = employeeName.map((emp) => emp.id.toString());
+      const allIds = employeeName.map((emp) => emp.id.toString());
       setEmployees(allIds);
-      console.log("All IDs selected:", allIds);x
+      console.log("All IDs selected:", allIds);
     }
     // setAllSelected(!allSelected);
   };
@@ -192,7 +192,7 @@ const Location = () => {
         );
         setEmployees([]);
         setLocationName("");
-        fetchEmployees();
+        await fetchEmployees();
         setIsEmployeeModalOpen(false);
 
       } else {
@@ -768,7 +768,7 @@ const Location = () => {
                     {Array.isArray(locationEmployees) && locationEmployees.length > 0 ? (
                       locationEmployees.map((sf, index) => (
                         <div
-                          key={sf.id||`staff-${index}`}
+                          key={sf.id || `staff-${index}`}
                           className="flex flex-col md:flex-row items-center justify-between px-3 py-2 border-b border-gray-100 hover:bg-gray-50 rounded-md transition gap-2"
                         >
                           <div className="flex items-center gap-3 w-full md:w-auto">
