@@ -248,7 +248,7 @@ const Location = () => {
         );
         setEmployees([]);
         setLocationName("");
-        await fetchEmployees();
+        // await fetchEmployees();
         setIsEmployeeModalOpen(false);
       } else {
         setFeedbackMessage(res.data.message || "Something went wrong.");
@@ -568,6 +568,17 @@ const Location = () => {
       console.error("Update error:", error);
     }
   };
+  
+  const handleFeedbackClose = () => {
+  setFeedbackModalOpen(false);
+
+  if (
+    feedbackMessage === "Employees assigned successfully." ||
+    feedbackMessage?.toLowerCase().includes("assigned")
+  ) {
+    setIsEmployeeModalOpen(false);
+  }
+};
 
   return (
     <div className=" py-2">
@@ -1106,7 +1117,9 @@ const Location = () => {
       {/* ✅ Reusable Modal */}
       <FeedbackModal
         isOpen={feedbackModalOpen}
-        onClose={() => setFeedbackModalOpen(false)}
+        // onClose={() => setFeedbackModalOpen(false)}
+        onClose={handleFeedbackClose}
+
         onConfirm={confirmDelete}
         showConfirmButtons={showConfirmButtons}
         message={feedbackMessage}
