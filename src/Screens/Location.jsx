@@ -57,7 +57,7 @@ const Location = () => {
     Authorization: `Bearer ${token}`,
   };
 
-  
+
 
   useEffect(() => {
     console.log("user ID:", id);
@@ -68,7 +68,7 @@ const Location = () => {
       try {
         const response = await axios.get(`${baseURL}/locations`, { headers });
         console.log("Locations:", response.data);
-        console.log("Location",locationId);
+        console.log("Location", locationId);
         setLocations(response.data.data || response.data);
       } catch (error) {
         console.error("Failed to fetch locations", error);
@@ -96,8 +96,8 @@ const Location = () => {
 
     fetchLocations();
     // fetchSales();
-    if (id && locationId){
-       fetchEmployees();
+    if (id && locationId) {
+      fetchEmployees();
     }
   }, [id, locationId]);
 
@@ -443,7 +443,7 @@ const Location = () => {
         }
         setFeedbackMessage(
           error.response?.data?.message ||
-            "Failed to add location. Please try again."
+          "Failed to add location. Please try again."
         );
         setFeedbackModalOpen(true);
       }
@@ -568,17 +568,17 @@ const Location = () => {
       console.error("Update error:", error);
     }
   };
-  
-  const handleFeedbackClose = () => {
-  setFeedbackModalOpen(false);
 
-  if (
-    feedbackMessage === "Employees assigned successfully." ||
-    feedbackMessage?.toLowerCase().includes("assigned")
-  ) {
-    setIsEmployeeModalOpen(false);
-  }
-};
+  const handleFeedbackClose = () => {
+    setFeedbackModalOpen(false);
+
+    if (
+      feedbackMessage === "Employees assigned successfully." ||
+      feedbackMessage?.toLowerCase().includes("assigned")
+    ) {
+      setIsEmployeeModalOpen(false);
+    }
+  };
 
   return (
     <div className=" py-2">
@@ -837,7 +837,7 @@ const Location = () => {
                   {/* Scrollable List */}
                   <div className="bg-white rounded-md shadow-inner p-4 max-h-[250px] overflow-y-auto space-y-3">
                     {Array.isArray(locationEmployees) &&
-                    locationEmployees.length > 0 ? (
+                      locationEmployees.length > 0 ? (
                       locationEmployees.map((sf, index) => (
                         <div
                           key={sf.id || `staff-${index}`}
@@ -889,6 +889,21 @@ const Location = () => {
             </div>
             <form className="p-6" onSubmit={handleSubmit}>
               <div className="flex flex-col md:flex-row gap-6">
+                <div className="w-full md:w-1/2 flex flex-col">
+                  <label className="paragraphBold mb-2">
+                    Select Location on Map
+                  </label>
+                  {/* <div className="flex-1 h-74 border rounded-md overflow-hidden"> */}
+                  <div className="h-64 md:h-72 border rounded-md overflow-hidden">
+                    <GoogleMapSelector
+                      address={addaddress}
+                      onLocationSelect={({ lat, lng }) => {
+                        setAddlatitude(lat.toFixed(6));
+                        setAddlongitude(lng.toFixed(6));
+                      }}
+                    />
+                  </div>
+                </div>
                 {/* Left Column - Form */}
                 <div className="flex-1 space-y-4">
                   <p className="paragraphThin text-gray-500">
@@ -980,21 +995,7 @@ const Location = () => {
                 </div>
 
                 {/* Right Column - Map */}
-                <div className="w-full md:w-1/2 flex flex-col">
-                  <label className="paragraphBold mb-2">
-                    Select Location on Map
-                  </label>
-                  {/* <div className="flex-1 h-74 border rounded-md overflow-hidden"> */}
-                  <div className="h-64 md:h-72 border rounded-md overflow-hidden">
-                    <GoogleMapSelector
-                      address={addaddress}
-                      onLocationSelect={({ lat, lng }) => {
-                        setAddlatitude(lat.toFixed(6));
-                        setAddlongitude(lng.toFixed(6));
-                      }}
-                    />
-                  </div>
-                </div>
+
               </div>
 
               <div className="flex justify-end gap-3 mt-6">
@@ -1104,8 +1105,8 @@ const Location = () => {
 
               {/* Submit Button */}
               <div className="flex justify-end gap-2 mt-4">
-                <button type="submit" className="buttonTheme">
-                  Submit
+                <button type="submit" title="Add Employee" className="buttonTheme">
+                  Add
                 </button>
               </div>
             </form>

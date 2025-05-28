@@ -121,8 +121,8 @@ const People = () => {
     form.append("role_id", updatedFormData.role_id);
     form.append("created_by", currentUserId);
     form.append("created_on", new Date().toISOString());
-    form.append("password", "defaultPassword123");
-    form.append("location_id", updatedFormData.location_id);
+    // form.append("password", "defaultPassword123");
+    // form.append("location_id", updatedFormData.location_id);
 
     if (selectedProfile.file) {
       form.append("profileImage", selectedProfile.file);
