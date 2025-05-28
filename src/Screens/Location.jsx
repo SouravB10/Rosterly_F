@@ -55,7 +55,6 @@ const Location = () => {
     console.log("user ID:", id);
   }, []);
 
-
   useEffect(() => {
     const fetchLocations = async () => {
       try {
@@ -127,11 +126,14 @@ const Location = () => {
   const fetchEmployees = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`${baseURL}/locations/employeesByLocation/${locationId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.get(
+        `${baseURL}/locations/employeesByLocation/${locationId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setStaff(res.data.data); // Assuming `setStaff` is your state updater
       console.log("Fetched Employees:", res.data.data);
     } catch (error) {
@@ -180,13 +182,13 @@ const Location = () => {
       console.log("API Response:", res.data);
 
       if (res.data.status) {
-        setFeedbackMessage(res.data?.message || "Employees assigned successfully.");
+        setFeedbackMessage(
+          res.data?.message || "Employees assigned successfully."
+        );
         setEmployees([]);
         setLocationName("");
         fetchEmployees();
-        setIsEmployeeModalOpen(false)
-
-
+        setIsEmployeeModalOpen(false);
       } else {
         setFeedbackMessage(res.data.message || "Something went wrong.");
       }
@@ -194,9 +196,13 @@ const Location = () => {
       console.error("API Error:", error);
 
       if (error.response) {
-        setFeedbackMessage(error.response.data.message || "Server responded with an error.");
+        setFeedbackMessage(
+          error.response.data.message || "Server responded with an error."
+        );
       } else if (error.request) {
-        setFeedbackMessage("No response from the server. Please check your network.");
+        setFeedbackMessage(
+          "No response from the server. Please check your network."
+        );
       } else {
         setFeedbackMessage("Request setup error: " + error.message);
       }
@@ -253,24 +259,8 @@ const Location = () => {
         Sunday: Salesresponse.data.sunday || 0,
       });
 
-      //     const Staffresponse = await axios.get(
-      //       `${baseURL}/locations/${data.id}/role/3`,
-      //       {
-      //         headers: {
-      //           Authorization: `Bearer ${token}`,
-      //         },
-      //       }
-      //     );
-
-      //     setStaff(Staffresponse.data.data);
-      //     console.log("Staff data:", Staffresponse.data.data);
-      //     console.log("saleId:", salesId);
-      //   } catch (error) {
-      //     console.error("Failed to fetch location", error);
-      //   }
-      // };
-      const Staffresponse = await axios.get(
-        `${baseURL}/locations/employeesByLocation/${data.id}`,
+      const sfresponse = await axios.get(
+        `${baseURL}/locations/${data.id}/users`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -278,14 +268,31 @@ const Location = () => {
         }
       );
 
-      setStaff(Staffresponse.data.employees);
-      console.log("Staff data:", Staffresponse.data.data);
-      console.log("saleId:", salesId);
+      // setStaff(Staffresponse.data.data);
+      const Staffresponse = sfresponse.data.data || sfresponse.data;
+
+      console.log("Raw sfresponse:", Staffresponse.map((sf)=>({firstName: sf.fullName})));
+      console.log("sfresponse.data:", sfresponse.data.data);
     } catch (error) {
       console.error("Failed to fetch location", error);
     }
   };
+  //     const Staffresponse = await axios.get(
+  //       `${baseURL}/locations/employeesByLocation/${data.id}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
 
+  //     setStaff(Staffresponse.data.employees);
+  //     console.log("Staff data:", Staffresponse.data.data);
+  //     console.log("saleId:", salesId);
+  //   } catch (error) {
+  //     console.error("Failed to fetch location", error);
+  //   }
+  // };
 
   const validateForm = () => {
     const newErrors = {};
@@ -357,10 +364,12 @@ const Location = () => {
         setIsModalOpen(false);
 
         // Show success feedback
-        setFeedbackMessage(response.data?.message || "Location added successfully.");
+        setFeedbackMessage(
+          response.data?.message || "Location added successfully."
+        );
         setFeedbackModalOpen(true);
         setTimeout(() => {
-          window.location.reload()
+          window.location.reload();
         }, 2000);
       } catch (error) {
         console.error("API Error:", error);
@@ -368,7 +377,8 @@ const Location = () => {
           setErrors(error.response.data.errors);
         }
         setFeedbackMessage(
-          error.response?.data?.message || "Failed to add location. Please try again."
+          error.response?.data?.message ||
+            "Failed to add location. Please try again."
         );
         setFeedbackModalOpen(true);
       }
@@ -425,7 +435,9 @@ const Location = () => {
 
       console.log("Location updated successfully", response.data);
       // Show success feedback
-      setFeedbackMessage(response.data?.message || "Location updated successfully.");
+      setFeedbackMessage(
+        response.data?.message || "Location updated successfully."
+      );
       setFeedbackModalOpen(true);
       setTimeout(() => {
         window.location.reload();
@@ -482,7 +494,9 @@ const Location = () => {
       );
 
       console.log("Sales updated successfully", response.data);
-      setFeedbackMessage(response.data?.message || "Sales Updated successfully");
+      setFeedbackMessage(
+        response.data?.message || "Sales Updated successfully"
+      );
       setFeedbackModalOpen(true);
     } catch (error) {
       console.error("Update error:", error);
@@ -555,7 +569,6 @@ const Location = () => {
               ))}
             </div>
 
-
             <div className="space-y-6">
               {activeTab === "general" && (
                 <form onSubmit={updateLocation}>
@@ -564,8 +577,8 @@ const Location = () => {
                       <div className="w-full">
                         <h4 className="subHeading">Location Name</h4>
                         <p className="paragraphThin">
-                          What you normally refer to the roster location as. (For
-                          example, Brisbane CBD.)
+                          What you normally refer to the roster location as.
+                          (For example, Brisbane CBD.)
                         </p>
                       </div>
                       <div className="w-full flex flex-col items-end">
@@ -582,7 +595,6 @@ const Location = () => {
                           </span>
                         )}
                       </div>
-
                     </div>
 
                     <div className=" flex flex-col md:flex-row justify-between gap-4">
@@ -611,7 +623,9 @@ const Location = () => {
                     <div className=" flex flex-col md:flex-row justify-between gap-4">
                       <div className="w-full">
                         <h4 className="subHeading">Latitude</h4>
-                        <p className="paragraphThin">Latitude coordinate of the location.</p>
+                        <p className="paragraphThin">
+                          Latitude coordinate of the location.
+                        </p>
                       </div>
                       <div className="w-full flex flex-col items-end">
                         <input
@@ -632,7 +646,9 @@ const Location = () => {
                     <div className=" flex flex-col md:flex-row justify-between gap-4">
                       <div className="w-full">
                         <h4 className="subHeading">Longitude</h4>
-                        <p className="paragraphThin">Longitude coordinate of the location.</p>
+                        <p className="paragraphThin">
+                          Longitude coordinate of the location.
+                        </p>
                       </div>
                       <div className="w-full flex flex-col items-end">
                         <input
@@ -726,11 +742,7 @@ const Location = () => {
 
                     {/* Right Side: Button + Search bar grouped */}
                     <div className="flex items-center gap-3 w-full md:w-auto">
-                      <button
-                        className="buttonTheme"
-                      >
-                        + Employee
-                      </button>
+                      <button className="buttonTheme">+ Employee</button>
 
                       <div className="bg-white rounded-lg border border-gray-300 w-full md:w-auto">
                         <div className="flex flex-row items-center px-3">
@@ -765,7 +777,9 @@ const Location = () => {
                         </div>
                       ))
                     ) : (
-                      <p className="text-gray-500">No staff found for this location.</p>
+                      <p className="text-gray-500">
+                        No staff found for this location.
+                      </p>
                     )}
                   </div>
                 </div>
@@ -798,11 +812,11 @@ const Location = () => {
               <div className="flex flex-col md:flex-row gap-6">
                 {/* Left Column - Form */}
                 <div className="flex-1 space-y-4">
-                  <p className="paragraphThin text-gray-500">Type your address to locate it on the map.</p>
+                  <p className="paragraphThin text-gray-500">
+                    Type your address to locate it on the map.
+                  </p>
                   <div>
-                    <label className="paragraphBold block mb-1">
-                      Address
-                    </label>
+                    <label className="paragraphBold block mb-1">Address</label>
                     <textarea
                       className="input w-full"
                       rows={7}
@@ -810,13 +824,17 @@ const Location = () => {
                       onChange={(e) => setAddaddress(e.target.value)}
                     />
                     {errors.addaddress && (
-                      <span className="text-sm text-red-600">{errors.addaddress}</span>
+                      <span className="text-sm text-red-600">
+                        {errors.addaddress}
+                      </span>
                     )}
                   </div>
 
                   <div className="flex flex-col md:flex-row gap-4">
                     <div className="w-full">
-                      <label className="paragraphBold block mb-1">Latitude</label>
+                      <label className="paragraphBold block mb-1">
+                        Latitude
+                      </label>
                       <input
                         type="text"
                         className="input w-full"
@@ -824,11 +842,15 @@ const Location = () => {
                         onChange={(e) => setAddlatitude(e.target.value)}
                       />
                       {errors.addlatitude && (
-                        <span className="text-sm text-red-600">{errors.addlatitude}</span>
+                        <span className="text-sm text-red-600">
+                          {errors.addlatitude}
+                        </span>
                       )}
                     </div>
                     <div className="w-full">
-                      <label className="paragraphBold block mb-1">Longitude</label>
+                      <label className="paragraphBold block mb-1">
+                        Longitude
+                      </label>
                       <input
                         type="text"
                         className="input w-full"
@@ -836,14 +858,17 @@ const Location = () => {
                         onChange={(e) => setAddlongitude(e.target.value)}
                       />
                       {errors.addlongitude && (
-                        <span className="text-sm text-red-600">{errors.addlongitude}</span>
+                        <span className="text-sm text-red-600">
+                          {errors.addlongitude}
+                        </span>
                       )}
                     </div>
                   </div>
 
-
                   <div>
-                    <label className="paragraphBold block mb-1">Location Name</label>
+                    <label className="paragraphBold block mb-1">
+                      Location Name
+                    </label>
                     <input
                       type="text"
                       className="input w-full"
@@ -851,12 +876,16 @@ const Location = () => {
                       onChange={(e) => setAddlocationName(e.target.value)}
                     />
                     {errors.addlocationName && (
-                      <span className="text-sm text-red-600">{errors.addlocationName}</span>
+                      <span className="text-sm text-red-600">
+                        {errors.addlocationName}
+                      </span>
                     )}
                   </div>
 
                   <div>
-                    <label className="paragraphBold block mb-1">Average Daily Sales ($)</label>
+                    <label className="paragraphBold block mb-1">
+                      Average Daily Sales ($)
+                    </label>
                     <input
                       type="text"
                       className="input w-full"
@@ -864,18 +893,20 @@ const Location = () => {
                       onChange={(e) => setAddsales(e.target.value)}
                     />
                     {errors.addsales && (
-                      <span className="text-sm text-red-600">{errors.addsales}</span>
+                      <span className="text-sm text-red-600">
+                        {errors.addsales}
+                      </span>
                     )}
                   </div>
-
                 </div>
 
                 {/* Right Column - Map */}
                 <div className="w-full md:w-1/2 flex flex-col">
-                  <label className="paragraphBold mb-2">Select Location on Map</label>
+                  <label className="paragraphBold mb-2">
+                    Select Location on Map
+                  </label>
                   {/* <div className="flex-1 h-74 border rounded-md overflow-hidden"> */}
                   <div className="h-64 md:h-72 border rounded-md overflow-hidden">
-
                     <GoogleMapSelector
                       address={addaddress}
                       onLocationSelect={({ lat, lng }) => {
