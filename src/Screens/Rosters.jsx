@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { FaEdit, FaFilePdf } from "react-icons/fa";
+import { FaEdit, FaFilePdf, FaTrash } from "react-icons/fa";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { SlCalender } from "react-icons/sl";
 import { FaAngleLeft, FaPlus, FaRegCopy } from "react-icons/fa";
@@ -9,6 +9,7 @@ import { Dialog } from "@headlessui/react";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { set } from "date-fns";
+import { HiTrash } from "react-icons/hi2";
 
 const Rosters = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -29,6 +30,7 @@ const Rosters = () => {
   const [isPublished, setIsPublished] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [shiftToEdit, setShiftToEdit] = useState(null);
+  const [rosterWeekId, setRosterWeekId] = useState(null);
 
   const loginId = localStorage.getItem("id");
 
@@ -347,7 +349,7 @@ const Rosters = () => {
 
       alert("Roster published successfully!");
       console.log("Publish response:", response.data);
-
+      setRosterWeekId(response.data.roster_week_id);
       // Add to published list
       setPublishedRosters((prev) => [
         ...prev,
@@ -614,16 +616,18 @@ const Rosters = () => {
                                         <span className="text-xs text-gray-200">
                                           {shift.breakTime !== null ? ` ${shift.breakTime} min break` : ""}
                                         </span>
-                                        {/* {shift.description && <span className="paragraphThin italic ml-2">{shift.description}</span>} */}
+                                        {shift.description && <span className="paragraphThin italic ml-2">{shift.description}</span>}
 
                                       </div>
 
                                       <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <FaRegCopy className="text-xl bg-white text-green-700 px-1 rounded cursor-pointer"
+                                        <FaRegCopy className="text-md  text-indigo-900  rounded cursor-pointer"
                                           onClick={() => handleCopy(shift)}
                                           title="Copy Shift" />
-                                        <FaEdit className="text-xl bg-green-800 text-white px-1 rounded cursor-pointer" onClick={() => onShiftEdit(emp.user.id, emp.user.firstName, day, shift)}
+                                        <FaEdit className="text-lg  text-black px-1 rounded cursor-pointer" onClick={() => onShiftEdit(emp.user.id, emp.user.firstName, day, shift)}
                                           title="Edit Shift" />
+                                        <HiTrash className="text-xl  text-red-600 px-1 rounded cursor-pointer"
+                                          title="Delete Shift" />
                                       </div>
 
                                     </div>
