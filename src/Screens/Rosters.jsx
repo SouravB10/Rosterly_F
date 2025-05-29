@@ -318,8 +318,9 @@ const Rosters = () => {
 
   const fetchRoster = async () => {
     try {
-      const response = await axios.get(`${baseURL}/rosterfetch/${loginId}/${selectedLocation}`);
+      const response = await axios.get(`${baseURL}/rosterfetch/${selectedLocation}/${loginId}`);
       const rosterData = response.data.data;
+      console.log("Roster data fetched:", rosterData);
         
       const organizedShifts = {};
 
