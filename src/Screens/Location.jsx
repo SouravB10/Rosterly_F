@@ -1012,7 +1012,7 @@ const Location = () => {
                   // className="buttonTheme"
                   className="buttonTheme w-full sm:w-auto"
                 >
-                  Add
+                  Add Location
                 </button>
               </div>
             </form>
@@ -1030,7 +1030,7 @@ const Location = () => {
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">Add Employee</Dialog.Title>
+              <Dialog.Title className="heading">Assign Employee</Dialog.Title>
               <button
                 className="text-white font-bold text-2xl"
                 onClick={() => setIsEmployeeModalOpen(false)}
