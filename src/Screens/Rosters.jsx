@@ -122,7 +122,7 @@ const Rosters = () => {
   };
 
   useEffect(() => {
-    if (shiftToEdit) {    
+    if (shiftToEdit) {
       setStart(shiftToEdit.time.split(" - ")[0]);
       setFinish(shiftToEdit.time.split(" - ")[1]);
       setBreakTime(shiftToEdit.breakTime);
@@ -228,6 +228,8 @@ const Rosters = () => {
     setCopiedShift(null);
   };
 
+
+  // Handle saving the shift
   const handleShiftSave = (e) => {
     e.preventDefault();
 
@@ -244,7 +246,7 @@ const Rosters = () => {
       breakTime,
       description,
       user_id: currentEmpId,
-      date:currentDay 
+      date: currentDay
     };
 
     setShiftsByEmployeeDay((prev) => {
@@ -273,11 +275,10 @@ const Rosters = () => {
     setBreakTime("");
     setDescription("");
     setShiftToEdit(null);
-
-
-
   };
 
+
+  //To publish the roster
   const handlePublish = async () => {
     const token = localStorage.getItem("token");
 
@@ -285,6 +286,9 @@ const Rosters = () => {
       alert("Please select a location before publishing the roster.");
       return;
     }
+
+    const startOfWeek = moment(currentWeek).day(3); // Wednesday
+    const endOfWeek = startOfWeek.clone().add(6, "days"); // Tuesday next week
 
     // Check if already published
     const alreadyPublished = publishedRosters.some(
@@ -329,8 +333,8 @@ const Rosters = () => {
       const response = await axios.post(
         `${baseURL}/rosterStore`,
         {
-          rWeekStartDate: ,
-          rWeekEndDate: ,
+          rWeekStartDate: startOfWeek.format("YYYY-MM-DD"),
+          rWeekEndDate: endOfWeek.format("YYYY-MM-DD"),
           location_id: selectedLocation,
           rosters: formattedShifts,
         },
