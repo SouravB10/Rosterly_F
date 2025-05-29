@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { FaFilePdf } from "react-icons/fa";
+import { FaEdit, FaFilePdf } from "react-icons/fa";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { SlCalender } from "react-icons/sl";
-import { FaAngleLeft, FaPlus, FaRegCopy  } from "react-icons/fa";
+import { FaAngleLeft, FaPlus, FaRegCopy } from "react-icons/fa";
 import { FaAngleRight } from "react-icons/fa";
 import { Dialog } from "@headlessui/react";
 import axios from "axios";
@@ -28,6 +28,7 @@ const Rosters = () => {
   const [publishedRosters, setPublishedRosters] = useState([]);
   const [isPublished, setIsPublished] = useState(false);
   const [firstName, setFirstName] = useState("");
+  const [shiftToEdit, setShiftToEdit] = useState(null);
 
   const loginId = localStorage.getItem("id");
 
@@ -69,7 +70,7 @@ const Rosters = () => {
         });
         // locatedEmployees = response.data;
         setLocatedEmployees(response.data.data);
-        console.log("Employees fetched:", response.data);
+        console.log("Employees fetched:", response.data.data);
       } catch (error) {
         console.error("Error fetching employees:", error);
       }
@@ -101,12 +102,40 @@ const Rosters = () => {
   }, []);
 
 
-  const onShiftAdd = (empId,empfirstName, day) => {
+  const onShiftAdd = (empId, empfirstName, day) => {
     setCurrentEmpId(empId);
     setCurrentDay(day);
     setIsShiftOpen(true);
     setFirstName(empfirstName);
   };
+
+  const onShiftEdit = (empId, empFirstName, day, shift) => {
+    setCurrentEmpId(empId);
+    setCurrentDay(day);
+    setFirstName(empFirstName);
+    setStart(shift.time.split(" - ")[0]);
+    setFinish(shift.time.split(" - ")[1]);
+    setBreakTime(shift.breakTime);
+    setDescription(shift.description);
+    setShiftToEdit(shift);
+    setIsShiftOpen(true);
+  };
+
+  useEffect(() => {
+    if (shiftToEdit) {    
+      setStart(shiftToEdit.time.split(" - ")[0]);
+      setFinish(shiftToEdit.time.split(" - ")[1]);
+      setBreakTime(shiftToEdit.breakTime);
+      setDescription(shiftToEdit.description || "");
+
+    } else {
+      setStart("");
+      setFinish("");
+      setBreakTime(null);
+      setDescription("");
+    }
+  }, [shiftToEdit]);
+
 
   const handleStats = () => {
     setStats(!stats);
@@ -202,38 +231,51 @@ const Rosters = () => {
   const handleShiftSave = (e) => {
     e.preventDefault();
 
-    if (!currentEmpId || !currentDay || !start || !finish) {
-      alert("Please fill all fields before saving the shift.");
-      return;
-    }
+    // if (!currentEmpId || !currentDay || !start || !finish) {
+    //   alert("Please fill all fields before saving the shift.");
+    //   return;
+    // }
+
+    const isEditing = !!shiftToEdit;
 
     const newShift = {
-      id: `${currentEmpId}-${currentDay}-${Date.now()}`,
+      id: isEditing ? shiftToEdit.id : `${currentEmpId}-${currentDay}-${Date.now()}`,
       time: `${start} - ${finish}`,
       breakTime,
       description,
+      user_id: currentEmpId,
+      date:currentDay 
     };
 
     setShiftsByEmployeeDay((prev) => {
       const currentEmpData = prev[currentEmpId] || {};
       const currentDayShifts = currentEmpData[currentDay] || [];
-
+      const updatedShifts = isEditing
+        ? currentDayShifts.map((shift) =>
+          shift.id === shiftToEdit.id ? newShift : shift
+        )
+        : [...currentDayShifts, newShift];
 
       return {
         ...prev,
         [currentEmpId]: {
           ...currentEmpData,
-          [currentDay]: [...currentDayShifts, newShift],
+          [currentDay]: updatedShifts,
         },
       };
     });
 
+    console.log("Saving shift for:", currentEmpId, currentDay, newShift);
     // Reset form and close modal
     setIsShiftOpen(false);
     setStart("");
     setFinish("");
     setBreakTime("");
     setDescription("");
+    setShiftToEdit(null);
+
+
+
   };
 
   const handlePublish = async () => {
@@ -282,11 +324,13 @@ const Rosters = () => {
     }
 
     setIsPublishing(true);
-    console.log("published",formattedShifts);
+    console.log("published", formattedShifts);
     try {
       const response = await axios.post(
-        `${baseURL}/rosterStore/${loginId}`,
+        `${baseURL}/rosterStore`,
         {
+          rWeekStartDate: ,
+          rWeekEndDate: ,
           location_id: selectedLocation,
           rosters: formattedShifts,
         },
@@ -305,7 +349,7 @@ const Rosters = () => {
         ...prev,
         { location_id: selectedLocation, days },
       ]);
-      console.log("days", days); 
+      console.log("days", days);
 
       fetchRoster();
     } catch (error) {
@@ -321,7 +365,7 @@ const Rosters = () => {
       const response = await axios.get(`${baseURL}/rosterfetch/${selectedLocation}/${loginId}`);
       const rosterData = response.data.data;
       console.log("Roster data fetched:", rosterData);
-        
+
       const organizedShifts = {};
 
       rosterData.forEach((shift) => {
@@ -376,7 +420,17 @@ const Rosters = () => {
     }
   };
 
-
+  const handleModalClose = () => {
+    setIsShiftOpen(false);
+    setShiftToEdit(null);
+    setCurrentEmpId(null);
+    setCurrentDay(null);
+    setFirstName("");
+    setStart("");
+    setFinish("");
+    setBreakTime(null);
+    setDescription("");
+  };
 
   return (
     <>
@@ -546,25 +600,28 @@ const Rosters = () => {
                                 >
                                   {(provided) => (
                                     <div
-                                      className="bgTable paragraph text-white p-2 rounded flex justify-between items-center cursor-move"
+                                      className="bgTable paragraph text-white p-2 rounded flex justify-between items-center cursor-move group"
                                       ref={provided.innerRef}
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
                                     >
                                       <div className="flex flex-col items-center justify-end w-full">
                                         <span>{shift.time}</span>
+                                        <span className="text-xs text-gray-200">
+                                          {shift.breakTime !== null ? ` ${shift.breakTime} min break` : ""}
+                                        </span>
                                         {/* {shift.description && <span className="paragraphThin italic ml-2">{shift.description}</span>} */}
 
                                       </div>
-                                      {/* <button
-                                        className="text-xs bg-white text-green-700 px-1 rounded cursor-pointer"
-                                        onClick={() => handleCopy(shift)}
-                                        title="Copy Shift"
-                                      > */}
-                                        <FaRegCopy  className="text-xl bg-white text-green-700 px-1 rounded cursor-pointer"
-                                        onClick={() => handleCopy(shift)}
-                                        title="Copy Shift"/>
-                                      {/* </button> */}
+
+                                      <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        <FaRegCopy className="text-xl bg-white text-green-700 px-1 rounded cursor-pointer"
+                                          onClick={() => handleCopy(shift)}
+                                          title="Copy Shift" />
+                                        <FaEdit className="text-xl bg-green-800 text-white px-1 rounded cursor-pointer" onClick={() => onShiftEdit(emp.user.id, emp.user.firstName, day, shift)}
+                                          title="Edit Shift" />
+                                      </div>
+
                                     </div>
                                   )}
                                 </Draggable>
@@ -662,7 +719,7 @@ const Rosters = () => {
 
       <Dialog
         open={isShiftOpen}
-        onClose={() => setIsShiftOpen(false)}
+        onClose={handleModalClose}
         className="relative z-50 rounded-lg"
       >
         <div className="fixed inset-0 bg-gray-700/70"></div>
@@ -672,7 +729,7 @@ const Rosters = () => {
               <Dialog.Title className="heading">Add Shift for : "{firstName}"</Dialog.Title>
               <button
                 className="text-white text-2xl font-bold cursor"
-                onClick={() => setIsShiftOpen(false)}
+                onClick={handleModalClose}
               >
                 ×
               </button>
@@ -717,7 +774,7 @@ const Rosters = () => {
                     <label className="paragraphBold">Break</label>
                     <select
                       className="input paragraph"
-                      value={breakTime==null ? "" : breakTime}
+                      value={breakTime == null ? "" : breakTime}
                       onChange={(e) => setBreakTime(e.target.value)}
                     >
                       {breakOptions.map((breakOption, index) => (
@@ -744,7 +801,7 @@ const Rosters = () => {
                 <button
                   type="button"
                   className="buttonGrey"
-                  onClick={() => setIsShiftOpen(false)}
+                  onClick={handleModalClose}
                 >
                   Cancel
                 </button>
