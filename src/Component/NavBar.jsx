@@ -116,7 +116,7 @@ const NavBar = ({ toggleSidebar }) => {
                   <img
                     alt=""
                     src={profileImage || "https://via.placeholder.com/150"} // fallback if null
-                    className="size-8 rounded p-1"
+                    className=" h-10 w-10 rounded-full object-cover"
                   />
                 </MenuButton>
               </div>
