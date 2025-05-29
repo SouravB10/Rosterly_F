@@ -281,39 +281,39 @@ const Rosters = () => {
       return;
     }
 
-    setIsPublishing(false);
+    setIsPublishing(true);
     console.log("published",formattedShifts);
-    // try {
-    //   const response = await axios.post(
-    //     `${baseURL}/rosterStore/${loginId}`,
-    //     {
-    //       location_id: selectedLocation,
-    //       rosters: formattedShifts,
-    //     },
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     }
-    //   );
+    try {
+      const response = await axios.post(
+        `${baseURL}/rosterStore/${loginId}`,
+        {
+          location_id: selectedLocation,
+          rosters: formattedShifts,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    //   alert("Roster published successfully!");
-    //   console.log("Publish response:", response.data);
+      alert("Roster published successfully!");
+      console.log("Publish response:", response.data);
 
-    //   // Add to published list
-    //   setPublishedRosters((prev) => [
-    //     ...prev,
-    //     { location_id: selectedLocation, days },
-    //   ]);
-    //   console.log("days", days); 
+      // Add to published list
+      setPublishedRosters((prev) => [
+        ...prev,
+        { location_id: selectedLocation, days },
+      ]);
+      console.log("days", days); 
 
-    //   fetchRoster();
-    // } catch (error) {
-    //   console.error("Error publishing roster:", error);
-    //   alert("Failed to publish roster. Please try again.");
-    // } finally {
-    //   setIsPublishing(false);
-    // }
+      fetchRoster();
+    } catch (error) {
+      console.error("Error publishing roster:", error);
+      alert("Failed to publish roster. Please try again.");
+    } finally {
+      setIsPublishing(false);
+    }
   };
 
   const fetchRoster = async () => {
