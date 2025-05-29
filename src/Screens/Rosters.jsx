@@ -57,7 +57,12 @@ const Rosters = () => {
 
   const days = getDaysForWeek(currentWeek);
 
-
+  useEffect(() => {
+    if (selectedLocation) {
+      postWeek();
+    }
+  }, [currentWeek, selectedLocation]);
+  
   const handleLocation = (e) => {
     const newLocationId = e.target.value;
     setSelectedLocation(newLocationId);
@@ -437,6 +442,30 @@ const Rosters = () => {
     setBreakTime(null);
     setDescription("");
   };
+
+  const postWeek = async () => {
+    const token = localStorage.getItem("token");
+    const startOfWeek = moment(currentWeek).day(3);
+    const endOfWeek = startOfWeek.clone().add(6, "days");
+    try {
+      const response = await axios.post(
+        `${baseURL}/rosterWeekftch`,
+        {
+          rWeekStartDate: startOfWeek.format("YYYY-MM-DD"),
+          rWeekEndDate: endOfWeek.format("YYYY-MM-DD"),
+          location_id: selectedLocation,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Post week response:", response.data);
+    } catch (error) {
+      console.error("Error posting week:", error);
+    }
+  }
 
   return (
     <>
