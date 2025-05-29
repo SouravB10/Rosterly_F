@@ -272,15 +272,26 @@ const Location = () => {
     setFeedbackModalOpen(true);
   };
 
+  const handleLocation = (e) => {
+    const selectedValue = e.target.value;
+    setSelectLocation(selectedValue);
+    // if (selectedValue) {
+    getLocation(selectedValue);
+    // }
+  };
+
   // Location Handling Start here
-  const getLocation = async () => {
+  const getLocation = async (locationId) => {
     // alert(selectLocation);
-    if (!selectLocation) return;
+    if (!locationId) return;
 
     try {
+      setLocationEmployees([]);
+
       const token = localStorage.getItem("token");
+      
       const response = await axios.get(
-        `${baseURL}/locations/${selectLocation}`,
+        `${baseURL}/locations/${locationId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -460,9 +471,7 @@ const Location = () => {
     setIsModalOpen(false);
   };
 
-  const handleLocation = (e) => {
-    setSelectLocation(e.target.value);
-  };
+
 
   const updateLocation = async (e) => {
     e.preventDefault();
@@ -602,12 +611,12 @@ const Location = () => {
                   ))}
                 </select>
 
-                <button
+                {/* <button
                   className="buttonSuccess w-full md:w-auto"
                   onClick={getLocation}
                 >
                   Get Data
-                </button>
+                </button> */}
               </div>
               {(activeTab === "general" || activeTab === "Sales") && (
                 <button
@@ -803,7 +812,7 @@ const Location = () => {
               )}
 
               {activeTab === "Employees" && (
-                <div className="card rounded-xl p-6 space-y-4">
+                <div className="card rounded-xl p-6 space-y-4" key={selectLocation}>
                   {/* Header */}
                   <div className="flex flex-col md:flex-row items-start justify-between gap-4">
                     <div>

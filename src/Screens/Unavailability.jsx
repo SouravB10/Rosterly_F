@@ -671,7 +671,7 @@ const Unavailability = () => {
                       className="black-100 hover:texttheme mt-1 cursor-pointer"
                       onClick={() => handleEdit(item)}
                     >
-                      <FaPencilAlt className="w-4 h-4" />
+                      <FaEdit className="w-4 h-4" />
                     </button>
                   )}
 
@@ -733,14 +733,7 @@ const Unavailability = () => {
                 </div>
 
                 <div
-                  className="mt-2 sm:mt-0 sm:ml-4 cursor-pointer"
-                  title={
-                    matchingUnavailability.length === 0
-                      ? "Add Unavailability"
-                      : matchingUnavailability[0].unavailStatus === 1
-                        ? "Edit Unavailability"
-                        : "Delete Unavailability"
-                  }
+                  className="mt-2 sm:mt-0 sm:ml-4 cursor-pointer"                
                   onClick={() => {
                     if (matchingUnavailability.length === 0) {
                       openModal(day); // Open Add modal
