@@ -27,6 +27,7 @@ const Rosters = () => {
   const [isPublishing, setIsPublishing] = useState(false);
   const [publishedRosters, setPublishedRosters] = useState([]);
   const [isPublished, setIsPublished] = useState(false);
+  const [firstName, setFirstName] = useState("");
 
   const loginId = localStorage.getItem("id");
 
@@ -100,10 +101,11 @@ const Rosters = () => {
   }, []);
 
 
-  const onShiftAdd = (empId, day) => {
+  const onShiftAdd = (empId,empfirstName, day) => {
     setCurrentEmpId(empId);
     setCurrentDay(day);
     setIsShiftOpen(true);
+    setFirstName(empfirstName);
   };
 
   const handleStats = () => {
@@ -279,38 +281,39 @@ const Rosters = () => {
       return;
     }
 
-    setIsPublishing(true);
-    try {
-      const response = await axios.post(
-        `${baseURL}/rosterStore/${loginId}`,
-        {
-          location_id: selectedLocation,
-          rosters: formattedShifts,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+    setIsPublishing(false);
+    console.log("published",formattedShifts);
+    // try {
+    //   const response = await axios.post(
+    //     `${baseURL}/rosterStore/${loginId}`,
+    //     {
+    //       location_id: selectedLocation,
+    //       rosters: formattedShifts,
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     }
+    //   );
 
-      alert("Roster published successfully!");
-      console.log("Publish response:", response.data);
+    //   alert("Roster published successfully!");
+    //   console.log("Publish response:", response.data);
 
-      // Add to published list
-      setPublishedRosters((prev) => [
-        ...prev,
-        { location_id: selectedLocation, days },
-      ]);
-      console.log("days", days); 
+    //   // Add to published list
+    //   setPublishedRosters((prev) => [
+    //     ...prev,
+    //     { location_id: selectedLocation, days },
+    //   ]);
+    //   console.log("days", days); 
 
-      fetchRoster();
-    } catch (error) {
-      console.error("Error publishing roster:", error);
-      alert("Failed to publish roster. Please try again.");
-    } finally {
-      setIsPublishing(false);
-    }
+    //   fetchRoster();
+    // } catch (error) {
+    //   console.error("Error publishing roster:", error);
+    //   alert("Failed to publish roster. Please try again.");
+    // } finally {
+    //   setIsPublishing(false);
+    // }
   };
 
   const fetchRoster = async () => {
@@ -572,7 +575,7 @@ const Rosters = () => {
                           {/* Paste Button */}
                           {copiedShift && !(shiftsByEmployeeDay[emp.id]?.[day]?.length > 0) && !(isPublished) && (
                             <button
-                              onClick={() => handlePaste(emp.id, day)}
+                              onClick={() => handlePaste(emp.user.id, day)}
                               className="text-xs mt-2 text-blue-500 underline"
                             >
                               Paste
@@ -583,7 +586,7 @@ const Rosters = () => {
                           {!(shiftsByEmployeeDay[emp.id]?.[day]?.length > 0) && !(isPublished) && (
                             <div className="text-center">
                               <button
-                                onClick={() => onShiftAdd(emp.id, day)}
+                                onClick={() => onShiftAdd(emp.id,emp.user.firstName,day)}
                                 className="text-gray-500 hover:text-green-700 cursor-pointer p-1"
                                 title="Add Shift"
                               >
@@ -665,7 +668,7 @@ const Rosters = () => {
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">Add Open Shift</Dialog.Title>
+              <Dialog.Title className="heading">Add Shift for : "{firstName}"</Dialog.Title>
               <button
                 className="text-white text-2xl font-bold cursor"
                 onClick={() => setIsShiftOpen(false)}
@@ -713,7 +716,7 @@ const Rosters = () => {
                     <label className="paragraphBold">Break</label>
                     <select
                       className="input paragraph"
-                      value={breakTime}
+                      value={breakTime==null ? "" : breakTime}
                       onChange={(e) => setBreakTime(e.target.value)}
                     >
                       {breakOptions.map((breakOption, index) => (
