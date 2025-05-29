@@ -168,6 +168,7 @@ const Location = () => {
 
       setFeedbackMessage("User deleted successfully.");
       setShowConfirmButtons(false);
+      await getLocation(locationId);
       setTimeout(() => {
         setFeedbackModalOpen(false);
         setLoading(false);
@@ -184,7 +185,7 @@ const Location = () => {
   const allSelected =
     employeeName.length > 0 && employees.length === employeeName.length;
 
-  // const fetchEmployees = async () => {
+  // const fetchEmployeesLoc = async () => {
   //   try {
   //     const token = localStorage.getItem("token");
   //     const res = await axios.get(
@@ -203,7 +204,7 @@ const Location = () => {
   // };
 
   // useEffect(() => {
-  //   fetchEmployees();
+  //   fetchEmployeesLoc();
   // }, []);
 
   const handleEmployeeSubmit = async (e) => {
@@ -242,14 +243,14 @@ const Location = () => {
       console.log("API Response:", res.data);
       console.log("API Response:", res.data);
 
-      if (res.data.status) {
+      if (res.data) {
         setFeedbackMessage(
           res.data?.message || "Employees assigned successfully."
         );
         setEmployees([]);
         setLocationName("");
-        // await fetchEmployees();
         setIsEmployeeModalOpen(false);
+        await getLocation(locationId)
       } else {
         setFeedbackMessage(res.data.message || "Something went wrong.");
       }
@@ -633,7 +634,7 @@ const Location = () => {
                   title="Add Employee to Location"
                   onClick={() => setIsEmployeeModalOpen(true)}
                 >
-                  + Employee
+                  + Assign Employee
                 </button>
               )}
             </div>
@@ -1096,11 +1097,11 @@ const Location = () => {
                           onChange={handleChange}
                           checked={employees.includes(emp.id.toString())}
                         />
-                        <img
+                        {/* <img
                           src={emp.profileImage}
                           alt={`${emp.firstName} ${emp.lastName}`}
                           className="h-10 w-10 rounded-full"
-                        />
+                        /> */}
                         <p className="paragraph">
                           {emp.firstName} {emp.lastName}
                         </p>
