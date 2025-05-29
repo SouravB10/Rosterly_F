@@ -281,46 +281,46 @@ const Rosters = () => {
       return;
     }
 
-    setIsPublishing(false);
+    setIsPublishing(true);
     console.log("published",formattedShifts);
-    // try {
-    //   const response = await axios.post(
-    //     `${baseURL}/rosterStore/${loginId}`,
-    //     {
-    //       location_id: selectedLocation,
-    //       rosters: formattedShifts,
-    //     },
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     }
-    //   );
+    try {
+      const response = await axios.post(
+        `${baseURL}/rosterStore/${loginId}`,
+        {
+          location_id: selectedLocation,
+          rosters: formattedShifts,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    //   alert("Roster published successfully!");
-    //   console.log("Publish response:", response.data);
+      alert("Roster published successfully!");
+      console.log("Publish response:", response.data);
 
-    //   // Add to published list
-    //   setPublishedRosters((prev) => [
-    //     ...prev,
-    //     { location_id: selectedLocation, days },
-    //   ]);
-    //   console.log("days", days); 
+      // Add to published list
+      setPublishedRosters((prev) => [
+        ...prev,
+        { location_id: selectedLocation, days },
+      ]);
+      console.log("days", days); 
 
-    //   fetchRoster();
-    // } catch (error) {
-    //   console.error("Error publishing roster:", error);
-    //   alert("Failed to publish roster. Please try again.");
-    // } finally {
-    //   setIsPublishing(false);
-    // }
+      fetchRoster();
+    } catch (error) {
+      console.error("Error publishing roster:", error);
+      alert("Failed to publish roster. Please try again.");
+    } finally {
+      setIsPublishing(false);
+    }
   };
 
   const fetchRoster = async () => {
     try {
       const response = await axios.get(`${baseURL}/rosterfetch/${loginId}`);
       const rosterData = response.data.data;
-
+        
       const organizedShifts = {};
 
       rosterData.forEach((shift) => {
@@ -513,7 +513,7 @@ const Rosters = () => {
             )}
             <tbody>
               {locatedEmployees.map((emp) => (
-                <tr key={emp.id} className="border border-gray-300">
+                <tr key={emp.user.id} className="border border-gray-300">
                   {/* Employee Info */}
                   <td className="p-2 bg-white">
                     <div className="font-semibold">{emp.user.firstName}{" "}{emp.user.lastName}</div>
@@ -525,8 +525,8 @@ const Rosters = () => {
                   {/* Days Column with DragDrop */}
                   {days.map((day) => (
                     <Droppable
-                      key={`${emp.id}-${day}`}
-                      droppableId={`${emp.id}-${day}`}
+                      key={`${emp.user.id}-${day}`}
+                      droppableId={`${emp.user.id}-${day}`}
                     >
                       {(provided) => (
                         <td
@@ -535,7 +535,7 @@ const Rosters = () => {
                           {...provided.droppableProps}
                         >
                           <div className="space-y-2 ">
-                            {(shiftsByEmployeeDay[emp.id]?.[day] || []).map(
+                            {(shiftsByEmployeeDay[emp.user.id]?.[day] || []).map(
                               (shift, index) => (
                                 <Draggable
                                   key={shift.id}
@@ -573,20 +573,20 @@ const Rosters = () => {
                           </div>
 
                           {/* Paste Button */}
-                          {copiedShift && !(shiftsByEmployeeDay[emp.id]?.[day]?.length > 0) && !(isPublished) && (
+                          {copiedShift && !(shiftsByEmployeeDay[emp.user.id]?.[day]?.length > 0) && !(isPublished) && (
                             <button
                               onClick={() => handlePaste(emp.user.id, day)}
-                              className="text-xs mt-2 text-blue-500 underline"
+                              className="text-xs mt-2 text-gray-500 underline cursor-pointer hover:text-green-800"
                             >
                               Paste
                             </button>
                           )}
 
                           {/* Add Shift Button */}
-                          {!(shiftsByEmployeeDay[emp.id]?.[day]?.length > 0) && !(isPublished) && (
+                          {!(shiftsByEmployeeDay[emp.user.id]?.[day]?.length > 0) && !(isPublished) && (
                             <div className="text-center">
                               <button
-                                onClick={() => onShiftAdd(emp.id,emp.user.firstName,day)}
+                                onClick={() => onShiftAdd(emp.user.id, emp.user.firstName, day)}
                                 className="text-gray-500 hover:text-green-700 cursor-pointer p-1"
                                 title="Add Shift"
                               >
