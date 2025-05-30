@@ -62,7 +62,7 @@ const Rosters = () => {
       postWeek();
     }
   }, [currentWeek, selectedLocation]);
-  
+
   const handleLocation = (e) => {
     const newLocationId = e.target.value;
     setSelectedLocation(newLocationId);
@@ -467,6 +467,72 @@ const Rosters = () => {
     }
   }
 
+  const calculateTotalHoursDisplay = (startTime, endTime, breakMinutes) => {
+    if (!startTime || !endTime || startTime === '--' || endTime === '--') return '';
+
+    const to24Hour = (timeStr) => {
+      const [time, modifier] = timeStr.split(' ');
+      let [hours, minutes] = time.split(':').map(Number);
+
+      if (modifier === 'PM' && hours !== 12) hours += 12;
+      if (modifier === 'AM' && hours === 12) hours = 0;
+
+      return { hours, minutes };
+    };
+
+    const start = to24Hour(startTime);
+    const end = to24Hour(endTime);
+
+    const startDate = new Date(0, 0, 0, start.hours, start.minutes);
+    const endDate = new Date(0, 0, 0, end.hours, end.minutes);
+
+    let diff = (endDate - startDate) / (1000 * 60); // total minutes
+    if (diff < 0) diff += 1440; // overnight shift fix
+
+    const breakMins = Number(breakMinutes) || 0;
+    diff -= breakMins;
+
+    const hours = Math.floor(diff / 60);
+    const minutes = diff % 60;
+
+    return `${hours}h ${minutes}m (${breakMins} min break)`;
+  };
+
+  const calculateShiftDuration = (timeRange, breakTime) => {
+    if (!timeRange) return '';
+
+    const [startTime, endTime] = timeRange.split(' - ');
+    if (!startTime || !endTime) return '';
+
+    const to24Hour = (timeStr) => {
+      const [time, modifier] = timeStr.trim().split(' ');
+      let [hours, minutes] = time.split(':').map(Number);
+
+      if (modifier === 'PM' && hours !== 12) hours += 12;
+      if (modifier === 'AM' && hours === 12) hours = 0;
+
+      return { hours, minutes };
+    };
+
+    const start = to24Hour(startTime);
+    const end = to24Hour(endTime);
+
+    const startDate = new Date(0, 0, 0, start.hours, start.minutes);
+    const endDate = new Date(0, 0, 0, end.hours, end.minutes);
+
+    let diff = (endDate - startDate) / (1000 * 60); // in minutes
+    if (diff < 0) diff += 1440; // handle overnight shift
+
+    const breakMins = Number(breakTime) || 0;
+    diff -= breakMins;
+
+    const hours = Math.floor(diff / 60);
+    const minutes = diff % 60;
+
+    return `${hours}h ${minutes}m (${breakMins} min break)`;
+  };
+
+
   return (
     <>
       <div className="flex flex-col md:flex-row justify-between items-center mb-2 gap-4 py-2">
@@ -643,7 +709,7 @@ const Rosters = () => {
                                       <div className="flex flex-col items-center justify-end w-full">
                                         <span>{shift.time}</span>
                                         <span className="text-xs text-gray-200">
-                                          {shift.breakTime !== null ? ` ${shift.breakTime} min break` : ""}
+                                          {calculateShiftDuration(shift.time, shift.breakTime)}
                                         </span>
                                         {shift.description && <span className="paragraphThin italic ml-2">{shift.description}</span>}
 
@@ -773,7 +839,7 @@ const Rosters = () => {
             </div>
             <form className="card p-6 space-y-3" onSubmit={handleShiftSave}>
               <div className="">
-                <div className="grid grid-cols-3 gap-4 mb-4">
+                <div className="grid grid-cols-3 gap-4">
                   {/* Start Time */}
                   <div className="flex flex-col">
                     <label className="paragraphBold">Start</label>
@@ -820,8 +886,20 @@ const Rosters = () => {
                         </option>
                       ))}
                     </select>
+
                   </div>
                 </div>
+                {!calculateTotalHoursDisplay(start, finish, breakTime) ?
+                  <div className="text-red-600 text-xs mb-2 mt-1">
+                    *Please select valid start and finish times.
+                  </div> :
+                  <div className="mb-2 ">
+                    <span className="text-xs mt-1 text-gray-700">
+                      Total Hours: {calculateTotalHoursDisplay(start, finish, breakTime)}
+                    </span>
+                  </div>
+                }
+
 
                 {/* Description Input */}
                 <label className="paragraphBold">Description:</label>
