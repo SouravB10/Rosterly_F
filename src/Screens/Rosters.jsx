@@ -565,9 +565,9 @@ const Rosters = () => {
   };
 
   const startOfWeek = moment(currentWeek).day(3).format("YYYY-MM-DD");
-  const weekKey = `${startOfWeek}_${selectedLocation}`;
+  const weekKey = `${startOfWeek}_${selectedLocation}_${loginId}`;
   const meta = weekMetaByDate[weekKey];
-  const isPublished = meta?.isPublished;
+  const isPublished = meta?.isPublished === 1 && meta?.created_by === loginId;
 
 
 
