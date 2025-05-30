@@ -153,7 +153,7 @@ const Rosters = () => {
   };
 
   const generateTimeOptions = () => {
-    let times = ["--"];
+    let times = ["-- --"];
     let hour = 0;
     let minute = 0;
 
