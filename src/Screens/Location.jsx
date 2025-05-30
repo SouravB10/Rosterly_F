@@ -290,7 +290,7 @@ const Location = () => {
       setLocationEmployees([]);
 
       const token = localStorage.getItem("token");
-      
+
       const response = await axios.get(
         `${baseURL}/locations/${locationId}`,
         {
@@ -752,15 +752,16 @@ const Location = () => {
                         )}
                       </div>
                     </div>
-
-                    <div className="flex justify-end">
-                      <button
-                        className="buttonTheme w-full md:w-auto"
-                        disabled={!selectLocation}
-                      >
-                        Update
-                      </button>
-                    </div>
+                    {selectLocation && (
+                      <div className="flex justify-end">
+                        <button
+                          className="buttonTheme w-full md:w-auto"
+                          disabled={!selectLocation}
+                        >
+                          Update
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </form>
               )}
@@ -800,15 +801,17 @@ const Location = () => {
                   {/* <div className="flex justify-end mt-6">
                     <button className="buttonSuccess w-full md:w-auto">Update</button>
                   </div> */}
-                  <div className="flex justify-end">
-                    <button
-                      className="buttonTheme w-full md:w-auto"
-                      onClick={updateSales}
-                      disabled={!selectLocation}
-                    >
-                      Update
-                    </button>
-                  </div>
+                  {selectLocation && (
+                    <div className="flex justify-end">
+                      <button
+                        className="buttonTheme w-full md:w-auto"
+                        onClick={updateSales}
+                        disabled={!selectLocation}
+                      >
+                        Update
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 

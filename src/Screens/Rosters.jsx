@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { FaEdit, FaFilePdf } from "react-icons/fa";
+import { FaEdit, FaFilePdf, FaTrash } from "react-icons/fa";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { SlCalender } from "react-icons/sl";
 import { FaAngleLeft, FaPlus, FaRegCopy } from "react-icons/fa";
@@ -9,6 +9,7 @@ import { Dialog } from "@headlessui/react";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { set } from "date-fns";
+import { HiTrash } from "react-icons/hi2";
 
 const Rosters = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -29,6 +30,8 @@ const Rosters = () => {
   const [isPublished, setIsPublished] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [shiftToEdit, setShiftToEdit] = useState(null);
+  const [rosterWeekId, setRosterWeekId] = useState(null);
+  const [weekId, setWeekId] = useState("");
 
   const loginId = localStorage.getItem("id");
 
@@ -55,6 +58,11 @@ const Rosters = () => {
 
   const days = getDaysForWeek(currentWeek);
 
+  useEffect(() => {
+    if (selectedLocation) {
+      postWeek();
+    }
+  }, [currentWeek, selectedLocation]);
 
   const handleLocation = (e) => {
     const newLocationId = e.target.value;
@@ -306,6 +314,7 @@ const Rosters = () => {
       Object.entries(daysObj).forEach(([day, shifts]) => {
         shifts.forEach((shift) => {
           formattedShifts.push({
+            shiftId: shift.id,
             user_id: empId,
             date: moment(day, "ddd, DD/MM").format("YYYY-MM-DD"),
             startTime: shift.time.split(" - ")[0],
@@ -337,6 +346,7 @@ const Rosters = () => {
           rWeekEndDate: endOfWeek.format("YYYY-MM-DD"),
           location_id: selectedLocation,
           rosters: formattedShifts,
+          rosterWeekId: weekId
         },
         {
           headers: {
@@ -347,7 +357,7 @@ const Rosters = () => {
 
       alert("Roster published successfully!");
       console.log("Publish response:", response.data);
-
+      setRosterWeekId(response.data.roster_week_id);
       // Add to published list
       setPublishedRosters((prev) => [
         ...prev,
@@ -412,10 +422,18 @@ const Rosters = () => {
     }
   }, [selectedLocation, currentWeek]);
 
-  const handleTogglePublish = () => {
-    if (isPublished) {
+  const handleTogglePublish = async () => {
+    if (isPublished == 1) {
       // Unpublishing
       setIsPublished(false);
+
+      try{
+        const response = await axios.post(`${baseURL}/pubUnpub/${weekId}`);
+        console.log(response);
+      }catch(e){
+        console.log("Failed to unpublish");
+      }
+
       // Optional: Call unpublish API here
     } else {
       // Publishing
@@ -435,6 +453,100 @@ const Rosters = () => {
     setBreakTime(null);
     setDescription("");
   };
+
+  const postWeek = async () => {
+    const token = localStorage.getItem("token");
+    const startOfWeek = moment(currentWeek).day(3);
+    const endOfWeek = startOfWeek.clone().add(6, "days");
+    try {
+      const response = await axios.post(
+        `${baseURL}/rosterWeekftch`,
+        {
+          rWeekStartDate: startOfWeek.format("YYYY-MM-DD"),
+          rWeekEndDate: endOfWeek.format("YYYY-MM-DD"),
+          location_id: selectedLocation,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Post week response:", response.data);
+      setWeekId(response.data.weekId);
+      setIsPublished(response.data.isPublished);
+      console.log(weekId);
+
+    } catch (error) {
+      console.error("Error posting week:", error);
+    }
+  }
+
+  const calculateTotalHoursDisplay = (startTime, endTime, breakMinutes) => {
+    if (!startTime || !endTime || startTime === '--' || endTime === '--') return '';
+
+    const to24Hour = (timeStr) => {
+      const [time, modifier] = timeStr.split(' ');
+      let [hours, minutes] = time.split(':').map(Number);
+
+      if (modifier === 'PM' && hours !== 12) hours += 12;
+      if (modifier === 'AM' && hours === 12) hours = 0;
+
+      return { hours, minutes };
+    };
+
+    const start = to24Hour(startTime);
+    const end = to24Hour(endTime);
+
+    const startDate = new Date(0, 0, 0, start.hours, start.minutes);
+    const endDate = new Date(0, 0, 0, end.hours, end.minutes);
+
+    let diff = (endDate - startDate) / (1000 * 60); // total minutes
+    if (diff < 0) diff += 1440; // overnight shift fix
+
+    const breakMins = Number(breakMinutes) || 0;
+    diff -= breakMins;
+
+    const hours = Math.floor(diff / 60);
+    const minutes = diff % 60;
+
+    return `${hours}h ${minutes}m (${breakMins} min break)`;
+  };
+
+  const calculateShiftDuration = (timeRange, breakTime) => {
+    if (!timeRange) return '';
+
+    const [startTime, endTime] = timeRange.split(' - ');
+    if (!startTime || !endTime) return '';
+
+    const to24Hour = (timeStr) => {
+      const [time, modifier] = timeStr.trim().split(' ');
+      let [hours, minutes] = time.split(':').map(Number);
+
+      if (modifier === 'PM' && hours !== 12) hours += 12;
+      if (modifier === 'AM' && hours === 12) hours = 0;
+
+      return { hours, minutes };
+    };
+
+    const start = to24Hour(startTime);
+    const end = to24Hour(endTime);
+
+    const startDate = new Date(0, 0, 0, start.hours, start.minutes);
+    const endDate = new Date(0, 0, 0, end.hours, end.minutes);
+
+    let diff = (endDate - startDate) / (1000 * 60); // in minutes
+    if (diff < 0) diff += 1440; // handle overnight shift
+
+    const breakMins = Number(breakTime) || 0;
+    diff -= breakMins;
+
+    const hours = Math.floor(diff / 60);
+    const minutes = diff % 60;
+
+    return `${hours}h ${minutes}m (${breakMins} min break)`;
+  };
+
 
   return (
     <>
@@ -612,18 +724,20 @@ const Rosters = () => {
                                       <div className="flex flex-col items-center justify-end w-full">
                                         <span>{shift.time}</span>
                                         <span className="text-xs text-gray-200">
-                                          {shift.breakTime !== null ? ` ${shift.breakTime} min break` : ""}
+                                          {calculateShiftDuration(shift.time, shift.breakTime)}
                                         </span>
-                                        {/* {shift.description && <span className="paragraphThin italic ml-2">{shift.description}</span>} */}
+                                        {shift.description && <span className="paragraphThin italic ml-2">{shift.description}</span>}
 
                                       </div>
 
                                       <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <FaRegCopy className="text-xl bg-white text-green-700 px-1 rounded cursor-pointer"
+                                        <FaRegCopy className="text-md  text-green-900  rounded cursor-pointer"
                                           onClick={() => handleCopy(shift)}
                                           title="Copy Shift" />
-                                        <FaEdit className="text-xl bg-green-800 text-white px-1 rounded cursor-pointer" onClick={() => onShiftEdit(emp.user.id, emp.user.firstName, day, shift)}
+                                        <FaEdit className="text-lg  text-black px-1 rounded cursor-pointer" onClick={() => onShiftEdit(emp.user.id, emp.user.firstName, day, shift)}
                                           title="Edit Shift" />
+                                        <HiTrash className="text-xl  text-red-600 px-1 rounded cursor-pointer"
+                                          title="Delete Shift" />
                                       </div>
 
                                     </div>
@@ -740,7 +854,7 @@ const Rosters = () => {
             </div>
             <form className="card p-6 space-y-3" onSubmit={handleShiftSave}>
               <div className="">
-                <div className="grid grid-cols-3 gap-4 mb-4">
+                <div className="grid grid-cols-3 gap-4">
                   {/* Start Time */}
                   <div className="flex flex-col">
                     <label className="paragraphBold">Start</label>
@@ -787,8 +901,20 @@ const Rosters = () => {
                         </option>
                       ))}
                     </select>
+
                   </div>
                 </div>
+                {!calculateTotalHoursDisplay(start, finish, breakTime) ?
+                  <div className="text-red-600 text-xs mb-2 mt-1">
+                    *Please select valid start and finish times.
+                  </div> :
+                  <div className="mb-2 ">
+                    <span className="text-xs mt-1 text-gray-700">
+                      Total Hours: {calculateTotalHoursDisplay(start, finish, breakTime)}
+                    </span>
+                  </div>
+                }
+
 
                 {/* Description Input */}
                 <label className="paragraphBold">Description:</label>
