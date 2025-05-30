@@ -6,6 +6,7 @@ import axios from "axios";
 import FeedbackModal from "../Component/FeedbackModal"; // ✅ Import here
 import GoogleMapSelector from "../Component/GoogleMap";
 import { set } from "date-fns";
+import { capitalLetter } from "../Component/capitalLetter";
 
 const Location = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -674,7 +675,7 @@ const Location = () => {
                           placeholder="Main Branch"
                           className="input border border-gray-300 w-full md:w-auto"
                           value={locationName}
-                          onChange={(e) => setLocationName(e.target.value)}
+                          onChange={(e) => setLocationName(capitalLetter(e.target.value))}
                         />
                         {errors.locationName && (
                           <span className="text-sm text-red-600">
@@ -697,7 +698,7 @@ const Location = () => {
                           placeholder="Main Branch"
                           className="input border border-gray-300 w-full md:w-auto"
                           value={address}
-                          onChange={(e) => setAddress(e.target.value)}
+                          onChange={(e) => setAddress(capitalLetter(e.target.value))}
                         />
                         {errors.address && (
                           <span className="text-sm text-red-600">
@@ -980,7 +981,7 @@ const Location = () => {
                       type="text"
                       className="input w-full"
                       value={addlocationName}
-                      onChange={(e) => setAddlocationName(e.target.value)}
+                      onChange={(e) => setAddlocationName(capitalLetter(e.target.value))}
                     />
                     {errors.addlocationName && (
                       <span className="text-sm text-red-600">
