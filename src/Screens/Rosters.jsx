@@ -68,6 +68,8 @@ const Rosters = () => {
     const newLocationId = e.target.value;
     setSelectedLocation(newLocationId);
 
+    setLocatedEmployees([]); 
+
     const fetchEmployees = async (id) => {
       const token = localStorage.getItem("token");
       try {
@@ -427,10 +429,10 @@ const Rosters = () => {
       // Unpublishing
       setIsPublished(false);
 
-      try{
+      try {
         const response = await axios.post(`${baseURL}/pubUnpub/${weekId}`);
         console.log(response);
-      }catch(e){
+      } catch (e) {
         console.log("Failed to unpublish");
       }
 
@@ -676,8 +678,8 @@ const Rosters = () => {
             {locatedEmployees.length === 0 && (
               <tbody>
                 <tr>
-                  <td colSpan={days.length + 1} className="p-2 text-center">
-                    Select a location to view employees.
+                  <td colSpan={days.length + 1} className="p-2 text-center text-gray-600">
+                    No employees to display. Please select a location or add employees to this location.
                   </td>
                 </tr>
               </tbody>
