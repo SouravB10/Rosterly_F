@@ -731,7 +731,7 @@ const Rosters = () => {
                                       </div>
 
                                       <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <FaRegCopy className="text-md  text-indigo-900  rounded cursor-pointer"
+                                        <FaRegCopy className="text-md  text-green-900  rounded cursor-pointer"
                                           onClick={() => handleCopy(shift)}
                                           title="Copy Shift" />
                                         <FaEdit className="text-lg  text-black px-1 rounded cursor-pointer" onClick={() => onShiftEdit(emp.user.id, emp.user.firstName, day, shift)}
