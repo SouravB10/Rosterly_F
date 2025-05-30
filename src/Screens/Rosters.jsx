@@ -10,6 +10,7 @@ import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { set } from "date-fns";
 import { HiTrash } from "react-icons/hi2";
+import { capitalLetter } from "../Component/capitalLetter";
 
 const Rosters = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -925,7 +926,7 @@ const Rosters = () => {
                   rows="3"
                   placeholder="Enter description..."
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e) => setDescription(capitalLetter(e.target.value))}
                 ></textarea>
               </div>
 
