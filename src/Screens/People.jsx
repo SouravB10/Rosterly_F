@@ -9,6 +9,7 @@ import { HiTrash } from "react-icons/hi2";
 import { LuNotebookPen } from "react-icons/lu";
 import FeedbackModal from "../Component/FeedbackModal";
 import { FaToggleOff, FaToggleOn } from "react-icons/fa6";
+import { capitalLetter } from "../Component/capitalLetter";
 
 const People = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -704,7 +705,7 @@ const People = () => {
                     className="input"
                     value={formData.firstName}
                     onChange={(e) =>
-                      setFormData({ ...formData, firstName: e.target.value })
+                      setFormData({ ...formData, firstName:  (capitalLetter(e.target.value)) })
                     }
                   />
                   {errors.firstName && (
@@ -718,7 +719,7 @@ const People = () => {
                     className="input"
                     value={formData.lastName}
                     onChange={(e) =>
-                      setFormData({ ...formData, lastName: e.target.value })
+                      setFormData({ ...formData, lastName:  (capitalLetter(e.target.value)) })
                     }
                   />
                   {errors.lastName && (
@@ -740,11 +741,11 @@ const People = () => {
                   <p className="text-red-500 text-sm">{errors.email}</p>
                 )}
               </div>
-              <div className="grid grid-cols-2 gap-4">
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="paragraphBold">Date of Birth</label>
                   <DatePicker
-                    className="input w-50"
+                    className="input"
                     selected={createDate}
                     onChange={(date) => {
                       setCreateDate(date);
@@ -913,7 +914,7 @@ const People = () => {
                     onChange={(e) =>
                       setSelectedProfile((prev) => ({
                         ...prev,
-                        firstName: e.target.value,
+                        firstName: (capitalLetter(e.target.value)),
                       }))
                     }
                   />
@@ -927,7 +928,7 @@ const People = () => {
                     onChange={(e) =>
                       setSelectedProfile((prev) => ({
                         ...prev,
-                        lastName: e.target.value,
+                        lastName:  (capitalLetter(e.target.value)),
                       }))
                     }
                   />
