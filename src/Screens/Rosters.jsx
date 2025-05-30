@@ -31,6 +31,7 @@ const Rosters = () => {
   const [firstName, setFirstName] = useState("");
   const [shiftToEdit, setShiftToEdit] = useState(null);
   const [rosterWeekId, setRosterWeekId] = useState(null);
+  const [weekId, setWeekId] = useState("");
 
   const loginId = localStorage.getItem("id");
 
@@ -313,6 +314,7 @@ const Rosters = () => {
       Object.entries(daysObj).forEach(([day, shifts]) => {
         shifts.forEach((shift) => {
           formattedShifts.push({
+            shiftId: shift.id,
             user_id: empId,
             date: moment(day, "ddd, DD/MM").format("YYYY-MM-DD"),
             startTime: shift.time.split(" - ")[0],
@@ -344,6 +346,7 @@ const Rosters = () => {
           rWeekEndDate: endOfWeek.format("YYYY-MM-DD"),
           location_id: selectedLocation,
           rosters: formattedShifts,
+          rosterWeekId: weekId
         },
         {
           headers: {
@@ -419,10 +422,18 @@ const Rosters = () => {
     }
   }, [selectedLocation, currentWeek]);
 
-  const handleTogglePublish = () => {
-    if (isPublished) {
+  const handleTogglePublish = async () => {
+    if (isPublished == 1) {
       // Unpublishing
       setIsPublished(false);
+
+      try{
+        const response = await axios.post(`${baseURL}/pubUnpub/${weekId}`);
+        console.log(response);
+      }catch(e){
+        console.log("Failed to unpublish");
+      }
+
       // Optional: Call unpublish API here
     } else {
       // Publishing
@@ -462,6 +473,10 @@ const Rosters = () => {
         }
       );
       console.log("Post week response:", response.data);
+      setWeekId(response.data.weekId);
+      setIsPublished(response.data.isPublished);
+      console.log(weekId);
+
     } catch (error) {
       console.error("Error posting week:", error);
     }
