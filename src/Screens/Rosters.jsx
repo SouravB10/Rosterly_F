@@ -787,7 +787,7 @@ const Rosters = () => {
                           )}
 
                           {/* Add Shift Button */}
-                          {!(shiftsByEmployeeDay[emp.user.id]?.[day]?.length > 0) && !isPublished && (
+                          {!(shiftsByEmployeeDay[emp.user.id]?.[day]?.length > 0) && isPublished && (
                             <div className="text-center">
                               <button
                                 onClick={() => onShiftAdd(emp.user.id, emp.user.firstName, day)}
