@@ -752,7 +752,8 @@ const Unavailability = () => {
                   {matchingUnavailability.length === 0 ? (
                     <FaPlusSquare className="text-indigo-900 text-xl" />
                   ) : (matchingUnavailability[0].unavailStatus) === 0 || (matchingUnavailability[0].unavailStatus) === 1 ? (
-                    <FaEdit />
+                    // <FaEdit />
+                    null
                   ) : (
                     <HiTrash className="text-red-700 text-xl" />
                   )}

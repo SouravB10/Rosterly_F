@@ -10,6 +10,7 @@ import { LuNotebookPen } from "react-icons/lu";
 import FeedbackModal from "../Component/FeedbackModal";
 import { FaToggleOff, FaToggleOn } from "react-icons/fa6";
 import { capitalLetter } from "../Component/capitalLetter";
+import { FaUserSlash } from "react-icons/fa";
 
 const People = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -33,7 +34,7 @@ const People = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
-  const [feedbackMessage, setFeedbackMessage] = useState(""); 
+  const [feedbackMessage, setFeedbackMessage] = useState("");
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [showConfirmButtons, setShowConfirmButtons] = useState(false);
   const [filteredProfiles, setFilteredProfiles] = useState([]);
@@ -539,28 +540,6 @@ const People = () => {
             <option value="0">Inactive</option>
           </select>
 
-
-
-          {/* <select
-            name="selectedLocation"
-            className="input flex-1 min-w-[140px]"
-            value={selectedLocation}
-            onChange={(e) => setSelectedLocation(e.target.value)}
-          >
-            <option value="all">--All Locations--</option>
-            {locations.map((loc) => (
-              <option key={loc.id} value={loc.location_name}>
-                {loc.location_name}
-              </option>
-            ))}
-          </select> */}
-
-          {/* <button
-            className="buttonSuccess flex-1 min-w-[120px]"
-            onClick={handleFilter}
-          >
-            Filter Data
-          </button> */}
         </div>
 
         {/* Right side: Search + Add */}
@@ -585,97 +564,111 @@ const People = () => {
           </button>
         </div>
       </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+      <div className="relative min-h-[60vh]">
         {loading && <p>Loading users...</p>}
-        {Array.isArray(filteredProfiles) &&
-          filteredProfiles.map((profile) => (
-            <div key={profile.id} className="w-full">
-              <div className={`shadow-xl p-4 rounded-xl h-full flex flex-col justify-between ${profile.status === 1 ? "mSideBar" : "mSideBarInactive"}`}>
-                {/* Top Section: Image + Info */}
-                <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-                  <div className="flex items-center gap-4 min-w-0">
-                    {profile.profileImage ? (
-                      <img
-                        alt="Profile"
-                        src={
-                          profile.profileImage.startsWith("http")
-                            ? profile.profileImage
-                            : `${profileBaseURL}/${profile.profileImage}`
+
+        {!loading &&
+          Array.isArray(filteredProfiles) &&
+          filteredProfiles.length === 0 && (
+            <div className="absolute inset-0 flex items-center justify-center">
+                    <FaUserSlash className="text-gray-400 text-3xl mr-2" />
+              <p className="text-gray-500 text-lg text-center">
+                No employees are there.
+              </p>
+            </div>
+          )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+
+
+          {Array.isArray(filteredProfiles) &&
+            filteredProfiles.map((profile) => (
+              <div key={profile.id} className="w-full">
+                <div className={`shadow-xl p-4 rounded-xl h-full flex flex-col justify-between ${profile.status === 1 ? "mSideBar" : "mSideBarInactive"}`}>
+                  {/* Top Section: Image + Info */}
+                  <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+                    <div className="flex items-center gap-4 min-w-0">
+                      {profile.profileImage ? (
+                        <img
+                          alt="Profile"
+                          src={
+                            profile.profileImage.startsWith("http")
+                              ? profile.profileImage
+                              : `${profileBaseURL}/${profile.profileImage}`
+                          }
+                          className="h-20 w-20 rounded-full object-cover"
+                        />
+                      ) : (
+                        <CgProfile className="h-20 w-20 rounded-full bg-gray-200 p-2" />
+                      )}
+                      <div className="text-left w-full min-w-0 overflow-hidden">
+                        <h3 className="paragraphBold md:subheadingBold break-words">
+                          {profile.firstName} {profile.lastName}
+                        </h3>
+                        <p className="paragraphThin break-words">
+                          {profile.email}
+                        </p>
+                        <p className="paragraphThin break-words">
+                          {profile.mobileNumber}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom Section: Actions + Toggle */}
+                  <div className="mt-4 flex flex-row flex-wrap md:justify-between items-center gap-4">
+                    {/* Status Toggle */}
+                    <label
+                      className="flex items-center gap-2 cursor-pointer"
+                      title="Toggle Status"
+                    >
+                      <input
+                        type="checkbox"
+                        className="sr-only"
+                        hidden
+                        checked={profile.status === 1}
+                        onChange={() =>
+                          handleToggleStatus(profile.id, profile.status)
                         }
-                        className="h-20 w-20 rounded-full object-cover"
                       />
-                    ) : (
-                      <CgProfile className="h-20 w-20 rounded-full bg-gray-200 p-2" />
-                    )}
-                    <div className="text-left w-full min-w-0 overflow-hidden">
-                      <h3 className="paragraphBold md:subheadingBold break-words">
-                        {profile.firstName} {profile.lastName}
-                      </h3>
-                      <p className="paragraphThin break-words">
-                        {profile.email}
-                      </p>
-                      <p className="paragraphThin break-words">
-                        {profile.mobileNumber}
-                      </p>
+                      {profile.status === 1 ? (
+                        <FaToggleOn className="text-green-700 w-6 h-6 transition duration-300" />
+                      ) : (
+                        <FaToggleOff className="text-gray-400 w-6 h-6 transition duration-300" />
+                      )}
+                      <span className="text-sm select-none">
+                        {profile.status === 1 ? "Active" : "Inactive"}
+                      </span>
+                    </label>
+
+                    {/* Actions */}
+                    <div className="flex ml-auto">
+                      <FaEye
+                        title="View Profile"
+                        className="text-indigo-950 cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
+                        onClick={() => {
+                          setSelectedProfile(profile);
+                          setViewButtonModel(true);
+                        }}
+                      />
+                      <LuNotebookPen
+                        title="Add Note"
+                        className="text-black cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
+                        onClick={() => {
+                          setSelectedProfile(profile);
+                          setAddNoteModal(true);
+                        }}
+                      />
+                      <HiTrash
+                        title="Delete Profile"
+                        className="textRed cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
+                        onClick={() => handleDeleteClick(profile.id)}
+                      />
                     </div>
                   </div>
                 </div>
-
-                {/* Bottom Section: Actions + Toggle */}
-                <div className="mt-4 flex flex-row flex-wrap md:justify-between items-center gap-4">
-                  {/* Status Toggle */}
-                  <label
-                    className="flex items-center gap-2 cursor-pointer"
-                    title="Toggle Status"
-                  >
-                    <input
-                      type="checkbox"
-                      className="sr-only"
-                      hidden
-                      checked={profile.status === 1}
-                      onChange={() =>
-                        handleToggleStatus(profile.id, profile.status)
-                      }
-                    />
-                    {profile.status === 1 ? (
-                      <FaToggleOn className="text-green-700 w-6 h-6 transition duration-300" />
-                    ) : (
-                      <FaToggleOff className="text-gray-400 w-6 h-6 transition duration-300" />
-                    )}
-                    <span className="text-sm select-none">
-                      {profile.status === 1 ? "Active" : "Inactive"}
-                    </span>
-                  </label>
-
-                  {/* Actions */}
-                  <div className="flex ml-auto">
-                    <FaEye
-                      title="View Profile"
-                      className="text-indigo-950 cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
-                      onClick={() => {
-                        setSelectedProfile(profile);
-                        setViewButtonModel(true);
-                      }}
-                    />
-                    <LuNotebookPen
-                      title="Add Note"
-                      className="text-black cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
-                      onClick={() => {
-                        setSelectedProfile(profile);
-                        setAddNoteModal(true);
-                      }}
-                    />
-                    <HiTrash
-                      title="Delete Profile"
-                      className="textRed cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
-                      onClick={() => handleDeleteClick(profile.id)}
-                    />
-                  </div>
-                </div>
               </div>
-            </div>
-          ))}
+            ))}
+        </div>
       </div>
 
       {/* Add Employee Modal */}
@@ -705,7 +698,7 @@ const People = () => {
                     className="input"
                     value={formData.firstName}
                     onChange={(e) =>
-                      setFormData({ ...formData, firstName:  (capitalLetter(e.target.value)) })
+                      setFormData({ ...formData, firstName: (capitalLetter(e.target.value)) })
                     }
                   />
                   {errors.firstName && (
@@ -719,7 +712,7 @@ const People = () => {
                     className="input"
                     value={formData.lastName}
                     onChange={(e) =>
-                      setFormData({ ...formData, lastName:  (capitalLetter(e.target.value)) })
+                      setFormData({ ...formData, lastName: (capitalLetter(e.target.value)) })
                     }
                   />
                   {errors.lastName && (
@@ -741,7 +734,7 @@ const People = () => {
                   <p className="text-red-500 text-sm">{errors.email}</p>
                 )}
               </div>
-<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="paragraphBold">Date of Birth</label>
                   <DatePicker
@@ -928,7 +921,7 @@ const People = () => {
                     onChange={(e) =>
                       setSelectedProfile((prev) => ({
                         ...prev,
-                        lastName:  (capitalLetter(e.target.value)),
+                        lastName: (capitalLetter(e.target.value)),
                       }))
                     }
                   />
