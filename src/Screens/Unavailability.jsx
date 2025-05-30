@@ -10,6 +10,7 @@ import moment from "moment";
 import FeedbackModal from "../Component/FeedbackModal";
 import { FaEdit } from "react-icons/fa";
 import { HiTrash } from "react-icons/hi2";
+import { capitalLetter } from "../Component/capitalLetter";
 
 const Unavailability = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -43,6 +44,10 @@ const Unavailability = () => {
     "Monday",
     "Tuesday",
   ];
+
+ 
+
+
   // fetching the notifying manager
   const fetchNotifyingManager = async () => {
     try {
@@ -575,7 +580,7 @@ const Unavailability = () => {
                   <textarea
                     rows="3"
                     value={reason}
-                    onChange={(e) => setReason(e.target.value)}
+                    onChange={(e) => setReason(capitalLetter(e.target.value))}
                     className="textarea w-full p-3 resize-none custom-focus"
                     placeholder="Type your reason here..."
                   />
@@ -733,7 +738,7 @@ const Unavailability = () => {
                 </div>
 
                 <div
-                  className="mt-2 sm:mt-0 sm:ml-4 cursor-pointer"                
+                  className="mt-2 sm:mt-0 sm:ml-4 cursor-pointer"
                   onClick={() => {
                     if (matchingUnavailability.length === 0) {
                       openModal(day); // Open Add modal
@@ -748,7 +753,7 @@ const Unavailability = () => {
                     <FaPlusSquare className="text-indigo-900 text-xl" />
                   ) : (matchingUnavailability[0].unavailStatus) === 0 || (matchingUnavailability[0].unavailStatus) === 1 ? (
                     <FaEdit />
-                  )  : (
+                  ) : (
                     <HiTrash className="text-red-700 text-xl" />
                   )}
                 </div>
@@ -856,7 +861,7 @@ const Unavailability = () => {
                   rows="3"
                   placeholder="Enter description..."
                   value={modalDescription}
-                  onChange={(e) => setModalDescription(e.target.value)}
+                  onChange={(e) => setModalDescription(capitalLetter(e.target.value))}
                 ></textarea>
               </div>
 
