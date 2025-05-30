@@ -343,11 +343,11 @@ const Rosters = () => {
     console.log("published", formattedShifts);
     try {
       const response = await axios.post(
-        `${baseURL}/rosterStore`,
+        `${baseURL}/porstRoster`,
         {
           rWeekStartDate: startOfWeek.format("YYYY-MM-DD"),
           rWeekEndDate: endOfWeek.format("YYYY-MM-DD"),
-          location_id: selectedLocation,
+          locationId: selectedLocation,
           rosters: formattedShifts,
           rosterWeekId: weekId
         },
