@@ -28,11 +28,14 @@ const Rosters = () => {
   const [description, setDescription] = useState("");
   const [isPublishing, setIsPublishing] = useState(false);
   const [publishedRosters, setPublishedRosters] = useState([]);
-  const [isPublished, setIsPublished] = useState(false);
+  // const [isPublished, setIsPublished] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [shiftToEdit, setShiftToEdit] = useState(null);
   const [rosterWeekId, setRosterWeekId] = useState(null);
   const [weekId, setWeekId] = useState("");
+  const [publishedStates, setPublishedStates] = useState({});
+  const [weekMetaByDate, setWeekMetaByDate] = useState({});
+
 
   const loginId = localStorage.getItem("id");
 
@@ -69,7 +72,7 @@ const Rosters = () => {
     const newLocationId = e.target.value;
     setSelectedLocation(newLocationId);
 
-    setLocatedEmployees([]); 
+    setLocatedEmployees([]);
 
     const fetchEmployees = async (id) => {
       const token = localStorage.getItem("token");
@@ -244,11 +247,6 @@ const Rosters = () => {
   const handleShiftSave = (e) => {
     e.preventDefault();
 
-    // if (!currentEmpId || !currentDay || !start || !finish) {
-    //   alert("Please fill all fields before saving the shift.");
-    //   return;
-    // }
-
     const isEditing = !!shiftToEdit;
 
     const newShift = {
@@ -257,7 +255,8 @@ const Rosters = () => {
       breakTime,
       description,
       user_id: currentEmpId,
-      date: currentDay
+      date: currentDay,
+      weekId: weekMetaByDate[weekId],
     };
 
     setShiftsByEmployeeDay((prev) => {
@@ -298,16 +297,17 @@ const Rosters = () => {
       return;
     }
 
-    const startOfWeek = moment(currentWeek).day(3); // Wednesday
-    const endOfWeek = startOfWeek.clone().add(6, "days"); // Tuesday next week
+    const startOfWeek = moment(currentWeek).day(3);
+    const weekKey = `${startOfWeek.format("YYYY-MM-DD")}_${selectedLocation}`;
+    const endOfWeek = startOfWeek.clone().add(6, "days");
+
+    const meta = weekMetaByDate[weekKey];
 
     // Check if already published
-    const alreadyPublished = publishedRosters.some(
-      (r) => r.location_id === selectedLocation && r.days === days
-    );
+    const alreadyPublished = meta?.isPublished === 1;
 
     if (alreadyPublished) {
-      alert("This roster has already been published for the selected week and location.");
+      alert("This roster has already been published.");
       return;
     }
 
@@ -315,6 +315,11 @@ const Rosters = () => {
 
     Object.entries(shiftsByEmployeeDay).forEach(([empId, daysObj]) => {
       Object.entries(daysObj).forEach(([day, shifts]) => {
+        const dayDate = moment(day, "ddd, DD/MM");
+        if (!dayDate.isBetween(startOfWeek.clone().subtract(1, 'day'), endOfWeek.clone().add(1, 'day'))) {
+          return; // skip shifts not in current week
+        }
+
         shifts.forEach((shift) => {
           formattedShifts.push({
             shiftId: shift.id,
@@ -338,7 +343,7 @@ const Rosters = () => {
       alert("No shifts to publish.");
       return;
     }
-
+    setWeekId(weekId);
     setIsPublishing(true);
     console.log("published", formattedShifts);
     try {
@@ -367,6 +372,10 @@ const Rosters = () => {
         { location_id: selectedLocation, days },
       ]);
       console.log("days", days);
+      setWeekMetaByDate((prev) => ({
+        ...prev,
+        [weekKey]: { weekId, isPublished: 1 },
+      }));
 
       fetchRoster();
     } catch (error) {
@@ -412,7 +421,6 @@ const Rosters = () => {
       });
 
       setShiftsByEmployeeDay(organizedShifts);
-      console.log("rosterdta", rosterData)
 
     } catch (error) {
       console.error("Failed to fetch roster:", error);
@@ -426,22 +434,21 @@ const Rosters = () => {
   }, [selectedLocation, currentWeek]);
 
   const handleTogglePublish = async () => {
-    if (isPublished == 1) {
-      // Unpublishing
-      setIsPublished(false);
+    const key = `${weekId}_${selectedLocation}`;
+    const currentState = publishedStates[key] ?? false;
 
+    if (currentState) {
+      // Unpublish
+      setPublishedStates((prev) => ({ ...prev, [key]: false }));
       try {
-        const response = await axios.post(`${baseURL}/pubUnpub/${weekId}`);
-        console.log(response);
+        await axios.post(`${baseURL}/pubUnpub/${weekId}`);
       } catch (e) {
         console.log("Failed to unpublish");
       }
-
-      // Optional: Call unpublish API here
     } else {
-      // Publishing
-      setIsPublished(true);
-      handlePublish();
+      // Publish
+      await handlePublish(); // only set publishedStates if publish successful
+      setPublishedStates((prev) => ({ ...prev, [key]: true }));
     }
   };
 
@@ -477,8 +484,15 @@ const Rosters = () => {
       );
       console.log("Post week response:", response.data);
       setWeekId(response.data.weekId);
-      setIsPublished(response.data.isPublished);
-      console.log(weekId);
+      // setIsPublished(response.data.isPublished);
+      const { weekId, isPublished } = response.data;
+      setWeekMetaByDate((prev) => ({
+        ...prev,
+        [`${startOfWeek.format("YYYY-MM-DD")}_${selectedLocation}`]: {
+          weekId,
+          isPublished,
+        },
+      }));
 
     } catch (error) {
       console.error("Error posting week:", error);
@@ -550,6 +564,12 @@ const Rosters = () => {
     return `${hours}h ${minutes}m (${breakMins} min break)`;
   };
 
+  const startOfWeek = moment(currentWeek).day(3).format("YYYY-MM-DD");
+  const weekKey = `${startOfWeek}_${selectedLocation}`;
+  const meta = weekMetaByDate[weekKey];
+  const isPublished = meta?.isPublished;
+
+
 
   return (
     <>
@@ -602,15 +622,20 @@ const Rosters = () => {
             </div>
           </div>
         </div>
-
-        <button
-          className={`${isPublished ? "buttonDanger" : "buttonSuccess"}`}
-          onClick={handleTogglePublish}
-          disabled={isPublishing}
-        >
-          {isPublishing ? "Publishing..." : isPublished ? "Unpublish" : "Publish"}
-        </button>
-
+        <div className="flex items-center gap-2">
+          <button
+            className={`${isPublished ? "buttonGrey" : "buttonSuccess"}`}
+            onClick={handleTogglePublish}
+            disabled={isPublishing}
+          >
+            {isPublishing ? "Publishing..." : isPublished ? "Published" : "Publish"}
+          </button>
+          <button
+            className="buttonDanger"
+          >
+            Unpublish
+          </button>
+        </div>
       </div>
       {stats && (
         <div className="w-full flex flex-col md:flex-row items-center justify-start gap-4 mt-6">
@@ -732,17 +757,17 @@ const Rosters = () => {
                                         {shift.description && <span className="paragraphThin italic ml-2">{shift.description}</span>}
 
                                       </div>
-
-                                      <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <FaRegCopy className="text-md  text-green-900  rounded cursor-pointer"
-                                          onClick={() => handleCopy(shift)}
-                                          title="Copy Shift" />
-                                        <FaEdit className="text-lg  text-black px-1 rounded cursor-pointer" onClick={() => onShiftEdit(emp.user.id, emp.user.firstName, day, shift)}
-                                          title="Edit Shift" />
-                                        <HiTrash className="text-xl  text-red-600 px-1 rounded cursor-pointer"
-                                          title="Delete Shift" />
-                                      </div>
-
+                                      {!isPublished &&
+                                        <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                          <FaRegCopy className="text-md  text-green-900  rounded cursor-pointer"
+                                            onClick={() => handleCopy(shift)}
+                                            title="Copy Shift" />
+                                          <FaEdit className="text-lg  text-black px-1 rounded cursor-pointer" onClick={() => onShiftEdit(emp.user.id, emp.user.firstName, day, shift)}
+                                            title="Edit Shift" />
+                                          <HiTrash className="text-xl  text-red-600 px-1 rounded cursor-pointer"
+                                            title="Delete Shift" />
+                                        </div>
+                                      }
                                     </div>
                                   )}
                                 </Draggable>
@@ -752,7 +777,7 @@ const Rosters = () => {
                           </div>
 
                           {/* Paste Button */}
-                          {copiedShift && !(shiftsByEmployeeDay[emp.user.id]?.[day]?.length > 0) && !(isPublished) && (
+                          {copiedShift && !(shiftsByEmployeeDay[emp.user.id]?.[day]?.length > 0) && !isPublished && (
                             <button
                               onClick={() => handlePaste(emp.user.id, day)}
                               className="text-xs mt-2 text-gray-500 underline cursor-pointer hover:text-green-800"
@@ -762,7 +787,7 @@ const Rosters = () => {
                           )}
 
                           {/* Add Shift Button */}
-                          {!(shiftsByEmployeeDay[emp.user.id]?.[day]?.length > 0) && !(isPublished) && (
+                          {!(shiftsByEmployeeDay[emp.user.id]?.[day]?.length > 0) && !isPublished && (
                             <div className="text-center">
                               <button
                                 onClick={() => onShiftAdd(emp.user.id, emp.user.firstName, day)}
