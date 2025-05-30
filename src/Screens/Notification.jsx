@@ -23,7 +23,7 @@ const NotificationPage = () => {
           },
         });
 
-// here to
+        // here to
         // const fetchedNotification = response.data?.notifications || [];
         const fetchedNotification = response.data?.notifications || [];
 
@@ -33,7 +33,7 @@ const NotificationPage = () => {
 
         setNotificationId(sortedNotifications.map((notID) => notID.id));
         setNotifications(sortedNotifications);
-// here 
+        // here 
 
 
         const fetchId = fetchedNotification.map((notID) => notID.id);
@@ -109,7 +109,9 @@ const NotificationPage = () => {
       </div>
 
       {notifications.length === 0 ? (
-        <p className="text-gray-500">No notifications found.</p>
+        <div className="flex items-center justify-center h-64">
+          <p className="text-gray-500 text-center">No notifications found.</p>
+        </div>
       ) : (
         notifications.map((note) => {
           const { id, data } = note;
@@ -126,22 +128,39 @@ const NotificationPage = () => {
                 }`}
             >
 
-              <div>
+              <div >
                 <p className="paragraphBold">
-                  {innerData.message || "User"}{" "}
-                  {innerData.fromDT ? (
-                    <strong className="notClass">{innerData.fromDT}</strong>
-                  ) : null}
-                  {innerData.toDT ? (
-                    <strong className="notClass">to {innerData.toDT}</strong>
-                  ) : null}{" "}
-                  {innerData.day ? (
-                    <strong className="notClass">{innerData.day}</strong>
-                  ) : null}{" "}
+
+                  <div className="flex items-center gap-2">
+                    <p className="text-lg font-bold text-indigo-900 mb-1">
+                      {innerData.userName || "User"}{" "}
+                    </p>
+
+                    {innerData.message || "User"}{" "}
+                    {innerData.fromDT ? (
+                      <strong className="notClass">{innerData.fromDT}</strong>
+                    ) : null}
+                    {innerData.toDT ? (
+                      <strong className="notClass">to {innerData.toDT}</strong>
+                    ) : null}{" "}
+                    {innerData.day ? (
+                      // <strong className="notClass">{innerData.day}</strong>
+
+                      <span className="bg-rosterGreen text-indigo-900 px-2 py-1 rounded-full">
+                        Day: {innerData.day}
+                      </span>
+                    ) : null}{" "}
+                  </div>
+
+
                 </p>
                 <p className="paragraphThin">
                   {innerData.reason ? (
-                    <span>Reason: {innerData.reason}</span>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-bold text-indigo-900 mb-1">
+                        Reason:</p>
+                      <p>{innerData.reason}</p>
+                    </div>
                   ) : null}
                   {/* Reason: {innerData.reason || "No reason provided"} */}
 
