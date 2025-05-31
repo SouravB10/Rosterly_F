@@ -28,14 +28,14 @@ const Rosters = () => {
   const [description, setDescription] = useState("");
   const [isPublishing, setIsPublishing] = useState(false);
   const [publishedRosters, setPublishedRosters] = useState([]);
-  // const [isPublished, setIsPublished] = useState(false);
+  const [isPublished, setIsPublished] = useState(0);
   const [firstName, setFirstName] = useState("");
   const [shiftToEdit, setShiftToEdit] = useState(null);
   const [rosterWeekId, setRosterWeekId] = useState(null);
   const [weekId, setWeekId] = useState("");
   const [publishedStates, setPublishedStates] = useState({});
   const [weekMetaByDate, setWeekMetaByDate] = useState({});
-
+  const token = localStorage.getItem("token");
 
   const loginId = localStorage.getItem("id");
 
@@ -115,7 +115,6 @@ const Rosters = () => {
     fetchLocations();
   }, []);
 
-
   const onShiftAdd = (empId, empfirstName, day) => {
     setCurrentEmpId(empId);
     setCurrentDay(day);
@@ -141,7 +140,6 @@ const Rosters = () => {
       setFinish(shiftToEdit.time.split(" - ")[1]);
       setBreakTime(shiftToEdit.breakTime);
       setDescription(shiftToEdit.description || "");
-
     } else {
       setStart("");
       setFinish("");
@@ -149,7 +147,6 @@ const Rosters = () => {
       setDescription("");
     }
   }, [shiftToEdit]);
-
 
   const handleStats = () => {
     setStats(!stats);
@@ -199,13 +196,13 @@ const Rosters = () => {
     const sourceList = Array.from(
       (shiftsByEmployeeDay[sourceEmpId] &&
         shiftsByEmployeeDay[sourceEmpId][sourceDay]) ||
-      []
+        []
     );
 
     const destList = Array.from(
       (shiftsByEmployeeDay[destEmpId] &&
         shiftsByEmployeeDay[destEmpId][destDay]) ||
-      []
+        []
     );
 
     const [moved] = sourceList.splice(source.index, 1);
@@ -242,7 +239,6 @@ const Rosters = () => {
     setCopiedShift(null);
   };
 
-
   // Handle saving the shift
   const handleShiftSave = (e) => {
     e.preventDefault();
@@ -250,7 +246,9 @@ const Rosters = () => {
     const isEditing = !!shiftToEdit;
 
     const newShift = {
-      id: isEditing ? shiftToEdit.id : `${currentEmpId}-${currentDay}-${Date.now()}`,
+      id: isEditing
+        ? shiftToEdit.id
+        : `${currentEmpId}-${currentDay}-${Date.now()}`,
       time: `${start} - ${finish}`,
       breakTime,
       description,
@@ -264,8 +262,8 @@ const Rosters = () => {
       const currentDayShifts = currentEmpData[currentDay] || [];
       const updatedShifts = isEditing
         ? currentDayShifts.map((shift) =>
-          shift.id === shiftToEdit.id ? newShift : shift
-        )
+            shift.id === shiftToEdit.id ? newShift : shift
+          )
         : [...currentDayShifts, newShift];
 
       return {
@@ -287,7 +285,6 @@ const Rosters = () => {
     setShiftToEdit(null);
   };
 
-
   //To publish the roster
   const handlePublish = async () => {
     const token = localStorage.getItem("token");
@@ -304,19 +301,24 @@ const Rosters = () => {
     const meta = weekMetaByDate[weekKey];
 
     // Check if already published
-    const alreadyPublished = meta?.isPublished === 1;
+    // const alreadyPublished = meta?.isPublished;
 
-    if (alreadyPublished) {
-      alert("This roster has already been published.");
-      return;
-    }
+    // if (alreadyPublished) {
+    //   alert("This roster has already been published.");
+    //   return;
+    // }
 
     const formattedShifts = [];
 
     Object.entries(shiftsByEmployeeDay).forEach(([empId, daysObj]) => {
       Object.entries(daysObj).forEach(([day, shifts]) => {
         const dayDate = moment(day, "ddd, DD/MM");
-        if (!dayDate.isBetween(startOfWeek.clone().subtract(1, 'day'), endOfWeek.clone().add(1, 'day'))) {
+        if (
+          !dayDate.isBetween(
+            startOfWeek.clone().subtract(1, "day"),
+            endOfWeek.clone().add(1, "day")
+          )
+        ) {
           return; // skip shifts not in current week
         }
 
@@ -354,7 +356,7 @@ const Rosters = () => {
           rWeekEndDate: endOfWeek.format("YYYY-MM-DD"),
           locationId: selectedLocation,
           rosters: formattedShifts,
-          rosterWeekId: weekId
+          rosterWeekId: weekId,
         },
         {
           headers: {
@@ -388,7 +390,9 @@ const Rosters = () => {
 
   const fetchRoster = async () => {
     try {
-      const response = await axios.get(`${baseURL}/rosterfetch/${selectedLocation}/${loginId}`);
+      const response = await axios.get(
+        `${baseURL}/rosterfetch/${selectedLocation}/${loginId}`
+      );
       const rosterData = response.data.data;
       console.log("Roster data fetched:", rosterData);
 
@@ -421,7 +425,6 @@ const Rosters = () => {
       });
 
       setShiftsByEmployeeDay(organizedShifts);
-
     } catch (error) {
       console.error("Failed to fetch roster:", error);
     }
@@ -435,20 +438,30 @@ const Rosters = () => {
 
   const handleTogglePublish = async () => {
     const key = `${weekId}_${selectedLocation}`;
-    const currentState = publishedStates[key] ?? false;
+    const currentState = isPublished == 1 ? true : false;
 
     if (currentState) {
       // Unpublish
       setPublishedStates((prev) => ({ ...prev, [key]: false }));
       try {
-        await axios.post(`${baseURL}/pubUnpub/${weekId}`);
+        const response = await axios.post(
+          `${baseURL}/pubUnpub/${weekId}/${selectedLocation}`,
+          {}, // body (if required)
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setIsPublished(0);
       } catch (e) {
-        console.log("Failed to unpublish");
+        console.error("Failed to unpublish", e.response?.data || e.message);
       }
     } else {
       // Publish
-      await handlePublish(); // only set publishedStates if publish successful
-      setPublishedStates((prev) => ({ ...prev, [key]: true }));
+      await handlePublish(); // Ensure this also includes the Authorization header
+      // setPublishedStates((prev) => ({ ...prev, [key]: true }));
+      setIsPublished(1);
     }
   };
 
@@ -483,6 +496,7 @@ const Rosters = () => {
         }
       );
       console.log("Post week response:", response.data);
+      setIsPublished(response.data.isPublished);
       setWeekId(response.data.weekId);
       // setIsPublished(response.data.isPublished);
       const { weekId, isPublished } = response.data;
@@ -493,21 +507,22 @@ const Rosters = () => {
           isPublished,
         },
       }));
-
     } catch (error) {
+      setIsPublished(0)
       console.error("Error posting week:", error);
     }
-  }
+  };
 
   const calculateTotalHoursDisplay = (startTime, endTime, breakMinutes) => {
-    if (!startTime || !endTime || startTime === '--' || endTime === '--') return '';
+    if (!startTime || !endTime || startTime === "--" || endTime === "--")
+      return "";
 
     const to24Hour = (timeStr) => {
-      const [time, modifier] = timeStr.split(' ');
-      let [hours, minutes] = time.split(':').map(Number);
+      const [time, modifier] = timeStr.split(" ");
+      let [hours, minutes] = time.split(":").map(Number);
 
-      if (modifier === 'PM' && hours !== 12) hours += 12;
-      if (modifier === 'AM' && hours === 12) hours = 0;
+      if (modifier === "PM" && hours !== 12) hours += 12;
+      if (modifier === "AM" && hours === 12) hours = 0;
 
       return { hours, minutes };
     };
@@ -531,17 +546,17 @@ const Rosters = () => {
   };
 
   const calculateShiftDuration = (timeRange, breakTime) => {
-    if (!timeRange) return '';
+    if (!timeRange) return "";
 
-    const [startTime, endTime] = timeRange.split(' - ');
-    if (!startTime || !endTime) return '';
+    const [startTime, endTime] = timeRange.split(" - ");
+    if (!startTime || !endTime) return "";
 
     const to24Hour = (timeStr) => {
-      const [time, modifier] = timeStr.trim().split(' ');
-      let [hours, minutes] = time.split(':').map(Number);
+      const [time, modifier] = timeStr.trim().split(" ");
+      let [hours, minutes] = time.split(":").map(Number);
 
-      if (modifier === 'PM' && hours !== 12) hours += 12;
-      if (modifier === 'AM' && hours === 12) hours = 0;
+      if (modifier === "PM" && hours !== 12) hours += 12;
+      if (modifier === "AM" && hours === 12) hours = 0;
 
       return { hours, minutes };
     };
@@ -567,9 +582,7 @@ const Rosters = () => {
   const startOfWeek = moment(currentWeek).day(3).format("YYYY-MM-DD");
   const weekKey = `${startOfWeek}_${selectedLocation}_${loginId}`;
   const meta = weekMetaByDate[weekKey];
-  const isPublished = meta?.isPublished === 1 && meta?.userId === loginId;
-
-
+  // const isPublished = meta?.isPublished === 1 && meta?.userId === loginId;
 
   return (
     <>
@@ -624,17 +637,17 @@ const Rosters = () => {
         </div>
         <div className="flex items-center gap-2">
           <button
-            className={`${isPublished ? "buttonGrey" : "buttonSuccess"}`}
+            className={`${isPublished == 0 ? "buttonSuccess" : "buttonGrey"}`}
             onClick={handleTogglePublish}
             disabled={isPublishing}
           >
-            {isPublishing ? "Publishing..." : isPublished ? "Published" : "Publish"}
+            {isPublishing
+              ? "Publishing..."
+              : isPublished == 0
+              ? "Publish"
+              : "Unpublish"}
           </button>
-          <button
-            className="buttonDanger"
-          >
-            Unpublish
-          </button>
+          {/* <button className="buttonDanger">Unpublish</button> */}
         </div>
       </div>
       {stats && (
@@ -704,8 +717,12 @@ const Rosters = () => {
             {locatedEmployees.length === 0 && (
               <tbody>
                 <tr>
-                  <td colSpan={days.length + 1} className="p-2 text-center text-gray-600">
-                    No employees to display. Please select a location or add employees to this location.
+                  <td
+                    colSpan={days.length + 1}
+                    className="p-2 text-center text-gray-600"
+                  >
+                    No employees to display. Please select a location or add
+                    employees to this location.
                   </td>
                 </tr>
               </tbody>
@@ -715,7 +732,9 @@ const Rosters = () => {
                 <tr key={emp.user.id} className="border border-gray-300">
                   {/* Employee Info */}
                   <td className="p-2 bg-white">
-                    <div className="font-semibold">{emp.user.firstName}{" "}{emp.user.lastName}</div>
+                    <div className="font-semibold">
+                      {emp.user.firstName} {emp.user.lastName}
+                    </div>
                     <div className="text-xs text-gray-500">
                       {/* {emp.hours} hrs {emp.cost ? `· ${emp.cost}` : ""} */}
                     </div>
@@ -734,71 +753,104 @@ const Rosters = () => {
                           {...provided.droppableProps}
                         >
                           <div className="space-y-2 ">
-                            {(shiftsByEmployeeDay[emp.user.id]?.[day] || []).map(
-                              (shift, index) => (
-                                <Draggable
-                                  key={shift.id}
-                                  draggableId={shift.id}
-                                  index={index}
-                                  isDragDisabled={isPublished}
-                                >
-                                  {(provided) => (
-                                    <div
-                                      className="bgTable paragraph text-white p-2 rounded flex justify-between items-center cursor-move group"
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                    >
-                                      <div className="flex flex-col items-center justify-end w-full">
-                                        <span>{shift.time}</span>
-                                        <span className="text-xs text-gray-200">
-                                          {calculateShiftDuration(shift.time, shift.breakTime)}
+                            {(
+                              shiftsByEmployeeDay[emp.user.id]?.[day] || []
+                            ).map((shift, index) => (
+                              <Draggable
+                                key={shift.id}
+                                draggableId={shift.id}
+                                index={index}
+                                isDragDisabled={isPublished}
+                              >
+                                {(provided) => (
+                                  <div
+                                    className="bgTable paragraph text-white p-2 rounded flex justify-between items-center cursor-move group"
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                  >
+                                    <div className="flex flex-col items-center justify-end w-full">
+                                      <span>{shift.time}</span>
+                                      <span className="text-xs text-gray-200">
+                                        {calculateShiftDuration(
+                                          shift.time,
+                                          shift.breakTime
+                                        )}
+                                      </span>
+                                      {shift.description && (
+                                        <span className="paragraphThin italic ml-2">
+                                          {shift.description}
                                         </span>
-                                        {shift.description && <span className="paragraphThin italic ml-2">{shift.description}</span>}
-
-                                      </div>
-                                      {!isPublished &&
-                                        <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                          <FaRegCopy className="text-md  text-green-900  rounded cursor-pointer"
-                                            onClick={() => handleCopy(shift)}
-                                            title="Copy Shift" />
-                                          <FaEdit className="text-lg  text-black px-1 rounded cursor-pointer" onClick={() => onShiftEdit(emp.user.id, emp.user.firstName, day, shift)}
-                                            title="Edit Shift" />
-                                          <HiTrash className="text-xl  text-red-600 px-1 rounded cursor-pointer"
-                                            title="Delete Shift" />
-                                        </div>
-                                      }
+                                      )}
                                     </div>
-                                  )}
-                                </Draggable>
-                              )
-                            )}
+                                    {!isPublished && (
+                                      <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        <FaRegCopy
+                                          className="text-md  text-green-900  rounded cursor-pointer"
+                                          onClick={() => handleCopy(shift)}
+                                          title="Copy Shift"
+                                        />
+                                        <FaEdit
+                                          className="text-lg  text-black px-1 rounded cursor-pointer"
+                                          onClick={() =>
+                                            onShiftEdit(
+                                              emp.user.id,
+                                              emp.user.firstName,
+                                              day,
+                                              shift
+                                            )
+                                          }
+                                          title="Edit Shift"
+                                        />
+                                        <HiTrash
+                                          className="text-xl  text-red-600 px-1 rounded cursor-pointer"
+                                          title="Delete Shift"
+                                        />
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </Draggable>
+                            ))}
                             {provided.placeholder}
                           </div>
 
                           {/* Paste Button */}
-                          {copiedShift && !(shiftsByEmployeeDay[emp.user.id]?.[day]?.length > 0) && !isPublished && (
-                            <button
-                              onClick={() => handlePaste(emp.user.id, day)}
-                              className="text-xs mt-2 text-gray-500 underline cursor-pointer hover:text-green-800"
-                            >
-                              Paste
-                            </button>
-                          )}
+                          {copiedShift &&
+                            !(
+                              shiftsByEmployeeDay[emp.user.id]?.[day]?.length >
+                              0
+                            ) &&
+                            !isPublished && (
+                              <button
+                                onClick={() => handlePaste(emp.user.id, day)}
+                                className="text-xs mt-2 text-gray-500 underline cursor-pointer hover:text-green-800"
+                              >
+                                Paste
+                              </button>
+                            )}
 
                           {/* Add Shift Button */}
-                          {!(shiftsByEmployeeDay[emp.user.id]?.[day]?.length > 0) && !isPublished && (
-                            <div className="text-center">
-                              <button
-                                onClick={() => onShiftAdd(emp.user.id, emp.user.firstName, day)}
-                                className="text-gray-500 hover:text-green-700 cursor-pointer p-1"
-                                title="Add Shift"
-                              >
-                                <FaPlus size={12} />
-                              </button>
-                            </div>
-                          )}
-
+                          {!(
+                            shiftsByEmployeeDay[emp.user.id]?.[day]?.length > 0
+                          ) &&
+                            isPublished == 0 && (
+                              <div className="text-center">
+                                <button
+                                  onClick={() =>
+                                    onShiftAdd(
+                                      emp.user.id,
+                                      emp.user.firstName,
+                                      day
+                                    )
+                                  }
+                                  className="text-gray-500 hover:text-green-700 cursor-pointer p-1"
+                                  title="Add Shift"
+                                >
+                                  <FaPlus size={12} />
+                                </button>
+                              </div>
+                            )}
                         </td>
                       )}
                     </Droppable>
@@ -872,7 +924,9 @@ const Rosters = () => {
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">Add Shift for : "{firstName}"</Dialog.Title>
+              <Dialog.Title className="heading">
+                Add Shift for : "{firstName}"
+              </Dialog.Title>
               <button
                 className="text-white text-2xl font-bold cursor"
                 onClick={handleModalClose}
@@ -929,20 +983,20 @@ const Rosters = () => {
                         </option>
                       ))}
                     </select>
-
                   </div>
                 </div>
-                {!calculateTotalHoursDisplay(start, finish, breakTime) ?
+                {!calculateTotalHoursDisplay(start, finish, breakTime) ? (
                   <div className="text-red-600 text-xs mb-2 mt-1">
                     *Please select valid start and finish times.
-                  </div> :
+                  </div>
+                ) : (
                   <div className="mb-2 ">
                     <span className="text-xs mt-1 text-gray-700">
-                      Total Hours: {calculateTotalHoursDisplay(start, finish, breakTime)}
+                      Total Hours:{" "}
+                      {calculateTotalHoursDisplay(start, finish, breakTime)}
                     </span>
                   </div>
-                }
-
+                )}
 
                 {/* Description Input */}
                 <label className="paragraphBold">Description:</label>
@@ -951,7 +1005,9 @@ const Rosters = () => {
                   rows="3"
                   placeholder="Enter description..."
                   value={description}
-                  onChange={(e) => setDescription(capitalLetter(e.target.value))}
+                  onChange={(e) =>
+                    setDescription(capitalLetter(e.target.value))
+                  }
                 ></textarea>
               </div>
 
