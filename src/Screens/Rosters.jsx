@@ -11,6 +11,7 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { set } from "date-fns";
 import { HiTrash } from "react-icons/hi2";
 import { capitalLetter } from "../Component/capitalLetter";
+import FeedbackModal from "../Component/FeedbackModal";
 
 const Rosters = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -35,6 +36,10 @@ const Rosters = () => {
   const [weekId, setWeekId] = useState("");
   const [publishedStates, setPublishedStates] = useState({});
   const [weekMetaByDate, setWeekMetaByDate] = useState({});
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+
+
   const token = localStorage.getItem("token");
 
   const loginId = localStorage.getItem("id");
@@ -196,13 +201,13 @@ const Rosters = () => {
     const sourceList = Array.from(
       (shiftsByEmployeeDay[sourceEmpId] &&
         shiftsByEmployeeDay[sourceEmpId][sourceDay]) ||
-        []
+      []
     );
 
     const destList = Array.from(
       (shiftsByEmployeeDay[destEmpId] &&
         shiftsByEmployeeDay[destEmpId][destDay]) ||
-        []
+      []
     );
 
     const [moved] = sourceList.splice(source.index, 1);
@@ -239,6 +244,24 @@ const Rosters = () => {
     setCopiedShift(null);
   };
 
+  const handleDeleteShift = (empId, day, shiftId) => {
+    setShiftsByEmployeeDay((prev) => {
+      const currentEmpData = prev[empId] || {};
+      const currentDayShifts = currentEmpData[day] || [];
+
+      const updatedShifts = currentDayShifts.filter((shift) => shift.id !== shiftId);
+
+      return {
+        ...prev,
+        [empId]: {
+          ...currentEmpData,
+          [day]: updatedShifts,
+        },
+      };
+    });
+  };
+
+
   // Handle saving the shift
   const handleShiftSave = (e) => {
     e.preventDefault();
@@ -262,8 +285,8 @@ const Rosters = () => {
       const currentDayShifts = currentEmpData[currentDay] || [];
       const updatedShifts = isEditing
         ? currentDayShifts.map((shift) =>
-            shift.id === shiftToEdit.id ? newShift : shift
-          )
+          shift.id === shiftToEdit.id ? newShift : shift
+        )
         : [...currentDayShifts, newShift];
 
       return {
@@ -290,7 +313,8 @@ const Rosters = () => {
     const token = localStorage.getItem("token");
 
     if (!selectedLocation) {
-      alert("Please select a location before publishing the roster.");
+      setFeedbackMessage("Please select a location before publishing the roster.");
+      setFeedbackModalOpen(true);
       return;
     }
 
@@ -342,7 +366,8 @@ const Rosters = () => {
     });
 
     if (formattedShifts.length === 0) {
-      alert("No shifts to publish.");
+      setFeedbackMessage("No shifts to publish.");
+      setFeedbackModalOpen(true);
       return;
     }
     setWeekId(weekId);
@@ -365,7 +390,8 @@ const Rosters = () => {
         }
       );
 
-      alert("Roster published successfully!");
+      setFeedbackMessage("Roster published successfully!");
+      setFeedbackModalOpen(true);
       console.log("Publish response:", response.data);
       setRosterWeekId(response.data.roster_week_id);
       // Add to published list
@@ -382,7 +408,8 @@ const Rosters = () => {
       fetchRoster();
     } catch (error) {
       console.error("Error publishing roster:", error);
-      alert("Failed to publish roster. Please try again.");
+      setFeedbackMessage("Failed to publish roster. Please try again.");
+      setFeedbackModalOpen(true);
     } finally {
       setIsPublishing(false);
     }
@@ -454,6 +481,7 @@ const Rosters = () => {
           }
         );
         setIsPublished(0);
+
       } catch (e) {
         console.error("Failed to unpublish", e.response?.data || e.message);
       }
@@ -637,15 +665,15 @@ const Rosters = () => {
         </div>
         <div className="flex items-center gap-2">
           <button
-            className={`${isPublished == 0 ? "buttonSuccess" : "buttonGrey"}`}
+            className={`${isPublished == 0 ? "buttonSuccess" : "buttonDanger"}`}
             onClick={handleTogglePublish}
             disabled={isPublishing}
           >
             {isPublishing
               ? "Publishing..."
               : isPublished == 0
-              ? "Publish"
-              : "Unpublish"}
+                ? "Publish"
+                : "Unpublish"}
           </button>
           {/* <button className="buttonDanger">Unpublish</button> */}
         </div>
@@ -805,6 +833,13 @@ const Rosters = () => {
                                         <HiTrash
                                           className="text-xl  text-red-600 px-1 rounded cursor-pointer"
                                           title="Delete Shift"
+                                          onClick={() =>
+                                            handleDeleteShift(
+                                              emp.user.id,
+                                              day,
+                                              shift.id
+                                            )
+                                          }
                                         />
                                       </div>
                                     )}
@@ -1027,6 +1062,11 @@ const Rosters = () => {
           </Dialog.Panel>
         </div>
       </Dialog>
+      <FeedbackModal
+        isOpen={feedbackModalOpen}
+        onClose={() => setFeedbackModalOpen(false)}
+        message={feedbackMessage}
+      />
     </>
   );
 };
