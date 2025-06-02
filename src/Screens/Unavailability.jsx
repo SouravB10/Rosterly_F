@@ -45,7 +45,7 @@ const Unavailability = () => {
     "Tuesday",
   ];
 
- 
+
 
 
   // fetching the notifying manager
@@ -755,7 +755,8 @@ const Unavailability = () => {
                     // <FaEdit />
                     null
                   ) : (
-                    <HiTrash className="text-red-700 text-xl" />
+                    // <HiTrash className="text-red-700 text-xl" />
+                    null
                   )}
                 </div>
               </div>
