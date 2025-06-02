@@ -670,6 +670,79 @@ const Rosters = () => {
   const meta = weekMetaByDate[weekKey];
   // const isPublished = meta?.isPublished === 1 && meta?.userId === loginId;
 
+  const isDayUnavailable = (employee, day) => {
+    const dayMoment = moment(day, "ddd, DD/MM");
+    const dayName = dayMoment.format("dddd"); // e.g., "Wednesday"
+    const dateString = dayMoment.format("YYYY-MM-DD"); // e.g., "2025-06-04"
+
+    return employee.unavail.find((unavail) => {
+      if (unavail.unavailType === "Days") {
+        // For specific date unavailability
+        const fromDate = moment(unavail.fromDT).format("YYYY-MM-DD");
+        const toDate = moment(unavail.toDT).format("YYYY-MM-DD");
+        return dateString >= fromDate && dateString <= toDate;
+      } else if (unavail.unavailType === "RecuDays") {
+        // For recurring day unavailability (e.g., every Wednesday)
+        const recurringDay = unavail.day.split(" ")[0]; // Extract day name, e.g., "Wednesday"
+        return recurringDay === dayName;
+      }
+      return false;
+    });
+  };
+
+  // Helper function to get unavailability details for display
+  const getUnavailabilityDetails = (employee, day) => {
+    const dayMoment = moment(day, "ddd, DD/MM");
+    const dateString = dayMoment.format("YYYY-MM-DD");
+    const unavail = employee.unavail.find((unavail) => {
+      if (unavail.unavailType === "Days") {
+        const fromDate = moment(unavail.fromDT).format("YYYY-MM-DD");
+        const toDate = moment(unavail.toDT).format("YYYY-MM-DD");
+        return dateString >= fromDate && dateString <= toDate;
+      } else if (unavail.unavailType === "RecuDays") {
+        const recurringDay = unavail.day.split(" ")[0];
+        return recurringDay === dayMoment.format("dddd");
+      }
+      return false;
+    });
+
+    if (unavail) {
+      if (unavail.unavailType === "Days") {
+        const fromDate = moment(unavail.fromDT).format("DD/MM");
+        const toDate = moment(unavail.toDT).format("DD/MM");
+        const timeRange = `${moment.utc(unavail.fromDT).local().format("hh:mm A")}`
+        const endTime = `${moment.utc(unavail.toDT).local().format("hh:mm A")}`;
+        return {
+          heading: "Unavailable",
+          from: `${fromDate}, ${timeRange}`,
+          to: `${toDate}, ${endTime}`,
+          reason: unavail.reason,
+        };
+      } else if (unavail.unavailType === "RecuDays") {
+        const recurringDay = unavail.day.split(" ")[0]; // e.g., "Wednesday"
+        if (unavail.fromDT && unavail.toDT) {
+          const startTime = moment.utc(unavail.fromDT).local().format("hh:mm A");
+          const endTime = moment.utc(unavail.toDT).local().format("hh:mm A");
+          return {
+            heading: "Unavailable",
+            from: `${recurringDay}, ${startTime}`,
+            to: `${recurringDay}, ${endTime}`,
+            reason: unavail.reason,
+          };
+        }
+        else {
+          return {
+            heading: "Unavailable",
+            allDay: true, // Flag to indicate "All Day"
+            details: "All Day",
+            reason: unavail.reason || "All Day"
+          };
+        }
+      }
+    }
+    return null;
+  };
+
   return (
     <>
       <div className="flex flex-col md:flex-row justify-between items-center mb-2 gap-4 py-2">
@@ -785,7 +858,7 @@ const Rosters = () => {
       <DragDropContext onDragEnd={onDragEnd}>
         <div>
           <table className="min-w-full border border-gray-300 text-sm mb-6 mt-2">
-            <thead className="bg-gray-100 bgTable rounded ">
+            <thead className="bg-gray-100 bgTable rounded">
               <tr>
                 <th className="w-48 p-2 text-white bgTable1 text-left border border-gray-300">
                   Employee
@@ -827,131 +900,146 @@ const Rosters = () => {
                   </td>
 
                   {/* Days Column with DragDrop */}
-                  {days.map((day) => (
-                    <Droppable
-                      key={`${emp.user.id}-${day}`}
-                      droppableId={`${emp.user.id}-${day}`}
-                    >
-                      {(provided) => (
-                        <td
-                          className="p-2 border border-gray-300"
-                          ref={provided.innerRef}
-                          {...provided.droppableProps}
-                        >
-                          <div className="space-y-2 ">
-                            {(
-                              shiftsByEmployeeDay[emp.user.id]?.[day] || []
-                            ).map((shift, index) => (
-                              <Draggable
-                                key={shift.id}
-                                draggableId={shift.id}
-                                index={index}
-                                isDragDisabled={isPublished}
-                              >
-                                {(provided) => (
-                                  <div
-                                    className="bgTable paragraph text-white p-2 rounded flex justify-between items-center cursor-move group"
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                  >
-                                    <div className="flex flex-col items-center justify-end w-full">
-                                      <span>{shift.time}</span>
-                                      <span className="text-xs text-gray-200">
-                                        {calculateShiftDuration(
-                                          shift.time,
-                                          shift.breakTime
-                                        )}
-                                      </span>
-                                      {shift.description && (
-                                        <span className="paragraphThin italic ml-2">
-                                          {shift.description}
-                                        </span>
-                                      )}
-                                    </div>
-                                    {/* {!isPublished && ( */}
-                                    <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                      <FaRegCopy
-                                        className={`text-md text-green-900 rounded cursor-pointer ${isPublished ? 'opacity-20 pointer-events-none' : ''}`} onClick={() => handleCopy(shift)}
-                                        title="Copy Shift"
-                                      />
-                                      <FaEdit
-                                        className={`text-md text-green-900 rounded cursor-pointer ${isPublished ? 'opacity-20 pointer-events-none' : ''}`}
-                                        onClick={() =>
-                                          onShiftEdit(
-                                            emp.user.id,
-                                            emp.user.firstName,
-                                            day,
-                                            shift
-                                          )
-                                        }
-                                        title="Edit Shift"
-                                      />
-                                      <HiTrash
-                                        className="text-xl  text-red-600 px-1 rounded cursor-pointer"
-                                        title="Delete Shift"
-                                        onClick={async () => {
-                                          if (!isPublished) {
-                                            handleDeleteShiftUnpublished(emp.user.id, day, shift.id);
-                                          } else {
-                                            await handleDeleteShift(
-                                              emp.user.id,
-                                              day,
-                                              shift.id,
-                                              shift.rosterWeekId
-                                            );
-                                          }
-                                        }}
-                                      />
-                                    </div>
-                                    {/* )} */}
-                                  </div>
-                                )}
-                              </Draggable>
-                            ))}
-                            {provided.placeholder}
-                          </div>
+                  {days.map((day) => {
+                    const unavail = isDayUnavailable(emp, day); // Check if day is unavailable
+                    const unavailDetails = unavail ? getUnavailabilityDetails(emp, day) : null; // Get display details
 
-                          {/* Paste Button */}
-                          {copiedShift &&
-                            !(
-                              shiftsByEmployeeDay[emp.user.id]?.[day]?.length >
-                              0
-                            ) &&
-                            !isPublished && (
-                              <button
-                                onClick={() => handlePaste(emp.user.id, day)}
-                                className="text-xs mt-2 text-gray-500 underline cursor-pointer hover:text-green-800"
-                              >
-                                Paste
-                              </button>
-                            )}
-
-                          {/* Add Shift Button */}
-                          {!(
-                            shiftsByEmployeeDay[emp.user.id]?.[day]?.length > 0
-                          ) &&
-                            isPublished == 0 && (
-                              <div className="text-center">
-                                <button
-                                  onClick={() =>
-                                    onShiftAdd(
-                                      emp.user.id,
-                                      emp.user.firstName,
-                                      day
-                                    )
-                                  }
-                                  className="text-gray-500 hover:text-green-700 cursor-pointer p-1"
-                                  title="Add Shift"
+                    return (
+                      <Droppable
+                        key={`${emp.user.id}-${day}`}
+                        droppableId={`${emp.user.id}-${day}`}
+                      >
+                        {(provided) => (
+                          <td
+                            className="p-2 border border-gray-300"
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                          >
+                            <div className="space-y-2">
+                              {/* Display unavailability minimally */}
+                              {unavail && (
+                                <div
+                                  className="text-center bg-gray-300 rounded py-1"
+                                  title={unavailDetails?.reason || "Unavailable"}
+                                  aria-label={`Employee unavailable on ${day} due to ${unavailDetails?.reason || "unavailability"}`}
                                 >
-                                  <FaPlus size={12} />
+                                  <div className=" text-gray-600 paragraphBold">
+                                    {unavailDetails?.heading}
+                                  </div>
+                                  {unavailDetails?.allDay ? (
+                                    <div className="text-xs text-gray-500">
+                                      {unavailDetails?.details}
+                                    </div>
+                                  ) : (
+                                    <>
+                                      <div className="text-xs text-gray-500">
+                                        From: {unavailDetails?.from}
+                                      </div>
+                                      <div className="text-xs text-gray-500">
+                                        To: {unavailDetails?.to}
+                                      </div>
+                                    </>
+                                  )}
+                                </div>
+                              )}
+
+                              {(shiftsByEmployeeDay[emp.user.id]?.[day] || []).map(
+                                (shift, index) => (
+                                  <Draggable
+                                    key={shift.id}
+                                    draggableId={shift.id}
+                                    index={index}
+                                    isDragDisabled={isPublished}
+                                  >
+                                    {(provided) => (
+                                      <div
+                                        className="bgTable paragraph text-white p-2 rounded flex justify-between items-center cursor-move group"
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                      >
+                                        <div className="flex flex-col items-center justify-end w-full">
+                                          <span>{shift.time}</span>
+                                          <span className="text-xs text-gray-200">
+                                            {calculateShiftDuration(shift.time, shift.breakTime)}
+                                          </span>
+                                          {shift.description && (
+                                            <span className="paragraphThin italic ml-2">
+                                              {shift.description}
+                                            </span>
+                                          )}
+                                        </div>
+                                        <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                          <FaRegCopy
+                                            className={`text-md text-green-900 rounded cursor-pointer ${isPublished ? "opacity-20 pointer-events-none" : ""}`}
+                                            onClick={() => handleCopy(shift)}
+                                            title="Copy Shift"
+                                          />
+                                          <FaEdit
+                                            className={`text-md text-green-900 rounded cursor-pointer ${isPublished ? "opacity-20 pointer-events-none" : ""}`}
+                                            onClick={() =>
+                                              onShiftEdit(emp.user.id, emp.user.firstName, day, shift)
+                                            }
+                                            title="Edit Shift"
+                                          />
+                                          <HiTrash
+                                            className="text-xl text-red-600 px-1 rounded cursor-pointer"
+                                            title="Delete Shift"
+                                            onClick={async () => {
+                                              if (!isPublished) {
+                                                handleDeleteShiftUnpublished(emp.user.id, day, shift.id);
+                                              } else {
+                                                await handleDeleteShift(
+                                                  emp.user.id,
+                                                  day,
+                                                  shift.id,
+                                                  shift.rosterWeekId
+                                                );
+                                              }
+                                            }}
+                                          />
+                                        </div>
+                                      </div>
+                                    )}
+                                  </Draggable>
+                                )
+                              )}
+                              {provided.placeholder}
+                            </div>
+
+                            {/* Paste Button */}
+                            {copiedShift &&
+                              !unavail && // Keep paste disabled for unavailable days
+                              !(shiftsByEmployeeDay[emp.user.id]?.[day]?.length > 0) &&
+                              !isPublished && (
+                                <button
+                                  onClick={() => handlePaste(emp.user.id, day)}
+                                  className="text-xs mt-2 text-gray-500 underline cursor-pointer hover:text-green-800"
+                                >
+                                  Paste
                                 </button>
-                              </div>
-                            )}
-                        </td>
-                      )}
-                    </Droppable>
-                  ))}
+                              )}
+
+                            {/* Add Shift Button (show even if unavailable) */}
+                            {!(shiftsByEmployeeDay[emp.user.id]?.[day]?.length > 0) &&
+                              isPublished == 0 && (
+                                <div className="text-center">
+                                  <button
+                                    onClick={() =>
+                                      onShiftAdd(emp.user.id, emp.user.firstName, day)
+                                    }
+                                    className="text-gray-500 hover:text-green-700 cursor-pointer p-1"
+                                    title="Add Shift"
+                                  >
+                                    <FaPlus size={12} />
+                                  </button>
+                                </div>
+                              )}
+                          </td>
+                        )}
+                      </Droppable>
+                    );
+                  })}
                 </tr>
               ))}
             </tbody>
