@@ -869,44 +869,42 @@ const Rosters = () => {
                                         </span>
                                       )}
                                     </div>
-                                    {!isPublished && (
-                                      <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <FaRegCopy
-                                          className="text-md  text-green-900  rounded cursor-pointer"
-                                          onClick={() => handleCopy(shift)}
-                                          title="Copy Shift"
-                                        />
-                                        <FaEdit
-                                          className="text-lg  text-black px-1 rounded cursor-pointer"
-                                          onClick={() =>
-                                            onShiftEdit(
-                                              emp.user.id,
-                                              emp.user.firstName,
-                                              day,
-                                              shift
-                                            )
-                                          }
-                                          title="Edit Shift"
-                                        />
-                                        <HiTrash
-                                          className="text-xl  text-red-600 px-1 rounded cursor-pointer"
-                                          title="Delete Shift"
-                                          onClick={() =>!isPublished ?
-                                            handleDeleteShiftUnpublished(
-                                              emp.user.id,
-                                              day,
-                                              shift.id,
-                                              shift.rosterWeekId
-                                            ) : handleDeleteShift(
+                                    {/* {!isPublished && ( */}
+                                    <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                      <FaRegCopy
+                                        className={`text-md text-green-900 rounded cursor-pointer ${isPublished ? 'opacity-20 pointer-events-none' : ''}`} onClick={() => handleCopy(shift)}
+                                        title="Copy Shift"
+                                      />
+                                      <FaEdit
+                                        className={`text-md text-green-900 rounded cursor-pointer ${isPublished ? 'opacity-20 pointer-events-none' : ''}`}
+                                        onClick={() =>
+                                          onShiftEdit(
+                                            emp.user.id,
+                                            emp.user.firstName,
+                                            day,
+                                            shift
+                                          )
+                                        }
+                                        title="Edit Shift"
+                                      />
+                                      <HiTrash
+                                        className="text-xl  text-red-600 px-1 rounded cursor-pointer"
+                                        title="Delete Shift"
+                                        onClick={async () => {
+                                          if (!isPublished) {
+                                            handleDeleteShiftUnpublished(emp.user.id, day, shift.id);
+                                          } else {
+                                            await handleDeleteShift(
                                               emp.user.id,
                                               day,
                                               shift.id,
                                               shift.rosterWeekId
-                                            )
+                                            );
                                           }
-                                        />
-                                      </div>
-                                    )}
+                                        }}
+                                      />
+                                    </div>
+                                    {/* )} */}
                                   </div>
                                 )}
                               </Draggable>
