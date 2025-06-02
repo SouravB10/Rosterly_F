@@ -888,7 +888,7 @@ const People = () => {
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-sm sm:max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">Employee Details</Dialog.Title>
+              <Dialog.Title className="heading">Employee Details ({selectedProfile?.firstName})</Dialog.Title>
               <button
                 className="text-white font-bold text-2xl"
                 onClick={() => setViewButtonModel(false)}

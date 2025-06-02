@@ -12,6 +12,7 @@ import { set } from "date-fns";
 import { HiTrash } from "react-icons/hi2";
 import { capitalLetter } from "../Component/capitalLetter";
 import FeedbackModal from "../Component/FeedbackModal";
+import { percent } from "framer-motion";
 
 const Rosters = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -228,7 +229,8 @@ const Rosters = () => {
   };
 
   const handleCopy = (shift) => {
-    setCopiedShift(shift);
+    const { id, ...shiftWithoutId } = shift;
+    setCopiedShift(shiftWithoutId); // remove the original ID
   };
 
   const handlePaste = (empId, day) => {
@@ -244,7 +246,7 @@ const Rosters = () => {
     setCopiedShift(null);
   };
 
-  const handleDeleteShift = (empId, day, shiftId) => {
+  const handleDeleteShiftUnpublished = (empId, day, shiftId) => {
     setShiftsByEmployeeDay((prev) => {
       const currentEmpData = prev[empId] || {};
       const currentDayShifts = currentEmpData[day] || [];
@@ -259,6 +261,55 @@ const Rosters = () => {
         },
       };
     });
+  };
+
+  const handleDeleteShift = async (empId, day, shiftId, rosterWeekId) => {
+    console.log("Deleting shift:", empId, day, shiftId, selectedLocation, rosterWeekId);
+
+    try {
+      // Only call API if the shift is published (i.e., saved in DB)
+      // if (shift.isPublished) {
+      const response = await axios.delete(`${baseURL}/rosterDelete`, {
+        data: {
+          shiftId,
+          locationId: selectedLocation,
+          rosterWeekId,
+          empId
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setFeedbackMessage(response.data.message);
+      setFeedbackModalOpen(true);
+      console.log("Delete response:", response.data.message);
+
+      if (!response.data.status) {
+        console.error("Failed to delete shift:", response.data.message);
+        return;
+      }
+      // }
+
+      // Now update the local state
+      setShiftsByEmployeeDay((prev) => {
+        const currentEmpData = prev[empId] || {};
+        const currentDayShifts = currentEmpData[day] || [];
+
+        const updatedShifts = currentDayShifts.filter(
+          (s) => s.id !== shiftId
+        );
+
+        return {
+          ...prev,
+          [empId]: {
+            ...currentEmpData,
+            [day]: updatedShifts,
+          },
+        };
+      });
+    } catch (error) {
+      console.error("Error deleting shift:", error);
+    }
   };
 
 
@@ -438,6 +489,10 @@ const Rosters = () => {
           percentRate: shift.percentRate,
           description: shift.description,
           location_id: shift.location_id,
+          rosterWeekId: shift.rosterWeekId,
+          userId: shift.user_id,
+          date: shift.date,
+          totalhrs: shift.totalHrs,
         };
 
         if (!organizedShifts[empId]) {
@@ -490,6 +545,9 @@ const Rosters = () => {
       await handlePublish(); // Ensure this also includes the Authorization header
       // setPublishedStates((prev) => ({ ...prev, [key]: true }));
       setIsPublished(1);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     }
   };
 
@@ -833,11 +891,17 @@ const Rosters = () => {
                                         <HiTrash
                                           className="text-xl  text-red-600 px-1 rounded cursor-pointer"
                                           title="Delete Shift"
-                                          onClick={() =>
-                                            handleDeleteShift(
+                                          onClick={() =>!isPublished ?
+                                            handleDeleteShiftUnpublished(
                                               emp.user.id,
                                               day,
-                                              shift.id
+                                              shift.id,
+                                              shift.rosterWeekId
+                                            ) : handleDeleteShift(
+                                              emp.user.id,
+                                              day,
+                                              shift.id,
+                                              shift.rosterWeekId
                                             )
                                           }
                                         />

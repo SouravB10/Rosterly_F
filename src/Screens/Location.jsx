@@ -836,14 +836,14 @@ const Location = () => {
                       {/* <button className="buttonTheme">+ Employee</button> */}
 
                       <div className="bg-white rounded-lg border border-gray-300 w-full md:w-auto">
-                        <div className="flex flex-row items-center px-3">
-                          <FaSearch className="text-indigo-950" />
-                          <input
-                            type="text"
-                            placeholder="Search..."
-                            className="input w-full"
-                          />
-                        </div>
+                          {/* <div className="flex flex-row items-center px-3">
+                            <FaSearch className="text-indigo-950" />
+                            <input
+                              type="text"
+                              placeholder="Search..."
+                              className="input w-full"
+                            />
+                          </div> */}
                       </div>
                     </div>
                   </div>
@@ -859,7 +859,7 @@ const Location = () => {
                         >
                           <div className="flex items-center gap-3 w-full md:w-auto">
                             <CgCloseO
-                              className="text-red-500"
+                              className="text-red-500 cursor-pointer"
                               onClick={(e) => handleDltLoc(e, sf.user.id)}
                             />
 
@@ -1090,6 +1090,46 @@ const Location = () => {
 
                 <div className="employee-checkboxes border p-2 rounded max-h-80 overflow-auto">
                   {employeeName.length > 0 ? (
+                    employeeName.map((emp) => {
+                      const isChecked = employees.includes(emp.id.toString());
+
+                      const toggleCheckbox = () => {
+                        const fakeEvent = {
+                          target: {
+                            value: emp.id.toString(),
+                            checked: !isChecked,
+                          },
+                        };
+                        handleChange(fakeEvent);
+                      };
+
+                      return (
+                        <div
+                          className="flex items-center bg-white rounded p-2 gap-3 mb-2 cursor-pointer"
+                          key={emp.id}
+                          onClick={toggleCheckbox}
+                        >
+                          <input
+                            type="checkbox"
+                            value={emp.id.toString()}
+                            onChange={handleChange}
+                            checked={isChecked}
+                            onClick={(e) => e.stopPropagation()} // prevent double trigger
+                          />
+                          <p className="paragraph">
+                            {emp.firstName} {emp.lastName}
+                          </p>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p className="text-gray-500">No employees available</p>
+                  )}
+                </div>
+
+
+                {/* <div className="employee-checkboxes border p-2 rounded max-h-80 overflow-auto">
+                  {employeeName.length > 0 ? (
                     employeeName.map((emp) => (
                       <div
                         className="flex items-center bg-white rounded p-2 gap-3 mb-2"
@@ -1101,11 +1141,11 @@ const Location = () => {
                           onChange={handleChange}
                           checked={employees.includes(emp.id.toString())}
                         />
-                        {/* <img
+                        <img
                           src={emp.profileImage}
                           alt={`${emp.firstName} ${emp.lastName}`}
                           className="h-10 w-10 rounded-full"
-                        /> */}
+                        />
                         <p className="paragraph">
                           {emp.firstName} {emp.lastName}
                         </p>
@@ -1114,7 +1154,7 @@ const Location = () => {
                   ) : (
                     <p className="text-gray-500">No employees available</p>
                   )}
-                </div>
+                </div> */}
               </div>
 
               {/* Submit Button */}
