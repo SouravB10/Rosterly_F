@@ -187,6 +187,9 @@ const Rosters = () => {
   const hoursPerDay = ["12.25", "0.00", "0.00", "0.00", "0.00", "0.00", "0.00"];
 
   const onDragEnd = (result) => {
+
+    if (isPublished) return;
+
     const { source, destination } = result;
     if (!destination) return;
 
@@ -520,7 +523,7 @@ const Rosters = () => {
 
   const handleTogglePublish = async () => {
     const key = `${weekId}_${selectedLocation}`;
-    const currentState = isPublished == 1 ? true : false;
+    const currentState = isPublished === 1;
 
     if (currentState) {
       // Unpublish
@@ -528,7 +531,7 @@ const Rosters = () => {
       try {
         const response = await axios.post(
           `${baseURL}/pubUnpub/${weekId}/${selectedLocation}`,
-          {}, // body (if required)
+          {},
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -536,20 +539,36 @@ const Rosters = () => {
           }
         );
         setIsPublished(0);
+        console.log("Unpublish response:", response.data);
+        
 
+        // Update meta locally
+        const startOfWeek = moment(currentWeek).day(3);
+        const weekKey = `${startOfWeek.format("YYYY-MM-DD")}_${selectedLocation}`;
+        setWeekMetaByDate((prev) => ({
+          ...prev,
+          [weekKey]: { ...prev[weekKey], isPublished: 0 },
+        }));
       } catch (e) {
         console.error("Failed to unpublish", e.response?.data || e.message);
       }
     } else {
-      // Publish
-      await handlePublish(); // Ensure this also includes the Authorization header
-      // setPublishedStates((prev) => ({ ...prev, [key]: true }));
+      setIsPublishing(true);
+      await handlePublish();
+
       setIsPublished(1);
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+
+      const startOfWeek = moment(currentWeek).day(3);
+      const weekKey = `${startOfWeek.format("YYYY-MM-DD")}_${selectedLocation}`;
+      setWeekMetaByDate((prev) => ({
+        ...prev,
+        [weekKey]: { ...prev[weekKey], isPublished: 1 },
+      }));
+
+      setIsPublishing(false);
     }
   };
+
 
   const handleModalClose = () => {
     setIsShiftOpen(false);
@@ -1011,7 +1030,7 @@ const Rosters = () => {
                             {copiedShift &&
                               !unavail && // Keep paste disabled for unavailable days
                               !(shiftsByEmployeeDay[emp.user.id]?.[day]?.length > 0) &&
-                              !isPublished && (
+                              !isPublished && !(unavailDetails?.allDay) && (
                                 <button
                                   onClick={() => handlePaste(emp.user.id, day)}
                                   className="text-xs mt-2 text-gray-500 underline cursor-pointer hover:text-green-800"
@@ -1022,7 +1041,7 @@ const Rosters = () => {
 
                             {/* Add Shift Button (show even if unavailable) */}
                             {!(shiftsByEmployeeDay[emp.user.id]?.[day]?.length > 0) &&
-                              isPublished == 0 && (
+                              !isPublished && !(unavailDetails?.allDay) && (
                                 <div className="text-center">
                                   <button
                                     onClick={() =>
