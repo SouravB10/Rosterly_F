@@ -672,7 +672,7 @@ const Location = () => {
                       <div className="w-full flex flex-col items-end">
                         <input
                           type="text"
-                          placeholder="Main Branch"
+                          placeholder="Location Name"
                           className="input border border-gray-300 w-full md:w-auto"
                           value={locationName}
                           onChange={(e) => setLocationName(capitalLetter(e.target.value))}
@@ -695,7 +695,7 @@ const Location = () => {
                       <div className="w-full flex flex-col items-end">
                         <input
                           type="text"
-                          placeholder="Main Branch"
+                          placeholder="Address"
                           className="input border border-gray-300 w-full md:w-auto"
                           value={address}
                           onChange={(e) => setAddress(capitalLetter(e.target.value))}
@@ -912,8 +912,8 @@ const Location = () => {
                     <GoogleMapSelector
                       address={addaddress}
                       onLocationSelect={({ lat, lng }) => {
-                        setAddlatitude(lat.toFixed(6));
-                        setAddlongitude(lng.toFixed(6));
+                        setAddlatitude(lat.toFixed(9));
+                        setAddlongitude(lng.toFixed(9));
                       }}
                     />
                   </div>

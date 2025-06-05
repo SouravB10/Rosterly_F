@@ -540,7 +540,7 @@ const Rosters = () => {
         );
         setIsPublished(0);
         console.log("Unpublish response:", response.data);
-        
+
 
         // Update meta locally
         const startOfWeek = moment(currentWeek).day(3);
@@ -911,7 +911,7 @@ const Rosters = () => {
                   {/* Employee Info */}
                   <td className="p-2 bg-white">
                     <div className="font-semibold">
-                      {emp.user.firstName} {emp.user.lastName}
+                      {emp.user.firstName} {emp.user.lastName} {emp.user.status === 0 && <span className="text-red-400 paragraph">(Inactive)</span>}
                     </div>
                     <div className="text-xs text-gray-500">
                       {/* {emp.hours} hrs {emp.cost ? `· ${emp.cost}` : ""} */}
@@ -1045,10 +1045,14 @@ const Rosters = () => {
                                 <div className="text-center">
                                   <button
                                     onClick={() =>
-                                      onShiftAdd(emp.user.id, emp.user.firstName, day)
+                                      emp.user.status !== 0 && onShiftAdd(emp.user.id, emp.user.firstName, day)
                                     }
-                                    className="text-gray-500 hover:text-green-700 cursor-pointer p-1"
-                                    title="Add Shift"
+                                    className={`p-1 ${emp.user.status === 0
+                                        ? "text-gray-300 cursor-not-allowed"
+                                        : "text-gray-500 hover:text-green-800 cursor-pointer"
+                                      }`}
+                                    title={emp.user.status === 0 ? "Inactive employee" : "Add Shift"}
+                                    disabled={emp.user.status === 0}
                                   >
                                     <FaPlus size={12} />
                                   </button>

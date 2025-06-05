@@ -102,7 +102,7 @@ const NotificationPage = () => {
   };
 
   return (
-    <div className="p-2 rounded-md  mt-2">
+    <div className="rounded-md  ">
       <div className="flex justify-between items-center mb-4">
         {/* <h2 className="heading">Notifications</h2> */}
         {/* <button className="buttonGrey">Clear All</button> */}
