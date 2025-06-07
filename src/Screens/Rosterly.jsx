@@ -94,6 +94,15 @@ const Rosterly = () => {
     setCurrentWeek((prev) => moment(prev).add(1, "week"));
   };
 
+  const getDaysForWeek = (week) => {
+    const start = moment(week).day(3); // Start from Wednesday
+    return Array.from({ length: 7 }, (_, i) =>
+      start.clone().add(i, "days").format("ddd, DD/MM")
+    );
+  };
+
+  const days = getDaysForWeek(currentWeek);
+
   const handleShiftToggle = () => {
     if (isShiftFinished) return;
 
