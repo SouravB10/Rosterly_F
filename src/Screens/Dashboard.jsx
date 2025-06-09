@@ -14,6 +14,8 @@ export default function Dashboard() {
   const [users, setUsers] = useState(0);
   const [managers, setManagers] = useState(0);
   const [employees, setEmployees] = useState(0);
+  const [locations, setLocations] = useState(0);
+  const [notifications, setNotifications] = useState(0);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -27,19 +29,45 @@ export default function Dashboard() {
 
         setUsers(users.length);
         setManagers(users.filter((user) => user.role_id === 2).length);
-        setEmployees(users.filter((user) => user.role_id === 3).length);
-
-        console.log("Fetched users:", users);
-        console.log("Total users:", users.length);
-        console.log("Total managers:", users.filter((user) => user.role_id === 2).length);
-        console.log("Total employees:", users.filter((user) => user.role_id === 3).length);
+        setEmployees(users.filter((user) => user.role_id === 3).length);     
 
       } catch (error) {
         console.log("Error fetching users:", error);
       }
     };
+    const fetchLocations = async () => {
+      try {
+        const response = await axios.get(`${baseURL}/locations`, { headers: { Authorization: `Bearer ${token}` } });
+        const locationsCount = response.data || [];
+        setLocations(locationsCount.length);
+
+      } catch (error) {
+        console.error("Failed to fetch locations", error);
+      }
+    };
+
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.get(`${baseURL}/notifications`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        });
+      
+        const fetchedNotification = response.data?.notifications || [];     
+
+        setNotifications(fetchedNotification.length);
+      
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    };
+
+    fetchNotifications();
 
     fetchUsers();
+    fetchLocations();
   }, []);
 
   const stats = [
@@ -58,7 +86,7 @@ export default function Dashboard() {
     },
     {
       title: "Pending Approvals",
-      value: 8,
+      value: notifications,
       bg: "bg-yellow-200",
       icon: <MdOutlinePendingActions className="text-3xl text-black-100" />,
     },
@@ -71,9 +99,10 @@ export default function Dashboard() {
     },
     {
       title: "Stores",
-      value: 5,
+      value: locations,
       bg: "bgSucces",
       icon: <AiOutlineShop className="text-3xl text-black-100" />,
+      link: "/location",
     },
     {
       title: "Employees",
