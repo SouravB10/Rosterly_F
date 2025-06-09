@@ -32,6 +32,7 @@ const Rosters = () => {
   const [publishedRosters, setPublishedRosters] = useState([]);
   const [isPublished, setIsPublished] = useState(0);
   const [firstName, setFirstName] = useState("");
+  const [hourRate,setHourRate] = useState(null);
   const [shiftToEdit, setShiftToEdit] = useState(null);
   const [rosterWeekId, setRosterWeekId] = useState(null);
   const [weekId, setWeekId] = useState("");
@@ -121,11 +122,12 @@ const Rosters = () => {
     fetchLocations();
   }, []);
 
-  const onShiftAdd = (empId, empfirstName, day) => {
+  const onShiftAdd = (empId, empfirstName, day, hourRate) => {
     setCurrentEmpId(empId);
     setCurrentDay(day);
     setIsShiftOpen(true);
     setFirstName(empfirstName);
+    setHourRate(hourRate);
   };
 
   const onShiftEdit = (empId, empFirstName, day, shift) => {
@@ -409,7 +411,7 @@ const Rosters = () => {
             endTime: shift.time.split(" - ")[1],
             breakTime: shift.breakTime,
             description: shift.description,
-            hrsRate: shift.hrsRate || "0.00",
+            hrsRate: hourRate,
             percentRate: shift.percentRate || "0.00",
             totalPay: shift.totalPay || "0.00",
             status: "active",
@@ -495,7 +497,7 @@ const Rosters = () => {
           rosterWeekId: shift.rosterWeekId,
           userId: shift.user_id,
           date: shift.date,
-          totalhrs: shift.totalHrs,
+          totalHrs: shift.totalHrs,
         };
 
         if (!organizedShifts[empId]) {
@@ -1045,7 +1047,7 @@ const Rosters = () => {
                                 <div className="text-center">
                                   <button
                                     onClick={() =>
-                                      emp.user.status !== 0 && onShiftAdd(emp.user.id, emp.user.firstName, day)
+                                      emp.user.status !== 0 && onShiftAdd(emp.user.id, emp.user.firstName, day, emp.user.payrate)
                                     }
                                     className={`p-1 ${emp.user.status === 0
                                         ? "text-gray-300 cursor-not-allowed"
