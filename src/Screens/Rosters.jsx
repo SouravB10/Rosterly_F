@@ -914,7 +914,7 @@ const Rosters = () => {
                       {emp.user.firstName} {emp.user.lastName} {emp.user.status === 0 && <span className="text-red-400 paragraph">(Inactive)</span>}
                     </div>
                     <div className="text-xs text-gray-500">
-                      {/* {emp.hours} hrs {emp.cost ? `· ${emp.cost}` : ""} */}
+                      {emp.user.payrate} / Hr {emp.cost ? `· ${emp.cost}` : ""}
                     </div>
                   </td>
 

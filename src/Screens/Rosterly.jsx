@@ -1,15 +1,24 @@
 import moment from "moment";
 import React, { useEffect, useState, useRef } from "react";
-import { FaRegClock, FaMapMarkerAlt, FaUserTimes, FaAngleLeft, FaAngleRight } from "react-icons/fa";
+import {
+  FaRegClock,
+  FaMapMarkerAlt,
+  FaUserTimes,
+  FaAngleLeft,
+  FaAngleRight,
+} from "react-icons/fa";
 import { motion } from "framer-motion";
 import { getDistance } from "geolib";
 import { useNavigate } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import { getRoleId } from "../Component/RoleId";
+import axios from "axios";
 
 const Rosterly = () => {
   const [userName, setUserName] = useState("");
-
+  const baseURL = import.meta.env.VITE_BASE_URL;
+  const token = localStorage.getItem("token");
+  const loginId = localStorage.getItem("id");
   // State updates
   const [activeTimer, setActiveTimer] = useState(null); // 'shift' | 'break' | null
   const [isShiftFinished, setIsShiftFinished] = useState(false);
@@ -19,18 +28,54 @@ const Rosterly = () => {
   const [shiftElapsed, setShiftElapsed] = useState(0);
   const [currentWeek, setCurrentWeek] = useState(moment());
   const [isAtStore, setIsAtStore] = useState(false);
-  const [locationError, setLocationError] = useState('');
+  const [locationError, setLocationError] = useState("");
   const [isCheckingLocation, setIsCheckingLocation] = useState(false);
   const [shiftStartTime, setShiftStartTime] = useState(null);
   const [shiftEndTime, setShiftEndTime] = useState(null);
+
   const timerRef = useRef(null);
   const navigate = useNavigate();
 
+  // for DB
+  const [locLatitude, setLocLatitude] = useState("");
+  const [locLongitude, setLocLognitude] = useState("");
+  const [shiftData, setShiftData] = useState([]);
+
   useEffect(() => {
+    const dashboardData = async () => {
+      try {
+        const response = await axios.get(`${baseURL}/dashboardData`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const shiftData = response.data.shiftdata;
+
+        if (Array.isArray(shiftData) && shiftData.length > 0) {
+          const locationWise = shiftData[0].locationwise;
+          if (Array.isArray(locationWise) && locationWise.length > 0) {
+            const { latitude, longitude } = locationWise[0];
+            setLocLatitude(latitude);
+            setLocLognitude(longitude);
+          }
+        }
+
+        setShiftData(shiftData);
+      } catch (error) {
+        console.error("Failed to fetch dashboard data:", error);
+      }
+    };
+
     const firstName = localStorage.getItem("firstName") || "";
     const lastName = localStorage.getItem("lastName") || "";
     setUserName(`${firstName} ${lastName}`);
+
+    dashboardData();
   }, []);
+
+  // useEffect(() => {
+  //   console.log("LocLatitude: ", locLatitude, "LocLognitude: ", locLongitude);
+  // }, [locLatitude, locLongitude]);
 
   // Starts a timer that ticks every second
   const shiftStartTimeRef = useRef(null);
@@ -45,7 +90,9 @@ const Rosterly = () => {
 
       timerRef.current = setInterval(() => {
         const now = Date.now();
-        const elapsedInSeconds = Math.floor((now - shiftStartTimeRef.current) / 1000);
+        const elapsedInSeconds = Math.floor(
+          (now - shiftStartTimeRef.current) / 1000
+        );
         setShiftElapsed(elapsedInSeconds);
       }, 1000);
     }
@@ -82,7 +129,7 @@ const Rosterly = () => {
 
   const getWeekRange = (week) => {
     const startOfWeek = moment(week).isoWeekday(3); // Wednesday
-    const endOfWeek = moment(startOfWeek).add(6, 'days'); // Tuesday (6 days after Wednesday)
+    const endOfWeek = moment(startOfWeek).add(6, "days"); // Tuesday (6 days after Wednesday)
     return `${startOfWeek.format("DD MMM")} - ${endOfWeek.format("DD MMM")}`;
   };
 
@@ -112,7 +159,7 @@ const Rosterly = () => {
         setShiftStartTime(now); // store shift start time only once
       }
       setActiveTimer("shift");
-      startTimer('shift');
+      startTimer("shift");
     }
   };
   const handleBreakToggle = () => {
@@ -138,9 +185,9 @@ const Rosterly = () => {
   };
 
   const formatDisplayTime = (timestamp) => {
-    if (!timestamp) return '';
+    if (!timestamp) return "";
     const date = new Date(timestamp);
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
   const unavailabilityHandler = () => {
@@ -153,24 +200,29 @@ const Rosterly = () => {
     longitude: 78.38736913783626,
   };
 
-  const ALLOWED_RADIUS_METERS = 500; // e.g., 500m radius
+  const ALLOWED_RADIUS_METERS = 100; // e.g., 500m radius
 
   const checkLocation = () => {
     setIsCheckingLocation(true);
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
 
+        const distance = getDistance(
+          { latitude, longitude },
+          { latitude: locLatitude, longitude: locLongitude }
+        );
         // Log current location to console
-        console.log("Latitude:", latitude);
-        console.log("Longitude:", longitude);
-
-        const distance = getDistance({ latitude, longitude }, STORE_LOCATION);
+        console.log("Current Latitude:", latitude);
+        console.log("Current Longitude:", longitude);
+        console.log("DB Lat", locLatitude);
+        console.log("DB Log", locLongitude);
         console.log("Distance from store (in meters):", distance);
 
         if (distance <= ALLOWED_RADIUS_METERS) {
           setIsAtStore(true);
-          setLocationError('');
+          setLocationError("");
         } else {
           setIsAtStore(false);
           setLocationError("You must be at the store to start your shift.");
@@ -181,13 +233,14 @@ const Rosterly = () => {
       (error) => {
         console.error("Geolocation error:", error);
         setIsAtStore(false);
-        setLocationError("Unable to fetch location. Please enable location access.");
+        setLocationError(
+          "Unable to fetch location. Please enable location access."
+        );
         setIsCheckingLocation(false);
       },
       { enableHighAccuracy: true }
     );
   };
-
 
   return (
     <>
@@ -197,7 +250,8 @@ const Rosterly = () => {
           {getRoleId() === 1 ? `${userName} (Admin)` : userName}
         </p>
       </div>
-      {getRoleId() === 1 ? (<Dashboard />
+      {getRoleId() === 1 ? (
+        <Dashboard />
       ) : (
         <>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 p-1">
@@ -212,7 +266,9 @@ const Rosterly = () => {
                     onClick={handleShiftToggle}
                     className="buttonSuccess mt-2 mr-2 w-full sm:w-auto"
                   >
-                    {activeTimer === "shift" ? "Shift Running..." : "Start/Resume Shift"}
+                    {activeTimer === "shift"
+                      ? "Shift Running..."
+                      : "Start/Resume Shift"}
                   </button>
 
                   <button
@@ -232,15 +288,20 @@ const Rosterly = () => {
                 </>
               ) : (
                 <>
-                  <button className="buttonSuccess mt-2" disabled={isCheckingLocation} onClick={checkLocation}>
+                  <button
+                    className="buttonSuccess mt-2"
+                    disabled={isCheckingLocation}
+                    onClick={checkLocation}
+                  >
                     {isCheckingLocation ? "Checking..." : "Get Location"}
                   </button>
                   {locationError && (
-                    <p className="text-red-600 mt-2 paragraph">{locationError}</p>
+                    <p className="text-red-600 mt-2 paragraph">
+                      {locationError}
+                    </p>
                   )}
                 </>
               )}
-
             </div>
 
             {(shiftElapsed > 0 || isShiftFinished) && (
@@ -256,27 +317,35 @@ const Rosterly = () => {
                   </p>
                 )}
 
-                <p className="py-1 subHeading">Shift Time: <strong>{formatTime(shiftElapsed)}(8 hrs)</strong></p>
+                <p className="py-1 subHeading">
+                  Shift Time: <strong>{formatTime(shiftElapsed)}(8 hrs)</strong>
+                </p>
                 {shiftEndTime && (
                   <p className="subHeading text-red-700">
                     End Time: {formatDisplayTime(shiftEndTime)}
                   </p>
                 )}
-                <p className="subHeading text-red-700">Break Time: {formatTime(breakElapsed)}(15 mins)</p>
+                <p className="subHeading text-red-700">
+                  Break Time: {formatTime(breakElapsed)}(15 mins)
+                </p>
               </motion.div>
             )}
           </div>
 
           <div className="card w-full px-4">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
-              <h2 className="subHeading text-lg sm:text-xl text-indigo-900">Shift Details</h2>
+              <h2 className="subHeading text-lg sm:text-xl text-indigo-900">
+                Shift Details
+              </h2>
               <div className="flex items-center justify-center bg-white rounded-lg text-sm font-semibold text-gray-900 w-full sm:w-fit px-2 py-1 border border-gray-300 shadow-sm">
                 <FaAngleLeft
                   className="text-gray-800 hover:text-gray-950 cursor-pointer"
                   size={16}
                   onClick={handlePrevWeek}
                 />
-                <span className="mx-2 paragraphBold">{getWeekRange(currentWeek)}</span>
+                <span className="mx-2 paragraphBold">
+                  {getWeekRange(currentWeek)}
+                </span>
                 <FaAngleRight
                   className="text-gray-800 hover:text-gray-950 cursor-pointer"
                   size={16}
@@ -287,18 +356,54 @@ const Rosterly = () => {
 
             <div className="grid grid-cols-[repeat(auto-fit,_minmax(220px,_1fr))] gap-4 justify-center text-center sm:text-left">
               {[
-                { day: "Wed 09/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-1" },
-                { day: "Thu 10/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-2" },
+                {
+                  day: "Wed 09/04",
+                  hours: "1.67 hrs",
+                  time: "8:00pm - 10:00pm",
+                  break: "20 min",
+                  location: "Store-1",
+                },
+                {
+                  day: "Thu 10/04",
+                  hours: "1.67 hrs",
+                  time: "8:00pm - 10:00pm",
+                  break: "20 min",
+                  location: "Store-2",
+                },
                 { day: "Fri 11/04", unavailable: true },
-                { day: "Sat 12/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-1" },
+                {
+                  day: "Sat 12/04",
+                  hours: "1.67 hrs",
+                  time: "8:00pm - 10:00pm",
+                  break: "20 min",
+                  location: "Store-1",
+                },
                 { total: true, hours: "13.01" },
-                { day: "Sun 13/04", hours: "1.67 hrs", time: "8:00pm - 10:00pm", break: "20 min", location: "Store-1" },
+                {
+                  day: "Sun 13/04",
+                  hours: "1.67 hrs",
+                  time: "8:00pm - 10:00pm",
+                  break: "20 min",
+                  location: "Store-1",
+                },
                 { day: "Mon 14/04", off: true },
-                { day: "Tue 15/04", off: true }
+                { day: "Tue 15/04", off: true },
               ].map((shift, i) => (
                 <div key={i} className="mt-2 mx-auto">
-                  <div className={shift.total ? "cardA" : shift.unavailable ? "cardGrey" : shift.off ? "cardRed" : "cardYellow"}>
-                    <p className="subHeading">{shift.day || (shift.total && "Weekly Total")}</p>
+                  <div
+                    className={
+                      shift.total
+                        ? "cardA"
+                        : shift.unavailable
+                        ? "cardGrey"
+                        : shift.off
+                        ? "cardRed"
+                        : "cardYellow"
+                    }
+                  >
+                    <p className="subHeading">
+                      {shift.day || (shift.total && "Weekly Total")}
+                    </p>
                     {shift.unavailable ? (
                       <div className="flex items-center">
                         <FaUserTimes className="icon50" />
@@ -314,7 +419,9 @@ const Rosterly = () => {
                       <>
                         <div className="flex items-center">
                           <FaRegClock className="icon50" />
-                          <strong className="headingBold ml-1">{shift.hours}</strong>
+                          <strong className="headingBold ml-1">
+                            {shift.hours}
+                          </strong>
                         </div>
                         <div className="text-sm">
                           <p>{shift.time}</p>
@@ -333,11 +440,20 @@ const Rosterly = () => {
               <div className="mt-2 w-full col-span-1 sm:col-span-2 mx-auto">
                 <div className="p-4 bg-gray-100 border rounded-lg h-full flex flex-col justify-between">
                   <div>
-                    <h2 className="text-indigo-900 heading">Give Your <strong>Unavailability</strong></h2>
-                    <h2 className="text-indigo-900 subHeading">date and time.</h2>
+                    <h2 className="text-indigo-900 heading">
+                      Give Your <strong>Unavailability</strong>
+                    </h2>
+                    <h2 className="text-indigo-900 subHeading">
+                      date and time.
+                    </h2>
                   </div>
                   <div className="flex justify-end mt-4">
-                    <button className="buttonSuccessActive w-full sm:w-1/2" onClick={unavailabilityHandler}>Select Your Unavailability</button>
+                    <button
+                      className="buttonSuccessActive w-full sm:w-1/2"
+                      onClick={unavailabilityHandler}
+                    >
+                      Select Your Unavailability
+                    </button>
                   </div>
                 </div>
               </div>
@@ -347,7 +463,6 @@ const Rosterly = () => {
       )}
       {/* // <Dashboard /> */}
     </>
-
   );
 };
 
