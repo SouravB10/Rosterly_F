@@ -63,8 +63,7 @@ const NavBar = ({ toggleSidebar }) => {
   const activeMenu = navItems.find(
     (item) =>
       item.path === location.pathname ||
-      (item.submenu &&
-        item.submenu.some((sub) => sub.path === location.pathname))
+      item.submenu?.some((sub) => sub.path === location.pathname)
   );
 
   const handleLogout = async () => {
@@ -108,7 +107,7 @@ const NavBar = ({ toggleSidebar }) => {
             </button>
 
             {/* Profile dropdown */}
-            <Menu as="div" className="relative border rounded-full">
+            <Menu as="div" className="relative border rounded-full z-99">
               <div>
                 <MenuButton className="cursor-pointer relative flex rounded-full text-sm focus:ring-2 focus:ring-white">
                   <span className="absolute -inset-1.5" />
@@ -152,9 +151,8 @@ const NavBar = ({ toggleSidebar }) => {
                   {({ active }) => (
                     <button
                       onClick={handleLogout}
-                      className={`block w-full px-4 py-2 text-left paragraph cursor-pointer text-black ${
-                        active ? "bg-yellow-200" : ""
-                      }`}
+                      className={`block w-full px-4 py-2 text-left paragraph cursor-pointer text-black ${active ? "bg-yellow-200" : ""
+                        }`}
                     >
                       Sign out
                     </button>

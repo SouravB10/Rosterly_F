@@ -15,7 +15,7 @@ import FeedbackModal from "../Component/FeedbackModal";
 import { percent } from "framer-motion";
 
 const Rosters = () => {
-    const baseURL = import.meta.env.VITE_BASE_URL;
+  const baseURL = import.meta.env.VITE_BASE_URL;
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState("default");
   const [currentWeek, setCurrentWeek] = useState(moment());
@@ -1048,8 +1048,8 @@ const Rosters = () => {
                                       emp.user.status !== 0 && onShiftAdd(emp.user.id, emp.user.firstName, day)
                                     }
                                     className={`p-1 ${emp.user.status === 0
-                                        ? "text-gray-300 cursor-not-allowed"
-                                        : "text-gray-500 hover:text-green-800 cursor-pointer"
+                                      ? "text-gray-300 cursor-not-allowed"
+                                      : "text-gray-500 hover:text-green-800 cursor-pointer"
                                       }`}
                                     title={emp.user.status === 0 ? "Inactive employee" : "Add Shift"}
                                     disabled={emp.user.status === 0}

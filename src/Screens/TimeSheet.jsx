@@ -10,11 +10,16 @@ import { FaArrowCircleDown } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
 import { ImCheckmark } from "react-icons/im";
 import { Dialog } from "@headlessui/react";
+import axios from "axios";
 
 const TimeSheet = () => {
-  const [selectedLocation, setSelectedLocation] = useState("default");
   const [currentWeek, setCurrentWeek] = useState(moment());
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const baseURL = import.meta.env.VITE_BASE_URL;
+  const [locations, setLocations] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState("default");
+  const [locatedEmployees, setLocatedEmployees] = useState([]);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState("default");
 
   const getWeekRange = (week) => {
     const startOfWeek = moment(week).startOf("isoWeek").format("DD MMM");
@@ -30,10 +35,63 @@ const TimeSheet = () => {
     setCurrentWeek((prev) => moment(prev).add(1, "week"));
   };
 
+  // const handleLocation = (e) => {
+  //   setSelectedLocation(e.target.value);
+  //   console.log("Selected Location:", e.target.value);
+  // };
+
   const handleLocation = (e) => {
-    setSelectedLocation(e.target.value);
-    console.log("Selected Location:", e.target.value);
+    const newLocationId = e.target.value;
+    setSelectedLocation(newLocationId);
+
+    setLocatedEmployees([]);
+    setSelectedEmployeeId("default");
+
+    const fetchEmployees = async (id) => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.get(`${baseURL}/locations/${id}/users`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        // locatedEmployees = response.data;
+        setLocatedEmployees(response.data.data);
+        console.log("Employees fetched:", response.data.data);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+      }
+    };
+
+    // Call with the new location id directly
+    fetchEmployees(newLocationId);
+
+    console.log("Selected Location:", newLocationId);
   };
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      const token = localStorage.getItem("token");
+
+      try {
+        const response = await axios.get(`${baseURL}/locations`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setLocations(response.data);
+      } catch (error) {
+        console.error("Error fetching locations:", error);
+      }
+    };
+
+    fetchLocations();
+  }, []);
+
+  const selectedEmployee = locatedEmployees.find(
+    (emp) => emp.id.toString() === selectedEmployeeId
+  );
+
   const tabs = [
     { id: 1, title: "Mon 07/04/25", content: "This is the overview content." },
     {
@@ -87,8 +145,11 @@ const TimeSheet = () => {
             onChange={handleLocation}
           >
             <option value="default">--Select Location--</option>
-            <option value="Location 1">Store 1</option>
-            <option value="Location 2">Store 2</option>
+            {locations.map((location) => (
+              <option key={location.id} value={location.id}>
+                {location.location_name}
+              </option>
+            ))}
           </select>
 
           <div className="flex items-center justify-center bg-white rounded-lg text-sm font-semibold text-gray-900 w-full md:w-75 px-2">
@@ -124,11 +185,26 @@ const TimeSheet = () => {
           </div>
         </div>
         <div>
-          <select name="selectedEmployee" className="input w-50 mx-2">
-            <option value="default">--Select Employee--</option>
-            <option value="Location 1">Vishal</option>
-            <option value="Location 2">Harish</option>
-            <option value="Location 3">Anita</option>
+          <select name="selectedEmployee"
+            className="input w-50 mx-2"
+            value={selectedEmployeeId}
+            onChange={(e)=> setSelectedEmployeeId(e.target.value)}
+            disabled={!locatedEmployees.length}
+          >
+            {locatedEmployees.length > 0 ? (
+              <>
+                <option value="default">--Select Employee--</option>
+                {locatedEmployees.map((employee) => (
+                  <option key={employee.id} value={employee.id}>
+                    {employee.user.firstName} {employee.user.lastName}
+                  </option>
+                ))}
+              </>
+            ) : (
+              <option value="default" disabled>
+                No Employees Found
+              </option>
+            )}
           </select>
 
           <button
@@ -143,7 +219,15 @@ const TimeSheet = () => {
       <div className=" mt-6 ">
         <div className="bgTable text-black p-2 rounded-lg">
           <div className="flex justify-between items-center ">
-            <h2 className="subHeadingBold text-white">Harish Dobila</h2>
+            {(selectedEmployee && selectedEmployeeId !== "default") ? (
+              <h2 className="paragraphBold text-white ml-2">
+                {selectedEmployee.user.firstName} {selectedEmployee.user.lastName}
+              </h2>
+            ) : (
+              <h2 className="paragraphBold text-white ml-2">
+               *Select an Employee to view their timesheet
+              </h2>
+            )}
             <div className="flex items-center gap-8 mx-4">
               <input
                 type="text"
@@ -179,8 +263,8 @@ const TimeSheet = () => {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`text-left px-4 py-2 rounded-lg transition-colors ${activeTab === tab.id
-                      ? "bg-white text-blue-600 paragraphBold shadow"
-                      : "hover:bg-white paragraphBold hover:text-blue-500 text-gray-700"
+                    ? "bg-white text-blue-600 paragraphBold shadow"
+                    : "hover:bg-white paragraphBold hover:text-blue-500 text-gray-700"
                     }`}
                 >
                   {tab.title}
