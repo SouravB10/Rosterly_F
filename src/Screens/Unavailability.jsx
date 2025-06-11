@@ -1,4 +1,4 @@
-import { Dialog } from "@headlessui/react";
+import { Dialog, Transition } from "@headlessui/react";
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -34,7 +34,6 @@ const Unavailability = () => {
   const [editId, setEditId] = useState(null);
   const [unavailabilityId, setUnavailabilityId] = useState(null);
 
-
   const days = [
     "Wednesday",
     "Thursday",
@@ -44,9 +43,6 @@ const Unavailability = () => {
     "Monday",
     "Tuesday",
   ];
-
-
-
 
   // fetching the notifying manager
   const fetchNotifyingManager = async () => {
@@ -76,11 +72,11 @@ const Unavailability = () => {
     }
   };
 
-
   useEffect(() => {
-    axios.get(`${baseURL}/get-managers`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
+    axios
+      .get(`${baseURL}/get-managers`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         setManagers(res.data);
       })
@@ -89,11 +85,9 @@ const Unavailability = () => {
       });
   }, []);
 
-
   useEffect(() => {
     fetchNotifyingManager();
   }, []);
-
 
   const resetForm = () => {
     setFromDate(new Date());
@@ -127,7 +121,8 @@ const Unavailability = () => {
     }
 
     if (fromDate && toDate && fromDate >= toDate) {
-      validationErrors.dateRange = "To Date & Time must be after From Date & Time.";
+      validationErrors.dateRange =
+        "To Date & Time must be after From Date & Time.";
     }
 
     if (!notifyToId) {
@@ -202,7 +197,6 @@ const Unavailability = () => {
       //   setTimeout(() => {
       //     window.location.reload();
       //   }, 3000);
-
     } catch (error) {
       console.error("Error saving unavailability:", error);
       setFeedbackMessage(error.response.data?.message || "An error occurred");
@@ -226,7 +220,8 @@ const Unavailability = () => {
     }
 
     if (fromDate && toDate && fromDate >= toDate) {
-      validationErrors.dateRange = "To Date & Time must be after From Date & Time.";
+      validationErrors.dateRange =
+        "To Date & Time must be after From Date & Time.";
     }
 
     if (!notifyToId) {
@@ -273,7 +268,6 @@ const Unavailability = () => {
       setFeedbackModalOpen(true);
     }
   };
-
 
   const generateTimeOptions = () => {
     let times = [];
@@ -424,7 +418,7 @@ const Unavailability = () => {
     setFinish("");
     setModalNotifyToId("");
     setModalDescription("");
-  }
+  };
   const handleEdit = (item) => {
     setIsEditing(true);
     setUnavailabilityId(item.id);
@@ -434,7 +428,6 @@ const Unavailability = () => {
     setReason(item.reason || "");
     setNotifyToId(item.notifyTo);
   };
-
 
   return (
     <>
@@ -484,9 +477,10 @@ const Unavailability = () => {
                           </div>
                         }
                       />
-
                     </div>
-                    {errors.fromDate && <p className="text-red-500 text-sm">{errors.fromDate}</p>}
+                    {errors.fromDate && (
+                      <p className="text-red-500 text-sm">{errors.fromDate}</p>
+                    )}
                   </div>
 
                   <div className="">
@@ -529,8 +523,14 @@ const Unavailability = () => {
                         }
                       />
                     </div>
-                    {errors.toDate && <p className="text-red-500 text-sm">{errors.toDate}</p>}
-                    {errors.dateRange && <p className="text-red-500 text-sm mt-1">{errors.dateRange}</p>}
+                    {errors.toDate && (
+                      <p className="text-red-500 text-sm">{errors.toDate}</p>
+                    )}
+                    {errors.dateRange && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.dateRange}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -566,11 +566,9 @@ const Unavailability = () => {
                     ))}
                   </select>
 
-
-
-
-                  {errors.notifyToId && <p className="text-red-500 text-sm">{errors.notifyToId}</p>}
-
+                  {errors.notifyToId && (
+                    <p className="text-red-500 text-sm">{errors.notifyToId}</p>
+                  )}
                 </div>
 
                 <div>
@@ -584,16 +582,15 @@ const Unavailability = () => {
                     className="textarea w-full p-3 resize-none custom-focus"
                     placeholder="Type your reason here..."
                   />
-                  {errors.reason && <p className="text-red-500 text-sm">{errors.reason}</p>}
-
+                  {errors.reason && (
+                    <p className="text-red-500 text-sm">{errors.reason}</p>
+                  )}
                 </div>
 
                 <div className="flex justify-end gap-4 pt-2">
                   {/* <button className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md">
                     Save
                   </button> */}
-
-
 
                   {/* <button className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md">
                     {isEditing ? "Update" : "Save"}
@@ -662,10 +659,19 @@ const Unavailability = () => {
                     )}
 
                     <p
-                      className={`paragraphThin mt-1 text-sm italic ${item.unavailStatus === 0 ? "text-red-500" : item.unavailStatus === 1 ? "text-green-600" : "text-orange-600"
-                        }`}
+                      className={`paragraphThin mt-1 text-sm italic ${
+                        item.unavailStatus === 0
+                          ? "text-red-500"
+                          : item.unavailStatus === 1
+                          ? "text-green-600"
+                          : "text-orange-600"
+                      }`}
                     >
-                      {item.unavailStatus === 0 ? "Pending" : item.unavailStatus === 1 ? "Approved" : "Denied"}
+                      {item.unavailStatus === 0
+                        ? "Pending"
+                        : item.unavailStatus === 1
+                        ? "Approved"
+                        : "Denied"}
                     </p>
                   </div>
                   {/* <button className="black-100 hover:texttheme mt-1 cursor-pointer">
@@ -679,7 +685,6 @@ const Unavailability = () => {
                       <FaEdit className="w-4 h-4" />
                     </button>
                   )}
-
                 </div>
                 <hr className="white-300" />
               </div>
@@ -702,8 +707,11 @@ const Unavailability = () => {
               >
                 <div className="flex flex-col">
                   <p
-                    className={`paragraphBold ${day === "Saturday" || day === "Sunday" ? "text-black-600" : ""
-                      }`}
+                    className={`paragraphBold ${
+                      day === "Saturday" || day === "Sunday"
+                        ? "text-black-600"
+                        : ""
+                    }`}
                   >
                     {day}
                   </p>
@@ -714,19 +722,25 @@ const Unavailability = () => {
                       <div key={item.id}>
                         <div className="flex ">
                           <p className="paragraph text-sm ">
-                            {item.day}  {item.fromDT} - {item.toDT}
+                            {item.day} {item.fromDT} - {item.toDT}
                           </p>{" "}
-                          (<p
-                            className={`paragraphThin text-sm italic ${item.unavailStatus === 0
-                              ? "text-red-500" : item.unavailStatus === 2
+                          (
+                          <p
+                            className={`paragraphThin text-sm italic ${
+                              item.unavailStatus === 0
+                                ? "text-red-500"
+                                : item.unavailStatus === 2
                                 ? "text-orange-600"
                                 : "text-green-600"
-                              }`}
+                            }`}
                           >
-                            {item.unavailStatus === 0 ? "Pending" : item.unavailStatus === 1 ? "Approved" : "Denied"}
-                          </p>)
-
-
+                            {item.unavailStatus === 0
+                              ? "Pending"
+                              : item.unavailStatus === 1
+                              ? "Approved"
+                              : "Denied"}
+                          </p>
+                          )
                         </div>
                         {item.reason && (
                           <p className="paragraphThin text-sm ">
@@ -751,138 +765,159 @@ const Unavailability = () => {
                 >
                   {matchingUnavailability.length === 0 ? (
                     <FaPlusSquare className="text-indigo-900 text-xl" />
-                  ) : (matchingUnavailability[0].unavailStatus) === 0 || (matchingUnavailability[0].unavailStatus) === 1 ? (
-                    // <FaEdit />
-                    null
-                  ) : (
-                    // <HiTrash className="text-red-700 text-xl" />
-                    null
-                  )}
+                  ) : matchingUnavailability[0].unavailStatus === 0 ||
+                    matchingUnavailability[0].unavailStatus ===
+                      1 ? // <FaEdit />
+                  null : // <HiTrash className="text-red-700 text-xl" />
+                  null}
                 </div>
               </div>
             );
           })}
-
         </div>
       </div>
+      <Transition show={isShiftOpen} as={React.Fragment}>
+        <Dialog
+          as="div"
+          onClose={() => setIsShiftOpen(false)}
+          className="relative z-50 rounded-lg"
+        >
+          <Transition.Child
+            as={React.Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-gray-700/70"></div>
+          </Transition.Child>
 
-      <Dialog
-        open={isShiftOpen}
-        onClose={() => setIsShiftOpen(false)}
-        className="relative z-50 rounded-lg"
-      >
-        <div className="fixed inset-0 bg-gray-700/70"></div>
-        <div className="fixed inset-0 flex items-center justify-center">
-          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
-            <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">
-                Add Unavailability for {selectedDay}
-              </Dialog.Title>
-              <button
-                className="text-white text-2xl font-bold cursor"
-                onClick={handleCloseModal}
-              >
-                ×
-              </button>
-            </div>
-            <form
-              className="card p-6 space-y-3"
-              onSubmit={saveRecurringUnavailability}
+          <div className="fixed inset-0 flex items-center justify-center">
+            <Transition.Child
+              as={React.Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95 translate-y-4"
+              enterTo="opacity-100 scale-100 translate-y-0"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100 translate-y-0"
+              leaveTo="opacity-0 scale-95 translate-y-4"
             >
-              <p className="paragraph text-gray-500">
-                Enter the times that you will NOT be available.
-              </p>
-
-              <div className="mt-3 space-y-3">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="allDay"
-                    checked={isAllDay}
-                    onChange={() => setIsAllDay(!isAllDay)}
-                    className="w-4 h-4"
-                  />
-                  <label htmlFor="allDay" className="paragraphBold">
-                    All Day
-                  </label>
-                </div>
-                {!isAllDay && (
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="flex flex-col">
-                      <label className="paragraphBold">Start</label>
-                      <select
-                        className="input paragraph"
-                        value={start}
-                        onChange={(e) => setStart(e.target.value)}
-                      >
-                        {timeOptions.map((time, index) => (
-                          <option key={index} value={time}>
-                            {time}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="flex flex-col">
-                      <label className="paragraphBold">Finish</label>
-                      <select
-                        className="input paragraph"
-                        value={finish}
-                        onChange={(e) => setFinish(e.target.value)}
-                      >
-                        {timeOptions.map((time, index) => (
-                          <option key={index} value={time}>
-                            {time}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                )}
-                <div>
-                  <label className="paragraphBold block mb-4">
-                    Select a manager to notify
-                  </label>
-                  <select
-                    className="input w-full p-3 custom-focus"
-                    onChange={(e) => setModalNotifyToId(e.target.value)}
-                    onClick={fetchNotifyingManager}
+              <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
+                <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
+                  <Dialog.Title className="heading">
+                    Add Unavailability for {selectedDay}
+                  </Dialog.Title>
+                  <button
+                    className="text-white text-2xl font-bold cursor"
+                    onClick={handleCloseModal}
                   >
-                    <option>-- Select --</option>
-                    {selectToNotify.map((user) => (
-                      <option key={user.id} value={user.id}>
-                        {user.firstName} {user.lastName}
-                      </option>
-                    ))}
-                  </select>
+                    ×
+                  </button>
                 </div>
-
-                <label className="paragraphBold">Description:</label>
-                <textarea
-                  className=" textarea paragraph"
-                  rows="3"
-                  placeholder="Enter description..."
-                  value={modalDescription}
-                  onChange={(e) => setModalDescription(capitalLetter(e.target.value))}
-                ></textarea>
-              </div>
-
-              <div className="flex justify-end gap-2 mt-4">
-                <button
-                  type="button"
-                  className="buttonGrey"
-                  onClick={handleCloseModal}
+                <form
+                  className="card p-6 space-y-3"
+                  onSubmit={saveRecurringUnavailability}
                 >
-                  Cancel
-                </button>
-                <button type="submit" className="buttonSuccess">
-                  Save
-                </button>
-              </div>
-            </form>
-          </Dialog.Panel>
-        </div>
-      </Dialog>
+                  <p className="paragraph text-gray-500">
+                    Enter the times that you will NOT be available.
+                  </p>
+
+                  <div className="mt-3 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="allDay"
+                        checked={isAllDay}
+                        onChange={() => setIsAllDay(!isAllDay)}
+                        className="w-4 h-4"
+                      />
+                      <label htmlFor="allDay" className="paragraphBold">
+                        All Day
+                      </label>
+                    </div>
+                    {!isAllDay && (
+                      <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div className="flex flex-col">
+                          <label className="paragraphBold">Start</label>
+                          <select
+                            className="input paragraph"
+                            value={start}
+                            onChange={(e) => setStart(e.target.value)}
+                          >
+                            {timeOptions.map((time, index) => (
+                              <option key={index} value={time}>
+                                {time}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className="flex flex-col">
+                          <label className="paragraphBold">Finish</label>
+                          <select
+                            className="input paragraph"
+                            value={finish}
+                            onChange={(e) => setFinish(e.target.value)}
+                          >
+                            {timeOptions.map((time, index) => (
+                              <option key={index} value={time}>
+                                {time}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    )}
+                    <div>
+                      <label className="paragraphBold block mb-4">
+                        Select a manager to notify
+                      </label>
+                      <select
+                        className="input w-full p-3 custom-focus"
+                        onChange={(e) => setModalNotifyToId(e.target.value)}
+                        onClick={fetchNotifyingManager}
+                      >
+                        <option>-- Select --</option>
+                        {selectToNotify.map((user) => (
+                          <option key={user.id} value={user.id}>
+                            {user.firstName} {user.lastName}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <label className="paragraphBold">Description:</label>
+                    <textarea
+                      className=" textarea paragraph"
+                      rows="3"
+                      placeholder="Enter description..."
+                      value={modalDescription}
+                      onChange={(e) =>
+                        setModalDescription(capitalLetter(e.target.value))
+                      }
+                    ></textarea>
+                  </div>
+
+                  <div className="flex justify-end gap-2 mt-4">
+                    <button
+                      type="button"
+                      className="buttonGrey"
+                      onClick={handleCloseModal}
+                    >
+                      Cancel
+                    </button>
+                    <button type="submit" className="buttonSuccess">
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition>
 
       <Dialog
         open={editShiftOpen}
@@ -905,7 +940,7 @@ const Unavailability = () => {
             </div>
             <form
               className="card p-6 space-y-3"
-            // onSubmit={saveRecurringUnavailability}
+              // onSubmit={saveRecurringUnavailability}
             >
               <p className="paragraph text-gray-500">
                 Enter the times that you will NOT be available.
@@ -972,10 +1007,7 @@ const Unavailability = () => {
               </div>
 
               <div className="flex justify-end gap-2 mt-4">
-                <button
-                  type="button"
-                  className="buttonDanger"
-                >
+                <button type="button" className="buttonDanger">
                   Delete
                 </button>
                 <button

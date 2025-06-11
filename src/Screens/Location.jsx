@@ -1,4 +1,4 @@
-import { Dialog } from "@headlessui/react";
+import { Dialog, Transition } from "@headlessui/react";
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { CgCloseO } from "react-icons/cg";
@@ -920,14 +920,34 @@ const Location = () => {
       </div>
 
       {/* Location Model starts */}
-      <Dialog
-        open={isModalOpen}
+    <Transition show={isModalOpen} as={React.Fragment}>
+        <Dialog
+          as="div"
         onClose={() => setIsModalOpen(false)}
         className="relative z-50 rounded-lg"
       >
+           <Transition.Child
+                    as={React.Fragment}
+                    enter="ease-out duration-300"
+                    enterFrom="opacity-0"
+                    enterTo="opacity-100"
+                    leave="ease-in duration-200"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
         <div className="fixed inset-0 bg-gray-700/70"></div>
+        </Transition.Child>
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-opacity-50">
           {/* <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-4xl w-full mx-4"> */}
+         <Transition.Child
+                       as={React.Fragment}
+                       enter="ease-out duration-300"
+                       enterFrom="opacity-0 scale-95 translate-y-4"
+                       enterTo="opacity-100 scale-100 translate-y-0"
+                       leave="ease-in duration-200"
+                       leaveFrom="opacity-100 scale-100 translate-y-0"
+                       leaveTo="opacity-0 scale-95 translate-y-4"
+                     >
           <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
               <Dialog.Title className="heading">Add Location</Dialog.Title>
@@ -1068,17 +1088,40 @@ const Location = () => {
               </div>
             </form>
           </Dialog.Panel>
+          </Transition.Child>
         </div>
       </Dialog>
+      </Transition>
       {/* Location Model Ends */}
       {/* Employee Model Starts*/}
-      <Dialog
-        open={isEmployeeModalOpen}
+
+  <Transition show={isEmployeeModalOpen} as={React.Fragment}>
+        <Dialog
+          as="div"
         onClose={() => setIsEmployeeModalOpen(false)}
         className="relative z-50 rounded-lg"
       >
+          <Transition.Child
+                    as={React.Fragment}
+                    enter="ease-out duration-300"
+                    enterFrom="opacity-0"
+                    enterTo="opacity-100"
+                    leave="ease-in duration-200"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
         <div className="fixed inset-0 bg-gray-700/70"></div>
+        </Transition.Child>
         <div className="fixed inset-0 flex items-center justify-center">
+           <Transition.Child
+                       as={React.Fragment}
+                       enter="ease-out duration-300"
+                       enterFrom="opacity-0 scale-95 translate-y-4"
+                       enterTo="opacity-100 scale-100 translate-y-0"
+                       leave="ease-in duration-200"
+                       leaveFrom="opacity-100 scale-100 translate-y-0"
+                       leaveTo="opacity-0 scale-95 translate-y-4"
+                     >
           <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
               <Dialog.Title className="heading">{modalRoleFilter==2? "Assign Manager":"Assign Employee"}</Dialog.Title>
@@ -1204,8 +1247,10 @@ const Location = () => {
               </div>
             </form>
           </Dialog.Panel>
+          </Transition.Child>
         </div>
       </Dialog>
+      </Transition>
 
       {/* Employee Model Ends */}
       {/* ✅ Reusable Modal */}
