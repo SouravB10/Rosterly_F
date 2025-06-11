@@ -13,6 +13,10 @@ import { HiTrash } from "react-icons/hi2";
 import { capitalLetter } from "../Component/capitalLetter";
 import FeedbackModal from "../Component/FeedbackModal";
 import { percent } from "framer-motion";
+import { FaTriangleExclamation } from "react-icons/fa6";
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; // optional styling
+
 
 const Rosters = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -984,7 +988,7 @@ const Rosters = () => {
                           >
                             <div className="space-y-2">
                               {/* Display unavailability minimally */}
-                              {unavail && (
+                              {/* {unavail && (
                                 <div
                                   className="text-center bg-gray-300 rounded py-1"
                                   title={
@@ -1012,89 +1016,95 @@ const Rosters = () => {
                                     </>
                                   )}
                                 </div>
-                              )}
+                              )} */}
 
-                              {(
-                                shiftsByEmployeeDay[emp.user.id]?.[day] || []
-                              ).map((shift, index) => (
-                                <Draggable
-                                  key={shift.id}
-                                  draggableId={shift.id}
-                                  index={index}
-                                  isDragDisabled={isPublished}
-                                >
-                                  {(provided) => (
-                                    <div
-                                      className="bgTable paragraph text-white p-2 rounded flex justify-between items-center cursor-move group"
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                    >
-                                      <div className="flex flex-col items-center justify-end w-full">
-                                        <span>{shift.time}</span>
-                                        <span className="text-xs text-gray-200">
-                                          {calculateShiftDuration(
-                                            shift.time,
-                                            shift.breakTime
-                                          )}
-                                        </span>
-                                        {shift.description && (
-                                          <span className="paragraphThin italic ml-2">
-                                            {shift.description}
-                                          </span>
+                              {unavail && (
+                                <div className="flex justify-center items-center">
+                                  <Tippy
+                                    content={
+                                      <div className="text-sm">
+                                        <div className="font-semibold">{unavailDetails?.heading}</div>
+                                        {unavailDetails?.allDay ? (
+                                          <div className="paragraph">{unavailDetails?.details}</div>
+                                        ) : (
+                                          <>
+                                            <div className="paragraph">From: {unavailDetails?.from}</div>
+                                            <div className="paragraph">To: {unavailDetails?.to}</div>
+                                          </>
                                         )}
                                       </div>
-                                      <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <FaRegCopy
-                                          className={`text-md text-green-900 rounded cursor-pointer ${
-                                            isPublished
-                                              ? "opacity-20 pointer-events-none"
-                                              : ""
-                                          }`}
-                                          onClick={() => handleCopy(shift)}
-                                          title="Copy Shift"
-                                        />
-                                        <FaEdit
-                                          className={`text-md text-green-900 rounded cursor-pointer ${
-                                            isPublished
-                                              ? "opacity-20 pointer-events-none"
-                                              : ""
-                                          }`}
-                                          onClick={() =>
-                                            onShiftEdit(
-                                              emp.user.id,
-                                              emp.user.firstName,
-                                              day,
-                                              shift
-                                            )
-                                          }
-                                          title="Edit Shift"
-                                        />
-                                        <HiTrash
-                                          className="text-xl text-red-600 px-1 rounded cursor-pointer"
-                                          title="Delete Shift"
-                                          onClick={async () => {
-                                            if (!isPublished) {
-                                              handleDeleteShiftUnpublished(
-                                                emp.user.id,
-                                                day,
-                                                shift.id
-                                              );
-                                            } else {
-                                              await handleDeleteShift(
-                                                emp.user.id,
-                                                day,
-                                                shift.id,
-                                                shift.rosterWeekId
-                                              );
+                                    }
+                                    placement="top"
+                                  >
+                                    <span>
+                                      <FaTriangleExclamation className="text-red-500 cursor-pointer" />
+                                    </span>
+                                  </Tippy>
+                                </div>
+                              )}
+
+
+                              {(shiftsByEmployeeDay[emp.user.id]?.[day] || []).map(
+                                (shift, index) => (
+                                  <Draggable
+                                    key={shift.id}
+                                    draggableId={shift.id}
+                                    index={index}
+                                    isDragDisabled={isPublished}
+                                  >
+                                    {(provided) => (
+                                      <div
+                                        className="bgTable paragraph text-white p-2 rounded flex justify-between items-center cursor-move group"
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                      >
+                                        <div className="flex flex-col items-center justify-end w-full">
+                                          <span>{shift.time}</span>
+                                          <span className="text-xs text-gray-200">
+                                            {calculateShiftDuration(shift.time, shift.breakTime)}
+                                          </span>
+                                          {shift.description && (
+                                            <span className="paragraphThin italic ml-2">
+                                              {shift.description}
+                                            </span>
+                                          )}
+                                        </div>
+                                        <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                          <FaRegCopy
+                                            className={`text-md text-green-900 rounded cursor-pointer ${isPublished ? "opacity-20 pointer-events-none" : ""}`}
+                                            onClick={() => handleCopy(shift)}
+                                            title="Copy Shift"
+                                          />
+                                          <FaEdit
+                                            className={`text-md text-green-900 rounded cursor-pointer ${isPublished ? "opacity-20 pointer-events-none" : ""}`}
+                                            onClick={() =>
+                                              onShiftEdit(emp.user.id, emp.user.firstName, day, shift)
                                             }
-                                          }}
-                                        />
+                                            title="Edit Shift"
+                                          />
+                                          <HiTrash
+                                            className="text-xl text-red-600 px-1 rounded cursor-pointer"
+                                            title="Delete Shift"
+                                            onClick={async () => {
+                                              if (!isPublished) {
+                                                handleDeleteShiftUnpublished(emp.user.id, day, shift.id);
+                                              } else {
+                                                await handleDeleteShift(
+                                                  emp.user.id,
+                                                  day,
+                                                  shift.id,
+                                                  shift.rosterWeekId
+                                                );
+                                              }
+                                            }}
+                                          />
+                                        </div>
                                       </div>
-                                    </div>
-                                  )}
-                                </Draggable>
-                              ))}
+                                    )}
+                                  </Draggable>
+                                )
+                              )}
                               {provided.placeholder}
                             </div>
 
