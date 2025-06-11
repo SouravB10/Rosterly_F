@@ -414,6 +414,7 @@ const Rosters = () => {
             hrsRate: hourRate,
             percentRate: shift.percentRate || "0.00",
             totalPay: shift.totalPay || "0.00",
+            totalHrs: shift.totalHrs || "0.00",
             status: "active",
             location_id: selectedLocation,
           });
