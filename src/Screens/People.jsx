@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Dialog } from "@headlessui/react";
+import { Dialog, Transition } from "@headlessui/react";
 import { FaSearch, FaEye, FaEdit } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import { set } from "date-fns";
@@ -116,7 +116,10 @@ const People = () => {
     form.append("email", updatedFormData.email);
     form.append("dob", updatedFormData.dob);
     form.append("payrate", updatedFormData.payrate);
-    form.append("payratePercent", updatedFormData.payratePercent?.trim() || "0");
+    form.append(
+      "payratePercent",
+      updatedFormData.payratePercent?.trim() || "0"
+    );
     form.append("mobileNumber", updatedFormData.mobileNumber);
     form.append("role_id", updatedFormData.role_id);
     form.append("created_by", currentUserId);
@@ -153,7 +156,6 @@ const People = () => {
       setFeedbackModalOpen(true);
     }
   };
-
 
   // const fetchUsers = async () => {
   //   setLoading(true);
@@ -305,7 +307,6 @@ const People = () => {
 
     setFilteredProfiles(filtered);
   };
-
 
   // const handleSearch = (e) => {
   //   const keyword = e.target.value.toLowerCase();
@@ -466,11 +467,10 @@ const People = () => {
   const handleCloseModal = () => {
     setFeedbackModalOpen(false);
     setTimeout(() => {
-      setFeedbackMessage('');
+      setFeedbackMessage("");
       setShowConfirmButtons(false);
     }, 300);
   };
-
 
   const confirmDelete = async () => {
     setLoading(true);
@@ -507,8 +507,6 @@ const People = () => {
     }
   };
 
-
-
   return (
     <div className="flex flex-col gap-3 ">
       <div className="sticky top-0 bg-[#f1f1f1] py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -523,9 +521,7 @@ const People = () => {
               setSelectedStatus(value);
 
               const statusFiltered = users.filter((user) => {
-                return value === "all"
-                  ? true
-                  : String(user.status) === value;
+                return value === "all" ? true : String(user.status) === value;
               });
 
               setFilteredByStatus(statusFiltered);
@@ -537,7 +533,6 @@ const People = () => {
             <option value="1">Active</option>
             <option value="0">Inactive</option>
           </select>
-
         </div>
 
         {/* Right side: Search + Add */}
@@ -569,19 +564,21 @@ const People = () => {
           Array.isArray(filteredProfiles) &&
           filteredProfiles.length === 0 && (
             <div className="absolute inset-0 flex items-center justify-center">
-                    <FaUserSlash className="text-gray-400 text-3xl mr-2" />
+              <FaUserSlash className="text-gray-400 text-3xl mr-2" />
               <p className="text-gray-500 text-lg text-center">
                 No employees found. Please add new employees.
               </p>
             </div>
           )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-
-
           {Array.isArray(filteredProfiles) &&
             filteredProfiles.map((profile) => (
               <div key={profile.id} className="w-full">
-                <div className={`shadow-xl p-4 rounded-xl h-full flex flex-col justify-between ${profile.status === 1 ? "mSideBar" : "mSideBarInactive"}`}>
+                <div
+                  className={`shadow-xl p-4 rounded-xl h-full flex flex-col justify-between ${
+                    profile.status === 1 ? "mSideBar" : "mSideBarInactive"
+                  }`}
+                >
                   {/* Top Section: Image + Info */}
                   <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                     <div className="flex items-center gap-4 min-w-0">
@@ -663,223 +660,290 @@ const People = () => {
       </div>
 
       {/* Add Employee Modal */}
-      <Dialog
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        className="relative z-50 rounded-lg"
-      >
-        <div className="fixed inset-0 bg-gray-700/70"></div>
-        <div className="fixed inset-0 flex items-center justify-center">
-          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-sm sm:max-w-md w-full overflow-y-auto max-h-[90vh]">
-            <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">Add Employee</Dialog.Title>
-              <button
-                className="text-white font-bold text-2xl"
-                onClick={() => setIsModalOpen(false)}
-              >
-                ×
-              </button>
-            </div>
-            <form className="mt-4 p-6 space-y-3" onSubmit={handleSubmit}>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col">
-                  <label className="paragraphBold">First Name</label>
-                  <input
-                    type="text"
-                    className="input"
-                    value={formData.firstName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, firstName: (capitalLetter(e.target.value)) })
-                    }
-                  />
-                  {errors.firstName && (
-                    <p className="text-red-500 text-sm">{errors.firstName}</p>
-                  )}
-                </div>
-                <div className="flex flex-col">
-                  <label className="paragraphBold">Last Name</label>
-                  <input
-                    type="text"
-                    className="input"
-                    value={formData.lastName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, lastName: (capitalLetter(e.target.value)) })
-                    }
-                  />
-                  {errors.lastName && (
-                    <p className="text-red-500 text-sm">{errors.lastName}</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <label className="paragraphBold">Email</label>
-                <input
-                  type="email"
-                  className="input"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-sm">{errors.email}</p>
-                )}
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex flex-col">
-                  <label className="paragraphBold">Date of Birth</label>
-                  <DatePicker
-                    className="input"
-                    selected={createDate}
-                    onChange={(date) => {
-                      setCreateDate(date);
-                      setFormData({ ...formData, dob: date?.toISOString().split("T")[0] });
-                    }}
-                    showYearDropdown
-                    showMonthDropdown
-                    dateFormat="dd/MM/yyyy" // or "yyyy-MM-dd" if you prefer
-                    scrollableYearDropdown
-                    yearDropdownItemNumber={100} // optional: sets how many years to show
-                    placeholderText="Select date"
-                  />
-                  {errors.dob && (
-                    <p className="text-red-500 text-sm">{errors.dob}</p>
-                  )}
-                </div>
-                <div className="flex flex-col">
-                  <label className="paragraphBold">Phone Number</label>
-                  <input
-                    type="text"
-                    className="input"
-                    value={formData.mobileNumber}
-                    onChange={(e) =>
-                      setFormData({ ...formData, mobileNumber: e.target.value })
-                    }
-                  />
-                  {errors.mobileNumber && (
-                    <p className="text-red-500 text-sm">
-                      {errors.mobileNumber}
-                    </p>
-                  )}
-                </div>
-              </div>
+      <Transition show={isModalOpen} as={React.Fragment}>
+        <Dialog
+        as="div"
+          onClose={() => setIsModalOpen(false)}
+          className="relative z-50 rounded-lg"
+        >
+          <Transition.Child
+            as={React.Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-gray-700/70"></div>
+          </Transition.Child>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col">
-                  <label className="paragraphBold">Pay Rate / Day</label>
-                  <input
-                    type="text"
-                    className="input"
-                    value={formData.payrate}
-                    onChange={(e) =>
-                      setFormData({ ...formData, payrate: e.target.value })
-                    }
-                  />
-                  {errors.payrate && (
-                    <p className="text-red-500 text-sm">{errors.payrate}</p>
-                  )}
-                </div>
-                <div className="flex flex-col">
-                  <label className="paragraphBold">Pay Rate %</label>
-                  <input
-                    type="text"
-                    className="input"
-                    value={formData.payratePercent}
-                    onChange={(e) =>
-                      setFormData({ ...formData, payratePercent: e.target.value })
-                    }
-                  />
-                  {errors.payratePercent && (
-                    <p className="text-red-500 text-sm">{errors.payratePercent}</p>
-                  )}
-                </div>
-              </div>
-              {currentUserRole === 1 && (
-                <div className="flex flex-col">
-                  <label className="paragraphBold">Role</label>
-                  <select
-                    className="input"
-                    value={formData.role_id || ""}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        role_id: parseInt(e.target.value),
-                      }))
-                    }
+          <div className="fixed inset-0 flex items-center justify-center">
+            <Transition.Child
+              as={React.Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95 translate-y-4"
+              enterTo="opacity-100 scale-100 translate-y-0"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100 translate-y-0"
+              leaveTo="opacity-0 scale-95 translate-y-4"
+            >
+              <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-sm sm:max-w-md w-full overflow-y-auto max-h-[90vh]">
+                <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
+                  <Dialog.Title className="heading">Add Employee</Dialog.Title>
+                  <button
+                    className="text-white font-bold text-2xl"
+                    onClick={() => setIsModalOpen(false)}
                   >
-                    <option value="">Select Role</option>
-                    <option value="2">Manager</option>
-                    <option value="3">Employee</option>
-                  </select>
-                  {errors.role_id && (
-                    <p className="text-red-500 text-sm">{errors.role_id}</p>
-                  )}
+                    ×
+                  </button>
                 </div>
-              )}
-              <div className="flex flex-col">
-                <label className="paragraphBold">Profile Image</label>
-                <input
-                  type="file"
-                  className="bg-white rounded p-2"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                      setSelectedProfile({
-                        image: URL.createObjectURL(file),
-                        file,
-                      });
-                    }
-                  }}
-                />
-              </div>
-              {selectedProfile?.profileImage && (
-                <img
-                  src={
-                    selectedProfile.profileImage.startsWith("http")
-                      ? selectedProfile.profileImage
-                      : `${profileBaseURL}/${selectedProfile.profileImage}`
-                  }
-                  alt="Preview"
-                  className="mt-2 w-32 h-32 object-cover rounded-md"
-                />
-              )}
+                <form className="mt-4 p-6 space-y-3" onSubmit={handleSubmit}>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col">
+                      <label className="paragraphBold">First Name</label>
+                      <input
+                        type="text"
+                        className="input"
+                        value={formData.firstName}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            firstName: capitalLetter(e.target.value),
+                          })
+                        }
+                      />
+                      {errors.firstName && (
+                        <p className="text-red-500 text-sm">
+                          {errors.firstName}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex flex-col">
+                      <label className="paragraphBold">Last Name</label>
+                      <input
+                        type="text"
+                        className="input"
+                        value={formData.lastName}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            lastName: capitalLetter(e.target.value),
+                          })
+                        }
+                      />
+                      {errors.lastName && (
+                        <p className="text-red-500 text-sm">
+                          {errors.lastName}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex flex-col">
+                    <label className="paragraphBold">Email</label>
+                    <input
+                      type="email"
+                      className="input"
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
+                    />
+                    {errors.email && (
+                      <p className="text-red-500 text-sm">{errors.email}</p>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex flex-col">
+                      <label className="paragraphBold">Date of Birth</label>
+                      <DatePicker
+                        className="input"
+                        selected={createDate}
+                        onChange={(date) => {
+                          setCreateDate(date);
+                          setFormData({
+                            ...formData,
+                            dob: date?.toISOString().split("T")[0],
+                          });
+                        }}
+                        showYearDropdown
+                        showMonthDropdown
+                        dateFormat="dd/MM/yyyy" // or "yyyy-MM-dd" if you prefer
+                        scrollableYearDropdown
+                        yearDropdownItemNumber={100} // optional: sets how many years to show
+                        placeholderText="Select date"
+                      />
+                      {errors.dob && (
+                        <p className="text-red-500 text-sm">{errors.dob}</p>
+                      )}
+                    </div>
+                    <div className="flex flex-col">
+                      <label className="paragraphBold">Phone Number</label>
+                      <input
+                        type="text"
+                        className="input"
+                        value={formData.mobileNumber}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            mobileNumber: e.target.value,
+                          })
+                        }
+                      />
+                      {errors.mobileNumber && (
+                        <p className="text-red-500 text-sm">
+                          {errors.mobileNumber}
+                        </p>
+                      )}
+                    </div>
+                  </div>
 
-              <div className="flex justify-end gap-2 mt-4">
-                <button
-                  type="button"
-                  className="buttonGrey"
-                  onClick={() => {
-                    resetForm(); // ✅ Clear form and errors
-                    setIsModalOpen(false); // ✅ Hide modal
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="buttonTheme"
-                  disabled={loading}
-                >
-                  {loading ? "Adding..." : "Add"}
-                </button>
-              </div>
-            </form>
-          </Dialog.Panel>
-        </div>
-      </Dialog>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col">
+                      <label className="paragraphBold">Pay Rate / Day</label>
+                      <input
+                        type="text"
+                        className="input"
+                        value={formData.payrate}
+                        onChange={(e) =>
+                          setFormData({ ...formData, payrate: e.target.value })
+                        }
+                      />
+                      {errors.payrate && (
+                        <p className="text-red-500 text-sm">{errors.payrate}</p>
+                      )}
+                    </div>
+                    <div className="flex flex-col">
+                      <label className="paragraphBold">Pay Rate %</label>
+                      <input
+                        type="text"
+                        className="input"
+                        value={formData.payratePercent}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            payratePercent: e.target.value,
+                          })
+                        }
+                      />
+                      {errors.payratePercent && (
+                        <p className="text-red-500 text-sm">
+                          {errors.payratePercent}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  {currentUserRole === 1 && (
+                    <div className="flex flex-col">
+                      <label className="paragraphBold">Role</label>
+                      <select
+                        className="input"
+                        value={formData.role_id || ""}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            role_id: parseInt(e.target.value),
+                          }))
+                        }
+                      >
+                        <option value="">Select Role</option>
+                        <option value="2">Manager</option>
+                        <option value="3">Employee</option>
+                      </select>
+                      {errors.role_id && (
+                        <p className="text-red-500 text-sm">{errors.role_id}</p>
+                      )}
+                    </div>
+                  )}
+                  <div className="flex flex-col">
+                    <label className="paragraphBold">Profile Image</label>
+                    <input
+                      type="file"
+                      className="bg-white rounded p-2"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          setSelectedProfile({
+                            image: URL.createObjectURL(file),
+                            file,
+                          });
+                        }
+                      }}
+                    />
+                  </div>
+                  {selectedProfile?.profileImage && (
+                    <img
+                      src={
+                        selectedProfile.profileImage.startsWith("http")
+                          ? selectedProfile.profileImage
+                          : `${profileBaseURL}/${selectedProfile.profileImage}`
+                      }
+                      alt="Preview"
+                      className="mt-2 w-32 h-32 object-cover rounded-md"
+                    />
+                  )}
+
+                  <div className="flex justify-end gap-2 mt-4">
+                    <button
+                      type="button"
+                      className="buttonGrey"
+                      onClick={() => {
+                        resetForm(); // ✅ Clear form and errors
+                        setIsModalOpen(false); // ✅ Hide modal
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="buttonTheme"
+                      disabled={loading}
+                    >
+                      {loading ? "Adding..." : "Add"}
+                    </button>
+                  </div>
+                </form>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition>
 
       {/* View Profile Modal */}
-      <Dialog
-        open={viewButtonModel}
+
+ <Transition show={viewButtonModel} as={React.Fragment}>
+        <Dialog
+          as="div"
         onClose={() => setViewButtonModel(false)}
         className="relative z-50 rounded-lg"
       >
+         <Transition.Child
+                    as={React.Fragment}
+                    enter="ease-out duration-300"
+                    enterFrom="opacity-0"
+                    enterTo="opacity-100"
+                    leave="ease-in duration-200"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
         <div className="fixed inset-0 bg-gray-700/70"></div>
+        </Transition.Child>
         <div className="fixed inset-0 flex items-center justify-center">
+          <Transition.Child
+                       as={React.Fragment}
+                       enter="ease-out duration-300"
+                       enterFrom="opacity-0 scale-95 translate-y-4"
+                       enterTo="opacity-100 scale-100 translate-y-0"
+                       leave="ease-in duration-200"
+                       leaveFrom="opacity-100 scale-100 translate-y-0"
+                       leaveTo="opacity-0 scale-95 translate-y-4"
+                     >
           <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-sm sm:max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">Employee Details ({selectedProfile?.firstName})</Dialog.Title>
+              <Dialog.Title className="heading">
+                Employee Details ({selectedProfile?.firstName})
+              </Dialog.Title>
               <button
                 className="text-white font-bold text-2xl"
                 onClick={() => setViewButtonModel(false)}
@@ -898,7 +962,7 @@ const People = () => {
                     onChange={(e) =>
                       setSelectedProfile((prev) => ({
                         ...prev,
-                        firstName: (capitalLetter(e.target.value)),
+                        firstName: capitalLetter(e.target.value),
                       }))
                     }
                   />
@@ -912,7 +976,7 @@ const People = () => {
                     onChange={(e) =>
                       setSelectedProfile((prev) => ({
                         ...prev,
-                        lastName: (capitalLetter(e.target.value)),
+                        lastName: capitalLetter(e.target.value),
                       }))
                     }
                   />
@@ -1044,11 +1108,12 @@ const People = () => {
               </div>
             </form>
           </Dialog.Panel>
+          </Transition.Child>
         </div>
       </Dialog>
+            </Transition>
+      
 
-   
-      {/* message modal start */}
 
       {/* ✅ Reusable Modal */}
       <FeedbackModal
