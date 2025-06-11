@@ -16,7 +16,6 @@ const People = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
   const profileBaseURL = import.meta.env.VITE_PROFILE_BASE_URL;
   const [users, setUsers] = useState([]);
-  const [activeTab, setActiveTab] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewButtonModel, setViewButtonModel] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState(null);
@@ -26,7 +25,6 @@ const People = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [createDate, setCreateDate] = useState(null);
   const [editDate, setEditDate] = useState(null);
-  const [addNoteModal, setAddNoteModal] = useState(false);
   const [note, setNote] = useState("");
   const [filteredEmployees, setFilteredEmployees] = useState([]);
   const currentUserRole = parseInt(localStorage.getItem("role_id"));
@@ -615,7 +613,7 @@ const People = () => {
                   </div>
 
                   {/* Bottom Section: Actions + Toggle */}
-                  <div className="mt-4 flex flex-row flex-wrap md:justify-between items-center gap-4">
+                  <div className="mt-4 flex flex-row flex-wrap md:justify-between">
                     {/* Status Toggle */}
                     <label
                       className="flex items-center gap-2 cursor-pointer"
@@ -641,7 +639,7 @@ const People = () => {
                     </label>
 
                     {/* Actions */}
-                    <div className="flex ml-auto">
+                    <div className="flex">
                       <FaEye
                         title="View Profile"
                         className="text-indigo-950 cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
@@ -650,14 +648,7 @@ const People = () => {
                           setViewButtonModel(true);
                         }}
                       />
-                      <LuNotebookPen
-                        title="Add Note"
-                        className="text-black cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
-                        onClick={() => {
-                          setSelectedProfile(profile);
-                          setAddNoteModal(true);
-                        }}
-                      />
+                     
                       <HiTrash
                         title="Delete Profile"
                         className="textRed cursor-pointer p-2 rounded-md w-8 h-8 flex items-center justify-center"
@@ -1056,58 +1047,7 @@ const People = () => {
         </div>
       </Dialog>
 
-      <Dialog
-        open={addNoteModal}
-        onClose={() => setAddNoteModal(false)}
-        className="relative z-50 rounded-lg"
-      >
-        <div className="fixed inset-0 bg-gray-700/70"></div>
-        <div className="fixed inset-0 flex items-center justify-center">
-          <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-sm sm:max-w-md w-full">
-            <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">
-                {selectedProfile
-                  ? `Add Note (for ${selectedProfile.firstName})`
-                  : "Add Note"}
-              </Dialog.Title>
-              <button
-                className="text-white font-bold text-2xl"
-                onClick={() => setAddNoteModal(false)}
-              >
-                ×
-              </button>
-            </div>
-            <form className="p-6 space-y-4">
-              <textarea
-                className="w-full h-32 border bg-white border-gray-300 rounded-md p-2"
-                placeholder="Write your note here..."
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-              />
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  className="buttonGrey"
-                  onClick={() => setAddNoteModal(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="buttonTheme"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleSaveNote(selectedProfile.id, note);
-                  }}
-                >
-                  Save
-                </button>
-              </div>
-            </form>
-          </Dialog.Panel>
-        </div>
-      </Dialog>
-
+   
       {/* message modal start */}
 
       {/* ✅ Reusable Modal */}
