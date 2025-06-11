@@ -364,6 +364,38 @@ const Rosters = () => {
     setShiftToEdit(null);
   };
 
+  const calculateNumericTotalHours = (timeRange, breakTime) => {
+    if (!timeRange) return 0;
+
+    const [startTime, endTime] = timeRange.split(" - ");
+    if (!startTime || !endTime) return 0;
+
+    const to24Hour = (timeStr) => {
+      const [time, modifier] = timeStr.trim().split(" ");
+      let [hours, minutes] = time.split(":").map(Number);
+
+      if (modifier === "PM" && hours !== 12) hours += 12;
+      if (modifier === "AM" && hours === 12) hours = 0;
+
+      return { hours, minutes };
+    };
+
+    const start = to24Hour(startTime);
+    const end = to24Hour(endTime);
+
+    const startDate = new Date(0, 0, 0, start.hours, start.minutes);
+    const endDate = new Date(0, 0, 0, end.hours, end.minutes);
+
+    let diff = (endDate - startDate) / (1000 * 60); // minutes
+    if (diff < 0) diff += 1440; // overnight fix
+
+    const breakMins = Number(breakTime) || 0;
+    diff -= breakMins;
+
+    return parseFloat((diff / 60).toFixed(2)); // total hours in decimal
+  };
+
+
   //To publish the roster
   const handlePublish = async () => {
     const token = localStorage.getItem("token");
@@ -417,6 +449,7 @@ const Rosters = () => {
             totalHrs: shift.totalHrs || "0.00",
             status: "active",
             location_id: selectedLocation,
+            totalHrs: calculateNumericTotalHours(shift.time, shift.breakTime),
           });
         });
       });
@@ -703,6 +736,7 @@ const Rosters = () => {
         const fromDate = moment(unavail.fromDT).format("YYYY-MM-DD");
         const toDate = moment(unavail.toDT).format("YYYY-MM-DD");
         return dateString >= fromDate && dateString <= toDate;
+
       } else if (unavail.unavailType === "RecuDays") {
         // For recurring day unavailability (e.g., every Wednesday)
         const recurringDay = unavail.day.split(" ")[0]; // Extract day name, e.g., "Wednesday"
@@ -717,6 +751,7 @@ const Rosters = () => {
     const dayMoment = moment(day, "ddd, DD/MM");
     const dateString = dayMoment.format("YYYY-MM-DD");
     const unavail = employee.unavail.find((unavail) => {
+
       if (unavail.unavailType === "Days") {
         const fromDate = moment(unavail.fromDT).format("YYYY-MM-DD");
         const toDate = moment(unavail.toDT).format("YYYY-MM-DD");
@@ -734,6 +769,7 @@ const Rosters = () => {
         const toDate = moment(unavail.toDT).format("DD/MM");
         const timeRange = `${moment.utc(unavail.fromDT).local().format("hh:mm A")}`
         const endTime = `${moment.utc(unavail.toDT).local().format("hh:mm A")}`;
+
         return {
           heading: "Unavailable",
           from: `${fromDate}, ${timeRange}`,
@@ -743,12 +779,12 @@ const Rosters = () => {
       } else if (unavail.unavailType === "RecuDays") {
         const recurringDay = unavail.day.split(" ")[0]; // e.g., "Wednesday"
         if (unavail.fromDT && unavail.toDT) {
-          const startTime = moment.utc(unavail.fromDT).local().format("hh:mm A");
-          const endTime = moment.utc(unavail.toDT).local().format("hh:mm A");
+          const startTime = moment(unavail.fromDT, "hh:mm A").format("hh:mm A");
+          const endTime = moment(unavail.toDT, "hh:mm A").format("hh:mm A");
           return {
             heading: "Unavailable",
-            from: `${recurringDay}, ${startTime}`,
-            to: `${recurringDay}, ${endTime}`,
+            from: ` ${startTime}`,
+            to: ` ${endTime}`,
             reason: unavail.reason,
           };
         }
@@ -914,7 +950,7 @@ const Rosters = () => {
                   {/* Employee Info */}
                   <td className="p-2 bg-white">
                     <div className="font-semibold">
-                      {emp.user.firstName} {emp.user.lastName} {emp.user.status === 0 && <span className="text-red-400 paragraph">(Inactive)</span>}
+                      {emp.user.firstName} {emp.user.lastName}({emp.user_id}) {emp.user.status === 0 && <span className="text-red-400 paragraph">(Inactive)</span>}
                     </div>
                     <div className="text-xs text-gray-500">
                       {emp.user.payrate} / Hr {emp.cost ? `· ${emp.cost}` : ""}
@@ -955,7 +991,7 @@ const Rosters = () => {
                                   ) : (
                                     <>
                                       <div className="text-xs text-gray-500">
-                                        From: {unavailDetails?.from}
+                                        {unavailDetails?.from}
                                       </div>
                                       <div className="text-xs text-gray-500">
                                         To: {unavailDetails?.to}

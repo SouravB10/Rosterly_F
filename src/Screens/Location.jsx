@@ -36,6 +36,8 @@ const Location = () => {
   const [locations, setLocations] = useState([]);
   const [updatelocationName, setUpdatelocationName] = useState("");
   const [updateaddress, setUpdateaddress] = useState("");
+  const roleId = Number(localStorage.getItem("role_id")); // or from context/state
+  const [modalRoleFilter, setModalRoleFilter] = useState(null);
 
   const [salesData, setSalesData] = useState({
     Monday: "",
@@ -595,9 +597,8 @@ const Location = () => {
     <div className=" py-2">
       <div className="">
         <div className="col-span-3">
-          <h6 className="heading">By Location</h6>
 
-          <div className="bg-gray-200 p-4 borderRadius10 mt-5">
+          <div className="bg-gray-200 p-4 borderRadius10">
             <div className="flex flex-col md:flex-row justify-between mb-6 gap-4">
               <div className="flex md:flex-row gap-4">
                 <select
@@ -630,14 +631,49 @@ const Location = () => {
                 </button>
               )}
               {activeTab === "Employees" && (
-                <button
-                  className="buttonTheme w-full md:w-auto"
-                  title="Add Employee to Location"
-                  onClick={() => setIsEmployeeModalOpen(true)}
-                >
-                  + Assign Employee
-                </button>
+                <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+                  {/* Only Admin (roleId 1) sees both buttons */}
+                  {roleId === 1 && (
+                    <>
+                      <button
+                        className="buttonTheme w-full md:w-auto"
+                        title="Assign Manager"
+                        onClick={() => {
+                          setModalRoleFilter(2); // Only managers (roleId === 2)
+                          setIsEmployeeModalOpen(true);
+                        }}
+                      >
+                        + Assign Manager
+                      </button>
+                      <button
+                        className="buttonTheme w-full md:w-auto"
+                        title="Assign Employee"
+                        onClick={() => {
+                          setModalRoleFilter(3); // Only employees (roleId === 3)
+                          setIsEmployeeModalOpen(true);
+                        }}
+                      >
+                        + Assign Employee
+                      </button>
+                    </>
+                  )}
+
+                  {/* Only Manager (roleId 2) sees Assign Employee */}
+                  {roleId === 2 && (
+                    <button
+                      className="buttonTheme w-full md:w-auto"
+                      title="Assign Employee"
+                      onClick={() => {
+                        setModalRoleFilter(3);
+                        setIsEmployeeModalOpen(true);
+                      }}
+                    >
+                      + Assign Employee
+                    </button>
+                  )}
+                </div>
               )}
+
             </div>
             <div className="subHeading flex  md:flex-row gap-6 mb-6">
               {["general", "Sales", "Employees"].map((tab) => (
@@ -657,7 +693,7 @@ const Location = () => {
               ))}
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 mt-2">
               {activeTab === "general" && (
                 <form onSubmit={updateLocation}>
                   <div className="card space-y-4">
@@ -836,7 +872,7 @@ const Location = () => {
                       {/* <button className="buttonTheme">+ Employee</button> */}
 
                       <div className="bg-white rounded-lg border border-gray-300 w-full md:w-auto">
-                          {/* <div className="flex flex-row items-center px-3">
+                        {/* <div className="flex flex-row items-center px-3">
                             <FaSearch className="text-indigo-950" />
                             <input
                               type="text"
@@ -864,7 +900,8 @@ const Location = () => {
                             />
 
                             <span className="text-sm font-medium text-gray-800">
-                              {sf.user.firstName} {sf.user.lastName}
+                              {sf.user.role_id==2?`${sf.user.firstName} ${sf.user.lastName}(Manager)`:`${sf.user.firstName} ${sf.user.lastName}`}
+                              {/* {sf.user.firstName} {sf.user.lastName} */}
                             </span>
                           </div>
                         </div>
@@ -1044,7 +1081,7 @@ const Location = () => {
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">Assign Employee</Dialog.Title>
+              <Dialog.Title className="heading">{modalRoleFilter==2? "Assign Manager":"Assign Employee"}</Dialog.Title>
               <button
                 className="text-white font-bold text-2xl"
                 onClick={() => setIsEmployeeModalOpen(false)}
@@ -1090,38 +1127,40 @@ const Location = () => {
 
                 <div className="employee-checkboxes border p-2 rounded max-h-80 overflow-auto">
                   {employeeName.length > 0 ? (
-                    employeeName.map((emp) => {
-                      const isChecked = employees.includes(emp.id.toString());
+                    employeeName
+                      .filter((emp) => emp.roleId === modalRoleFilter)
+                      .map((emp) => {
+                        const isChecked = employees.includes(emp.id.toString());
 
-                      const toggleCheckbox = () => {
-                        const fakeEvent = {
-                          target: {
-                            value: emp.id.toString(),
-                            checked: !isChecked,
-                          },
+                        const toggleCheckbox = () => {
+                          const fakeEvent = {
+                            target: {
+                              value: emp.id.toString(),
+                              checked: !isChecked,
+                            },
+                          };
+                          handleChange(fakeEvent);
                         };
-                        handleChange(fakeEvent);
-                      };
 
-                      return (
-                        <div
-                          className="flex items-center bg-white rounded p-2 gap-3 mb-2 cursor-pointer"
-                          key={emp.id}
-                          onClick={toggleCheckbox}
-                        >
-                          <input
-                            type="checkbox"
-                            value={emp.id.toString()}
-                            onChange={handleChange}
-                            checked={isChecked}
-                            onClick={(e) => e.stopPropagation()} // prevent double trigger
-                          />
-                          <p className="paragraph">
-                            {emp.firstName} {emp.lastName}
-                          </p>
-                        </div>
-                      );
-                    })
+                        return (
+                          <div
+                            className="flex items-center bg-white rounded p-2 gap-3 mb-2 cursor-pointer"
+                            key={emp.id}
+                            onClick={toggleCheckbox}
+                          >
+                            <input
+                              type="checkbox"
+                              value={emp.id.toString()}
+                              onChange={handleChange}
+                              checked={isChecked}
+                              onClick={(e) => e.stopPropagation()} // prevent double trigger
+                            />
+                            <p className="paragraph">
+                              {emp.firstName} {emp.lastName}
+                            </p>
+                          </div>
+                        );
+                      })
                   ) : (
                     <p className="text-gray-500">No employees available</p>
                   )}

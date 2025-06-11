@@ -37,8 +37,8 @@ const Rosterly = () => {
   const navigate = useNavigate();
 
   // for DB
-  const [locLatitude, setLocLatitude] = useState("");
-  const [locLongitude, setLocLognitude] = useState("");
+  const [locLatitude, setLocLatitude] = useState([]);
+  const [locLongitude, setLocLognitude] = useState([]);
   const [shiftData, setShiftData] = useState([]);
 
   useEffect(() => {
@@ -50,6 +50,7 @@ const Rosterly = () => {
           },
         });
         const shiftData = response.data.shiftdata;
+        console.log("Shift Data:", shiftData);
 
         if (Array.isArray(shiftData) && shiftData.length > 0) {
           const locationWise = shiftData[0].locationwise;
@@ -57,7 +58,13 @@ const Rosterly = () => {
             const { latitude, longitude } = locationWise[0];
             setLocLatitude(latitude);
             setLocLognitude(longitude);
+            console.log("Location Latitude:", locLatitude);
+            console.log("Location Longitude:", locLongitude);
+            console.log("Location Wise Data:", locationWise);
+
           }
+
+
         }
 
         setShiftData(shiftData);
@@ -211,7 +218,7 @@ const Rosterly = () => {
 
         const distance = getDistance(
           { latitude, longitude },
-          { latitude: locLatitude, longitude: locLongitude }
+          STORE_LOCATION
         );
         // Log current location to console
         console.log("Current Latitude:", latitude);
@@ -244,7 +251,7 @@ const Rosterly = () => {
 
   return (
     <>
-      <div className="text-indigo-950 mb-3 p-1">
+      <div className="text-indigo-950 p-1">
         <p className="text-sm sm:text-base font-bold">Welcome,</p>
         <p className="text-lg sm:text-xl font-bold">
           {getRoleId() === 1 ? `${userName} (Admin)` : userName}
@@ -264,7 +271,7 @@ const Rosterly = () => {
                 <>
                   <button
                     onClick={handleShiftToggle}
-                    className="buttonSuccess mt-2 mr-2 w-full sm:w-auto"
+                    className="buttonSuccess mr-2 w-full sm:w-auto"
                   >
                     {activeTimer === "shift"
                       ? "Shift Running..."
@@ -273,14 +280,14 @@ const Rosterly = () => {
 
                   <button
                     onClick={handleBreakToggle}
-                    className="buttonDanger mt-2 mr-2 w-full sm:w-auto"
+                    className="buttonDanger mr-2 w-full sm:w-auto"
                   >
                     {activeTimer === "break" ? "Stop Break" : "Start Break"}
                   </button>
 
                   <button
                     onClick={handleFinishShift}
-                    className="buttonSuccess mt-2 w-full sm:w-auto"
+                    className="buttonSuccess w-full sm:w-auto"
                     disabled={isShiftFinished || !shiftElapsed}
                   >
                     {isShiftFinished ? "Shift Finished" : "Finish Shift"}
@@ -289,14 +296,14 @@ const Rosterly = () => {
               ) : (
                 <>
                   <button
-                    className="buttonSuccess mt-2"
+                    className="buttonSuccess "
                     disabled={isCheckingLocation}
                     onClick={checkLocation}
                   >
-                    {isCheckingLocation ? "Checking..." : "Get Location"}
+                    {isCheckingLocation ? "Checking..." : "Check Location"}
                   </button>
                   {locationError && (
-                    <p className="text-red-600 mt-2 paragraph">
+                    <p className="text-red-600 paragraph">
                       {locationError}
                     </p>
                   )}
@@ -395,10 +402,10 @@ const Rosterly = () => {
                       shift.total
                         ? "cardA"
                         : shift.unavailable
-                        ? "cardGrey"
-                        : shift.off
-                        ? "cardRed"
-                        : "cardYellow"
+                          ? "cardGrey"
+                          : shift.off
+                            ? "cardRed"
+                            : "cardYellow"
                     }
                   >
                     <p className="subHeading">
