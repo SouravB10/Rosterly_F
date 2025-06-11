@@ -171,6 +171,7 @@ const NavBar = ({ toggleSidebar }) => {
       <Transition show={isChangePasswordOpen} as={React.Fragment}>
         <Dialog
           as="div"
+          // open={isChangePasswordOpen}
           onClose={() => setIsChangePasswordOpen(false)}
           className="relative z-50"
         >
