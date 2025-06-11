@@ -1006,9 +1006,10 @@ const Rosters = () => {
                                 <div className="flex justify-center items-center">
                                   <Tippy
                                     content={
-                                      <div className="text-sm">
-                                        <div className="font-semibold">{unavailDetails?.heading}</div>
-                                        {unavailDetails?.allDay ? (
+                                      <div>
+                                        <div className="paragraphBold">{unavailDetails?.heading}</div>
+                                        {unavailDetails?.allDay ? 
+                                        (
                                           <div className="paragraph">{unavailDetails?.details}</div>
                                         ) : (
                                           <>
