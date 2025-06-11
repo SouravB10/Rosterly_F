@@ -13,6 +13,10 @@ import { HiTrash } from "react-icons/hi2";
 import { capitalLetter } from "../Component/capitalLetter";
 import FeedbackModal from "../Component/FeedbackModal";
 import { percent } from "framer-motion";
+import { FaTriangleExclamation } from "react-icons/fa6";
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css'; // optional styling
+
 
 const Rosters = () => {
   const baseURL = import.meta.env.VITE_BASE_URL;
@@ -972,7 +976,7 @@ const Rosters = () => {
                           >
                             <div className="space-y-2">
                               {/* Display unavailability minimally */}
-                              {unavail && (
+                              {/* {unavail && (
                                 <div
                                   className="text-center bg-gray-300 rounded py-1"
                                   title={unavailDetails?.reason || "Unavailable"}
@@ -996,7 +1000,33 @@ const Rosters = () => {
                                     </>
                                   )}
                                 </div>
+                              )} */}
+
+                              {unavail && (
+                                <div className="flex justify-center items-center">
+                                  <Tippy
+                                    content={
+                                      <div className="text-sm">
+                                        <div className="font-semibold">{unavailDetails?.heading}</div>
+                                        {unavailDetails?.allDay ? (
+                                          <div className="paragraph">{unavailDetails?.details}</div>
+                                        ) : (
+                                          <>
+                                            <div className="paragraph">From: {unavailDetails?.from}</div>
+                                            <div className="paragraph">To: {unavailDetails?.to}</div>
+                                          </>
+                                        )}
+                                      </div>
+                                    }
+                                    placement="top"
+                                  >
+                                    <span>
+                                      <FaTriangleExclamation className="text-red-500 cursor-pointer" />
+                                    </span>
+                                  </Tippy>
+                                </div>
                               )}
+
 
                               {(shiftsByEmployeeDay[emp.user.id]?.[day] || []).map(
                                 (shift, index) => (
