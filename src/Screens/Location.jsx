@@ -700,7 +700,7 @@ const Location = () => {
               ))}
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 mt-2">
               {activeTab === "general" && (
                 <form onSubmit={updateLocation}>
                   <div className="card space-y-4">

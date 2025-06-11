@@ -14,11 +14,14 @@ import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { navItems } from "../assets/Data";
 import { TiThMenu } from "react-icons/ti";
+import { Dialog, Transition } from "@headlessui/react";
+import ChangePassword from "../Screens/ChangePassword";
 
 const NavBar = ({ toggleSidebar }) => {
   const [profileImage, setProfileImage] = useState("");
   const baseURL = import.meta.env.VITE_BASE_URL;
   const profileURL = import.meta.env.VITE_PROFILE_BASE_URL;
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -53,7 +56,8 @@ const NavBar = ({ toggleSidebar }) => {
   };
 
   const handlechangepasswordClick = () => {
-    navigate("/changepassword");
+    // navigate("/changepassword");
+    setIsChangePasswordOpen(true);
   };
   const handleProfileClick = () => {
     navigate("/profile");
@@ -151,8 +155,9 @@ const NavBar = ({ toggleSidebar }) => {
                   {({ active }) => (
                     <button
                       onClick={handleLogout}
-                      className={`block w-full px-4 py-2 text-left paragraph cursor-pointer text-black ${active ? "bg-yellow-200" : ""
-                        }`}
+                      className={`block w-full px-4 py-2 text-left paragraph cursor-pointer text-black ${
+                        active ? "bg-yellow-200" : ""
+                      }`}
                     >
                       Sign out
                     </button>
@@ -163,6 +168,55 @@ const NavBar = ({ toggleSidebar }) => {
           </div>
         </div>
       </div>
+      <Transition show={isChangePasswordOpen} as={React.Fragment}>
+        <Dialog
+          as="div"
+          onClose={() => setIsChangePasswordOpen(false)}
+          className="relative z-50"
+        >
+          <Transition.Child
+            as={React.Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/50" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <Transition.Child
+              as={React.Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95 translate-y-4"
+              enterTo="opacity-100 scale-100 translate-y-0"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100 translate-y-0"
+              leaveTo="opacity-0 scale-95 translate-y-4"
+            >
+              <Dialog.Panel className="w-full max-w-lg rounded-lg bg-white shadow-lg">
+                <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
+                  <Dialog.Title className="heading">
+                    Change Password
+                  </Dialog.Title>
+                  <button
+                    onClick={() => setIsChangePasswordOpen(false)}
+                    className="text-2xl font-bold"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <div className="py-5">
+                  <ChangePassword />
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition>
     </Disclosure>
   );
 };
