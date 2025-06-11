@@ -66,6 +66,25 @@ const Location = () => {
     console.log("user ID:", id);
   }, []);
 
+  const fetchEmployees = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const employeeList = await axios.get(
+        `${baseURL}/users/login/${id}/${locationId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setEmployeeName(employeeList.data.data);
+      console.log("Employee List:", employeeList.data.data);
+    } catch (error) {
+      console.error("Failed to fetch employees", error);
+    }
+  };
+
+
   useEffect(() => {
     const fetchLocations = async () => {
       try {
@@ -79,23 +98,6 @@ const Location = () => {
     };
 
     // Employee List Start here
-    const fetchEmployees = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const employeeList = await axios.get(
-          `${baseURL}/users/login/${id}/${locationId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setEmployeeName(employeeList.data.data);
-        console.log("Employee List:", employeeList.data.data);
-      } catch (error) {
-        console.error("Failed to fetch employees", error);
-      }
-    };
 
     fetchLocations();
     // fetchSales();
@@ -176,6 +178,7 @@ const Location = () => {
         setFeedbackModalOpen(false);
         setLoading(false);
       }, 2000);
+      fetchEmployees(); 
     } catch (error) {
       console.error("Error deleting user:", error);
       setFeedbackMessage("Failed to delete user.");
@@ -254,6 +257,7 @@ const Location = () => {
         setLocationName("");
         setIsEmployeeModalOpen(false);
         await getLocation(locationId)
+        fetchEmployees();      
       } else {
         setFeedbackMessage(res.data.message || "Something went wrong.");
       }
@@ -593,6 +597,9 @@ const Location = () => {
     }
   };
 
+  const filteredModalEmployees = employeeName.filter(emp => emp.roleId === modalRoleFilter);
+
+
   return (
     <div className=" py-2">
       <div className="">
@@ -900,7 +907,7 @@ const Location = () => {
                             />
 
                             <span className="text-sm font-medium text-gray-800">
-                              {sf.user.role_id==2?`${sf.user.firstName} ${sf.user.lastName}(Manager)`:`${sf.user.firstName} ${sf.user.lastName}`}
+                              {sf.user.role_id == 2 ? `${sf.user.firstName} ${sf.user.lastName}(Manager)` : `${sf.user.firstName} ${sf.user.lastName}`}
                               {/* {sf.user.firstName} {sf.user.lastName} */}
                             </span>
                           </div>
@@ -1081,7 +1088,7 @@ const Location = () => {
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="bg-gray-200 rounded-lg shadow-lg max-w-md w-full">
             <div className="bg-gray-800 rounded-t-lg text-white px-4 py-3 flex justify-between items-center">
-              <Dialog.Title className="heading">{modalRoleFilter==2? "Assign Manager":"Assign Employee"}</Dialog.Title>
+              <Dialog.Title className="heading">{modalRoleFilter == 2 ? "Assign Manager" : "Assign Employee"}</Dialog.Title>
               <button
                 className="text-white font-bold text-2xl"
                 onClick={() => setIsEmployeeModalOpen(false)}
@@ -1126,10 +1133,8 @@ const Location = () => {
                 </div>
 
                 <div className="employee-checkboxes border p-2 rounded max-h-80 overflow-auto">
-                  {employeeName.length > 0 ? (
-                    employeeName
-                      .filter((emp) => emp.roleId === modalRoleFilter)
-                      .map((emp) => {
+                  {filteredModalEmployees.length > 0 ? (
+                    filteredModalEmployees.map((emp) => {
                         const isChecked = employees.includes(emp.id.toString());
 
                         const toggleCheckbox = () => {
