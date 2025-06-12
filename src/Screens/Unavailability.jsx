@@ -609,7 +609,7 @@ const Unavailability = () => {
                       onClick={saveUnavailability}
                       className="buttonSuccess button font12 font-semibold px-4 py-2 rounded-md"
                     >
-                      Save
+                      Submit
                     </button>
                   ) : (
                     <>
@@ -642,53 +642,59 @@ const Unavailability = () => {
 
           <div className="card rounded-md p-5 overflow-auto">
             <h1 className="subHeading">Requested Days Off</h1>
+            {daysOff.length > 0 ? (
+              
+                daysOff.map((item) => (
+                  <div key={item.id} className="py-2">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="paragraphBold">
+                          {formatDate(item.fromDT)} ({formatTime(item.fromDT)}) -{" "}
+                          {formatDate(item.toDT)} ({formatTime(item.toDT)})
+                        </p>
 
-            {daysOff.map((item) => (
-              <div key={item.id} className="py-2">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="paragraphBold">
-                      {formatDate(item.fromDT)} ({formatTime(item.fromDT)}) -{" "}
-                      {formatDate(item.toDT)} ({formatTime(item.toDT)})
-                    </p>
+                        {item.reason && (
+                          <p className="paragraphThin">
+                            {item.reason || "No reason provided"}
+                          </p>
+                        )}
 
-                    {item.reason && (
-                      <p className="paragraphThin">
-                        {item.reason || "No reason provided"}
-                      </p>
-                    )}
-
-                    <p
-                      className={`paragraphThin mt-1 text-sm italic ${
-                        item.unavailStatus === 0
-                          ? "text-red-500"
-                          : item.unavailStatus === 1
-                          ? "text-green-600"
-                          : "text-orange-600"
-                      }`}
-                    >
-                      {item.unavailStatus === 0
-                        ? "Pending"
-                        : item.unavailStatus === 1
-                        ? "Approved"
-                        : "Denied"}
-                    </p>
-                  </div>
-                  {/* <button className="black-100 hover:texttheme mt-1 cursor-pointer">
+                        <p
+                          className={`paragraphThin mt-1 text-sm italic ${item.unavailStatus === 0
+                              ? "text-red-500"
+                              : item.unavailStatus === 1
+                                ? "text-green-600"
+                                : "text-orange-600"
+                            }`}
+                        >
+                          {item.unavailStatus === 0
+                            ? "Pending"
+                            : item.unavailStatus === 1
+                              ? "Approved"
+                              : "Denied"}
+                        </p>
+                      </div>
+                      {/* <button className="black-100 hover:texttheme mt-1 cursor-pointer">
                     <FaPencilAlt className="w-4 h-4" />
                   </button> */}
-                  {item.unavailStatus === 1 ? null : (
-                    <button
-                      className="black-100 hover:texttheme mt-1 cursor-pointer"
-                      onClick={() => handleEdit(item)}
-                    >
-                      <FaEdit className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-                <hr className="white-300" />
-              </div>
-            ))}
+                      {item.unavailStatus === 1 ? null : (
+                        <button
+                          className="black-100 hover:texttheme mt-1 cursor-pointer"
+                          onClick={() => handleEdit(item)}
+                        >
+                          <FaEdit className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                    <hr className="white-300" />
+                  </div>
+                ))
+              
+            ) :
+              (
+                <p className="paragraph">No data available</p>
+              )}
+
           </div>
         </div>
 
@@ -707,11 +713,10 @@ const Unavailability = () => {
               >
                 <div className="flex flex-col">
                   <p
-                    className={`paragraphBold ${
-                      day === "Saturday" || day === "Sunday"
+                    className={`paragraphBold ${day === "Saturday" || day === "Sunday"
                         ? "text-black-600"
                         : ""
-                    }`}
+                      }`}
                   >
                     {day}
                   </p>
@@ -726,19 +731,18 @@ const Unavailability = () => {
                           </p>{" "}
                           (
                           <p
-                            className={`paragraphThin text-sm italic ${
-                              item.unavailStatus === 0
+                            className={`paragraphThin text-sm italic ${item.unavailStatus === 0
                                 ? "text-red-500"
                                 : item.unavailStatus === 2
-                                ? "text-orange-600"
-                                : "text-green-600"
-                            }`}
+                                  ? "text-orange-600"
+                                  : "text-green-600"
+                              }`}
                           >
                             {item.unavailStatus === 0
                               ? "Pending"
                               : item.unavailStatus === 1
-                              ? "Approved"
-                              : "Denied"}
+                                ? "Approved"
+                                : "Denied"}
                           </p>
                           )
                         </div>
@@ -767,9 +771,9 @@ const Unavailability = () => {
                     <FaPlusSquare className="text-indigo-900 text-xl" />
                   ) : matchingUnavailability[0].unavailStatus === 0 ||
                     matchingUnavailability[0].unavailStatus ===
-                      1 ? // <FaEdit />
-                  null : // <HiTrash className="text-red-700 text-xl" />
-                  null}
+                    1 ? // <FaEdit />
+                    null : // <HiTrash className="text-red-700 text-xl" />
+                    null}
                 </div>
               </div>
             );
@@ -940,7 +944,7 @@ const Unavailability = () => {
             </div>
             <form
               className="card p-6 space-y-3"
-              // onSubmit={saveRecurringUnavailability}
+            // onSubmit={saveRecurringUnavailability}
             >
               <p className="paragraph text-gray-500">
                 Enter the times that you will NOT be available.
