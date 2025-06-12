@@ -15,7 +15,7 @@ import { getRoleId } from "../Component/RoleId";
 import axios from "axios";
 
 const Rosterly = () => {
-  const [userName, setUserName] = useState("");
+  const userName = localStorage.getItem("firstName")
   const baseURL = import.meta.env.VITE_BASE_URL;
   const token = localStorage.getItem("token");
   const loginId = localStorage.getItem("id");
@@ -267,7 +267,7 @@ const Rosterly = () => {
   return (
     <>
       <div className="text-indigo-950 p-1">
-        <p className="text-sm sm:text-base font-bold">Welcome,</p>
+        <p className="text-sm sm:text-base font-bold">Welcome,  </p>
         <p className="text-lg sm:text-xl font-bold">
           {getRoleId() === 1 ? `${userName} (Admin)` : userName}
         </p>
@@ -302,7 +302,7 @@ const Rosterly = () => {
 
                   <button
                     onClick={handleFinishShift}
-                    className="buttonSuccess w-full sm:w-auto"
+                    className="buttonTheme w-full sm:w-auto"
                     disabled={isShiftFinished || !shiftElapsed}
                   >
                     {isShiftFinished ? "Shift Finished" : "Finish Shift"}
@@ -381,7 +381,7 @@ const Rosterly = () => {
                 const shift = shiftData.find((item) => item.date === fullDate);
                 return (
                   <div key={i} className="mt-2 mx-auto">
-                    <div className="cardYellow">
+                    <div className={`${shift ? 'cardYellow' : 'cardGrey'}`}>
                       <p className="subHeading">{day}</p>
                       {shift ? (
                         <>

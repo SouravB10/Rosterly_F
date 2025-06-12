@@ -89,6 +89,7 @@ export default function Dashboard() {
       value: notifications,
       bg: "bg-yellow-200",
       icon: <MdOutlinePendingActions className="text-3xl text-black-100" />,
+      link:'/notification'
     },
     {
       title: "Managers",
@@ -109,6 +110,7 @@ export default function Dashboard() {
       value: employees,
       bg: "bg-red-300",
       icon: <BsPeopleFill className="text-3xl text-black-100" />,
+      link:'/employee'
     },
   ];
 
@@ -127,7 +129,7 @@ export default function Dashboard() {
         {stats.map((item, index) => (
           <motion.div
             key={index}
-            className={`rounded-2xl p-5 shadow-md hover:shadow-xl transition-all duration-300 ${item.bg}`}
+            className={`rounded-2xl p-5 shadow-md hover:shadow-xl transition-all duration-300 ${item.bg} ${item.link?"cursor-pointer":""}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1, duration: 0.5 }}
