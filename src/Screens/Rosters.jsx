@@ -207,13 +207,13 @@ const Rosters = () => {
     const sourceList = Array.from(
       (shiftsByEmployeeDay[sourceEmpId] &&
         shiftsByEmployeeDay[sourceEmpId][sourceDay]) ||
-        []
+      []
     );
 
     const destList = Array.from(
       (shiftsByEmployeeDay[destEmpId] &&
         shiftsByEmployeeDay[destEmpId][destDay]) ||
-        []
+      []
     );
 
     const [moved] = sourceList.splice(source.index, 1);
@@ -347,8 +347,8 @@ const Rosters = () => {
       const currentDayShifts = currentEmpData[currentDay] || [];
       const updatedShifts = isEditing
         ? currentDayShifts.map((shift) =>
-            shift.id === shiftToEdit.id ? newShift : shift
-          )
+          shift.id === shiftToEdit.id ? newShift : shift
+        )
         : [...currentDayShifts, newShift];
 
       return {
@@ -742,6 +742,7 @@ const Rosters = () => {
         const fromDate = moment(unavail.fromDT).format("YYYY-MM-DD");
         const toDate = moment(unavail.toDT).format("YYYY-MM-DD");
         return dateString >= fromDate && dateString <= toDate;
+
       } else if (unavail.unavailType === "RecuDays") {
         // For recurring day unavailability (e.g., every Wednesday)
         const recurringDay = unavail.day.split(" ")[0]; // Extract day name, e.g., "Wednesday"
@@ -771,11 +772,8 @@ const Rosters = () => {
       if (unavail.unavailType === "Days") {
         const fromDate = moment(unavail.fromDT).format("DD/MM");
         const toDate = moment(unavail.toDT).format("DD/MM");
-        const timeRange = `${moment
-          .utc(unavail.fromDT)
-          .local()
-          .format("hh:mm A")}`;
-        const endTime = `${moment.utc(unavail.toDT).local().format("hh:mm A")}`;
+        const timeRange = moment(unavail.fromDT).format("hh:mm A");
+        const endTime = moment(unavail.toDT).format("hh:mm A");
 
         return {
           heading: "Unavailable",
@@ -867,8 +865,8 @@ const Rosters = () => {
             {isPublishing
               ? "Publishing..."
               : isPublished == 0
-              ? "Publish"
-              : "Unpublish"}
+                ? "Publish"
+                : "Unpublish"}
           </button>
           {/* <button className="buttonDanger">Unpublish</button> */}
         </div>
@@ -1024,15 +1022,16 @@ const Rosters = () => {
                                     content={
                                       <div>
                                         <div className="paragraphBold">{unavailDetails?.heading}</div>
-                                        {unavailDetails?.allDay ? 
-                                        (
-                                          <div className="paragraph">{unavailDetails?.details}</div>
-                                        ) : (
-                                          <>
-                                            <div className="paragraph">From: {unavailDetails?.from}</div>
-                                            <div className="paragraph">To: {unavailDetails?.to}</div>
-                                          </>
-                                        )}
+                                        {unavailDetails?.allDay ?
+                                          (
+                                            <div className="paragraph">{unavailDetails?.details}</div>
+                                          ) : (
+                                            <>
+                                              <div className="paragraph">From: {unavailDetails?.from}</div>
+                                              <div className="paragraph">To: {unavailDetails?.to}</div>
+                                            </>
+                                          )}
+                                        <div className="paragraph">Reason: <span className="paragraphThin">{unavailDetails.reason}</span></div>
                                       </div>
                                     }
                                     placement="top"
@@ -1143,11 +1142,10 @@ const Rosters = () => {
                                         day
                                       )
                                     }
-                                    className={`p-1 ${
-                                      emp.user.status === 0
-                                        ? "text-gray-300 cursor-not-allowed"
-                                        : "text-gray-500 hover:text-green-800 cursor-pointer"
-                                    }`}
+                                    className={`p-1 ${emp.user.status === 0
+                                      ? "text-gray-300 cursor-not-allowed"
+                                      : "text-gray-500 hover:text-green-800 cursor-pointer"
+                                      }`}
                                     title={
                                       emp.user.status === 0
                                         ? "Inactive employee"
