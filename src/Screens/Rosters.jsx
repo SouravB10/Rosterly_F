@@ -452,7 +452,7 @@ const Rosters = () => {
             endTime: shift.time.split(" - ")[1],
             breakTime: shift.breakTime,
             description: shift.description,
-            hrsRate: hourRate,
+            hrsRate: shift.hrsRate || "0.00",
             percentRate: shift.percentRate || "0.00",
             totalPay: shift.totalPay || "0.00",
             totalHrs: shift.totalHrs || "0.00",
