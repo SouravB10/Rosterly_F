@@ -40,6 +40,7 @@ const Rosterly = () => {
   const [rosterData, setRosterData] = useState([]);
   const [endWeekDay, setEndWeekDay] = useState("");
   const [startWeekDay, setStartWeekDay] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const timerRef = useRef(null);
   const navigate = useNavigate();
@@ -128,6 +129,7 @@ const Rosterly = () => {
   useEffect(() => {
     const fetchDashboardCards = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(
           `${baseURL}/dashboardCards`,
           {
@@ -145,6 +147,8 @@ const Rosterly = () => {
         console.log(shiftData, "bhaaaaiaiiiiii");
       } catch (error) {
         console.error("Error fetching dashboard cards:", error);
+      } finally {
+        setLoading(false);
       }
     };
     if (startDate && endDate) {
@@ -510,52 +514,52 @@ const Rosterly = () => {
                         <div className="text-black paragraphBold text-center mb-2 px-4 py-2 rounded-lg min-w-[120px]">
                           {dayLabel}
                         </div>
-
-                        {/* All shifts for that day */}
-                        <div className="flex flex-col gap-2 text-xs text-gray-800">
-                          {shifts.length > 0 ? (
-                            shifts.map((shift, index) => (
-                              <div className="cardYellow w-full" key={index}>
-                                <p className="flex items-center gap-1">
-                                  <SlCalender
-                                    className="text-gray-600"
-                                    title="Time"
-                                  />
-                                  {shift.startTime} - {shift.endTime}
-                                </p>
-
-                                <p className="flex flex-col items-start">
-                                  <span className="flex gap-1 items-center">
-                                    <FaClock
+                        {loading ? (<p className="text-center text-gray-500 italic">Loading...</p>) : (
+                          < div className="flex flex-col gap-2 text-xs text-gray-800">
+                            {shifts.length > 0 ? (
+                              shifts.map((shift, index) => (
+                                <div className="cardYellow w-full" key={index}>
+                                  <p className="flex items-center gap-1">
+                                    <SlCalender
                                       className="text-gray-600"
-                                      title="Total hours"
+                                      title="Time"
                                     />
-                                    {shift.totalHrs} hrs
-                                  </span>
-                                  <span className="flex items-center gap-1">
-                                    <FaClock
-                                      className="text-red-400"
-                                      title="Break"
-                                    />
-                                    {shift.breakTime} Min Break
-                                  </span>
-                                </p>
+                                    {shift.startTime} - {shift.endTime}
+                                  </p>
 
-                                <p className="flex items-center gap-1">
-                                  <FaMapMarkerAlt
-                                    className="text-gray-600"
-                                    title="Location"
-                                  />
-                                  <span>{shift.location_name}</span>
-                                </p>
-                              </div>
-                            ))
-                          ) : (
-                            <p className="italic text-gray-500 cardGrey">
-                              No Shift Assigned
-                            </p>
-                          )}
-                        </div>
+                                  <p className="flex flex-col items-start">
+                                    <span className="flex gap-1 items-center">
+                                      <FaClock
+                                        className="text-gray-600"
+                                        title="Total hours"
+                                      />
+                                      {shift.totalHrs} hrs
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                      <FaClock
+                                        className="text-red-400"
+                                        title="Break"
+                                      />
+                                      {shift.breakTime} Min Break
+                                    </span>
+                                  </p>
+
+                                  <p className="flex items-center gap-1">
+                                    <FaMapMarkerAlt
+                                      className="text-gray-600"
+                                      title="Location"
+                                    />
+                                    <span>{shift.location_name}</span>
+                                  </p>
+                                </div>
+                              ))
+                            ) : (
+                              <p className="italic text-gray-500 cardGrey">
+                                No Shift Assigned
+                              </p>
+                            )}
+                          </div>)}
+
                       </div>
                     </div>
                   );
@@ -564,7 +568,8 @@ const Rosterly = () => {
             </div>
           </div>
         </>
-      )}
+      )
+      }
       {/* // <Dashboard /> */}
     </>
   );
