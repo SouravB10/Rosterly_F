@@ -17,7 +17,7 @@ import axios from "axios";
 import { SlCalender } from "react-icons/sl";
 
 const Rosterly = () => {
-  const userName = localStorage.getItem("firstName")
+  const userName = localStorage.getItem("firstName");
   const baseURL = import.meta.env.VITE_BASE_URL;
   const token = localStorage.getItem("token");
   const loginId = localStorage.getItem("id");
@@ -34,9 +34,10 @@ const Rosterly = () => {
   const [isCheckingLocation, setIsCheckingLocation] = useState(false);
   const [shiftStartTime, setShiftStartTime] = useState(null);
   const [shiftEndTime, setShiftEndTime] = useState(null);
-  const [rWeekStartDate, setRWeekStartDate] = useState("2025-06-11");
-  const [rWeekEndDate, setRWeekEndDate] = useState("2025-06-17");
+  const [rWeekStartDate, setRWeekStartDate] = useState("");
+  const [rWeekEndDate, setRWeekEndDate] = useState("");
   const [weekId, setWeekId] = useState(null);
+  const [rosterData, setRosterData] = useState([]);
   const [endWeekDay, setEndWeekDay] = useState("");
   const [startWeekDay, setStartWeekDay] = useState("");
 
@@ -124,11 +125,37 @@ const Rosterly = () => {
   };
   const { displayRange, startDate, endDate } = getWeekRange(currentWeek);
 
+  useEffect(() => {
+    const fetchDashboardCards = async () => {
+      try {
+        const response = await axios.get(
+          `${baseURL}/dashboardCards`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              rWeekStartDate: startDate,
+              rWeekEndDate: endDate,
+            },
+          } // ✅ your Laravel endpoint
+        );
+        const shiftData = response.data.RosterData;
+        setShiftData(shiftData);
+        console.log(shiftData, "bhaaaaiaiiiiii");
+      } catch (error) {
+        console.error("Error fetching dashboard cards:", error);
+      }
+    };
+    if (startDate && endDate) {
+      fetchDashboardCards();
+    }
+    console.log(startDate, "and", endDate);
+  }, [startDate, endDate]);
+
   const handlePrevWeek = () => {
     setCurrentWeek((prev) => moment(prev).subtract(1, "week"));
-    console.log(currentWeek);
   };
-
   const handleNextWeek = () => {
     setCurrentWeek((prev) => moment(prev).add(1, "week"));
   };
@@ -238,8 +265,8 @@ const Rosterly = () => {
                 },
               });
 
-              const shiftData = response.data.RosterData;
-              setShiftData(shiftData);
+              // const shiftData = response.data.RosterData;
+              // setShiftData(shiftData);
               console.log("Shift Data:", shiftData);
             } catch (error) {
               console.error("Failed to fetch dashboard data:", error);
@@ -281,7 +308,7 @@ const Rosterly = () => {
   return (
     <>
       <div className="text-indigo-950 p-1">
-        <p className="text-sm sm:text-base font-bold">Welcome,  </p>
+        <p className="text-sm sm:text-base font-bold">Welcome, </p>
         <p className="text-lg sm:text-xl font-bold">
           {getRoleId() === 1 ? `${userName} (Admin)` : userName}
         </p>
@@ -454,7 +481,7 @@ const Rosterly = () => {
                   onClick={handlePrevWeek}
                 />
                 <span className="mx-2 paragraphBold">
-                  {displayRange} ({startDate} to {endDate})
+                  {displayRange}
                 </span>
                 <FaAngleRight
                   className="text-gray-800 hover:text-gray-950 cursor-pointer"
@@ -467,52 +494,72 @@ const Rosterly = () => {
             <div className="w-full text-gray-300">
               <div className="w-full flex flex-row gap-2">
                 {days.map((dayLabel, i) => {
-                  const fullDate = moment(rWeekStartDate).add(i, "days").format("YYYY-MM-DD");
-                  const shift = shiftData.find((item) => item.date === fullDate);
+                  const fullDate = moment(startDate)
+                    .add(i, "days")
+                    .format("YYYY-MM-DD");
+                  const shifts = shiftData.filter(
+                    (item) => item.date === fullDate
+                  ); // get all shifts for the day
 
                   return (
                     <div
                       key={i}
-                      className="flex w-full items-center gap-3 mb-3 p-3 border rounded-lg "
+                      className="w-full items-start gap-3 mb-3 p-3 border rounded-lg"
                     >
-                      <div className="flex flex-col gap-3 ">
-                        <div
-                          className="text-black paragraphBold text-center mb-2 px-4 py-2 rounded-lg min-w-[120px]"
-                        >
+                      <div className="flex flex-col gap-3">
+                        <div className="text-black paragraphBold text-center mb-2 px-4 py-2 rounded-lg min-w-[120px]">
                           {dayLabel}
                         </div>
 
-                        {/* Shift Details */}
-                        <div className="flex flex-col gap-2   text-xs text-gray-800">
-                          {shift ? (
-                            <div className="cardYellow">
-                              <p className="flex items-center gap-1 " >
-                                <SlCalender className="text-gray-600 " title="Time" />
-                                {shift.startTime} - {shift.endTime}
-                              </p>
+                        {/* All shifts for that day */}
+                        <div className="flex flex-col gap-2 text-xs text-gray-800">
+                          {shifts.length > 0 ? (
+                            shifts.map((shift, index) => (
+                              <div className="cardYellow w-full" key={index}>
+                                <p className="flex items-center gap-1">
+                                  <SlCalender
+                                    className="text-gray-600"
+                                    title="Time"
+                                  />
+                                  {shift.startTime} - {shift.endTime}
+                                </p>
 
-                              <p className="flex flex-col items-start">
-                                <span className="flex gap-1 items-center"><FaClock className="text-gray-600 " title="Total hours" />{shift.totalHrs} hrs</span>
-                                <span className="flex items-center gap-1"><FaClock className="text-red-400 " title="Break" />{shift.breakTime} Min Break</span>
-                                {/* <span className=" text-sm text-gray-500"></span><FaRegClock className="text-gray-600 " title="break" /> <span>  min</span> */}
-                              </p>
+                                <p className="flex flex-col items-start">
+                                  <span className="flex gap-1 items-center">
+                                    <FaClock
+                                      className="text-gray-600"
+                                      title="Total hours"
+                                    />
+                                    {shift.totalHrs} hrs
+                                  </span>
+                                  <span className="flex items-center gap-1">
+                                    <FaClock
+                                      className="text-red-400"
+                                      title="Break"
+                                    />
+                                    {shift.breakTime} Min Break
+                                  </span>
+                                </p>
 
-                              <p className="flex items-center gap-1 ">
-                                <FaMapMarkerAlt className="text-gray-600 " title="Location" />
-                                <span>{shift.location_name}</span>
-                              </p>
-                            </div>
+                                <p className="flex items-center gap-1">
+                                  <FaMapMarkerAlt
+                                    className="text-gray-600"
+                                    title="Location"
+                                  />
+                                  <span>{shift.location_name}</span>
+                                </p>
+                              </div>
+                            ))
                           ) : (
-                            <p className="italic text-gray-500 cardGrey">No Shift Assigned</p>
+                            <p className="italic text-gray-500 cardGrey">
+                              No Shift Assigned
+                            </p>
                           )}
                         </div>
                       </div>
-
-
                     </div>
                   );
                 })}
-
               </div>
             </div>
           </div>
