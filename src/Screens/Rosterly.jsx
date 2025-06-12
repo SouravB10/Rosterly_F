@@ -230,7 +230,7 @@ const Rosterly = () => {
               });
 
               const shiftData = response.data.RosterData;
-              // console.log("Shift Data:", shiftData);
+              console.log("Shift Data:", shiftData);
             } catch (error) {
               console.error("Failed to fetch dashboard data:", error);
             }
