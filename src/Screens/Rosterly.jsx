@@ -35,6 +35,8 @@ const Rosterly = () => {
   const [rWeekStartDate, setRWeekStartDate] = useState("2025-06-11");
   const [rWeekEndDate, setRWeekEndDate] = useState("2025-06-17");
   const [weekId, setWeekId] = useState(null);
+  const [endWeekDay, setEndWeekDay] = useState("");
+  const [startWeekDay, setStartWeekDay] = useState("");
 
   const timerRef = useRef(null);
   const navigate = useNavigate();
@@ -108,12 +110,21 @@ const Rosterly = () => {
 
   const getWeekRange = (week) => {
     const startOfWeek = moment(week).isoWeekday(3); // Wednesday
-    const endOfWeek = moment(startOfWeek).add(6, "days"); // Tuesday (6 days after Wednesday)
-    return `${startOfWeek.format("DD MMM")} - ${endOfWeek.format("DD MMM")}`;
+    const endOfWeek = moment(startOfWeek).add(6, "days"); // Tuesday
+
+    return {
+      displayRange: `${startOfWeek.format("DD MMM")} - ${endOfWeek.format(
+        "DD MMM"
+      )}`,
+      startDate: startOfWeek.format("YYYY-MM-DD"),
+      endDate: endOfWeek.format("YYYY-MM-DD"),
+    };
   };
+  const { displayRange, startDate, endDate } = getWeekRange(currentWeek);
 
   const handlePrevWeek = () => {
     setCurrentWeek((prev) => moment(prev).subtract(1, "week"));
+    console.log(currentWeek);
   };
 
   const handleNextWeek = () => {
@@ -364,7 +375,7 @@ const Rosterly = () => {
                   onClick={handlePrevWeek}
                 />
                 <span className="mx-2 paragraphBold">
-                  {getWeekRange(currentWeek)}
+                  {displayRange} ({startDate} to {endDate})
                 </span>
                 <FaAngleRight
                   className="text-gray-800 hover:text-gray-950 cursor-pointer"
@@ -376,7 +387,9 @@ const Rosterly = () => {
 
             <div className="grid grid-cols-[repeat(auto-fit,_minmax(220px,_1fr))] gap-4 justify-center text-center sm:text-left">
               {days.map((day, i) => {
-                const fullDate = moment(rWeekStartDate).add(i, 'days').format("YYYY-MM-DD");
+                const fullDate = moment(rWeekStartDate)
+                  .add(i, "days")
+                  .format("YYYY-MM-DD");
 
                 const shift = shiftData.find((item) => item.date === fullDate);
                 return (
@@ -385,12 +398,20 @@ const Rosterly = () => {
                       <p className="subHeading">{day}</p>
                       {shift ? (
                         <>
-                          <p className="paragraph">Shift Time: {shift.startTime} - {shift.endTime}</p>
-                          <p className="paragraph">Total Hours: {shift.totalHrs} hrs</p>
-                          <p className="paragraph">Break Time: {shift.breakTime} min</p>
+                          <p className="paragraph">
+                            Shift Time: {shift.startTime} - {shift.endTime}
+                          </p>
+                          <p className="paragraph">
+                            Total Hours: {shift.totalHrs} hrs
+                          </p>
+                          <p className="paragraph">
+                            Break Time: {shift.breakTime} min
+                          </p>
                         </>
                       ) : (
-                        <p className="headingBold text-gray-500">No Shift Assigned</p>
+                        <p className="headingBold text-gray-500">
+                          No Shift Assigned
+                        </p>
                       )}
                     </div>
                   </div>
