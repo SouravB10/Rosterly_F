@@ -94,7 +94,8 @@ body {
 .bgTable {
   background-color: #85CA6D;
 }
-.bgTable1{
+
+.bgTable1 {
   background-color: #6ca45a;
 }
 
@@ -109,6 +110,7 @@ body {
 .mSideBar {
   background-color: #dcf2e6;
 }
+
 .mSideBarInactive {
   background-color: #dadada;
   border: #afafaf 1px solid;
@@ -296,7 +298,7 @@ body {
     4px 4px 6px #ddd6d6; */
 }
 
-.textRed{
+.textRed {
   color: #e42d2d;
 }
 
@@ -500,14 +502,14 @@ body {
   background-color: #04f07217;
   border-radius: 10px;
   /* border: 1px solid #eaeaea; */
-  padding: 20px;
+  padding: 10px 6px;
   box-shadow:
     0px 4px 20px #efefef;
   color: #201f1f;
-  height: 180px;
-  width: 200px;
+  /* height: 180px;
+  width: 200px; */
   border: 1px solid #85CA6D;
-
+  font-size: 12px
 }
 
 .cardRed {
@@ -527,9 +529,8 @@ body {
   background-color: #cacaca70;
   border-radius: 10px;
   border: 1px solid #7878788a;
-  padding: 20px;
-  height: 180px;
-  width: 200px;
+  padding: 8px;
+ 
   box-shadow:
     0px 4px 20px #efefef;
   color: #2e2e2e95;
@@ -681,8 +682,10 @@ body {
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out forwards;
 }
-.notClass{
-  background-color:#dcf2e6;
-  padding:3px;
+
+.notClass {
+  background-color: #dcf2e6;
+  padding: 3px;
 }
+
 /* modal animation  */

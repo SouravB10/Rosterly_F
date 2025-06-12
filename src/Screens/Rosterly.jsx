@@ -6,6 +6,7 @@ import {
   FaUserTimes,
   FaAngleLeft,
   FaAngleRight,
+  FaClock,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { getDistance } from "geolib";
@@ -13,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import { getRoleId } from "../Component/RoleId";
 import axios from "axios";
+import { SlCalender } from "react-icons/sl";
 
 const Rosterly = () => {
   const userName = localStorage.getItem("firstName")
@@ -139,6 +141,7 @@ const Rosterly = () => {
   };
 
   const days = getDaysForWeek(currentWeek);
+  const [activeTab, setActiveTab] = useState(days[0].id);
 
   const handleShiftToggle = () => {
     if (isShiftFinished) return;
@@ -363,7 +366,7 @@ const Rosterly = () => {
             )}
           </div>
 
-          <div className="card w-full px-4">
+          {/* <div className="card w-full px-4">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
               <h2 className="subHeading text-lg sm:text-xl text-indigo-900">
                 Shift Details
@@ -436,6 +439,80 @@ const Rosterly = () => {
                     </button>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div> */}
+          <div className="card w-full px-4 my-4">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
+              <h2 className="subHeading text-lg sm:text-xl text-indigo-900">
+                Shift Details
+              </h2>
+              <div className="flex items-center justify-center bg-white rounded-lg text-sm font-semibold text-gray-900 w-full sm:w-fit px-2 py-1 border border-gray-300 shadow-sm">
+                <FaAngleLeft
+                  className="text-gray-800 hover:text-gray-950 cursor-pointer"
+                  size={16}
+                  onClick={handlePrevWeek}
+                />
+                <span className="mx-2 paragraphBold">
+                  {displayRange} ({startDate} to {endDate})
+                </span>
+                <FaAngleRight
+                  className="text-gray-800 hover:text-gray-950 cursor-pointer"
+                  size={16}
+                  onClick={handleNextWeek}
+                />
+              </div>
+            </div>
+
+            <div className="w-full text-gray-300">
+              <div className="w-full flex flex-row gap-2">
+                {days.map((dayLabel, i) => {
+                  const fullDate = moment(rWeekStartDate).add(i, "days").format("YYYY-MM-DD");
+                  const shift = shiftData.find((item) => item.date === fullDate);
+
+                  return (
+                    <div
+                      key={i}
+                      className="flex w-full items-center gap-3 mb-3 p-3 border rounded-lg "
+                    >
+                      <div className="flex flex-col gap-3 ">
+                        <div
+                          className="text-black paragraphBold text-center mb-2 px-4 py-2 rounded-lg min-w-[120px]"
+                        >
+                          {dayLabel}
+                        </div>
+
+                        {/* Shift Details */}
+                        <div className="flex flex-col gap-2   text-xs text-gray-800">
+                          {shift ? (
+                            <div className="cardYellow">
+                              <p className="flex items-center gap-1 " >
+                                <SlCalender className="text-gray-600 " title="Time" />
+                                {shift.startTime} - {shift.endTime}
+                              </p>
+
+                              <p className="flex flex-col items-start">
+                                <span className="flex gap-1 items-center"><FaClock className="text-gray-600 " title="Total hours" />{shift.totalHrs} hrs</span>
+                                <span className="flex items-center gap-1"><FaClock className="text-red-400 " title="Break" />{shift.breakTime} Min Break</span>
+                                {/* <span className=" text-sm text-gray-500"></span><FaRegClock className="text-gray-600 " title="break" /> <span>  min</span> */}
+                              </p>
+
+                              <p className="flex items-center gap-1 ">
+                                <FaMapMarkerAlt className="text-gray-600 " title="Location" />
+                                <span>{shift.location_name}</span>
+                              </p>
+                            </div>
+                          ) : (
+                            <p className="italic text-gray-500 cardGrey">No Shift Assigned</p>
+                          )}
+                        </div>
+                      </div>
+
+
+                    </div>
+                  );
+                })}
+
               </div>
             </div>
           </div>
