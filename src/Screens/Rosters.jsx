@@ -1030,11 +1030,11 @@ const Rosters = () => {
                                             <div className="paragraph">{unavailDetails?.details}</div>
                                           ) : (
                                             <>
-                                              <div className="paragraph">From: {unavailDetails?.from}</div>
-                                              <div className="paragraph">To: {unavailDetails?.to}</div>
+                                              <div className="paragraph">From: <span className="paragraphThin text-gray-300">{unavailDetails.from}</span></div>
+                                              <div className="paragraph">To: <span className="paragraphThin text-gray-300">{unavailDetails.to}</span></div>
                                             </>
                                           )}
-                                        <div className="paragraph">Reason: <span className="paragraphThin">{unavailDetails.reason}</span></div>
+                                        <div className="paragraph">Reason: <span className="paragraphThin text-gray-300">{unavailDetails.reason}</span></div>
                                       </div>
                                     }
                                     placement="top"
