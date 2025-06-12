@@ -32,6 +32,9 @@ const Rosterly = () => {
   const [isCheckingLocation, setIsCheckingLocation] = useState(false);
   const [shiftStartTime, setShiftStartTime] = useState(null);
   const [shiftEndTime, setShiftEndTime] = useState(null);
+  const [rWeekStartDate, setRWeekStartDate] = useState("2025-06-11");
+  const [rWeekEndDate, setRWeekEndDate] = useState("2025-06-17");
+  const [weekId, setWeekId] = useState(null);
 
   const timerRef = useRef(null);
   const navigate = useNavigate();
@@ -42,43 +45,12 @@ const Rosterly = () => {
   const [shiftData, setShiftData] = useState([]);
 
   useEffect(() => {
-    const dashboardData = async () => {
-      try {
-        const response = await axios.get(`${baseURL}/dashboardData`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const shiftData = response.data.shiftdata;
-        console.log("Shift Data:", shiftData);
-
-        if (Array.isArray(shiftData) && shiftData.length > 0) {
-          const locationWise = shiftData[0].locationwise;
-          if (Array.isArray(locationWise) && locationWise.length > 0) {
-            const { latitude, longitude } = locationWise[0];
-            setLocLatitude(latitude);
-            setLocLognitude(longitude);
-            console.log("Location Latitude:", locLatitude);
-            console.log("Location Longitude:", locLongitude);
-            console.log("Location Wise Data:", locationWise);
-
-          }
-
-
-        }
-
-        setShiftData(shiftData);
-      } catch (error) {
-        console.error("Failed to fetch dashboard data:", error);
-      }
-    };
-
-    const firstName = localStorage.getItem("firstName") || "";
-    const lastName = localStorage.getItem("lastName") || "";
-    setUserName(`${firstName} ${lastName}`);
-
-    dashboardData();
-  }, []);
+    if (weekId) {
+      // This will run AFTER weekId is updated
+      console.log("Updated Week ID:", weekId);
+      // You can perform dependent actions here
+    }
+  }, [weekId]);
 
   // useEffect(() => {
   //   console.log("LocLatitude: ", locLatitude, "LocLognitude: ", locLongitude);
@@ -203,37 +175,84 @@ const Rosterly = () => {
 
   // 17.43920120470179, 78.38736913783626 (Glansa Solutions)
   const STORE_LOCATION = {
-    latitude: 17.43920120470179,
-    longitude: 78.38736913783626,
+    latitude: 17.4391091,
+    longitude: 78.3873906,
   };
 
   const ALLOWED_RADIUS_METERS = 100; // e.g., 500m radius
 
-  const checkLocation = () => {
+  const checkLocation = async () => {
     setIsCheckingLocation(true);
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const { latitude, longitude } = position.coords;
 
-        const distance = getDistance(
-          { latitude, longitude },
-          STORE_LOCATION
-        );
-        // Log current location to console
+        const distance = getDistance({ latitude, longitude }, STORE_LOCATION);
+        // setAsCurrentLat(latitude);
+        // setAsCurrentLog(longitude);
+
         console.log("Current Latitude:", latitude);
         console.log("Current Longitude:", longitude);
-        console.log("DB Lat", locLatitude);
-        console.log("DB Log", locLongitude);
         console.log("Distance from store (in meters):", distance);
+        try {
+          const response = await axios.get(`${baseURL}/rosterWeekDay`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              latitude: latitude,
+              longitude: longitude,
+              rWeekStartDate: rWeekStartDate,
+              rWeekEndDate: rWeekEndDate,
+            },
+          });
 
-        if (distance <= ALLOWED_RADIUS_METERS) {
+          const rosterWeekData = response.data.rosterWeekId;
+          const weekId =
+            rosterWeekData.length > 0 ? rosterWeekData[0].id : null;
+          const locationId =
+            rosterWeekData.length > 0 ? rosterWeekData[0].location_id : null;
+          // setWeekId(shiftData.id);
           setIsAtStore(true);
           setLocationError("");
-        } else {
+          if (weekId) {
+            console.log("bhai agaya week id", weekId);
+            try {
+              const response = await axios.get(`${baseURL}/dashboardData`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+                params: {
+                  locationId: locationId, // ✅ corrected key
+                  rosterWeekId: weekId,
+                },
+              });
+
+              const shiftData = response.data.RosterData;
+              // console.log("Shift Data:", shiftData);
+            } catch (error) {
+              console.error("Failed to fetch dashboard data:", error);
+            }
+          }
+
+          // console.log("rosterWeekData:", response.data.rosterWeekId);
+        } catch (error) {
           setIsAtStore(false);
-          setLocationError("You must be at the store to start your shift.");
+          setLocationError(error.response.data.message);
+          console.error(
+            "Failed to fetch dashboard data:",
+            error.response.data.message
+          );
         }
+        // if (distance <= ALLOWED_RADIUS_METERS) {
+        //   setIsAtStore(true);
+        //   setLocationError("");
+
+        // } else {
+        //   setIsAtStore(false);
+        //   setLocationError("You must be at the store to start your shift.");
+        // }
 
         setIsCheckingLocation(false);
       },
@@ -303,9 +322,7 @@ const Rosterly = () => {
                     {isCheckingLocation ? "Checking..." : "Check Location"}
                   </button>
                   {locationError && (
-                    <p className="text-red-600 paragraph">
-                      {locationError}
-                    </p>
+                    <p className="text-red-600 paragraph">{locationError}</p>
                   )}
                 </>
               )}
@@ -402,10 +419,10 @@ const Rosterly = () => {
                       shift.total
                         ? "cardA"
                         : shift.unavailable
-                          ? "cardGrey"
-                          : shift.off
-                            ? "cardRed"
-                            : "cardYellow"
+                        ? "cardGrey"
+                        : shift.off
+                        ? "cardRed"
+                        : "cardYellow"
                     }
                   >
                     <p className="subHeading">
