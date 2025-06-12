@@ -33,8 +33,7 @@ const NotificationPage = () => {
 
         setNotificationId(sortedNotifications.map((notID) => notID.id));
         setNotifications(sortedNotifications);
-        // here 
-
+        // here
 
         const fetchId = fetchedNotification.map((notID) => notID.id);
         setNotificationId(fetchId);
@@ -54,7 +53,8 @@ const NotificationPage = () => {
   const handleActions = (id, actionType) => {
     setNotificationId(id);
     setFeedbackMessage(
-      `Are you sure you want to ${actionType == 1 ? "approve" : "deny"
+      `Are you sure you want to ${
+        actionType == 1 ? "approve" : "deny"
       } this request?`
     );
     setShowConfirmButtons(true);
@@ -95,11 +95,19 @@ const NotificationPage = () => {
           setRemovingId(null);
         }, 300);
       }
-
     } catch (error) {
       console.error("Error handling notification:", error);
     }
   };
+  function formatDateTime(dateString) {
+    const date = new Date(dateString);
+    const time = date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+    });
+    const day = date.toLocaleDateString("en-GB");
+    return `${day}, ${time}`;
+  }
 
   return (
     <div className="rounded-md  ">
@@ -124,24 +132,28 @@ const NotificationPage = () => {
             // >
             <div
               key={id}
-              className={`bg-white shadow-sm border border-gray-200 rounded-lg p-4 mb-4 flex justify-between items-start transition-all duration-300 ease-in-out ${removingId === id ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
-                }`}
+              className={`bg-white shadow-sm border border-gray-200 rounded-lg p-4 mb-4 flex justify-between items-start transition-all duration-300 ease-in-out ${
+                removingId === id
+                  ? "opacity-0 scale-95"
+                  : "opacity-100 scale-100"
+              }`}
             >
-
-              <div >
+              <div>
                 <p className="paragraphBold">
-
                   <div className="flex items-center gap-2">
                     <p className="text-lg font-bold text-indigo-900 mb-1">
                       {innerData.userName || "User"}{" "}
                     </p>
-
                     {innerData.message || "User"}{" "}
                     {innerData.fromDT ? (
-                      <strong className="notClass">{innerData.fromDT}</strong>
+                      <strong className="notClass">
+                        {formatDateTime(innerData.fromDT)}
+                      </strong>
                     ) : null}
                     {innerData.toDT ? (
-                      <strong className="notClass">to {innerData.toDT}</strong>
+                      <strong className="notClass">
+                        to {formatDateTime(innerData.toDT)}
+                      </strong>
                     ) : null}{" "}
                     {innerData.day ? (
                       // <strong className="notClass">{innerData.day}</strong>
@@ -151,19 +163,17 @@ const NotificationPage = () => {
                       </span>
                     ) : null}{" "}
                   </div>
-
-
                 </p>
                 <p className="paragraphThin">
                   {innerData.reason ? (
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-bold text-indigo-900 mb-1">
-                        Reason:</p>
+                        Reason:
+                      </p>
                       <p>{innerData.reason}</p>
                     </div>
                   ) : null}
                   {/* Reason: {innerData.reason || "No reason provided"} */}
-
                 </p>
               </div>
               {innerData.status != null ? null : (
