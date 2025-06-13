@@ -22,7 +22,7 @@ const Rosterly = () => {
   const token = localStorage.getItem("token");
   const loginId = localStorage.getItem("id");
   // State updates
-  const [activeTimer, setActiveTimer] = useState(null); // 'shift' | 'break' | null
+  const [activeTimer, setActiveTimer] = useState(null);
   const [isShiftFinished, setIsShiftFinished] = useState(false);
   const [elapsed, setElapsed] = useState(0); // current mode's elapsed
   const [breakElapsed, setBreakElapsed] = useState(0);
@@ -45,6 +45,7 @@ const Rosterly = () => {
   const [shiftBreak, setShiftBreak] = useState('');
   const [locationName, setLocationName] = useState('');
   const [todayDate, setTodayDate] = useState('');
+  const [todayShift, setTodayShift] = useState(null);
 
   const timerRef = useRef(null);
   const navigate = useNavigate();
@@ -176,40 +177,68 @@ const Rosterly = () => {
   };
 
   const days = getDaysForWeek(currentWeek);
-  const [activeTab, setActiveTab] = useState(days[0].id);
 
-  const handleShiftToggle = () => {
+  const logAttendanceAction = async (actionType) => {
+    if (!todayShift) {
+      console.warn("No todayShift data available for logging.");
+      return;
+    }
+    try {
+      const response = await axios.post(`${baseURL}/attendance/log`, {
+        user_id: loginId,
+        roster_id: todayShift?.rosterId,
+        action_type: actionType,
+        location: todayShift?.location_Id,
+        remarks: "", // optional
+      });
+
+      if (response.data.status) {
+        console.log(`${actionType} logged successfully.`);
+      } else {
+        console.warn(`Failed to log ${actionType}:`, response.data.message);
+      }
+    } catch (error) {
+      console.error(`Error logging ${actionType}:`, error.message);
+    }
+  };
+
+
+  const handleShiftToggle = async() => {
     if (isShiftFinished) return;
 
     if (activeTimer !== "shift") {
       const now = Date.now();
       if (!shiftStartTime) {
-        setShiftStartTime(now); // store shift start time only once
+        setShiftStartTime(now);
+        await logAttendanceAction("start"); // store shift start time only once
       }
       setActiveTimer("shift");
       startTimer("shift");
     }
   };
-  const handleBreakToggle = () => {
+  const handleBreakToggle = async() => {
     if (isShiftFinished) return;
 
     if (activeTimer === "break") {
       stopTimer();
       setActiveTimer("shift");
       startTimer("shift");
+       await logAttendanceAction("break_end");
     } else {
       stopTimer();
       setBreakElapsed(0);
       setActiveTimer("break");
       startTimer("break");
+       await logAttendanceAction("break_start");
     }
   };
 
-  const handleFinishShift = () => {
+  const handleFinishShift = async() => {
     stopTimer();
     setShiftEndTime(Date.now()); // store end time
     setActiveTimer(null);
     setIsShiftFinished(true);
+     await logAttendanceAction("end");
   };
 
   const formatDisplayTime = (timestamp) => {
@@ -277,15 +306,16 @@ const Rosterly = () => {
 
           const dashData = dashRes.data.RosterData || [];
 
-          const todayShift = dashData.find((shift) =>
+          const foundShift = dashData.find((shift) =>
             moment(shift.date).isSame(moment(), "day")
           );
+          setTodayShift(foundShift);
 
-          if (todayShift) {
-            setTotalShiftHour(todayShift.totalHrs || "0");
-            setShiftBreak(todayShift.breakTime || "0");
-            setLocationName(todayShift.location_name);
-            const formattedDate = todayShift.date.split("-").reverse().slice(0, 2).join("/");
+          if (foundShift) {
+            setTotalShiftHour(foundShift.totalHrs || "0");
+            setShiftBreak(foundShift.breakTime || "0");
+            setLocationName(foundShift.location_name);
+            const formattedDate = foundShift.date.split("-").reverse().slice(0, 2).join("/");
             setTodayDate(formattedDate)
             setIsAtStore(true);
             setLocationError("");
