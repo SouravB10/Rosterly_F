@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import {
   FaRegClock,
   FaMapMarkerAlt,
@@ -243,8 +243,8 @@ const Rosterly = () => {
             params: {
               latitude: latitude,
               longitude: longitude,
-              rWeekStartDate: rWeekStartDate,
-              rWeekEndDate: rWeekEndDate,
+              rWeekStartDate: startDate,
+              rWeekEndDate: endDate,
             },
           });
 
@@ -309,6 +309,12 @@ const Rosterly = () => {
     );
   };
 
+  const todayShiftExists = useMemo(() => {
+    return shiftData?.some((shift) =>
+      moment(shift.date).isSame(moment(), "day")
+    );
+  }, [shiftData]);
+
   return (
     <>
       <div className="text-indigo-950 p-1">
@@ -355,15 +361,23 @@ const Rosterly = () => {
                 </>
               ) : (
                 <>
-                  <button
-                    className="buttonSuccess "
-                    disabled={isCheckingLocation}
-                    onClick={checkLocation}
-                  >
-                    {isCheckingLocation ? "Checking..." : "Check Location"}
-                  </button>
-                  {locationError && (
-                    <p className="text-red-600 paragraph">{locationError}</p>
+                  {todayShiftExists ? (
+                    <>
+                      <button
+                        className="buttonSuccess"
+                        disabled={isCheckingLocation}
+                        onClick={checkLocation}
+                      >
+                        {isCheckingLocation ? "Checking..." : "Check Location"}
+                      </button>
+                      {locationError && (
+                        <p className="text-red-600 paragraph">{locationError}</p>
+                      )}
+                    </>
+                  ) : (
+                    <p className="text-gray-600 paragraph">
+                      You don’t have any shifts scheduled for today. Enjoy your day off!
+                    </p>
                   )}
                 </>
               )}
@@ -484,9 +498,7 @@ const Rosterly = () => {
                   size={16}
                   onClick={handlePrevWeek}
                 />
-                <span className="mx-2 paragraphBold">
-                  {displayRange}
-                </span>
+                <span className="mx-2 paragraphBold">{displayRange}</span>
                 <FaAngleRight
                   className="text-gray-800 hover:text-gray-950 cursor-pointer"
                   size={16}
@@ -495,60 +507,48 @@ const Rosterly = () => {
               </div>
             </div>
 
-            <div className="w-full text-gray-300">
-              <div className="w-full flex flex-row gap-2">
+            <div className="w-full">
+              {/* Flex direction changes based on screen size */}
+              <div className="flex flex-col sm:flex-row gap-3">
                 {days.map((dayLabel, i) => {
-                  const fullDate = moment(startDate)
-                    .add(i, "days")
-                    .format("YYYY-MM-DD");
-                  const shifts = shiftData.filter(
-                    (item) => item.date === fullDate
-                  ); // get all shifts for the day
+                  const fullDate = moment(startDate).add(i, "days").format("YYYY-MM-DD");
+                  const shifts = shiftData.filter((item) => item.date === fullDate);
 
                   return (
                     <div
                       key={i}
-                      className="w-full items-start gap-3 mb-3 p-3 border rounded-lg"
+                      className="w-full sm:w-[calc(100%/3-1rem)] p-3 border border-gray-300 rounded-md bg-white"
                     >
                       <div className="flex flex-col gap-3">
-                        <div className="text-black paragraphBold text-center mb-2 px-4 py-2 rounded-lg min-w-[120px]">
+                        <div className="text-black paragraphBold text-center mb-2 px-4 py-2 rounded-lg bg-gray-100">
                           {dayLabel}
                         </div>
-                        {loading ? (<p className="text-center text-gray-500 italic">Loading...</p>) : (
-                          < div className="flex flex-col gap-2 text-xs text-gray-800">
+
+                        {loading ? (
+                          <p className="text-center text-gray-500 italic">Loading...</p>
+                        ) : (
+                          <div className="flex flex-col gap-2 text-xs text-gray-800">
                             {shifts.length > 0 ? (
                               shifts.map((shift, index) => (
                                 <div className="cardYellow w-full" key={index}>
                                   <p className="flex items-center gap-1">
-                                    <SlCalender
-                                      className="text-gray-600"
-                                      title="Time"
-                                    />
+                                    <SlCalender className="text-gray-600" title="Time" />
                                     {shift.startTime} - {shift.endTime}
                                   </p>
 
                                   <p className="flex flex-col items-start">
                                     <span className="flex gap-1 items-center">
-                                      <FaClock
-                                        className="text-gray-600"
-                                        title="Total hours"
-                                      />
+                                      <FaClock className="text-gray-600" title="Total hours" />
                                       {shift.totalHrs} hrs
                                     </span>
                                     <span className="flex items-center gap-1">
-                                      <FaClock
-                                        className="text-red-400"
-                                        title="Break"
-                                      />
+                                      <FaClock className="text-red-400" title="Break" />
                                       {shift.breakTime} Min Break
                                     </span>
                                   </p>
 
                                   <p className="flex items-center gap-1">
-                                    <FaMapMarkerAlt
-                                      className="text-gray-600"
-                                      title="Location"
-                                    />
+                                    <FaMapMarkerAlt className="text-gray-600" title="Location" />
                                     <span>{shift.location_name}</span>
                                   </p>
                                 </div>
@@ -558,8 +558,8 @@ const Rosterly = () => {
                                 No Shift Assigned
                               </p>
                             )}
-                          </div>)}
-
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
@@ -567,6 +567,7 @@ const Rosterly = () => {
               </div>
             </div>
           </div>
+
         </>
       )
       }
