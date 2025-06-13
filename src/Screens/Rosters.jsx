@@ -36,7 +36,7 @@ const Rosters = () => {
   const [publishedRosters, setPublishedRosters] = useState([]);
   const [isPublished, setIsPublished] = useState(0);
   const [firstName, setFirstName] = useState("");
-  const [hourRate,setHourRate] = useState(null);
+  const [hourRate, setHourRate] = useState(null);
   const [shiftToEdit, setShiftToEdit] = useState(null);
   const [rosterWeekId, setRosterWeekId] = useState(null);
   const [weekId, setWeekId] = useState("");
@@ -455,7 +455,6 @@ const Rosters = () => {
             hrsRate: shift.hrsRate || "0.00",
             percentRate: shift.percentRate || "0.00",
             totalPay: shift.totalPay || "0.00",
-            totalHrs: shift.totalHrs || "0.00",
             status: "active",
             location_id: selectedLocation,
             totalHrs: calculateNumericTotalHours(shift.time, shift.breakTime),
@@ -808,6 +807,50 @@ const Rosters = () => {
     return null;
   };
 
+  const getTotalHoursPerDay = () => {
+    const totals = {};
+
+    days.forEach((day) => {
+      let totalMinutes = 0;
+
+      locatedEmployees.forEach((emp) => {
+        const shifts = shiftsByEmployeeDay[emp.user.id]?.[day] || [];
+        shifts.forEach((shift) => {
+          const [startTime, endTime] = shift.time?.split(" - ") || [];
+          if (startTime && endTime) {
+            const to24Hour = (timeStr) => {
+              const [time, modifier] = timeStr.trim().split(" ");
+              let [hours, minutes] = time.split(":").map(Number);
+              if (modifier === "PM" && hours !== 12) hours += 12;
+              if (modifier === "AM" && hours === 12) hours = 0;
+              return { hours, minutes };
+            };
+
+            const start = to24Hour(startTime);
+            const end = to24Hour(endTime);
+            const startDate = new Date(0, 0, 0, start.hours, start.minutes);
+            const endDate = new Date(0, 0, 0, end.hours, end.minutes);
+
+            let diff = (endDate - startDate) / (1000 * 60); // in minutes
+            if (diff < 0) diff += 1440; // handle overnight shift
+
+            const breakMins = Number(shift.breakTime) || 0;
+            totalMinutes += diff - breakMins;
+          }
+        });
+      });
+
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+      totals[day] = `${hours}h ${minutes}m`;
+    });
+
+    return totals;
+  };
+
+  const totalHoursByDay = getTotalHoursPerDay();
+
+
   return (
     <>
       <div className="flex flex-col md:flex-row justify-between items-center mb-2 gap-4 py-2">
@@ -933,7 +976,12 @@ const Rosters = () => {
                     key={day}
                     className="p-2 text-center border border-gray-300"
                   >
-                    {day}
+                    <div className="flex flex-col items-center">
+                      <span className="paragraphBold">{day}</span>
+                      <span className="paragraph text-white">
+                      Total Hrs:  {totalHoursByDay[day] || "0h 0m"}
+                      </span>
+                    </div>
                   </th>
                 ))}
               </tr>
@@ -988,37 +1036,6 @@ const Rosters = () => {
                             {...provided.droppableProps}
                           >
                             <div className="space-y-2">
-                              {/* Display unavailability minimally */}
-                              {/* {unavail && (
-                                <div
-                                  className="text-center bg-gray-300 rounded py-1"
-                                  title={
-                                    unavailDetails?.reason || "Unavailable"
-                                  }
-                                  aria-label={`Employee unavailable on ${day} due to ${
-                                    unavailDetails?.reason || "unavailability"
-                                  }`}
-                                >
-                                  <div className=" text-gray-600 paragraphBold">
-                                    {unavailDetails?.heading}
-                                  </div>
-                                  {unavailDetails?.allDay ? (
-                                    <div className="text-xs text-gray-500">
-                                      {unavailDetails?.details}
-                                    </div>
-                                  ) : (
-                                    <>
-                                      <div className="text-xs text-gray-500">
-                                        {unavailDetails?.from}
-                                      </div>
-                                      <div className="text-xs text-gray-500">
-                                        To: {unavailDetails?.to}
-                                      </div>
-                                    </>
-                                  )}
-                                </div>
-                              )} */}
-
                               {unavail && (
                                 <div className="flex justify-center items-center">
                                   <Tippy
@@ -1067,11 +1084,11 @@ const Rosters = () => {
                                           <span className="text-xs text-gray-200">
                                             {calculateShiftDuration(shift.time, shift.breakTime)}
                                           </span>
-                                          {shift.description && (
+                                          {/* {shift.description && (
                                             <span className="paragraphThin italic ml-2">
                                               {shift.description}
                                             </span>
-                                          )}
+                                          )} */}
                                         </div>
                                         <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                           <FaRegCopy
@@ -1119,7 +1136,7 @@ const Rosters = () => {
                                   ?.length > 0
                               ) &&
                               !isPublished &&
-                              !unavailDetails?.allDay && (
+                              !unavailDetails?.allDay && emp.user.status!==0 &&(
                                 <button
                                   onClick={() => handlePaste(emp.user.id, day)}
                                   className="text-xs mt-2 text-gray-500 underline cursor-pointer hover:text-green-800"

@@ -554,7 +554,7 @@ const Rosterly = () => {
                                 </div>
                               ))
                             ) : (
-                              <p className="italic text-gray-500 cardGrey">
+                              <p className="italic text-center text-gray-500 cardGrey">
                                 No Shift Assigned
                               </p>
                             )}
