@@ -118,7 +118,7 @@ const NotificationPage = () => {
 
       {notifications.length === 0 ? (
         <div className="flex items-center justify-center h-64">
-          <p className="text-gray-500 text-center">No notifications found.</p>
+          <p className="text-gray-500 subHeading text-center">No notifications found.</p>
         </div>
       ) : (
         notifications.map((note) => {

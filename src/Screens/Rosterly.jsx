@@ -41,6 +41,10 @@ const Rosterly = () => {
   const [endWeekDay, setEndWeekDay] = useState("");
   const [startWeekDay, setStartWeekDay] = useState("");
   const [loading, setLoading] = useState(true);
+  const [totalShiftHour, setTotalShiftHour] = useState('');
+  const [shiftBreak, setShiftBreak] = useState('');
+  const [locationName, setLocationName] = useState('');
+  const [todayDate, setTodayDate] = useState('');
 
   const timerRef = useRef(null);
   const navigate = useNavigate();
@@ -249,65 +253,80 @@ const Rosterly = () => {
           });
 
           const rosterWeekData = response.data.rosterWeekId;
-          const weekId =
-            rosterWeekData.length > 0 ? rosterWeekData[0].id : null;
-          const locationId =
-            rosterWeekData.length > 0 ? rosterWeekData[0].location_id : null;
-          // setWeekId(shiftData.id);
-          setIsAtStore(true);
-          setLocationError("");
-          if (weekId) {
-            console.log("bhai agaya week id", weekId);
-            try {
-              const response = await axios.get(`${baseURL}/dashboardData`, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-                params: {
-                  locationId: locationId, // ✅ corrected key
-                  rosterWeekId: weekId,
-                },
-              });
+          const weekId = rosterWeekData.length > 0 ? rosterWeekData[0].id : null;
+          const locationId = rosterWeekData.length > 0 ? rosterWeekData[0].location_id : null;
+          console.log('rosterweek', rosterWeekData);
 
-              // const shiftData = response.data.RosterData;
-              // setShiftData(shiftData);
-              console.log("Shift Data:", shiftData);
-            } catch (error) {
-              console.error("Failed to fetch dashboard data:", error);
-            }
+
+          if (!weekId || !locationId) {
+            setIsAtStore(false);
+            setLocationError("No shift assigned to your current location.");
+            setIsCheckingLocation(false);
+            return;
           }
 
-          console.log("rosterWeekData:", response.data.rosterWeekId);
+          const dashRes = await axios.get(`${baseURL}/dashboardData`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              locationId: locationId,
+              rosterWeekId: weekId,
+            },
+          });
+
+          const dashData = dashRes.data.RosterData || [];
+
+          const todayShift = dashData.find((shift) =>
+            moment(shift.date).isSame(moment(), "day")
+          );
+
+          if (todayShift) {
+            setTotalShiftHour(todayShift.totalHrs || "0");
+            setShiftBreak(todayShift.breakTime || "0");
+            setLocationName(todayShift.location_name);
+            const formattedDate = todayShift.date.split("-").reverse().slice(0, 2).join("/");
+            setTodayDate(formattedDate)
+            setIsAtStore(true);
+            setLocationError("");
+          } else {
+            setIsAtStore(false);
+            setLocationError("No shift found at your current location for today.");
+          }
+          console.log('dashhhh', dashData);
+
+          // Check if today’s shift exists for the current location
+          const hasTodayShiftAtLocation = dashData.some((shift) =>
+            moment(shift.date).isSame(moment(), "day")
+          );
+
+          if (hasTodayShiftAtLocation) {
+            setIsAtStore(true);
+            setLocationError("");
+          } else {
+            setIsAtStore(false);
+            setLocationError("No shift found at your current location for today.");
+          }
         } catch (error) {
           setIsAtStore(false);
-          setLocationError(error.response.data.message);
-          console.error(
-            "Failed to fetch dashboard data:",
-            error.response.data.message
-          );
+          setLocationError(error.response?.data?.message || "Error fetching shift data.");
+          console.error("Failed to fetch dashboard data:", error);
         }
-        // if (distance <= ALLOWED_RADIUS_METERS) {
-        //   setIsAtStore(true);
-        //   setLocationError("");
-
-        // } else {
-        //   setIsAtStore(false);
-        //   setLocationError("You must be at the store to start your shift.");
-        // }
 
         setIsCheckingLocation(false);
       },
+
+
       (error) => {
         console.error("Geolocation error:", error);
         setIsAtStore(false);
-        setLocationError(
-          "Unable to fetch location. Please enable location access."
-        );
+        setLocationError("Unable to fetch location. Please enable location access.");
         setIsCheckingLocation(false);
       },
       { enableHighAccuracy: true }
     );
   };
+
 
   const todayShiftExists = useMemo(() => {
     return shiftData?.some((shift) =>
@@ -329,10 +348,6 @@ const Rosterly = () => {
         <>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 p-1">
             <div className="text-indigo-950">
-              {/* <p className="text-sm sm:text-base font-bold">Welcome,</p>
-              <p className="text-lg sm:text-xl font-bold">{userName}</p> */}
-              {/* <p className="text-lg sm:text-xl font-bold">Anita Verma</p> */}
-
               {isAtStore ? (
                 <>
                   <button
@@ -358,6 +373,8 @@ const Rosterly = () => {
                   >
                     {isShiftFinished ? "Shift Finished" : "Finish Shift"}
                   </button>
+                  <div className="subHeading mt-3">Welcome to {locationName}</div>
+
                 </>
               ) : (
                 <>
@@ -390,6 +407,7 @@ const Rosterly = () => {
                 transition={{ type: "spring", stiffness: 80 }}
                 className="flex flex-col justify-end flex-1 mt-10 text-right text-indigo-950"
               >
+                <p className="subHeading">Date: {todayDate}</p>
                 {shiftStartTime && (
                   <p className="subHeading text-green-800">
                     Start Time: {formatDisplayTime(shiftStartTime)}
@@ -397,7 +415,7 @@ const Rosterly = () => {
                 )}
 
                 <p className="py-1 subHeading">
-                  Shift Time: <strong>{formatTime(shiftElapsed)}(8 hrs)</strong>
+                  Shift Time: <strong>{formatTime(shiftElapsed)}({totalShiftHour} hrs)</strong>
                 </p>
                 {shiftEndTime && (
                   <p className="subHeading text-red-700">
@@ -405,7 +423,7 @@ const Rosterly = () => {
                   </p>
                 )}
                 <p className="subHeading text-red-700">
-                  Break Time: {formatTime(breakElapsed)}(15 mins)
+                  Break Time: {formatTime(breakElapsed)}({shiftBreak} min)
                 </p>
               </motion.div>
             )}

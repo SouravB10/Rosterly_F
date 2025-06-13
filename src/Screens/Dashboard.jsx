@@ -27,7 +27,7 @@ export default function Dashboard() {
         });
         const users = res.data?.data || [];
 
-        setUsers(users.length);
+        setUsers(users.filter((user)=>user.role_id!==1).length);
         setManagers(users.filter((user) => user.role_id === 2).length);
         setEmployees(users.filter((user) => user.role_id === 3).length);     
 

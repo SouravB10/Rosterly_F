@@ -903,18 +903,19 @@ const Rosters = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            className={`${isPublished == 0 ? "buttonSuccess" : "buttonDanger"}`}
-            onClick={handleTogglePublish}
-            disabled={isPublishing}
-          >
-            {isPublishing
-              ? "Publishing..."
-              : isPublished == 0
-                ? "Publish"
-                : "Unpublish"}
-          </button>
-          {/* <button className="buttonDanger">Unpublish</button> */}
+          {selectedLocation && (
+            <button
+              className={`${isPublished == 0 ? "buttonSuccess" : "buttonDanger"}`}
+              onClick={handleTogglePublish}
+              disabled={isPublishing}
+            >
+              {isPublishing
+                ? "Publishing..."
+                : isPublished == 0
+                  ? "Publish"
+                  : "Unpublish"}
+            </button>
+          )}
         </div>
       </div>
       {stats && (
@@ -979,7 +980,7 @@ const Rosters = () => {
                     <div className="flex flex-col items-center">
                       <span className="paragraphBold">{day}</span>
                       <span className="paragraph text-white">
-                      Total Hrs:  {totalHoursByDay[day] || "0h 0m"}
+                        Total Hrs:  {totalHoursByDay[day] || "0h 0m"}
                       </span>
                     </div>
                   </th>
@@ -1136,7 +1137,7 @@ const Rosters = () => {
                                   ?.length > 0
                               ) &&
                               !isPublished &&
-                              !unavailDetails?.allDay && emp.user.status!==0 &&(
+                              !unavailDetails?.allDay && emp.user.status !== 0 && (
                                 <button
                                   onClick={() => handlePaste(emp.user.id, day)}
                                   className="text-xs mt-2 text-gray-500 underline cursor-pointer hover:text-green-800"
