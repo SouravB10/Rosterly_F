@@ -809,6 +809,7 @@ const Rosters = () => {
 
   const getTotalHoursPerDay = () => {
     const totals = {};
+    let totalWeeklyMinutes = 0;
 
     days.forEach((day) => {
       let totalMinutes = 0;
@@ -843,13 +844,62 @@ const Rosters = () => {
       const hours = Math.floor(totalMinutes / 60);
       const minutes = totalMinutes % 60;
       totals[day] = `${hours}h ${minutes}m`;
+      totalWeeklyMinutes += totalMinutes;
     });
+
+    const weeklyHours = Math.floor(totalWeeklyMinutes / 60);
+    const weeklyMinutes = totalWeeklyMinutes % 60;
+    totals["weekly"] = `${weeklyHours}h ${weeklyMinutes}m`;
 
     return totals;
   };
 
   const totalHoursByDay = getTotalHoursPerDay();
 
+  const getTotalWeeklyHoursPerEmployee = () => {
+    const employeeTotals = {};
+
+    locatedEmployees.forEach((emp) => {
+      if (emp.user.status === 0) return; // skip inactive employees
+
+      let totalMinutes = 0;
+
+      days.forEach((day) => {
+        const shifts = shiftsByEmployeeDay[emp.user.id]?.[day] || [];
+        shifts.forEach((shift) => {
+          const [startTime, endTime] = shift.time?.split(" - ") || [];
+          if (startTime && endTime) {
+            const to24Hour = (timeStr) => {
+              const [time, modifier] = timeStr.trim().split(" ");
+              let [hours, minutes] = time.split(":").map(Number);
+              if (modifier === "PM" && hours !== 12) hours += 12;
+              if (modifier === "AM" && hours === 12) hours = 0;
+              return { hours, minutes };
+            };
+
+            const start = to24Hour(startTime);
+            const end = to24Hour(endTime);
+            const startDate = new Date(0, 0, 0, start.hours, start.minutes);
+            const endDate = new Date(0, 0, 0, end.hours, end.minutes);
+
+            let diff = (endDate - startDate) / (1000 * 60); // in minutes
+            if (diff < 0) diff += 1440; // handle overnight shift
+
+            const breakMins = Number(shift.breakTime) || 0;
+            totalMinutes += diff - breakMins;
+          }
+        });
+      });
+
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+      employeeTotals[emp.user.id] = `${hours}h ${minutes}m`;
+    });
+
+    return employeeTotals;
+  };
+
+  const totalWeeklyHoursByEmployee = getTotalWeeklyHoursPerEmployee();
 
   return (
     <>
@@ -980,7 +1030,7 @@ const Rosters = () => {
                     <div className="flex flex-col items-center">
                       <span className="paragraphBold">{day}</span>
                       <span className="paragraph text-white">
-                        Total Hrs:  {totalHoursByDay[day] || "0h 0m"}
+                        Day Total:  {totalHoursByDay[day] || "0h 0m"}
                       </span>
                     </div>
                   </th>
@@ -1001,191 +1051,204 @@ const Rosters = () => {
               </tbody>
             )}
             <tbody>
-              {locatedEmployees.map((emp) => (
-                <tr key={emp.user.id} className="border border-gray-300">
-                  {/* Employee Info */}
-                  <td className="p-2 bg-white">
-                    <div className="font-semibold">
-                      {emp.user.firstName} {emp.user.lastName}({emp.user_id}){" "}
-                      {emp.user.status === 0 && (
-                        <span className="text-red-400 paragraph">
-                          (Inactive)
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {emp.user.payrate} / Hr {emp.cost ? `· ${emp.cost}` : ""}
-                    </div>
-                  </td>
+              {locatedEmployees
+                .filter((emp) => emp.user.status !== 0)
+                .map((emp) => (
+                  <tr key={emp.user.id} className="border border-gray-300">
+                    {/* Employee Info */}
+                    <td className="p-2 bg-white">
+                      <div className="font-semibold">
+                        {emp.user.firstName} {emp.user.lastName}({emp.user_id}){" "}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {emp.user.payrate} / Hr {emp.cost ? `· ${emp.cost}` : ""}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        Weekly Hours: {totalWeeklyHoursByEmployee[emp.user.id] || "0h 0m"}
+                      </div>
+                    </td>
 
-                  {/* Days Column with DragDrop */}
-                  {days.map((day) => {
-                    const unavail = isDayUnavailable(emp, day); // Check if day is unavailable
-                    const unavailDetails = unavail
-                      ? getUnavailabilityDetails(emp, day)
-                      : null; // Get display details
+                    {/* Days Column with DragDrop */}
+                    {days.map((day) => {
+                      const unavail = isDayUnavailable(emp, day); // Check if day is unavailable
+                      const unavailDetails = unavail
+                        ? getUnavailabilityDetails(emp, day)
+                        : null; // Get display details
 
-                    return (
-                      <Droppable
-                        key={`${emp.user.id}-${day}`}
-                        droppableId={`${emp.user.id}-${day}`}
-                      >
-                        {(provided) => (
-                          <td
-                            className="p-2 border border-gray-300"
-                            ref={provided.innerRef}
-                            {...provided.droppableProps}
-                          >
-                            <div className="space-y-2">
-                              {unavail && (
-                                <div className="flex justify-center items-center">
-                                  <Tippy
-                                    content={
-                                      <div>
-                                        <div className="paragraphBold">{unavailDetails?.heading}</div>
-                                        {unavailDetails?.allDay ?
-                                          (
-                                            <div className="paragraph">{unavailDetails?.details}</div>
-                                          ) : (
-                                            <>
-                                              <div className="paragraph">From: <span className="paragraphThin text-gray-300">{unavailDetails.from}</span></div>
-                                              <div className="paragraph">To: <span className="paragraphThin text-gray-300">{unavailDetails.to}</span></div>
-                                            </>
-                                          )}
-                                        <div className="paragraph">Reason: <span className="paragraphThin text-gray-300">{unavailDetails.reason}</span></div>
-                                      </div>
-                                    }
-                                    placement="top"
-                                  >
-                                    <span>
-                                      <FaTriangleExclamation className="text-red-500 cursor-pointer" />
-                                    </span>
-                                  </Tippy>
-                                </div>
-                              )}
+                      return (
+                        <Droppable
+                          key={`${emp.user.id}-${day}`}
+                          droppableId={`${emp.user.id}-${day}`}
+                        >
+                          {(provided) => (
+                            <td
+                              className="p-2 border border-gray-300"
+                              ref={provided.innerRef}
+                              {...provided.droppableProps}
+                            >
+                              <div className="space-y-2">
+                                {unavail && (
+                                  <div className="flex justify-center items-center">
+                                    <Tippy
+                                      content={
+                                        <div>
+                                          <div className="paragraphBold">{unavailDetails?.heading}</div>
+                                          {unavailDetails?.allDay ?
+                                            (
+                                              <div className="paragraph">{unavailDetails?.details}</div>
+                                            ) : (
+                                              <>
+                                                <div className="paragraph">From: <span className="paragraphThin text-gray-300">{unavailDetails.from}</span></div>
+                                                <div className="paragraph">To: <span className="paragraphThin text-gray-300">{unavailDetails.to}</span></div>
+                                              </>
+                                            )}
+                                          <div className="paragraph">Reason: <span className="paragraphThin text-gray-300">{unavailDetails.reason}</span></div>
+                                        </div>
+                                      }
+                                      placement="top"
+                                    >
+                                      <span>
+                                        <FaTriangleExclamation className="text-red-500 cursor-pointer" />
+                                      </span>
+                                    </Tippy>
+                                  </div>
+                                )}
 
 
-                              {(shiftsByEmployeeDay[emp.user.id]?.[day] || []).map(
-                                (shift, index) => (
-                                  <Draggable
-                                    key={shift.id}
-                                    draggableId={shift.id}
-                                    index={index}
-                                    isDragDisabled={isPublished}
-                                  >
-                                    {(provided) => (
-                                      <div
-                                        className="bgTable paragraph text-white p-2 rounded flex justify-between items-center cursor-move group"
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                      >
-                                        <div className="flex flex-col items-center justify-end w-full">
-                                          <span>{shift.time}</span>
-                                          <span className="text-xs text-gray-200">
-                                            {calculateShiftDuration(shift.time, shift.breakTime)}
-                                          </span>
-                                          {/* {shift.description && (
+                                {(shiftsByEmployeeDay[emp.user.id]?.[day] || []).map(
+                                  (shift, index) => (
+                                    <Draggable
+                                      key={shift.id}
+                                      draggableId={shift.id}
+                                      index={index}
+                                      isDragDisabled={isPublished}
+                                    >
+                                      {(provided) => (
+                                        <div
+                                          className={`p-2 rounded flex justify-between items-center group
+    ${isPublished ? 'bgTablePub cursor-default ' : 'bgTable cursor-move'} text-white`}
+                                          ref={provided.innerRef}
+                                          {...provided.draggableProps}
+                                          {...provided.dragHandleProps}
+                                        >
+                                          <div className="flex flex-col items-center justify-end w-full">
+                                            <span>{shift.time}</span>
+                                            <span className="text-xs text-gray-200">
+                                              {calculateShiftDuration(shift.time, shift.breakTime)}
+                                            </span>
+                                            {/* {shift.description && (
                                             <span className="paragraphThin italic ml-2">
                                               {shift.description}
                                             </span>
                                           )} */}
-                                        </div>
-                                        <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                          <FaRegCopy
-                                            className={`text-md text-green-900 rounded cursor-pointer ${isPublished ? "opacity-20 pointer-events-none" : ""}`}
-                                            onClick={() => handleCopy(shift)}
-                                            title="Copy Shift"
-                                          />
-                                          <FaEdit
-                                            className={`text-md text-green-900 rounded cursor-pointer ${isPublished ? "opacity-20 pointer-events-none" : ""}`}
-                                            onClick={() =>
-                                              onShiftEdit(emp.user.id, emp.user.firstName, day, shift)
-                                            }
-                                            title="Edit Shift"
-                                          />
-                                          <HiTrash
-                                            className="text-xl text-red-600 px-1 rounded cursor-pointer"
-                                            title="Delete Shift"
-                                            onClick={async () => {
-                                              if (!isPublished) {
-                                                handleDeleteShiftUnpublished(emp.user.id, day, shift.id);
-                                              } else {
-                                                await handleDeleteShift(
-                                                  emp.user.id,
-                                                  day,
-                                                  shift.id,
-                                                  shift.rosterWeekId
-                                                );
+                                          </div>
+                                          <div className="flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            <FaRegCopy
+                                              className={`text-md text-green-900 rounded cursor-pointer ${isPublished ? "opacity-20 pointer-events-none" : ""}`}
+                                              onClick={() => handleCopy(shift)}
+                                              title="Copy Shift"
+                                            />
+                                            <FaEdit
+                                              className={`text-md text-green-900 rounded cursor-pointer ${isPublished ? "opacity-20 pointer-events-none" : ""}`}
+                                              onClick={() =>
+                                                onShiftEdit(emp.user.id, emp.user.firstName, day, shift)
                                               }
-                                            }}
-                                          />
+                                              title="Edit Shift"
+                                            />
+                                            <HiTrash
+                                              className="text-xl text-red-600 px-1 rounded cursor-pointer"
+                                              title="Delete Shift"
+                                              onClick={async () => {
+                                                if (!isPublished) {
+                                                  handleDeleteShiftUnpublished(emp.user.id, day, shift.id);
+                                                } else {
+                                                  await handleDeleteShift(
+                                                    emp.user.id,
+                                                    day,
+                                                    shift.id,
+                                                    shift.rosterWeekId
+                                                  );
+                                                }
+                                              }}
+                                            />
+                                          </div>
                                         </div>
-                                      </div>
-                                    )}
-                                  </Draggable>
-                                )
-                              )}
-                              {provided.placeholder}
-                            </div>
+                                      )}
+                                    </Draggable>
+                                  )
+                                )}
+                                {provided.placeholder}
+                              </div>
 
-                            {/* Paste Button */}
-                            {copiedShift &&
-                              !unavail && // Keep paste disabled for unavailable days
-                              !(
-                                shiftsByEmployeeDay[emp.user.id]?.[day]
-                                  ?.length > 0
-                              ) &&
-                              !isPublished &&
-                              !unavailDetails?.allDay && emp.user.status !== 0 && (
-                                <button
-                                  onClick={() => handlePaste(emp.user.id, day)}
-                                  className="text-xs mt-2 text-gray-500 underline cursor-pointer hover:text-green-800"
-                                >
-                                  Paste
-                                </button>
-                              )}
-
-                            {/* Add Shift Button (show even if unavailable) */}
-                            {!(
-                              shiftsByEmployeeDay[emp.user.id]?.[day]?.length >
-                              0
-                            ) &&
-                              !isPublished &&
-                              !unavailDetails?.allDay && (
-                                <div className="text-center">
+                              {/* Paste Button */}
+                              {copiedShift &&
+                                !unavail && // Keep paste disabled for unavailable days
+                                !(
+                                  shiftsByEmployeeDay[emp.user.id]?.[day]
+                                    ?.length > 0
+                                ) &&
+                                !isPublished &&
+                                !unavailDetails?.allDay && (
                                   <button
-                                    onClick={() =>
-                                      emp.user.status !== 0 &&
-                                      onShiftAdd(
-                                        emp.user.id,
-                                        emp.user.firstName,
-                                        day
-                                      )
-                                    }
-                                    className={`p-1 ${emp.user.status === 0
-                                      ? "text-gray-300 cursor-not-allowed"
-                                      : "text-gray-500 hover:text-green-800 cursor-pointer"
-                                      }`}
-                                    title={
-                                      emp.user.status === 0
-                                        ? "Inactive employee"
-                                        : "Add Shift"
-                                    }
-                                    disabled={emp.user.status === 0}
+                                    onClick={() => handlePaste(emp.user.id, day)}
+                                    className="text-xs mt-2 text-gray-500 underline cursor-pointer hover:text-green-800"
                                   >
-                                    <FaPlus size={12} />
+                                    Paste
                                   </button>
-                                </div>
-                              )}
-                          </td>
-                        )}
-                      </Droppable>
-                    );
-                  })}
-                </tr>
-              ))}
+                                )}
+
+                              {/* Add Shift Button (show even if unavailable) */}
+                              {!(
+                                shiftsByEmployeeDay[emp.user.id]?.[day]?.length >
+                                0
+                              ) &&
+                                !isPublished &&
+                                (
+                                  <div className="text-center">
+                                    <button
+                                      onClick={() =>
+                                        emp.user.status !== 0 &&
+                                        onShiftAdd(
+                                          emp.user.id,
+                                          emp.user.firstName,
+                                          day
+                                        )
+                                      }
+                                      className={`p-1 ${emp.user.status === 0
+                                        ? "text-gray-300 cursor-not-allowed"
+                                        : "text-gray-500 hover:text-green-800 cursor-pointer"
+                                        }`}
+                                      title={
+                                        emp.user.status === 0
+                                          ? "Inactive employee"
+                                          : "Add Shift"
+                                      }
+                                      disabled={emp.user.status === 0}
+                                    >
+                                      <FaPlus size={12} />
+                                    </button>
+                                  </div>
+                                )}
+                            </td>
+                          )}
+                        </Droppable>
+                      );
+                    })}
+                  </tr>
+                ))}
             </tbody>
+            {
+              locatedEmployees.length !==0 && (
+                <tfoot>
+                  <tr className=" font-semibold">
+                    <td className="p-2 border border-gray-300 text-start" colSpan={days.length + 1}>
+                      Weekly Total: {totalHoursByDay["weekly"] || "0h 0m"}
+                    </td>
+                  </tr>
+                </tfoot>
+              )
+            }
+
           </table>
         </div>
       </DragDropContext>

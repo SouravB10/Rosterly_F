@@ -26,9 +26,13 @@ const Rosterly = () => {
   const [isShiftFinished, setIsShiftFinished] = useState(false);
   const [elapsed, setElapsed] = useState(0); // current mode's elapsed
   const [breakElapsed, setBreakElapsed] = useState(0);
-  const breakStartTimeRef = useRef(null);
   const [shiftElapsed, setShiftElapsed] = useState(0);
-  const [currentWeek, setCurrentWeek] = useState(moment());
+  const getCurrentWeekStart = () => {
+    const today = moment();
+    const day = today.day();
+    return today.subtract((day >= 3 ? day - 3 : 7 - (3 - day)), 'days'); // go to this week’s Wednesday
+  };
+  const [currentWeek, setCurrentWeek] = useState(getCurrentWeekStart());
   const [isAtStore, setIsAtStore] = useState(false);
   const [locationError, setLocationError] = useState("");
   const [isCheckingLocation, setIsCheckingLocation] = useState(false);
@@ -47,13 +51,13 @@ const Rosterly = () => {
   const [todayDate, setTodayDate] = useState('');
   const [todayShift, setTodayShift] = useState(null);
 
-  const timerRef = useRef(null);
   const navigate = useNavigate();
 
   // for DB
   const [locLatitude, setLocLatitude] = useState([]);
   const [locLongitude, setLocLognitude] = useState([]);
   const [shiftData, setShiftData] = useState([]);
+
 
   useEffect(() => {
     if (weekId) {
@@ -69,33 +73,29 @@ const Rosterly = () => {
 
   // Starts a timer that ticks every second
   const shiftStartTimeRef = useRef(null);
+  const breakStartTimeRef = useRef(null);
+  const timerRef = useRef(null);
+  const accumulatedShiftRef = useRef(0);
+  const accumulatedBreakRef = useRef(0);
 
   const startTimer = (type) => {
-    stopTimer();
+    if (timerRef.current) return;
 
-    if (type === "shift") {
-      if (!shiftStartTimeRef.current) {
-        shiftStartTimeRef.current = Date.now();
+    timerRef.current = setInterval(() => {
+      const now = Date.now();
+
+      if (type === "shift" && shiftStartTimeRef.current) {
+        const currentElapsed = now - shiftStartTimeRef.current;
+        const totalShiftElapsed = accumulatedShiftRef.current + currentElapsed;
+        setShiftElapsed(Math.floor(totalShiftElapsed / 1000));
       }
 
-      timerRef.current = setInterval(() => {
-        const now = Date.now();
-        const elapsedInSeconds = Math.floor(
-          (now - shiftStartTimeRef.current) / 1000
-        );
-        setShiftElapsed(elapsedInSeconds);
-      }, 1000);
-    }
-
-    if (type === "break") {
-      breakStartTimeRef.current = Date.now(); // Set break start time
-
-      timerRef.current = setInterval(() => {
-        const now = Date.now();
-        const elapsed = Math.floor((now - breakStartTimeRef.current) / 1000);
-        setBreakElapsed(elapsed);
-      }, 1000);
-    }
+      if (type === "break" && breakStartTimeRef.current) {
+        const currentBreakElapsed = now - breakStartTimeRef.current;
+        const totalBreakElapsed = accumulatedBreakRef.current + currentBreakElapsed;
+        setBreakElapsed(Math.floor(totalBreakElapsed / 1000));
+      }
+    }, 1000);
   };
 
   // Stops any running timer
@@ -169,12 +169,15 @@ const Rosterly = () => {
     setCurrentWeek((prev) => moment(prev).add(1, "week"));
   };
 
-  const getDaysForWeek = (week) => {
-    const start = moment(week).day(3); // Start from Wednesday
+  const getDaysForWeek = (date) => {
+    const day = moment(date).day();
+    const start = moment(date).subtract((day >= 3 ? day - 3 : 7 - (3 - day)), 'days'); // get nearest past Wednesday
     return Array.from({ length: 7 }, (_, i) =>
       start.clone().add(i, "days").format("ddd, DD/MM")
     );
   };
+
+
 
   const days = getDaysForWeek(currentWeek);
 
@@ -189,7 +192,7 @@ const Rosterly = () => {
         roster_id: todayShift?.rosterId,
         action_type: actionType,
         location: todayShift?.location_Id,
-        remarks: "", // optional
+        remarks: "",
       });
 
       if (response.data.status) {
@@ -203,43 +206,204 @@ const Rosterly = () => {
   };
 
 
-  const handleShiftToggle = async() => {
+  const handleShiftToggle = async () => {
     if (isShiftFinished) return;
 
-    if (activeTimer !== "shift") {
-      const now = Date.now();
-      if (!shiftStartTime) {
-        setShiftStartTime(now);
-        await logAttendanceAction("start"); // store shift start time only once
-      }
-      setActiveTimer("shift");
-      startTimer("shift");
+    const now = Date.now();
+
+    // If shift is starting for the first time
+    if (!shiftStartTime) {
+      setShiftStartTime(now);
+      localStorage.setItem("shiftStartTime", now);
+      await logAttendanceAction("start");
     }
+
+    // If currently on break, end break first
+    if (activeTimer === "break" && breakStartTimeRef.current) {
+      const breakElapsed = now - breakStartTimeRef.current;
+      accumulatedBreakRef.current += breakElapsed;
+      localStorage.setItem("accumulatedBreak", accumulatedBreakRef.current);
+
+      breakStartTimeRef.current = null;
+      localStorage.removeItem("breakStartTime");
+
+      await logAttendanceAction("break_end");
+    }
+
+    // Now start the shift
+    stopTimer(); // stops any active timer
+    shiftStartTimeRef.current = now;
+
+    setActiveTimer("shift");
+    localStorage.setItem("activeTimer", "shift");
+    localStorage.setItem("shiftStartTimeRef", now.toString());
+
+    startTimer("shift");
   };
-  const handleBreakToggle = async() => {
+
+
+  const handleBreakToggle = async () => {
     if (isShiftFinished) return;
+
+    const now = Date.now();
+
+    if (activeTimer === "shift") {
+      const now = Date.now();
+      const elapsed = now - shiftStartTimeRef.current;
+
+      accumulatedShiftRef.current += elapsed;
+      localStorage.setItem("accumulatedShift", accumulatedShiftRef.current);
+
+      shiftStartTimeRef.current = null;
+      stopTimer();
+    }
 
     if (activeTimer === "break") {
+      // End break
       stopTimer();
+      const elapsed = now - breakStartTimeRef.current;
+
+      // Update accumulated break time
+      accumulatedBreakRef.current += elapsed;
+      localStorage.setItem("accumulatedBreak", accumulatedBreakRef.current);
+
+      setBreakElapsed(Math.floor(accumulatedBreakRef.current / 1000));
+      breakStartTimeRef.current = null;
+      localStorage.removeItem("breakStartTime");
+
       setActiveTimer("shift");
+      localStorage.setItem("activeTimer", "shift");
+
+      await logAttendanceAction("break_end");
       startTimer("shift");
-       await logAttendanceAction("break_end");
     } else {
+      // Start break
       stopTimer();
-      setBreakElapsed(0);
+
+      breakStartTimeRef.current = now;
+      localStorage.setItem("breakStartTime", now.toString());
+
       setActiveTimer("break");
+      localStorage.setItem("activeTimer", "break");
+
+      // setBreakElapsed(Math.floor(accumulatedBreakRef.current / 1000));
+      await logAttendanceAction("break_start");
       startTimer("break");
-       await logAttendanceAction("break_start");
     }
   };
 
-  const handleFinishShift = async() => {
+  const handleFinishShift = async () => {
     stopTimer();
-    setShiftEndTime(Date.now()); // store end time
-    setActiveTimer(null);
+    const end = Date.now();
+    if (shiftStartTimeRef.current) {
+      const elapsed = end - shiftStartTimeRef.current;
+      accumulatedShiftRef.current += elapsed;
+    }
+
+    setShiftElapsed(Math.floor(accumulatedShiftRef.current / 1000));
+    setShiftEndTime(end);
     setIsShiftFinished(true);
-     await logAttendanceAction("end");
+    setActiveTimer(null);
+    localStorage.removeItem("shiftStartTime");
+    localStorage.removeItem("activeTimer");
+    localStorage.removeItem("breakStartTime");
+    localStorage.removeItem("accumulatedBreak");
+    localStorage.removeItem("accumulatedShift");
+    localStorage.removeItem("todayShift");
+
+    await logAttendanceAction("end");
   };
+
+  useEffect(() => {
+    const savedShiftStart = localStorage.getItem("shiftStartTime");
+    const savedBreakStart = localStorage.getItem("breakStartTime");
+    const savedActiveTimer = localStorage.getItem("activeTimer");
+    const savedBreakElapsed = localStorage.getItem("accumulatedBreak");
+    const savedAccumulatedShift = localStorage.getItem("accumulatedShift");
+    const storedLocation = localStorage.getItem("locationName");
+    const storedDate = localStorage.getItem("todayDate");
+    const storedTodayShift = localStorage.getItem("todayShift");
+    const storedShiftStart = localStorage.getItem("shiftStartTimeRef");
+    if (storedShiftStart) {
+      shiftStartTimeRef.current = parseInt(storedShiftStart, 10);
+
+    }
+    if (storedTodayShift) {
+      setTodayShift(JSON.parse(storedTodayShift));
+    }
+    if (storedLocation) setLocationName(storedLocation);
+    if (storedDate) setTodayDate(storedDate);
+
+    if (savedAccumulatedShift) {
+      accumulatedShiftRef.current = parseInt(savedAccumulatedShift, 10);
+    }
+
+    if (savedShiftStart && savedActiveTimer === "shift") {
+      shiftStartTimeRef.current = parseInt(savedShiftStart, 10);
+      const now = Date.now();
+      const elapsed = now - shiftStartTimeRef.current;
+      setShiftElapsed(Math.floor((accumulatedShiftRef.current + elapsed) / 1000));
+    }
+
+    if (savedShiftStart) {
+      const shiftStart = parseInt(savedShiftStart, 10);
+      shiftStartTimeRef.current = shiftStart;
+      setShiftStartTime(shiftStart);
+      const elapsed = Math.floor((Date.now() - shiftStart) / 1000);
+      setShiftElapsed(elapsed);
+      setIsAtStore(true);
+    }
+
+    if (savedBreakElapsed) {
+      const breakTotal = parseInt(savedBreakElapsed, 10);
+      accumulatedBreakRef.current = breakTotal;
+      setBreakElapsed(Math.floor(breakTotal / 1000));
+    }
+
+    if (savedBreakStart && savedActiveTimer === "break") {
+      const breakStart = parseInt(savedBreakStart, 10);
+      breakStartTimeRef.current = breakStart;
+    }
+
+    if (savedActiveTimer === "shift" || savedActiveTimer === "break") {
+      setActiveTimer(savedActiveTimer);
+      startTimer(savedActiveTimer);
+      setIsAtStore(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        const now = Date.now();
+
+        if (activeTimer === "shift" && shiftStartTimeRef.current) {
+          const elapsed = now - shiftStartTimeRef.current;
+          setShiftElapsed(Math.floor((accumulatedShiftRef.current + elapsed) / 1000));
+        }
+
+        if (activeTimer === "break" && breakStartTimeRef.current) {
+          const elapsed = now - breakStartTimeRef.current;
+          setBreakElapsed(Math.floor((accumulatedBreakRef.current + elapsed) / 1000));
+        }
+
+        stopTimer(); // Clear old interval
+        if (activeTimer) startTimer(activeTimer); // Will only start if none exists
+      } else {
+        // When tab is hidden, stop the timer to prevent inaccurate increments
+        stopTimer();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [activeTimer]);
+
+  useEffect(() => {
+    return () => stopTimer(); // Cleanup on unmount
+  }, []);
 
   const formatDisplayTime = (timestamp) => {
     if (!timestamp) return "";
@@ -247,9 +411,6 @@ const Rosterly = () => {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  const unavailabilityHandler = () => {
-    navigate("/unavailability");
-  };
 
   // 17.43920120470179, 78.38736913783626 (Glansa Solutions)
   const STORE_LOCATION = {
@@ -317,6 +478,10 @@ const Rosterly = () => {
             setLocationName(foundShift.location_name);
             const formattedDate = foundShift.date.split("-").reverse().slice(0, 2).join("/");
             setTodayDate(formattedDate)
+            setTodayShift(foundShift);
+            localStorage.setItem("todayShift", JSON.stringify(foundShift));
+            localStorage.setItem("locationName", foundShift.location_name);
+            localStorage.setItem("todayDate", formattedDate);
             setIsAtStore(true);
             setLocationError("");
           } else {
@@ -364,6 +529,9 @@ const Rosterly = () => {
     );
   }, [shiftData]);
 
+  const colors = ["text-yellow-500", "text-pink-500", "text-indigo-500", "text-orange-500"];
+
+
   return (
     <>
       <div className="text-indigo-950 p-1">
@@ -382,11 +550,13 @@ const Rosterly = () => {
                 <>
                   <button
                     onClick={handleShiftToggle}
-                    className="buttonSuccess mr-2 w-full sm:w-auto"
+                    className={`buttonSuccess mr-2 w-full sm:w-auto `}
                   >
                     {activeTimer === "shift"
                       ? "Shift Running..."
-                      : "Start/Resume Shift"}
+                      : activeTimer === "break"
+                        ? "Resume Shift"
+                        : "Start Shift"}
                   </button>
 
                   <button
@@ -577,30 +747,33 @@ const Rosterly = () => {
                         ) : (
                           <div className="flex flex-col gap-2 text-xs text-gray-800">
                             {shifts.length > 0 ? (
-                              shifts.map((shift, index) => (
-                                <div className="cardYellow w-full" key={index}>
-                                  <p className="flex items-center gap-1">
-                                    <SlCalender className="text-gray-600" title="Time" />
-                                    {shift.startTime} - {shift.endTime}
-                                  </p>
+                              shifts.map((shift, index) => {
+                                const locationColor = colors[index % colors.length];
+                                return (
+                                  <div className="cardYellow w-full" key={index}>
+                                    <p className="flex items-center gap-1">
+                                      <SlCalender className="text-gray-600" title="Time" />
+                                      {shift.startTime} - {shift.endTime}
+                                    </p>
 
-                                  <p className="flex flex-col items-start">
-                                    <span className="flex gap-1 items-center">
-                                      <FaClock className="text-gray-600" title="Total hours" />
-                                      {shift.totalHrs} hrs
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                      <FaClock className="text-red-400" title="Break" />
-                                      {shift.breakTime} Min Break
-                                    </span>
-                                  </p>
+                                    <p className="flex flex-col items-start">
+                                      <span className="flex gap-1 items-center">
+                                        <FaClock className="text-gray-600" title="Total hours" />
+                                        {shift.totalHrs} hrs
+                                      </span>
+                                      <span className="flex items-center gap-1">
+                                        <FaClock className="text-red-400" title="Break" />
+                                        {shift.breakTime} Min Break
+                                      </span>
+                                    </p>
 
-                                  <p className="flex items-center gap-1">
-                                    <FaMapMarkerAlt className="text-gray-600" title="Location" />
-                                    <span>{shift.location_name}</span>
-                                  </p>
-                                </div>
-                              ))
+                                    <p className="flex items-center gap-1">
+                                      <FaMapMarkerAlt className="text-gray-600" title="Location" />
+                                      <span className={`${locationColor} font-bold` }>{shift.location_name}</span>
+                                    </p>
+                                  </div>
+                                )
+                              })
                             ) : (
                               <p className="italic text-center text-gray-500 cardGrey">
                                 No Shift Assigned

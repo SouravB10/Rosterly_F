@@ -800,7 +800,7 @@ const People = () => {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col">
-                      <label className="paragraphBold">Pay Rate / Day</label>
+                      <label className="paragraphBold">Pay Rate/Hour</label>
                       <input
                         type="text"
                         className="input"
@@ -1014,11 +1014,11 @@ const People = () => {
                   scrollableYearDropdown
                   yearDropdownItemNumber={100}
                   placeholderText="Select date"
-                />
+                />  [p  ]
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div className="flex flex-col">
-                  <label className="paragraphBold">Payrate / Day</label>
+                  <label className="paragraphBold">Payrate/Hour</label>
                   <input
                     type="text"
                     className="input"
